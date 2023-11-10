@@ -80,7 +80,47 @@ const loginUser = async (req, res) => {
     }
 };
 
+// @desc Update user profile
+// @route PUT/api/users/profile
+const updateUserProfile = async(req, res) => {
+    const { fullName, image, phone, email, dob } = req.body;
+    try {
+        // find user in DB  
+        const user = await User.findById(req.user.id);
+        // if users exists update user data and save it in DB
+        if(user) {
+            user.fullName = fullName || user.fullName;
+            user.email = email || user.email;
+            user.image = image || user.image;
+            user.phone = phone || user.phone;
+            user.dob = dob || user.dob;
+
+            const updatedUser = await user.save();
+            // send updated user data and token to client
+            res.json({
+                _id: updatedUser._id,
+                fullName: updatedUser.fullName,
+                email: updatedUser.email,
+                image: updatedUser.image,
+                phone: updatedUser.phone,
+                dob: updatedUser.dob,
+                isAdmin: updatedUser.isAdmin,
+                token: generateToken(updatedUser._id),
+            })
+        }
+        // else send error message
+        else {
+            res.status(404);
+            throw new Error("User not found");
+        }
+        
+    
+    }  catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 export {
     registerUser,
     loginUser,
+    updateUserProfile,
 }

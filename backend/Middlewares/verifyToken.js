@@ -16,7 +16,6 @@ const verify = (req, res, next) => {
                 throw new Error("Token is not valid!");
             };
             req.user = user;
-            console.log(req.user);
             next();
         });
     } else {

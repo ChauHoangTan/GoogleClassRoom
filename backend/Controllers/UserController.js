@@ -119,8 +119,38 @@ const updateUserProfile = async(req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+// @desc Change user password
+// @route PUT /api/users/password
+const changeUserPassword = async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    try {
+        // find user in DB
+        const user = await User.findById(req.user.id);
+        // compare old password with hashed password 
+        const checkPassword = await bcrypt.compare(oldPassword, user.password);
+        // if user exists and correct password  then update user password and save it in DB
+        if(user && checkPassword) {
+            // hash new password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+            user.password = hashedPassword;
+            await user.save();
+            res.json({ message: "Password changed! "});
+        }
+        // else send error message
+        else {
+            res.status(401);
+            throw new Error("Invalid old password");
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 export {
     registerUser,
     loginUser,
     updateUserProfile,
+    changeUserPassword,
 }

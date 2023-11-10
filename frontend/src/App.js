@@ -7,15 +7,19 @@ import Layout from './layout/Layout.js'
 import Home from './pages/home/Home.js'
 import Register from './pages/register/Register.js'
 import Login from './pages/login/Login.js'
+import Landing from './pages/landing/Landing.js'
+import Account from "./pages/account/Account.js";
 import NoPage from './pages/noPage/NoPage.js'
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element = {<Layout/>}>
-          <Route index element = {<Home/>}/>
+          <Route index element = {<Landing/>}/>
+          <Route path="home" element = {<Home/>}/>
           <Route path="register" element = {<Register/>}/>
           <Route path="login" element = {<Login/>}/>
+          <Route path="account" element = {<Account/>}/>
           <Route path="*" element = {<NoPage/>} />
         </Route>
       </Routes>

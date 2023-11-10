@@ -23,9 +23,11 @@ const UserSchema = mongoose.Schema(
         },
         phone: {
             type: String,
+            default: "",
         },
         dob: {
             type: Date,
+            default: "",
         },
 
         isAdmin: {

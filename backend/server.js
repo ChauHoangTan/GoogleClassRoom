@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
+import userRouter from "./Routes/UserRoute.js";
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ connectDB();
 app.get('/', (req, res) => {
     res.send("Hello world");
 })
+
+app.use("/api/users", userRouter);
 
 const PORT = process.env.PORT || 5000;
 

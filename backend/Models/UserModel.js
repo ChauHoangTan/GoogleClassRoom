@@ -19,6 +19,7 @@ const UserSchema = mongoose.Schema(
         },
         image: {
             type: String,
+            default: "",
         },
         phone: {
             type: String,

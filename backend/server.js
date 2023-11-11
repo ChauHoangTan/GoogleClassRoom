@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import userRouter from "./Routes/UserRoute.js";
+import UploadRouter from "./Routes/UploadRouter.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
 })
 
 app.use("/api/users", userRouter);
+app.use("/api/upload", UploadRouter);
 
 const PORT = process.env.PORT || 5000;
 

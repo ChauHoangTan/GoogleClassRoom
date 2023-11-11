@@ -24,8 +24,10 @@ function Login() {
         event.preventDefault();
         
         if (inputUserNameValue === '' || inputUserNameValue === '') {
+            setNotificationOpen(true);
             setErrorMessage("Please fill in the blank field");
         } else if (inputPasswordValue.length < 6) {
+            setNotificationOpen(true);
             setErrorMessage("Password must be greater than 6 characters");
         } else {
             
@@ -154,7 +156,7 @@ function Login() {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/register" variant="body2">
                             {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>

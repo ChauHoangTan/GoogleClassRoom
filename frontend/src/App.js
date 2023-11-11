@@ -17,11 +17,12 @@ function App() {
         <Route path="/" element = {<Layout/>}>
           <Route index element = {<Landing/>}/>
           <Route path="home" element = {<Home/>}/>
-          <Route path="register" element = {<Register/>}/>
-          <Route path="login" element = {<Login/>}/>
           <Route path="account" element = {<Account/>}/>
           <Route path="*" element = {<NoPage/>} />
         </Route>
+
+        <Route path="register" element = {<Register/>}/>
+        <Route path="login" element = {<Login/>}/>
       </Routes>
     </BrowserRouter>
   );

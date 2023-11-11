@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { Snackbar, Alert } from '@mui/material';
+import './style.scss';
 
 const defaultTheme = createTheme();
 
@@ -122,7 +123,7 @@ function Register() {
                         alignItems: 'center',
                     }}
                     >
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
                         Sign up
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>

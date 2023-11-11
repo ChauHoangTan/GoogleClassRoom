@@ -14,7 +14,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import IconButton from '@mui/material/IconButton';
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert, Container } from '@mui/material';
+import './style.scss';
   
 const defaultTheme = createTheme();
 
@@ -97,8 +98,20 @@ function Login() {
                 t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            display: 'flex',
+            textAlign: 'center',
             }}
-        />
+        >
+            <Container sx={{ width: '100%' }}>
+                <Typography component="h1" sx={{fontFamily: 'FingerPaint', fontSize: '100px', color: 'white'}}>
+                    Google Class Room
+                </Typography>
+
+                <Typography sx={{fontFamily: 'FingerPaint', fontSize: '30px', color: 'white'}} marginTop={4}>
+                    Building a High-Quality Online Learning Platform - Connecting Knowledge, Elevating Wisdom!
+                </Typography>
+            </Container>
+        </Grid>
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
             <Box
                 sx={{
@@ -109,7 +122,7 @@ function Login() {
                     alignItems: 'center',
                 }}
             >
-                <Typography component="h1" variant="h5"            >
+                <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
                     Login
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>

@@ -135,16 +135,17 @@ function Login() {
                         helperText={errors.userName?.message || ''}
                     />
                     <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        id="password"
-                        autoComplete="current-password"
-                        {...register("password")}
-                        error={!!errors.password}
-                        helperText={errors.password?.message || ''}
-                        type={showPassword ? 'text' : 'password'}
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            id="password"
+                            autoComplete="current-password"
+                            {...register("password")}
+                            error={!!errors.password}
+                            helperText={errors.password?.message || ''}
+                            type={showPassword ? 'text' : 'password'}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">

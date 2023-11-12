@@ -10,8 +10,17 @@ import { Avatar, Stack } from '@mui/material';
 import {Link, useNavigate} from 'react-router-dom'
 import logo from '../assets/img/logo.png'
 import './style.scss'
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutAction } from '../redux/actions/userActions';
+import toast from 'react-hot-toast';
 
 export default function Header() {
+  const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { userInfo} = useSelector(
+        (state) => state.userLogin
+    ); 
+
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -23,10 +32,11 @@ export default function Header() {
     setAnchorEl(null);
   };
 
-  const navigate = useNavigate();
-  const handleLogout = () => {
+  const logoutHandler = () => {
     handleClose();
-    navigate('/')
+    dispatch(logoutAction());
+    toast.success("Logged out successfully");
+    navigate("/login");
   }
 
   return (
@@ -80,9 +90,12 @@ export default function Header() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>
-                    <Link to='/account' style={{textDecoration:'none', color:'black'}}>Profile account</Link>
+                    <Link to='/profile' style={{textDecoration:'none', color:'black'}}>Profile account</Link>
                 </MenuItem>
-                <MenuItem onClick={handleLogout}>
+                <MenuItem onClick={handleClose}>
+                    <Link to='/password' style={{textDecoration:'none', color:'black'}}>Change password</Link>
+                </MenuItem>
+                <MenuItem onClick={logoutHandler}>
                     Log out
                 </MenuItem>
                 

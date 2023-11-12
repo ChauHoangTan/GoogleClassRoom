@@ -4,7 +4,7 @@ import User from "../Models/UserModel.js";
 import bcrypt from "bcryptjs";
 
 // @desc Register user
-// @route POST /api/users/
+// @route POST /api/users/register
 const registerUser = async(req, res) => {
     const { userName, fullName, password, image } = req.body;
     try {
@@ -33,7 +33,9 @@ const registerUser = async(req, res) => {
                 _id: user._id,
                 userName: user.userName,
                 fullName: user.fullName,
-                password: user.password,
+                phone: user.phone,
+                dob: user.dob,
+                email: user.email,
                 image: user.image,
                 isAdmin: user.isAdmin,
                 token: generateToken(user._id)
@@ -55,7 +57,6 @@ const loginUser = async (req, res) => {
     try {
         // find user in DB
         const user = await User.findOne({ userName });
-
         // compare password with hash password
         const checkPassword = await bcrypt.compare(password, user.password);
 
@@ -65,9 +66,11 @@ const loginUser = async (req, res) => {
                 _id: user._id,
                 userName: user.userName,
                 fullName: user.fullName,
-                password: user.password,
                 image: user.image,
                 isAdmin: user.isAdmin,
+                phone: user.phone,
+                dob: user.dob,
+                email: user.email,
                 token: generateToken(user._id)
             });
         }  else {

@@ -1,7 +1,7 @@
 import * as userConstants from "../constants/userConstants";
 import * as userApi from "../APIs/userServices";
 // import { toast } from "react-hot-toast";
-import { ErrorsAction } from "../protection";
+import { ErrorsAction, tokenProtection } from "../Protection";
 
 // Login action
 const loginAction = (datas) => async (dispatch) => {
@@ -34,4 +34,17 @@ const logoutAction = (datas) => async (dispatch) => {
     dispatch({ type: userConstants.USER_LOGIN_RESET });
 };
 
-export { loginAction, registerAction, logoutAction };
+// Change password action
+const changePasswordAction = (password) => async(dispatch, getState) => {
+    try {
+        dispatch({ type: userConstants.USER_CHANGE_PASSWORD_REQUEST });
+        const response = await userApi.changePasswordService(
+            password,
+            tokenProtection(getState)
+        );
+        dispatch({ type: userConstants.USER_CHANGE_PASSWORD_SUCCESS, payload: response });
+    } catch (error) {
+        ErrorsAction(error, dispatch, userConstants.USER_CHANGE_PASSWORD_FAIL); 
+    }
+};
+export { loginAction, registerAction, logoutAction, changePasswordAction };

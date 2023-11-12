@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,88 +12,54 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import { Snackbar, Alert } from '@mui/material';
 import './style.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { registerAction } from '../../redux/actions/userActions';
+import { useForm } from 'react-hook-form';
+import { RegisterValidation } from '../../components/Validation/userValidation';
+import { yupResolver } from '@hookform/resolvers/yup';
+import toast from 'react-hot-toast';
 
 const defaultTheme = createTheme();
 
 function Register() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleSubmit = async (event) => {
+    const { isLoading, isError, userInfo, isSuccess } = useSelector(
+        (state) => state.userRegister
+    ); 
 
-        event.preventDefault();
-        
-        if (inputUserNameValue === '' || inputUserNameValue === '' || inputFirstNameValue === '' || inputLastNameValue === '') {
-            setNotificationOpen(true);
-            setErrorMessage("Please fill in the blank field");
-        } else if (inputPasswordValue.length < 6) {
-            setNotificationOpen(true);
-            setErrorMessage("Password must be greater than 6 characters");
-        } else if (!agreeTerm) {
-            setNotificationOpen(true);
-            setErrorMessage("You must agree to our terms in order to create an account");
-        } else {
+    // validate user
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(RegisterValidation),
+    })
 
-            const data = new FormData(event.currentTarget);
-            console.log({
-                fullName: data.get('firstName') + ' ' + data.get('lastName'),
-                userName: data.get('userName'),
-                password: data.get('password'),
-            });
+      // useEffect
+      useEffect(() => {
+        if( userInfo) {
+            navigate("/profile");
         }
-    };
-
-    const [inputUserNameValue, setInputUserNameValue] = useState('');
-    const [inputPasswordValue, setInputPasswordValue] = useState('');
-    const [inputFirstNameValue, setInputFirstNameValue] = useState('');
-    const [inputLastNameValue, setInputLastNameValue] = useState('');
-    const [agreeTerm, setAgreeTerm] = useState(false);
-
-    const [notificationOpen, setNotificationOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const handleInputUserNameChange = (event) => {
-        const regex = /^\S+$/; 
-        const newInputValue = event.target.value;
-    
-        if (regex.test(newInputValue) || newInputValue === '') {
-          setInputUserNameValue(newInputValue);
-        } else {
-          // Show notification when the input doesn't match the regex pattern
-          setNotificationOpen(true);
-          setErrorMessage("Username does not contain spaces");
+        if (isSuccess) {
+            toast.success(`Welcome ${userInfo?.fullName}`);
+            dispatch({ type: "USER_REGISTER_RESET" });
         }
-    };
-
-    const handleInputPasswordChange = (event) => {
-        // TODO: Handle change password
-        const newInputValue = event.target.value;
-        setInputPasswordValue(newInputValue);
-    };
-
-    const handleInputFirstNameChange = (event) => {
-        // TODO: Handle change first name
-        const newInputValue = event.target.value;
-        setInputFirstNameValue(newInputValue);
-    };
-
-    const handleInputLastNameChange = (event) => {
-        // TODO: Handle change last name
-        const newInputValue = event.target.value;
-        setInputLastNameValue(newInputValue);
-    };
-
-    const handleAgreeTermChange = (event) => {
-        setAgreeTerm(event.target.checked);
-    };
-
-    const handleNotificationClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
+        if (isError) {
+            toast.error(isError);
+            dispatch({ type: "USER_REGISTER_RESET" });
         }
-        setNotificationOpen(false);
+    }, [userInfo, isSuccess, isError, navigate, dispatch]);
+
+    // onSubmit
+    const onSubmit = (data) => {
+        dispatch(registerAction({...data, "fullName": `${data.firstName} ${data.lastName}`}));
     };
-      
+
     return ( 
         <ThemeProvider theme={defaultTheme}>
             <CssBaseline />
@@ -126,43 +92,48 @@ function Register() {
                     <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box 
+                        component="form" 
+                        noValidate 
+                        onSubmit={handleSubmit(onSubmit)} 
+                        sx={{ mt: 3 }}
+                    >
                         <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                            autoComplete="given-name"
-                            name="firstName"
-                            required
-                            fullWidth
-                            id="firstName"
-                            label="First Name"
-                            autoFocus
-                            value={inputFirstNameValue}
-                            onChange={handleInputFirstNameChange}
+                                name="firstName"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="First Name"
+                                autoFocus
+                                {...register("firstName")}
+                                error={!!errors.firstName}
+                                helperText={errors.firstName?.message || ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                            required
-                            fullWidth
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            autoComplete="family-name"
-                            value={inputLastNameValue}
-                            onChange={handleInputLastNameChange}
+                                required
+                                fullWidth
+                                id="lastName"
+                                label="Last Name"
+                                name="lastName"
+                                {...register("lastName")}
+                                error={!!errors.lastName}
+                                helperText={errors.lastName?.message || ''}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                            required
-                            fullWidth
-                            id="userName"
-                            label="User Name"
-                            name="userName"
-                            autoComplete="userName"
-                            value={inputUserNameValue}
-                            onChange={handleInputUserNameChange}
+                                required
+                                fullWidth
+                                id="userName"
+                                label="User Name"
+                                name="userName"
+                                {...register("userName")}
+                                error={!!errors.userName}
+                                helperText={errors.userName?.message || ''}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -173,17 +144,15 @@ function Register() {
                             label="Password"
                             type="password"
                             id="password"
-                            autoComplete="new-password"
-                            value={inputPasswordValue}
-                            onChange={handleInputPasswordChange}
+                            {...register("password")}
+                            error={!!errors.password}
+                            helperText={errors.password?.message || ''}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={<Checkbox value="agreeTerm" color="primary" />}
                                 label="I agree to the terms and conditions"
-                                checked={agreeTerm}
-                                onChange={handleAgreeTermChange}
                             />
                         </Grid>
                         </Grid>
@@ -206,16 +175,6 @@ function Register() {
                     </Box>
                 </Container>
             </Grid>
-
-            <Snackbar
-                open={notificationOpen}
-                autoHideDuration={6000}
-                onClose={handleNotificationClose}
-            >
-                <Alert onClose={handleNotificationClose} severity="error">
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
         </ThemeProvider>
     );
 }

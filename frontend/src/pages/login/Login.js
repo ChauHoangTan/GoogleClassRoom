@@ -1,3 +1,4 @@
+import './style.scss';
 import * as React from 'react';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
@@ -15,16 +16,14 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import IconButton from '@mui/material/IconButton';
 import { Container } from '@mui/material';
-import './style.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { LoginValidation } from '../../components/validation/userValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginAction } from '../../redux/actions/userActions';
 import { useEffect } from 'react';
 import toast from "react-hot-toast";
-  
+import { LoginValidation } from "../../components/Validation/userValidation"
 const defaultTheme = createTheme();
 
 function Login() {
@@ -41,17 +40,14 @@ function Login() {
 
     // On submit
     const onSubmit = (data) => {
-        dispatch(loginAction(data));
         console.log(data);
+        dispatch(loginAction(data));
     };
 
     // useEffect
     useEffect(() => {
-        if (userInfo?.isAdmin) {
-            navigate("/dashboard");
-        }
-        else if( userInfo) {
-            navigate("/profile");
+        if (userInfo) {
+            navigate("/");
         }
         if (isSuccess) {
             toast.success(`Welcome back ${userInfo?.fullName}`);
@@ -65,44 +61,11 @@ function Login() {
     const handleGoogleLogin = () => {
         // Handle when user click login by Google
         console.log('Google login clicked');
-      };
+    };
     
-      const handleFacebookLogin = (response) => {
+    const handleFacebookLogin = (response) => {
         // Handle when user click login by Facebook
         console.log('Facebook login response:', response);
-      };
-    
-    
-    const [inputUserNameValue, setInputUserNameValue] = useState('');
-    const [inputPasswordValue, setInputPasswordValue] = useState('');
-
-    const [notificationOpen, setNotificationOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const handleInputUserNameChange = (event) => {
-        const regex = /^\S+$/; 
-        const newInputValue = event.target.value;
-    
-        if (regex.test(newInputValue) || newInputValue === '') {
-          setInputUserNameValue(newInputValue);
-        } else {
-          // Show notification when the input doesn't match the regex pattern
-          setNotificationOpen(true);
-          setErrorMessage("Username does not contain spaces");
-        }
-    };
-
-    const handleInputPasswordChange = (event) => {
-        // TODO: Handle change password
-        const newInputValue = event.target.value;
-        setInputPasswordValue(newInputValue);
-    };
-
-    const handleNotificationClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-        setNotificationOpen(false);
     };
     
     return (
@@ -157,7 +120,6 @@ function Login() {
                         name="userName"
                         autoComplete="userName"
                         autoFocus
-                        onChange={handleInputUserNameChange}
                         {...register("userName")}
                         error={!!errors.userName}
                         helperText={errors.userName?.message || ''}
@@ -171,7 +133,6 @@ function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        onChange={handleInputPasswordChange}
                         {...register("password")}
                         error={!!errors.password}
                         helperText={errors.password?.message || ''}

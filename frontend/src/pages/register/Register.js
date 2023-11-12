@@ -19,11 +19,21 @@ import { registerAction } from '../../redux/actions/userActions';
 import { useForm } from 'react-hook-form';
 import { RegisterValidation } from '../../components/Validation/userValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { IconButton } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import toast from 'react-hot-toast';
 
 const defaultTheme = createTheme();
 
 function Register() {
+    const [showPassword, setShowPassword] = React.useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -142,11 +152,25 @@ function Register() {
                             fullWidth
                             name="password"
                             label="Password"
-                            type="password"
                             id="password"
                             {...register("password")}
                             error={!!errors.password}
                             helperText={errors.password?.message || ''}
+                            type={showPassword ? 'text' : 'password'}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                      <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                      >
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                      </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
                             />
                         </Grid>
                         <Grid item xs={12}>

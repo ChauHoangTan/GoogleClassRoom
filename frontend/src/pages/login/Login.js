@@ -23,10 +23,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { loginAction } from '../../redux/actions/userActions';
 import { useEffect } from 'react';
 import toast from "react-hot-toast";
-import { LoginValidation } from "../../components/Validation/userValidation"
+import { LoginValidation } from "../../components/Validation/userValidation";
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 const defaultTheme = createTheme();
 
 function Login() {
+    const [showPassword, setShowPassword] = React.useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -129,13 +139,26 @@ function Login() {
                         required
                         fullWidth
                         name="password"
-                        label="Password"
-                        type="password"
                         id="password"
                         autoComplete="current-password"
                         {...register("password")}
                         error={!!errors.password}
                         helperText={errors.password?.message || ''}
+                        type={showPassword ? 'text' : 'password'}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                      <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                      >
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                      </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}

@@ -1,4 +1,4 @@
-import { Grid, Paper, Stack, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Card, CardContent, Grid, Paper, Stack, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React from 'react';
 import './style.scss'
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
@@ -167,6 +167,61 @@ const Famous = () => {
     )
 }
 
+const Features = () => {
+    return (
+        <Stack direction='column' alignItems='center' mt={10}>
+            <Stack sx={{width:'90%'}}>
+                <Title>Features</Title>
+            </Stack>
+            
+            <Grid container sx={{width:'90%'}} spacing={2} className='gridFeatures' mt={2}>
+                
+                <Grid item xs={3}>
+                    <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
+                        <img src='https://i.pinimg.com/564x/4a/30/13/4a30135c32abbea9693ce564b7f02348.jpg'/>
+                        <CardContent>
+                            <Typography variant='body-1' sx={{fontWeight:'bold'}}>Effortless Class Management: </Typography>Streamline your classes with the power of Google Classroom. 
+                            Manage assignments, share resources, and foster collaboration seamlessly.
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xs={3}>
+                    <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
+                        <img src='https://i.pinimg.com/564x/1f/ec/bc/1fecbc7d8496e7d6a7251d46ca1a84f6.jpg'/>
+                        <CardContent>
+                            <Typography variant='body-1' sx={{fontWeight:'bold'}}>Empowering Educators: </Typography>Discover tips, tricks,
+                             and best practices to maximize your teaching potential with Google Classroom. From innovative assignments 
+                             to effective communication strategies, we've got you covered.
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xs={3}>
+                    <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
+                        <img src='https://i.pinimg.com/564x/9c/f3/b8/9cf3b8676bcc88bfa2efb1847adefa4e.jpg'/>
+                        <CardContent>
+                            <Typography variant='body-1' sx={{fontWeight:'bold'}}>Engaging Student Experiences: </Typography>Students, embark
+                             on an interactive learning journey! Explore ways to make the most of Google Classroom, participate in discussions, 
+                             and elevate your academic experience.
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xs={3}>
+                    <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
+                        <img src='https://i.pinimg.com/564x/af/7e/2a/af7e2ad4bea83c4d68a2825d86ff9b3a.jpg'/>
+                        <CardContent>
+                            <Typography variant='body-1' sx={{fontWeight:'bold'}}> Stay Updated: </Typography>Keep abreast of the latest Google Classroom 
+                            features, updates, and educational trends. Our hub is a dynamic space where the learning never stops.
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Stack>
+    )
+}
+
 function Landing() {
     return (
         <div id='landingPage'>
@@ -175,6 +230,9 @@ function Landing() {
             </div>
             <div className='famous'>
                 <Famous />
+            </div>
+            <div className='features'>
+                <Features/>
             </div>
 
         </div>

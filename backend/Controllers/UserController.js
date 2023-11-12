@@ -72,7 +72,7 @@ const loginUser = async (req, res) => {
             });
         }  else {
             res.status(400);
-            throw new Error(" Invalid email or password");
+            throw new Error(" Invalid userName or password");
         } 
 
     } catch (error) {

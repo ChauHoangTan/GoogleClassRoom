@@ -25,13 +25,13 @@ function App() {
             <Route path="home" element = {<Home/>}/>
             <Route path="account" element = {<Account/>}/>
             <Route path="*" element = {<NoPage/>} />
+            <Route element={<ProtectedRouter />} >
+              <Route path="password" element = {<Password/>}/>
+            </Route>
           </Route>
-          
+
           <Route path="login" element = {<Login/>}/>
           <Route path="register" element = {<Register/>}/>
-          <Route element={<ProtectedRouter />} >
-            <Route path="password" element = {<Password/>}/>
-          </Route>
 
         </Routes>
       </BrowserRouter>

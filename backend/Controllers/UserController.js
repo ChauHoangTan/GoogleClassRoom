@@ -58,24 +58,30 @@ const loginUser = async (req, res) => {
         // find user in DB
         const user = await User.findOne({ userName });
         // compare password with hash password
-        const checkPassword = await bcrypt.compare(password, user.password);
-
+        
         // if user exists and correct password send user data and token to client
-        if(user && checkPassword) {
-            res.status(200).json({
-                _id: user._id,
-                userName: user.userName,
-                fullName: user.fullName,
-                image: user.image,
-                isAdmin: user.isAdmin,
-                phone: user.phone,
-                dob: user.dob,
-                email: user.email,
-                token: generateToken(user._id)
-            });
+        if(user) {
+            const checkPassword = await bcrypt.compare(password, user.password);
+            if(checkPassword) {
+                res.status(200).json({
+                    _id: user._id,
+                    userName: user.userName,
+                    fullName: user.fullName,
+                    image: user.image,
+                    isAdmin: user.isAdmin,
+                    phone: user.phone,
+                    dob: user.dob,
+                    email: user.email,
+                    token: generateToken(user._id)
+                });
+            }
+            else {
+                res.status(400);
+                throw new Error(" Invalid password");
+            }
         }  else {
             res.status(400);
-            throw new Error(" Invalid userName or password");
+            throw new Error(" Invalid userName ");
         } 
 
     } catch (error) {

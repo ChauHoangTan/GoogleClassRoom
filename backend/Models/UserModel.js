@@ -26,7 +26,7 @@ const UserSchema = mongoose.Schema(
             default: "",
         },
         dob: {
-            type: Date,
+            type: String,
             default: "",
         },
 

@@ -84,7 +84,7 @@ useEffect(() => {
                     }}
                     >
                     <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
-                        Sign up
+                        Change Password
                     </Typography>
                     <Box 
                         component="form" 

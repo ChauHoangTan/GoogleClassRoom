@@ -14,6 +14,11 @@ import {
   ThemeProvider,
 } from '@mui/material';
 import { Alert } from '@mui/material';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const defaultTheme = {}; // Bạn có thể thêm các cài đặt theme tùy chọn ở đây
 
@@ -25,6 +30,9 @@ const EditProfile = () => {
   const [inputDobValue, setInputDobValue] = useState('');
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [value, setValue] = React.useState(dayjs());
+
   // Thêm các state và hàm xử lý thay đổi tương ứng cho các trường khác
 
   const handleInputUserNameChange = (event) => {
@@ -143,15 +151,15 @@ const EditProfile = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <TextField
-                    fullWidth
-                    id="dob"
-                    label="Date of Birth"
-                    name="dob"
-                    autoComplete="dob"
-                    value={inputDobValue}
-                    onChange={handleInputDobChange}
-                  />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DatePicker
+                        label="Date of birth"
+                        value={value}
+                        onChange={(newValue) => setValue(newValue)}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
                 </Grid>
               </Grid>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

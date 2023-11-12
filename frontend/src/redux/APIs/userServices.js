@@ -37,4 +37,17 @@ const changePasswordService = async (password, token) => {
     return data;
 }
 
-export { registerService, logoutService, loginService, changePasswordService };
+// update profile API call
+const updateProfileService = async (user, token) => {
+    const { data } = await Axios.put("/users/profile", user, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    if(data) {
+        localStorage.setItem("userInfo", JSON.stringify(data));
+    }
+    return data;
+}
+
+export { registerService, logoutService, loginService, changePasswordService, updateProfileService };

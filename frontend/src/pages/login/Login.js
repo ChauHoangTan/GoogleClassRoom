@@ -60,7 +60,7 @@ function Login() {
             navigate("/");
         }
         if (isSuccess) {
-            toast.success(`Welcome back ${userInfo?.fullName}`);
+            toast.success(`Welcome back ${userInfo?.firstName} ${userInfo?.lastName}`);
         }
         if (isError) {
             toast.error(isError);

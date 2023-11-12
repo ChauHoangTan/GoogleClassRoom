@@ -56,7 +56,7 @@ function Register() {
             navigate("/profile");
         }
         if (isSuccess) {
-            toast.success(`Welcome ${userInfo?.fullName}`);
+            toast.success(`Welcome ${userInfo?.firstName} ${userInfo?.lastName}`);
             dispatch({ type: "USER_REGISTER_RESET" });
         }
         if (isError) {
@@ -67,7 +67,7 @@ function Register() {
 
     // onSubmit
     const onSubmit = (data) => {
-        dispatch(registerAction({...data, "fullName": `${data.firstName} ${data.lastName}`}));
+        dispatch(registerAction(data));
     };
 
     return ( 
@@ -109,76 +109,76 @@ function Register() {
                         sx={{ mt: 3 }}
                     >
                         <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                name="firstName"
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    name="firstName"
+                                    required
+                                    fullWidth
+                                    id="firstName"
+                                    label="First Name"
+                                    autoFocus
+                                    {...register("firstName")}
+                                    error={!!errors.firstName}
+                                    helperText={errors.firstName?.message || ''}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="lastName"
+                                    label="Last Name"
+                                    name="lastName"
+                                    {...register("lastName")}
+                                    error={!!errors.lastName}
+                                    helperText={errors.lastName?.message || ''}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="userName"
+                                    label="User Name"
+                                    name="userName"
+                                    {...register("userName")}
+                                    error={!!errors.userName}
+                                    helperText={errors.userName?.message || ''}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
                                 required
                                 fullWidth
-                                id="firstName"
-                                label="First Name"
-                                autoFocus
-                                {...register("firstName")}
-                                error={!!errors.firstName}
-                                helperText={errors.firstName?.message || ''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                {...register("lastName")}
-                                error={!!errors.lastName}
-                                helperText={errors.lastName?.message || ''}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                id="userName"
-                                label="User Name"
-                                name="userName"
-                                {...register("userName")}
-                                error={!!errors.userName}
-                                helperText={errors.userName?.message || ''}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            id="password"
-                            {...register("password")}
-                            error={!!errors.password}
-                            helperText={errors.password?.message || ''}
-                            type={showPassword ? 'text' : 'password'}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                      <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                      >
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                      </IconButton>
-                                    </InputAdornment>
-                                )
-                            }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value="agreeTerm" color="primary" />}
-                                label="I agree to the terms and conditions"
-                            />
-                        </Grid>
+                                name="password"
+                                label="Password"
+                                id="password"
+                                {...register("password")}
+                                error={!!errors.password}
+                                helperText={errors.password?.message || ''}
+                                type={showPassword ? 'text' : 'password'}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={<Checkbox value="agreeTerm" color="primary" />}
+                                    label="I agree to the terms and conditions"
+                                />
+                            </Grid>
                         </Grid>
                         <Button
                             type="submit"

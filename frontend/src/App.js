@@ -9,22 +9,26 @@ import Register from './pages/register/Register.js'
 import Login from './pages/login/Login.js'
 import Landing from './pages/landing/Landing.js'
 import Account from "./pages/account/Account.js";
-import NoPage from './pages/noPage/NoPage.js'
+import NoPage from './pages/noPage/NoPage.js';
+import ToastContainer from './components/notification/ToastContainer.js'
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element = {<Layout/>}>
-          <Route index element = {<Landing/>}/>
-          <Route path="home" element = {<Home/>}/>
-          <Route path="account" element = {<Account/>}/>
-          <Route path="*" element = {<NoPage/>} />
-        </Route>
+    <>
+      <ToastContainer />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element = {<Layout/>}>
+            <Route index element = {<Landing/>}/>
+            <Route path="home" element = {<Home/>}/>
+            <Route path="account" element = {<Account/>}/>
+            <Route path="*" element = {<NoPage/>} />
+          </Route>
 
-        <Route path="register" element = {<Register/>}/>
-        <Route path="login" element = {<Login/>}/>
-      </Routes>
-    </BrowserRouter>
+          <Route path="register" element = {<Register/>}/>
+          <Route path="login" element = {<Login/>}/>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

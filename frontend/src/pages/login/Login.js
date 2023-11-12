@@ -14,31 +14,53 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import IconButton from '@mui/material/IconButton';
-import { Snackbar, Alert, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import './style.scss';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form"
+import { LoginValidation } from '../../components/validation/userValidation';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { loginAction } from '../../redux/actions/userActions';
+import { useEffect } from 'react';
+import toast from "react-hot-toast";
   
 const defaultTheme = createTheme();
 
 function Login() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        
-        if (inputUserNameValue === '' || inputUserNameValue === '') {
-            setNotificationOpen(true);
-            setErrorMessage("Please fill in the blank field");
-        } else if (inputPasswordValue.length < 6) {
-            setNotificationOpen(true);
-            setErrorMessage("Password must be greater than 6 characters");
-        } else {
-            
-            const data = new FormData(event.currentTarget);
-            console.log({
-              userName: data.get('userName'),
-              password: data.get('password'),
-            });
-        }
+    const { isLoading, isError, userInfo, isSuccess } = useSelector(
+        (state) => state.userLogin
+    );
+
+    // Validate user 
+    const { register, handleSubmit, formState: {errors} } = 
+        useForm({ resolver: yupResolver(LoginValidation) })
+
+    // On submit
+    const onSubmit = (data) => {
+        dispatch(loginAction(data));
+        console.log(data);
     };
+
+    // useEffect
+    useEffect(() => {
+        if (userInfo?.isAdmin) {
+            navigate("/dashboard");
+        }
+        else if( userInfo) {
+            navigate("/profile");
+        }
+        if (isSuccess) {
+            toast.success(`Welcome back ${userInfo?.fullName}`);
+        }
+        if (isError) {
+            toast.error(isError);
+            dispatch({ type: "USER_LOGIN_RESET" });
+        }
+    }, [userInfo, isSuccess, isError, navigate, dispatch]);    
 
     const handleGoogleLogin = () => {
         // Handle when user click login by Google
@@ -125,7 +147,7 @@ function Login() {
                 <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
                     Login
                 </Typography>
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
                         required
@@ -135,8 +157,10 @@ function Login() {
                         name="userName"
                         autoComplete="userName"
                         autoFocus
-                        value={inputUserNameValue}
                         onChange={handleInputUserNameChange}
+                        {...register("userName")}
+                        error={!!errors.userName}
+                        helperText={errors.userName?.message || ''}
                     />
                     <TextField
                         margin="normal"
@@ -147,8 +171,10 @@ function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        value={inputPasswordValue}
                         onChange={handleInputPasswordChange}
+                        {...register("password")}
+                        error={!!errors.password}
+                        helperText={errors.password?.message || ''}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -201,16 +227,6 @@ function Login() {
             </Box>
         </Grid>
         </Grid>
-
-        <Snackbar
-            open={notificationOpen}
-            autoHideDuration={6000}
-            onClose={handleNotificationClose}
-        >
-            <Alert onClose={handleNotificationClose} severity="error">
-                {errorMessage}
-            </Alert>
-        </Snackbar>
     </ThemeProvider>
     );
 }

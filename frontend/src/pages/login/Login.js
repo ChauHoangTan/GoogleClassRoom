@@ -23,7 +23,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { loginAction } from '../../redux/actions/userActions';
 import { useEffect } from 'react';
 import toast from "react-hot-toast";
-import { LoginValidation } from "../../components/Validation/userValidation";
+import { LoginValidation } from "../../components/validation/userValidation";
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';

@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
-import { PasswordValidation } from '../../components/Validation/userValidation';
+import { PasswordValidation } from '../../components/validation/userValidation';
 import { changePasswordAction } from '../../redux/actions/userActions';
 
 const defaultTheme = createTheme();

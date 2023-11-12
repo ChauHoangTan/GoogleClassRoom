@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerAction } from '../../redux/actions/userActions';
 import { useForm } from 'react-hook-form';
-import { RegisterValidation } from '../../components/Validation/userValidation';
+import { RegisterValidation } from '../../components/validation/userValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IconButton } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';

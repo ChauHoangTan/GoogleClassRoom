@@ -4,8 +4,47 @@
         object-fit: cover;
     }
     .containerText{
-        color: rgb(98, 125, 232);
-        font-weight: bold;
-        text-shadow: 0px 1px 1px black;
+        
+        .title{
+            color:#414756;
+            font-weight: bold;
+            text-shadow: 0px 1px 1px rgb(255, 255, 255);
+        }
     }
+
+    .containerImg{
+        position: relative;
+        .circular{
+            content: '';
+            position: absolute;
+            top: 49.5%;
+            left: 0%;
+            transform: translate(-50%, 0%);
+            width: 50px;
+            height: 50px;
+            background-color: rgb(109, 17, 247);
+            border-radius: 50%;
+            box-shadow: 0px 2px 2px rgb(29, 2, 2);
+        }
+    }
+
+    .btnStart{
+        outline: none;
+        padding: 10px 20px;
+        font-size: 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+        border: 2px solid #5d5560;
+        color: #504854;
+        background-color: #b0a7b1;
+        transition: 0.2s ease;
+    }
+
+    .btnStart:hover{
+        background-color: #9562A9;
+        border: 2px solid #9562A9;
+        color: white;
+      
+    }
+    
 }

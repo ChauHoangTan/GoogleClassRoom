@@ -21,7 +21,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { ProfileValidation } from '../../components/Validation/userValidation';
+import { ProfileValidation } from '../../components/validation/userValidation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateProfileAction } from '../../redux/actions/userActions';
 import toast from 'react-hot-toast';

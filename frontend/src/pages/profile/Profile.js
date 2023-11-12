@@ -1,223 +1,174 @@
-import * as React from 'react';
-import { useState } from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-import { Snackbar, Alert } from '@mui/material';
-import './style.scss';
+import React, { useState } from 'react';
+import {
+  Button,
+  Box,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
+  Paper,
+  Snackbar,
+  TextField,
+  Typography,
+  ThemeProvider,
+} from '@mui/material';
+import { Alert } from '@mui/material';
 
-const defaultTheme = createTheme();
+const defaultTheme = {}; // Bạn có thể thêm các cài đặt theme tùy chọn ở đây
 
-function Register() {
+const EditProfile = () => {
+  const [inputUserNameValue, setInputUserNameValue] = useState('');
+  const [inputFullNameValue, setInputFullNameValue] = useState('');
+  const [inputImageValue, setInputImageValue] = useState('');
+  const [inputPhoneValue, setInputPhoneValue] = useState('');
+  const [inputDobValue, setInputDobValue] = useState('');
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  // Thêm các state và hàm xử lý thay đổi tương ứng cho các trường khác
 
-    const handleSubmit = async (event) => {
+  const handleInputUserNameChange = (event) => {
+    setInputUserNameValue(event.target.value);
+  };
 
-        event.preventDefault();
-        
-        if (inputUserNameValue === '' || inputUserNameValue === '' || inputFirstNameValue === '' || inputLastNameValue === '') {
-            setNotificationOpen(true);
-            setErrorMessage("Please fill in the blank field");
-        } else if (inputPasswordValue.length < 6) {
-            setNotificationOpen(true);
-            setErrorMessage("Password must be greater than 6 characters");
-        } else if (!agreeTerm) {
-            setNotificationOpen(true);
-            setErrorMessage("You must agree to our terms in order to create an account");
-        } else {
+  const handleInputFullNameChange = (event) => {
+    setInputFullNameValue(event.target.value);
+  };
 
-            const data = new FormData(event.currentTarget);
-            console.log({
-                fullName: data.get('firstName') + ' ' + data.get('lastName'),
-                userName: data.get('userName'),
-                password: data.get('password'),
-            });
-        }
-    };
+  const handleInputImageChange = (event) => {
+    setInputImageValue(event.target.value);
+  };
 
-    const [inputUserNameValue, setInputUserNameValue] = useState('');
-    const [inputPasswordValue, setInputPasswordValue] = useState('');
-    const [inputFirstNameValue, setInputFirstNameValue] = useState('');
-    const [inputLastNameValue, setInputLastNameValue] = useState('');
-    const [agreeTerm, setAgreeTerm] = useState(false);
+  const handleInputPhoneChange = (event) => {
+    setInputPhoneValue(event.target.value);
+  };
 
-    const [notificationOpen, setNotificationOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+  const handleInputDobChange = (event) => {
+    setInputDobValue(event.target.value);
+  };
 
-    const handleInputUserNameChange = (event) => {
-        const regex = /^\S+$/; 
-        const newInputValue = event.target.value;
-    
-        if (regex.test(newInputValue) || newInputValue === '') {
-          setInputUserNameValue(newInputValue);
-        } else {
-          // Show notification when the input doesn't match the regex pattern
-          setNotificationOpen(true);
-          setErrorMessage("Username does not contain spaces");
-        }
-    };
+  const handleNotificationClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setNotificationOpen(false);
+  };
 
-    const handleInputPasswordChange = (event) => {
-        // TODO: Handle change password
-        const newInputValue = event.target.value;
-        setInputPasswordValue(newInputValue);
-    };
+  // Thêm các state và hàm xử lý thay đổi tương ứng cho các trường khác
 
-    const handleInputFirstNameChange = (event) => {
-        // TODO: Handle change first name
-        const newInputValue = event.target.value;
-        setInputFirstNameValue(newInputValue);
-    };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Thêm logic xử lý khi submit form
+  };
 
-    const handleInputLastNameChange = (event) => {
-        // TODO: Handle change last name
-        const newInputValue = event.target.value;
-        setInputLastNameValue(newInputValue);
-    };
-
-    const handleAgreeTermChange = (event) => {
-        setAgreeTerm(event.target.checked);
-    };
-
-    const handleNotificationClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-        setNotificationOpen(false);
-    };
-      
-    return ( 
-        <ThemeProvider theme={defaultTheme}>
-            <CssBaseline />
-            <Grid container 
-                sx={{
-                    height: '100vh',
-                    backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundColor: (t) =>
-                        t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-                maxWidth="xs"
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <CssBaseline />
+      <Grid
+        container
+        sx={{
+          height: '100vh',
+          backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: (t) =>
+            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        maxWidth="xs"
+      >
+        <Container margin={4} component={Paper} elevation={6}>
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 4,
+              marginBottom: 4,
+            }}
+          >
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{ fontFamily: 'FingerPaint', fontSize: '40px' }}
             >
-                <Container maxWidth="xs" component={Paper} elevation={6}>
-                    <CssBaseline />
-                    <Box
-                    sx={{
-                        marginTop: 4,
-                        marginBottom: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                    >
-                    <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
-                        Sign up
-                    </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-                        <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                            autoComplete="given-name"
-                            name="firstName"
-                            required
-                            fullWidth
-                            id="firstName"
-                            label="First Name"
-                            autoFocus
-                            value={inputFirstNameValue}
-                            onChange={handleInputFirstNameChange}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                            required
-                            fullWidth
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            autoComplete="family-name"
-                            value={inputLastNameValue}
-                            onChange={handleInputLastNameChange}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                            required
-                            fullWidth
-                            id="userName"
-                            label="User Name"
-                            name="userName"
-                            autoComplete="userName"
-                            value={inputUserNameValue}
-                            onChange={handleInputUserNameChange}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="new-password"
-                            value={inputPasswordValue}
-                            onChange={handleInputPasswordChange}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value="agreeTerm" color="primary" />}
-                                label="I agree to the terms and conditions"
-                                checked={agreeTerm}
-                                onChange={handleAgreeTermChange}
-                            />
-                        </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                        Sign Up
-                        </Button>
-                        <Grid container justifyContent="flex-end">
-                        <Grid item>
-                            <Link href="/login" variant="body2">
-                                Already have an account? Login
-                            </Link>
-                        </Grid>
-                        </Grid>
-                    </Box>
-                    </Box>
-                </Container>
-            </Grid>
+              Edit Profile
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="userName"
+                    label="User Name"
+                    name="userName"
+                    autoComplete="userName"
+                    value={inputUserNameValue}
+                    onChange={handleInputUserNameChange}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="image"
+                    label="Image URL"
+                    name="image"
+                    autoComplete="image"
+                    value={inputImageValue}
+                    onChange={handleInputImageChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="fullName"
+                    label="Full Name"
+                    name="fullName"
+                    autoComplete="fullName"
+                    value={inputFullNameValue}
+                    onChange={handleInputFullNameChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <TextField
+                    fullWidth
+                    id="phone"
+                    label="Phone"
+                    name="phone"
+                    autoComplete="phone"
+                    value={inputPhoneValue}
+                    onChange={handleInputPhoneChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <TextField
+                    fullWidth
+                    id="dob"
+                    label="Date of Birth"
+                    name="dob"
+                    autoComplete="dob"
+                    value={inputDobValue}
+                    onChange={handleInputDobChange}
+                  />
+                </Grid>
+              </Grid>
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                Save Changes
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+      </Grid>
 
-            <Snackbar
-                open={notificationOpen}
-                autoHideDuration={6000}
-                onClose={handleNotificationClose}
-            >
-                <Alert onClose={handleNotificationClose} severity="error">
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
-        </ThemeProvider>
-    );
-}
+      <Snackbar open={notificationOpen} autoHideDuration={6000} onClose={handleNotificationClose}>
+        <Alert onClose={handleNotificationClose} severity="error">
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+    </ThemeProvider>
+  );
+};
 
-export default Register; 
+export default EditProfile;

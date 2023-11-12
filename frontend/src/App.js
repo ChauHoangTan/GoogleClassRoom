@@ -12,6 +12,7 @@ import Account from "./pages/account/Account.js";
 import NoPage from './pages/noPage/NoPage.js';
 import ToastContainer from './components/notification/ToastContainer.js'
 import Password from "./pages/password/Password.js";
+import Profile from "./pages/profile/Profile.js";
 import {ProtectedRouter} from "./ProtectedRouter.js";
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
             <Route path="*" element = {<NoPage/>} />
             <Route element={<ProtectedRouter />} >
               <Route path="password" element = {<Password/>}/>
+              <Route path="profile" element = {<Profile/>}/>
+
             </Route>
           </Route>
 

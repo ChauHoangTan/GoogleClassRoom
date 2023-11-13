@@ -1,0 +1,28 @@
+#home{
+    min-height: 100vh;
+    border-top: 2px solid rgb(199, 199, 199);
+    border-bottom: 2px solid rgb(199, 199, 199);
+    
+    .grid1{
+        border-right: 2px solid rgb(199, 199, 199);
+
+        .containerPanel{
+            border-top: 2px solid rgb(199, 199, 199);
+        }
+
+        .panel{
+            padding: 10px 10px;
+            padding-left: 20px;
+            margin: 5px 10px;
+            margin-left: 0px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .panel.highlight{
+            background-color: #c0ddff;
+            border-radius: 0px 20px 20px 0px;
+        }
+
+    }
+}

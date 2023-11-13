@@ -1,0 +1,47 @@
+.card{
+    
+    width: 350px;
+
+    .cardHeader{
+        position: relative;
+        padding: 15px 30px;
+        color: white;
+     
+        .text-limit {
+            max-width: 300px; /* Giới hạn chiều rộng tối đa */
+            overflow: hidden; /* Ẩn phần dư thừa */
+            text-overflow: ellipsis; /* Hiển thị dấu ba chấm (...) nếu vượt quá chiều rộng */
+            white-space: nowrap; /* Ngăn chặn xuống dòng */
+          }
+        >div{
+            z-index: 1;
+        }
+        img{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            object-fit: cover;
+            height: 150px;
+        }
+
+        .avatar{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            transform: translate(-50%, 100%);
+            object-fit: cover;
+            color: rgb(81, 81, 255);
+            background-color: rgb(160, 160, 255);
+            z-index: 1;
+        }
+    }
+
+    .expandBottom{
+        content: '';
+        height: 200px;
+    }
+    
+}

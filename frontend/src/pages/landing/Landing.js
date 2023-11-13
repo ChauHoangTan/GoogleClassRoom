@@ -1,8 +1,10 @@
-import { Card, CardContent, Grid, Paper, Stack, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Card, CardContent, Grid, Paper, Rating, Stack, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React from 'react';
 import './style.scss'
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useNavigate } from 'react-router-dom';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const theme = createTheme({
     palette: {
@@ -222,6 +224,123 @@ const Features = () => {
     )
 }
 
+const Review = ({title, review, rating, avatar, name}) => {
+    return(
+        <Stack direction='column' mt={3}>
+            <Typography variant='body-1' sx={{fontWeight:'bold'}}>{title}</Typography>
+            <Typography variant='body-1' mb={1}>{review}</Typography>
+            <Rating value={rating}/>
+            <Stack direction='row' alignItems='center' mt={1}>
+                <Avatar src={avatar}/>
+                <Typography variant='body-1' ml={2}>{name}</Typography>
+            </Stack>
+        </Stack>
+    )
+}
+
+const CustomerReviews = () => {
+    return(
+        <Stack direction='column'>
+            <Review title='Excellent Educational Platform' 
+                    review='Google Classroom has truly transformed my teaching experience. 
+                    The user-friendly interface makes it easy to manage classes, share resources, 
+                    and interact with students. The seamless integration with Google Drive is a game-changer
+                     for organizing and accessing educational materials. The ability to provide real-time 
+                     feedback enhances communication and student engagement. A highly recommended platform 
+                     for educators seeking efficiency and collaboration.'
+                    rating={5}
+                    avatar='https://i.pinimg.com/564x/93/75/ae/9375aef3b0ea35e0cf4ca12862bb5fef.jpg'
+                    name='Oreki'/>
+
+            <Review title='User-Friendly but Limited Features' 
+                    review='Google Classroom is undoubtedly easy to use, making it accessible for both 
+                    teachers and students. The platform excels in basic class management and document sharing.
+                     However, I find that it lacks some advanced features compared to other educational platforms. 
+                     More customization options for assignments and a more robust grading system would enhance the
+                      overall experience. Despite these limitations, it remains a solid choice for straightforward
+                       online classroom needs.'
+                    rating={5}
+                    avatar='https://cdn.alongwalk.info/info/wp-content/uploads/2022/11/16190620/image-99-hinh-avatar-cute-ngau-ca-tinh-de-thuong-nhat-cho-nam-nu-178699bcb1cf6d58f3f17d3a1ee26472.jpg'
+                    name='Annya'/>
+        </Stack>
+    )
+}
+
+const QuestionAndAnswer = ({question, answer }) => {
+    return (
+        <Stack direction='column' mb={2}>
+            <Stack direction='row'>
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<KeyboardArrowDownIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                        sx={{borderRadius:'10px 10px 0px 0px', outline:'none', backgroundColor:'#EEE8A9'}}
+                        >
+                        <Typography>{question}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Typography>
+                            {answer}
+                        </Typography>
+                    </AccordionDetails>
+                </Accordion>
+            </Stack>
+        </Stack>
+    )
+}
+
+const FrequentlyQuestions = () => {
+    return (
+        <Stack direction='column' mt={3}>
+            <QuestionAndAnswer 
+                question='How do I create a new class in Google Classroom?' 
+                answer='To create a new class in Google Classroom, log in to your Google account, 
+                go to Google Classroom, click the "+" icon, and select "Create class." Follow the 
+                prompts to set up your class, including adding a class name, section, and description.'/>
+
+            <QuestionAndAnswer 
+                question={`Can students see each other's work in Google Classroom?`}
+                answer={`It depends on how you set up assignments. By default,
+                 students can view their own work, but you have control over whether 
+                 they can see each other's work. When creating an assignment, choose 
+                 the appropriate settings under "Student can view" and "Student can edit."`}/>
+
+            <QuestionAndAnswer 
+                question={`How can I grade assignments in Google Classroom?`}
+                answer={`To grade assignments in Google Classroom, go to the Classwork page, 
+                select the assignment, and click on "View assignment." You can view and grade 
+                individual student submissions, provide feedback, and assign grades. Google 
+                Classroom also offers features for efficient grading, such as rubrics and comment banks.`}/>
+
+            <QuestionAndAnswer 
+                question={`Is Google Classroom free to use?`}
+                answer={`Yes, Google Classroom is a free platform for both educators and students. 
+                It is part of the Google Workspace for Education suite, which offers additional 
+                features for schools and institutions. Users can create classes, share resources, 
+                and collaborate without any cost, making it an accessible tool for online learning.`}/>
+        </Stack>
+    )
+}
+
+const CustomerReviewsAndFrequentlyQuestions = () => {
+    return (
+        <Stack direction='row' justifyContent='center' mt={10}>
+            <Grid container sx={{width:'90%'}}>
+                <Grid item xs={6}>
+                    <Title>Customer Reviews</Title>
+                    <CustomerReviews/>
+                </Grid>
+
+                <Grid item xs={6}>
+                    <Title>Frequently Questions</Title>
+                    <FrequentlyQuestions/>
+                </Grid>
+            </Grid>
+        </Stack>
+    )
+}
+
 function Landing() {
     return (
         <div id='landingPage'>
@@ -233,6 +352,9 @@ function Landing() {
             </div>
             <div className='features'>
                 <Features/>
+            </div>
+            <div className='ReviewsAndQuestions'>
+                <CustomerReviewsAndFrequentlyQuestions/>
             </div>
 
         </div>

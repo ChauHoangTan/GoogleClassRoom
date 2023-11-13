@@ -95,6 +95,7 @@ function Login() {
             backgroundPosition: 'center',
             display: 'flex',
             textAlign: 'center',
+            alignItems: 'center'
             }}
         >
             <Container sx={{ width: '100%' }}>
@@ -107,7 +108,11 @@ function Login() {
                 </Typography>
             </Container>
         </Grid>
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square
+            sx={{
+                display: 'flex',
+                alignItems: 'center'
+            }}>
             <Box
                 sx={{
                     my: 8,
@@ -117,7 +122,7 @@ function Login() {
                     alignItems: 'center',
                 }}
             >
-                <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
+                <Typography component="h1" variant="h5" sx={{fontSize: '60px', fontWeight: 'bold'}}>
                     Login
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
@@ -169,16 +174,11 @@ function Login() {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
+                        sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50}}
                     >
                         Login
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                            Forgot password?
-                            </Link>
-                        </Grid>
+                    <Grid container sx={{justifyContent: 'flex-end'}}>
                         <Grid item>
                             <Link href="/register" variant="body2">
                             {"Don't have an account? Sign Up"}
@@ -190,7 +190,7 @@ function Login() {
                         justifyContent="center"
                         alignItems="center"
                         height="10vh">
-                        <Typography sx={{ mt: 2, pb: 2, mr: 4 }}>
+                        <Typography sx={{ mt: 2, pb: 2, mr: 4, fontSize: '20px' }}>
                             Or login with
                         </Typography>
                         <IconButton 

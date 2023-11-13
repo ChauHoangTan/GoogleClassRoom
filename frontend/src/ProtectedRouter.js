@@ -6,7 +6,7 @@ const ProtectedRouter = () => {
         (state) => state.userLogin
     );
     
-    return userInfo?.token ? <Outlet /> : <Navigate to="/login" />;
+    return userInfo?.token ? <Outlet /> : <Navigate to="/" />;
 };
 
 export { ProtectedRouter };

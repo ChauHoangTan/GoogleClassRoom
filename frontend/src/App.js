@@ -23,13 +23,12 @@ function App() {
         <Routes>
           <Route path="/" element = {<Layout/>}>
             <Route index element = {<Landing/>}/>
-            <Route path="home" element = {<Home/>}/>
             <Route path="account" element = {<Account/>}/>
             <Route path="*" element = {<NoPage/>} />
             <Route element={<ProtectedRouter />} >
               <Route path="password" element = {<Password/>}/>
               <Route path="profile" element = {<Profile/>}/>
-
+              <Route path="home" element = {<Home/>}/>
             </Route>
           </Route>
 

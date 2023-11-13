@@ -3,82 +3,98 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { Avatar, Stack } from '@mui/material';
-import {Link, useNavigate} from 'react-router-dom'
-import logo from '../assets/img/logo.png'
-import './style.scss'
+import { Avatar, Stack, Button } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import logo from '../assets/img/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../redux/actions/userActions';
 import toast from 'react-hot-toast';
 
-export default function Header() {
+const pages = ['Home', 'Blog', 'My Course'];
+
+export default function ResponsiveAppBar() {
   const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { userInfo} = useSelector(
-        (state) => state.userLogin
-    ); 
+  const navigate = useNavigate();
+  const { userInfo } = useSelector((state) => state.userLogin);
 
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
   const logoutHandler = () => {
-    handleClose();
+    handleCloseUserMenu();
     dispatch(logoutAction());
-    toast.success("Logged out successfully");
-    navigate("/login");
-  }
+    toast.success('Logged out successfully');
+    navigate('/login');
+  };
 
   return (
-    <Box sx={{ flexGrow: 1 }} id='header'>
-      
-      <AppBar position="static" sx={{backgroundColor: 'rgba(0, 191, 255, 0.382)', color:'#673F00'}} >
-        <Toolbar>
+    <AppBar position="static">
+      <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: 'black' }}>
+        <Toolbar disableGutters>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
+            onClick={handleOpenNavMenu}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
-          <Stack sx={{flexGrow: 1}} direction="row" alignItems="center" spacing={4}>
- 
-            <Link to='/'>
-                <Avatar src={logo} sx={{width:60, height:60, margin: 2}}/>
+          <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
+            <Link to="/">
+              <Avatar src={logo} sx={{ width: 60, height: 60, margin: 2 }} />
             </Link>
-            
           </Stack>
-          {auth && (
-            <div>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Typography key={page} variant="h6" sx={{ mr: 2 }}>
+                <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  {page}
+                </Link>
+              </Typography>
+            ))}
+          </Box>
+          { userInfo ? (
+            <Box sx={{ flexGrow: 0 }}>
               <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
+                onClick={handleOpenUserMenu}
                 color="inherit"
               >
-                <Avatar 
-                    src='https://www.vietnamfineart.com.vn/wp-content/uploads/2023/03/avatar-chill-anime-2.jpg'
-                    sx={{width:40, height:40}}/>
+                <Avatar
+                  src="https://www.vietnamfineart.com.vn/wp-content/uploads/2023/03/avatar-chill-anime-2.jpg"
+                  sx={{ width: 40, height: 40 }}
+                />
               </IconButton>
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={anchorElUser}
                 anchorOrigin={{
-                  vertical: 'bottom',
+                  vertical: 'top',
                   horizontal: 'right',
                 }}
                 keepMounted
@@ -86,24 +102,44 @@ export default function Header() {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
               >
-                <MenuItem onClick={handleClose}>
-                    <Link to='/profile' style={{textDecoration:'none', color:'black'}}>Profile account</Link>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Link to="/profile" style={{ textDecoration: 'none', color: 'black' }}>
+                    Profile account
+                  </Link>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <Link to='/password' style={{textDecoration:'none', color:'black'}}>Change password</Link>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Link to="/password" style={{ textDecoration: 'none', color: 'black' }}>
+                    Change password
+                  </Link>
                 </MenuItem>
-                <MenuItem onClick={logoutHandler}>
-                    Log out
-                </MenuItem>
-                
+                <MenuItem onClick={logoutHandler}>Log out</MenuItem>
               </Menu>
-            </div>
+            </Box>
+          ) : (
+            <>
+              <Button
+                href="/login"
+                variant="contained"
+                sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50}}
+              >
+                  Login
+              </Button>
+
+              <Button
+                href="/register"
+                variant="contained"
+                sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50}}
+              >
+                Register
+              </Button>
+            </>
           )}
+          
         </Toolbar>
-      </AppBar>
-    </Box>
+      </Box>
+    </AppBar>
   );
 }

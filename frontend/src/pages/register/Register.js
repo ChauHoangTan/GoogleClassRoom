@@ -88,7 +88,12 @@ function Register() {
                 }}
                 maxWidth="xs"
             >
-                <Container maxWidth="xs" component={Paper} elevation={6}>
+                <Container maxWidth="xs" component={Paper} elevation={6}
+                    sx={{
+                        padding: 5,
+                        borderRadius: 5
+                    }}
+                >
                     <CssBaseline />
                     <Box
                     sx={{
@@ -99,7 +104,7 @@ function Register() {
                         alignItems: 'center',
                     }}
                     >
-                    <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
+                    <Typography component="h1" variant="h5" sx={{fontSize: '60px'}}>
                         Sign up
                     </Typography>
                     <Box 
@@ -184,7 +189,7 @@ function Register() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50 }}
                         >
                         Sign Up
                         </Button>

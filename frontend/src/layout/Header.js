@@ -13,6 +13,8 @@ import logo from '../assets/img/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../redux/actions/userActions';
 import toast from 'react-hot-toast';
+import Badge from '@mui/material/Badge';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const pages = ['Home', 'Blog', 'My Course'];
 
@@ -47,6 +49,8 @@ export default function ResponsiveAppBar() {
     navigate('/login');
   };
 
+  const imgURL = userInfo?.image ? userInfo?.image : "https://www.vietnamfineart.com.vn/wp-content/uploads/2023/03/avatar-chill-anime-2.jpg";
+
   return (
     <AppBar position="static">
       <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: 'black' }}>
@@ -76,48 +80,59 @@ export default function ResponsiveAppBar() {
             ))}
           </Box>
           { userInfo ? (
-            <Box sx={{ flexGrow: 0 }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenUserMenu}
-                color="inherit"
-              >
-                <Avatar
-                  src="https://www.vietnamfineart.com.vn/wp-content/uploads/2023/03/avatar-chill-anime-2.jpg"
-                  sx={{ width: 40, height: 40 }}
-                />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Link to="/profile" style={{ textDecoration: 'none', color: 'black' }}>
-                    Profile account
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Link to="/password" style={{ textDecoration: 'none', color: 'black' }}>
-                    Change password
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={logoutHandler}>Log out</MenuItem>
-              </Menu>
-            </Box>
+            <>
+              <Typography variant="h6" sx={{ mr: 2 }}>
+                Hi, {userInfo?.firstName}
+              </Typography>
+
+              <Box sx={{ flexGrow: 0 }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenUserMenu}
+                  color="inherit"
+                >
+                  <Avatar
+                    src={imgURL}
+                    sx={{ width: 40, height: 40, mr: 1 }}
+                  />
+                </IconButton>
+                <IconButton color="inherit">
+                  <Badge badgeContent={5} color="error">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to="/profile" style={{ textDecoration: 'none', color: 'black' }}>
+                      Profile account
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to="/password" style={{ textDecoration: 'none', color: 'black' }}>
+                      Change password
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={logoutHandler}>Log out</MenuItem>
+                </Menu>
+              </Box>
+            </>
           ) : (
             <>
               <Button

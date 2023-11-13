@@ -31,7 +31,7 @@ const CardClass = ({title, tagline, author,}) => {
 
 function HomePageContent() {
     return ( 
-        <Grid container spacing={2} ml={5}>
+        <Grid container spacing={2} ml={5} mt={1}>
             <Grid item>
                 <CardClass title='2310-CLC-AWP-20KTPM2' 
                             tagline='Advanced Web Programming'

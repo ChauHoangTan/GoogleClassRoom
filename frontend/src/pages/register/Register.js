@@ -29,6 +29,7 @@ const defaultTheme = createTheme();
 
 function Register() {
     const [showPassword, setShowPassword] = React.useState(false);
+    const [agreeTerm, setAgreeTerm] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -67,8 +68,16 @@ function Register() {
 
     // onSubmit
     const onSubmit = (data) => {
+        if (!agreeTerm) {
+            toast.error('Please agree to the terms and conditions to be register new account');
+            return;
+        }
         dispatch(registerAction(data));
     };
+
+    const handleTermCheckBox = () => {
+        setAgreeTerm(!agreeTerm);
+    }
 
     return ( 
         <ThemeProvider theme={defaultTheme}>
@@ -180,7 +189,7 @@ function Register() {
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
-                                    control={<Checkbox value="agreeTerm" color="primary" />}
+                                    control={<Checkbox value={agreeTerm} onChange={handleTermCheckBox} color="primary" />}
                                     label="I agree to the terms and conditions"
                                 />
                             </Grid>

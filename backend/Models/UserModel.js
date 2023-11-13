@@ -29,6 +29,10 @@ const UserSchema = mongoose.Schema(
             type: String,
             default: "",
         },
+        email: {
+            type: String,
+            default: "",
+        },
         dob: {
             type: String,
             default: "",

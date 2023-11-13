@@ -41,7 +41,7 @@ const changePasswordService = async (password, token) => {
 const updateProfileService = async (user, token) => {
     const { data } = await Axios.put("/users/profile", user, {
         headers: {
-            Authorization: `Bearer ${token}`,
+            token: `Bearer ${token}`,
         },
     });
     if(data) {

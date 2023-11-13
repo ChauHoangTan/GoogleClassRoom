@@ -95,12 +95,13 @@ const loginUser = async (req, res) => {
 // @desc Update user profile
 // @route PUT/api/users/profile
 const updateUserProfile = async(req, res) => {
-    const { firstName, lastName, image, phone, email, dob } = req.body;
+    const { userName, firstName, lastName, image, phone, email, dob } = req.body;
     try {
         // find user in DB  
         const user = await User.findById(req.user.id);
         // if users exists update user data and save it in DB
         if(user) {
+            user.userName = userName || user.userName;
             user.firstName = firstName || user.firstName;
             user.lastName = lastName || user.lastName;
             user.email = email || user.email;
@@ -112,8 +113,9 @@ const updateUserProfile = async(req, res) => {
             // send updated user data and token to client
             res.json({
                 _id: updatedUser._id,
-                firstName: user.firstName,
-                lastName: user.lastName,
+                userName: updatedUser.userName,
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName,
                 email: updatedUser.email,
                 image: updatedUser.image,
                 phone: updatedUser.phone,

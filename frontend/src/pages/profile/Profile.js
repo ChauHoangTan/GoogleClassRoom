@@ -32,7 +32,7 @@ const defaultTheme = {}; // Bạn có thể thêm các cài đặt theme tùy ch
 
 const EditProfile = () => {
   const [date, setDate] = useState(dayjs());
-
+  // console.log(date.format("MM/DD/YYYY") )
   const dispatch = useDispatch();
   const { userInfo } = useSelector(
       (state) => state.userLogin
@@ -54,7 +54,7 @@ const EditProfile = () => {
 
   // update profile
   const onSubmit = (data) => {
-    dispatch(updateProfileAction({ ...data, image: imageUrl }));
+    dispatch(updateProfileAction({ ...data, ...{ image: imageUrl, dob: date.format("MM/DD/YYYY") } }));
   };
 
   
@@ -66,7 +66,9 @@ const EditProfile = () => {
         setValue("lastName", userInfo?.lastName);
         setValue("email", userInfo?.email);
         setValue("phone", userInfo?.phone);
-        setDate(userInfo?.dob === "" ? dayjs() : userInfo?.dob);
+        if(userInfo?.dob !== "") {
+          setDate(dayjs(userInfo?.dob));
+        }
     }   
 
     if(isSuccess) {
@@ -75,7 +77,6 @@ const EditProfile = () => {
     if(isError) {
         toast.error(isError);
         dispatch({ type: "USER_UPDATE_PROFILE_RESET"});
-        dispatch({ type: "USER_DELETE_PROFILE_RESET" });
     }
 
   }, [userInfo, setValue, isSuccess, isError, dispatch])
@@ -129,6 +130,7 @@ const EditProfile = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
+                    {...register("userName")}
                     id="userName"
                     label="User Name"
                     name="userName"
@@ -163,8 +165,10 @@ const EditProfile = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
+                    required
                     id="email"
                     label="Email"
+                    type='email'
                     name="email"
                     {...register("email")}
                     error={!!errors.email}
@@ -178,6 +182,7 @@ const EditProfile = () => {
                     label="Phone"
                     name="phone"
                     autoComplete="phone"
+                    required
                     {...register("phone")}
                     error={!!errors.phone}
                     helperText={errors.phone?.message || ''}

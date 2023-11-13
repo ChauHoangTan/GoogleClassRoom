@@ -100,5 +100,53 @@
         }
     }
 
+    .submitQuestion{
+        form{
+            padding-right: 50px;
+            div{
+                input{
+                    margin-top: 10px;
+                    padding: 10px 20px;
+                    border-radius: 20px;
+                    border: 2px solid rgba(107, 104, 103, 0.453);
+                    background-color: rgb(247, 247, 247);
+                    outline: none;
+                }
+
+                textarea{
+                    margin-top: 10px;
+                    min-height: 150px;
+                    padding: 10px 20px;
+                    border-radius: 20px;
+                    background-color: rgb(247, 247, 247);
+                    border: 2px solid rgba(107, 104, 103, 0.453);
+                    outline: none;
+                }
+
+                button{
+                    padding: 10px 20px;
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    border-radius: 20px;
+                    border: 2px solid #E14930;
+                    background-color: #e0614e ;
+                }
+            }
+        }
+    }
+
+    .contact{
+        img{
+            width: 100%;
+        }
+
+        div{
+            div{
+                div{
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
     
 }

@@ -1,10 +1,11 @@
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Card, CardContent, Grid, Paper, Rating, Stack, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Card, CardContent, Grid, Paper, Rating, Stack, TextField, TextareaAutosize, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React from 'react';
 import './style.scss'
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useNavigate } from 'react-router-dom';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 
 const theme = createTheme({
     palette: {
@@ -326,7 +327,7 @@ const FrequentlyQuestions = () => {
 const CustomerReviewsAndFrequentlyQuestions = () => {
     return (
         <Stack direction='row' justifyContent='center' mt={10}>
-            <Grid container sx={{width:'90%'}}>
+            <Grid container sx={{width:'90%'}} spacing={2}>
                 <Grid item xs={6}>
                     <Title>Customer Reviews</Title>
                     <CustomerReviews/>
@@ -335,6 +336,63 @@ const CustomerReviewsAndFrequentlyQuestions = () => {
                 <Grid item xs={6}>
                     <Title>Frequently Questions</Title>
                     <FrequentlyQuestions/>
+                </Grid>
+            </Grid>
+        </Stack>
+    )
+}
+
+
+
+const SubmitQuestion = () => {
+    return ( 
+        <Stack className='submitQuestion'>
+            <Typography variant='body-1'>Please fill in your email address and question, we will reply to your email as soon as!</Typography>
+            <form>
+                <Stack direction='column' justifyContent='center'>
+                    <input placeholder='Email address...' type='text'/>
+                    <textarea placeholder='Your questions...'/>
+                    <button variant='outlined'>Submit</button>
+                </Stack>
+                
+                
+            </form>
+        </Stack>
+    )
+}
+
+const Contact = () => {
+    return(
+        <Grid container  className='contact'>
+            <Grid item xs={8}>
+                <Stack>
+                    <div><Typography variant='body-1' sx={{fontWeight:'bold'}}>Địa chỉ: </Typography> 12X đường Nguyễn Thị Thập, Tân Quy, Quận 7, Thành phố Hồ Chí Minh, Việt Nam</div>
+                    <div><Typography variant='body-1' sx={{fontWeight:'bold'}}>Zalo: </Typography> 09012345678</div>
+                    <div><Typography variant='body-1' sx={{fontWeight:'bold'}}>FaceBook: </Typography> GoogleClassroom</div>
+                    <div><Typography variant='body-1' sx={{fontWeight:'bold'}}>Email: </Typography> GoogleClassroom@gmail.com</div>
+                </Stack>
+            </Grid>
+
+            <Grid item xs={4}>
+                <img src='https://vinalands.com/Uploads/images/EditSetting/z4313921095166_71d45f90f745627adfcdac62037299f8.jpg's/>
+            </Grid>
+        </Grid>
+        
+    )
+}
+
+const SubmitQuestionAndContact = () => {
+    return (
+        <Stack direction='row' justifyContent='center' mt={10}>
+            <Grid container sx={{width:'90%'}} spacing={2}>
+                <Grid item xs={6}>
+                    <Title>Have Any Question?</Title>
+                    <SubmitQuestion/>
+                </Grid>
+
+                <Grid item xs={6}>
+                    <Title>Contact Us</Title>
+                    <Contact/>
                 </Grid>
             </Grid>
         </Stack>
@@ -355,6 +413,9 @@ function Landing() {
             </div>
             <div className='ReviewsAndQuestions'>
                 <CustomerReviewsAndFrequentlyQuestions/>
+            </div>
+            <div className='SubmitQuestionAndContact'>
+                <SubmitQuestionAndContact/>
             </div>
 
         </div>

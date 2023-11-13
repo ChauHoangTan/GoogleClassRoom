@@ -14,8 +14,11 @@ import ToastContainer from './components/notification/ToastContainer.js'
 import Password from "./pages/password/Password.js";
 import Profile from "./pages/profile/Profile.js";
 import {ProtectedRouter} from "./ProtectedRouter.js";
+import { useState } from "react";
 
 function App() {
+  const [rememberMe, setRememberMe] = useState(false);
+
   return (
     <>
       <ToastContainer />
@@ -32,7 +35,7 @@ function App() {
             </Route>
           </Route>
 
-          <Route path="login" element = {<Login/>}/>
+          <Route path="login" element = {<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
           <Route path="register" element = {<Register/>}/>
 
         </Routes>

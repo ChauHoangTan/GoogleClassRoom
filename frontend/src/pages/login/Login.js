@@ -29,8 +29,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 const defaultTheme = createTheme();
 
-function Login() {
-    const [showPassword, setShowPassword] = React.useState(false);
+function Login({rememberMe, setRememberMe}) {
+    const [showPassword, setShowPassword] = useState(false);
+
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -45,20 +46,48 @@ function Login() {
     );
 
     // Validate user 
-    const { register, handleSubmit, formState: {errors} } = 
-        useForm({ resolver: yupResolver(LoginValidation) })
+    const { 
+        register, 
+        setValue,
+        handleSubmit, 
+        formState: {errors} 
+    } = useForm({ resolver: yupResolver(LoginValidation) })
 
     // On submit
     const onSubmit = (data) => {
-        console.log(data);
         dispatch(loginAction(data));
+        if (rememberMe) {
+            localStorage.setItem('rememberedCheck', rememberMe);
+            localStorage.setItem('rememberedUsername', data.userName);
+            localStorage.setItem('rememberedPassword', data.password);
+        } else {
+            localStorage.removeItem('rememberedUsername');
+            localStorage.removeItem('rememberedPassword');
+        }
     };
+
+    const handleRememberMeChange = () => {
+        setRememberMe((prevRememberMe) => !prevRememberMe);
+    };
+
+    useEffect(() => {
+        const rememberedCheck = localStorage.getItem('rememberedCheck');
+        const rememberedUsername = localStorage.getItem('rememberedUsername');
+        const rememberedPassword = localStorage.getItem('rememberedPassword');
+        
+        if (rememberMe) {
+            setRememberMe(rememberedCheck);
+            setValue("userName", rememberedUsername);
+            setValue("password", rememberedPassword);
+        } 
+    },[]);
 
     // useEffect
     useEffect(() => {
         if (userInfo) {
             navigate("/");
         }
+
         if (isSuccess) {
             toast.success(`Welcome back ${userInfo?.firstName} ${userInfo?.lastName}`);
         }
@@ -154,20 +183,20 @@ function Login() {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                      <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                      >
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                      </IconButton>
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
                                     </InputAdornment>
                                 )
                             }}
                     />
                     <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
+                        control={<Checkbox onChange={handleRememberMeChange} checked={rememberMe} value="remember" color="primary" />}
                         label="Remember me"
                     />
                     <Button

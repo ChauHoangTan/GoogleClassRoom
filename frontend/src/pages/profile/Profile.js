@@ -202,7 +202,7 @@ const EditProfile = () => {
                 </Grid>
               </Grid>
               <Button  disabled={isLoading} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              {isLoading ? "Updating..." : "Update Profile"}
+                {isLoading ? "Updating..." : "Update Profile"}
               </Button>
             </Box>
           </Box>

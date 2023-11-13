@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { Avatar, Stack, Button } from '@mui/material';
+import { Avatar, Stack, Button, Hidden } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
@@ -52,7 +52,7 @@ export default function ResponsiveAppBar() {
   const imgURL = userInfo?.image ? userInfo?.image : "https://www.vietnamfineart.com.vn/wp-content/uploads/2023/03/avatar-chill-anime-2.jpg";
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ overflow: 'hidden' }}>
       <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: 'black' }}>
         <Toolbar disableGutters>
           <IconButton
@@ -67,7 +67,7 @@ export default function ResponsiveAppBar() {
           </IconButton>
           <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
             <Link to="/">
-              <Avatar src={logo} sx={{ width: 60, height: 60, margin: 2 }} />
+              <Avatar src={logo} sx={{ width: 210, height: 60, margin: 2, borderRadius: 0 }} />
             </Link>
           </Stack>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

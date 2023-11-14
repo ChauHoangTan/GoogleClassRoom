@@ -2,8 +2,8 @@ import express from "express";
 import cors from 'cors';
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
-import userRouter from "./Routes/UserRoute.js";
-import UploadRouter from "./Routes/UploadRouter.js";
+import userRouter from './Routes/UserRoute.js';
+import UploadRouter from './Routes/UploadRouter.js';
 
 dotenv.config();
 

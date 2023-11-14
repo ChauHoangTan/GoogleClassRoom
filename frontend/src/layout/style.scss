@@ -8,10 +8,14 @@
         color:rgb(255, 255, 255);
         backdrop-filter: blur(20px);
         height: 200px;
+        opacity: 1;
+        overflow: hidden;
+        transition: opacity 0.5s ease,height 0.5s ease;
     }
 
     .responsive.hide{
         height: 0px;
+        transition: opacity 0.5s ease,height 0.5s ease;
     }
 
     .nav{

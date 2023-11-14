@@ -1,9 +1,10 @@
-import express from "express";
-import multer from "multer";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
-import storage from "../config/firebaseStorage.js";
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const uuid = require("uuid");
+const storage = require("../config/firebaseStorage.js");
 
+const uuidv4 = uuid.v4;
 const uploadController = async (req, res) => {
     try {
         // get file from request
@@ -69,4 +70,4 @@ const deleteFileByUrl = async (req, res) => {
 
 // export default uploadController;
 
-export { uploadController, deleteFileByUrl}
+module.exports = { uploadController, deleteFileByUrl}

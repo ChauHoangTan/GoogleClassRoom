@@ -32,10 +32,10 @@ function App() {
               <Route path="profile" element = {<Profile />}/>
               <Route path="home" element = {<Home/>}/>
             </Route>
-            <Route path="login" element = {<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
-            <Route path="register" element = {<Register/>}/>
           </Route>
 
+          <Route path="login" element = {<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
+          <Route path="register" element = {<Register/>}/>
 
         </Routes>
       </BrowserRouter>

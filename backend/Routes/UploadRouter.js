@@ -1,6 +1,6 @@
-import express from "express";
-import multer from "multer";
-import { deleteFileByUrl, uploadController } from "../Controllers/UploadFile.js";
+const express = require("express");
+const multer = require("multer");
+const { deleteFileByUrl, uploadController } = require("../Controllers/UploadFile.js");
 
 const UploadRouter = express.Router();
 
@@ -11,4 +11,4 @@ const upload = multer({
 UploadRouter.post("/", upload.single("file"), uploadController);
 UploadRouter.delete("/", deleteFileByUrl);
 
-export default UploadRouter;
+module.exports = UploadRouter;

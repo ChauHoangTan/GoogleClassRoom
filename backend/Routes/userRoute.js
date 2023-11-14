@@ -1,6 +1,6 @@
-import express from "express";
-import * as userController from "../Controllers/UserController.js";
-import { verify } from "../Middlewares/verifyToken.js";
+const express = require("express");
+const userController = require("../Controllers/UserController.js");
+const { verify } = require("../Middlewares/verifyToken.js");
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post("/login", userController.loginUser);
 router.put("/profile", verify, userController.updateUserProfile);
 router.put("/password", verify, userController.changeUserPassword);
 
-export default router;
+module.exports = router;

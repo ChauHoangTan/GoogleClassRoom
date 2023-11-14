@@ -27,6 +27,7 @@ import { updateProfileAction } from '../../redux/actions/userActions';
 import toast from 'react-hot-toast';
 import ImagePreview from '../../components/ImagePreview/ImagePreview';
 import Uploader from '../../components/Uploader/Uploader';
+import { deleteImageService } from '../../redux/APIs/ImageUpload';
 
 // const defaultTheme = createTheme();
 const defaultTheme = createTheme({
@@ -48,7 +49,9 @@ const EditProfile = () => {
   const { userInfo } = useSelector(
       (state) => state.userLogin
   ); 
-  const [imageUrl, setImageUrl] = useState(userInfo ? userInfo.image : "")
+  const [imageUrl, setImageUrl] = useState(userInfo ? userInfo.image : "");
+  const [imageUpdateUrl, setImageUpdateUrl] = useState(userInfo?.image !== "" ? userInfo?.image : "");
+
   const { isLoading, isError, isSuccess } = useSelector(
       (state) => state.userUpdateProfile
   );
@@ -64,10 +67,10 @@ const EditProfile = () => {
   })
 
   // update profile
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    await deleteImageService(imageUpdateUrl);
     dispatch(updateProfileAction({ ...data, ...{ image: imageUrl, dob: date.format("MM/DD/YYYY") } }));
   };
-
   
   // useEffect
   useEffect(() => {
@@ -83,6 +86,7 @@ const EditProfile = () => {
     }   
 
     if(isSuccess) {
+        setImageUpdateUrl(userInfo?.image);
         dispatch({ type: "USER_UPDATE_PROFILE_RESET"});
     }
     if(isError) {
@@ -129,7 +133,12 @@ const EditProfile = () => {
             <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={9}>
-                  <Uploader setImageUrl={setImageUrl} />
+                  <Uploader 
+                    setImageUrl={setImageUrl} 
+                    imageUrl={imageUrl} 
+                    imageUpdateUrl={imageUpdateUrl}
+                  />
+
                 </Grid>
                 {/* image preview */}
                 <Grid item xs={12} sm={3}>

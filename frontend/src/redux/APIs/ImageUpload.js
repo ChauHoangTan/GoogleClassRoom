@@ -14,4 +14,14 @@ const uploadImageService = async (file, setLoading) => {
     }
 }
 
-export { uploadImageService };
+
+const deleteImageService = async (url) => {
+    try {
+        const response = await Axios.delete("/upload", { data: { imageUrl: url } });
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export { uploadImageService, deleteImageService };

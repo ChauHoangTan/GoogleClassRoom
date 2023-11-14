@@ -43,6 +43,12 @@ function HomePageContent() {
                             tagline='Advanced Web Programming'
                             author='Khánh Nguyễn Huy'/>
             </Grid>
+
+            <Grid item>
+                <CardClass title='2310-CLC-AWP-20KTPM2' 
+                            tagline='Advanced Web Programming'
+                            author='Khánh Nguyễn Huy'/>
+            </Grid>
         </Grid>
      );
 }

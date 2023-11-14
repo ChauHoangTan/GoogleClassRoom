@@ -4,6 +4,7 @@
     border-bottom: 2px solid rgb(199, 199, 199);
     
     .grid1{
+        width: 200px;
         border-right: 2px solid rgb(199, 199, 199);
 
         .containerPanel{
@@ -11,16 +12,13 @@
         }
 
         .panel{
-            padding: 10px 10px;
-            padding-left: 20px;
-            margin: 5px 10px;
-            margin-left: 0px;
-            cursor: pointer;
+            
+            margin-right: 20px;
             transition: 0.2s ease;
         }
 
-        .panel.highlight{
-            background-color: #c0ddff;
+        .highlight{
+            background-color: #cbd5e0;
             border-radius: 0px 20px 20px 0px;
         }
 

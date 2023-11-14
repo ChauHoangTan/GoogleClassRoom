@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Card, CardContent, Grid, Paper, Rating, Stack, TextField, TextareaAutosize, ThemeProvider, Typography, createTheme } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import './style.scss'
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useNavigate } from 'react-router-dom';
@@ -34,8 +34,7 @@ const Introduction = () => {
         navigate('/login')
     }
 
-    // handle for form submit
-
+    
 
     return (
         <ThemeProvider theme={theme}>
@@ -207,7 +206,7 @@ const Features = () => {
 
                 <Grid item xs={3}>
                     <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
-                        <img src='https://i.pinimg.com/564x/9c/f3/b8/9cf3b8676bcc88bfa2efb1847adefa4e.jpg'/>
+                        <img src='https://i.pinimg.com/564x/b8/b4/e1/b8b4e1118277242dfcdd0624217ee560.jpg'/>
                         <CardContent>
                             <Typography variant='body-1' sx={{fontWeight:'bold'}}>Engaging Student Experiences: </Typography>Students, embark
                              on an interactive learning journey! Explore ways to make the most of Google Classroom, participate in discussions, 
@@ -218,7 +217,7 @@ const Features = () => {
 
                 <Grid item xs={3}>
                     <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
-                        <img src='https://i.pinimg.com/564x/af/7e/2a/af7e2ad4bea83c4d68a2825d86ff9b3a.jpg'/>
+                        <img src='https://i.pinimg.com/564x/2d/30/14/2d301464613de4d3421e8572dc051ecb.jpg'/>
                         <CardContent>
                             <Typography variant='body-1' sx={{fontWeight:'bold'}}> Stay Updated: </Typography>Keep abreast of the latest Google Classroom 
                             features, updates, and educational trends. Our hub is a dynamic space where the learning never stops.
@@ -350,13 +349,36 @@ const CustomerReviewsAndFrequentlyQuestions = () => {
 
 
 const SubmitQuestion = () => {
+
+    // handle for form submit
+    const [inputEmail, setInputEmail] = useState('')
+    const [inputQuestion, setInputQuestion] = useState('')
+
+    const handleInputEmail = (e) => {
+        setInputEmail(e.target.value)
+    }
+
+    const handleInputQuestion = (e) => {
+        setInputQuestion(e.target.value)
+    }
+
+    const handleSubmit = (e) =>{
+        e.preventDefault()
+        setInputEmail('')
+        setInputQuestion('')
+    }
+
     return ( 
         <Stack className='submitQuestion'>
             <Typography variant='body-1'>Please fill in your email address and question, we will reply to your email as soon as!</Typography>
-            <form>
+            <form onSubmit={(e)=>handleSubmit(e)}>
                 <Stack direction='column' justifyContent='center'>
-                    <input placeholder='Email address...' type='text'/>
-                    <textarea placeholder='Your questions...'/>
+                    <input placeholder='Email address...' type='text'
+                        value={inputEmail}
+                        onChange={(e)=>handleInputEmail(e)}/>
+                    <textarea placeholder='Your questions...'
+                        value={inputQuestion}
+                        onChange={(e)=>handleInputQuestion(e)}/>
                     <button variant='outlined'>Submit</button>
                 </Stack>
                 
@@ -379,7 +401,7 @@ const Contact = () => {
             </Grid>
 
             <Grid item xs={4}>
-                <img src='https://i.pinimg.com/564x/c8/ba/09/c8ba096cfa66d6bf68b43b233953df66.jpg'/>
+                <img src='https://i.pinimg.com/564x/36/d9/35/36d935bcd4324d6786d313e69a8e6b9a.jpg'/>
             </Grid>
         </Grid>
         

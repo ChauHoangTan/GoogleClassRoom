@@ -39,7 +39,9 @@ const Footer = () => {
                         <Typography variant='body-1' sx={{fontSize: '20px', fontWeight: 'bold'}}>
                             Contact us
                         </Typography>
-                        <Typography variant='body-1' sx={{fontSize: '20px'}}>
+                        <Typography variant='body-1' sx={{fontSize: '20px',
+                            wordWrap: 'break-word',
+                        }}>
                             Email: truongdaihockhoahoctunhien@hcmus.edu.vn
                         </Typography>
                     </Stack>

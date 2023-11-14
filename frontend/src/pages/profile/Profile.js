@@ -13,7 +13,7 @@ import {
   Typography,
   ThemeProvider,
 } from '@mui/material';
-import { Alert } from '@mui/material';
+import { Alert, createTheme } from '@mui/material';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -28,7 +28,18 @@ import toast from 'react-hot-toast';
 import ImagePreview from '../../components/ImagePreview/ImagePreview';
 import Uploader from '../../components/Uploader/Uploader';
 
-const defaultTheme = {}; // Bạn có thể thêm các cài đặt theme tùy chọn ở đây
+// const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+  palette: {
+      primary: {
+          main: '#466874',
+      },
+      secondary: {
+          main: '#f2f2f2'
+      },
+
+  }
+})
 
 const EditProfile = () => {
   const [date, setDate] = useState(dayjs());
@@ -87,7 +98,7 @@ const EditProfile = () => {
       <Grid
         container
         sx={{
-          height: '100vh',
+          height: '120vh',
           backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
@@ -111,7 +122,7 @@ const EditProfile = () => {
             <Typography
               component="h1"
               variant="h5"
-              sx={{ fontFamily: 'FingerPaint', fontSize: '40px' }}
+              sx={{ fontSize: '40px', fontWeight: 'bold', color: '#465d74' }}
             >
               Edit Profile
             </Typography>

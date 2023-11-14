@@ -17,7 +17,18 @@ import { useForm } from 'react-hook-form';
 import { PasswordValidation } from '../../components/validation/userValidation';
 import { changePasswordAction } from '../../redux/actions/userActions';
 
-const defaultTheme = createTheme();
+// const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+    palette: {
+        primary: {
+            main: '#466874',
+        },
+        secondary: {
+            main: '#f2f2f2'
+        },
+
+    }
+})
 
 function Password() {
     const dispatch = useDispatch();
@@ -83,7 +94,7 @@ useEffect(() => {
                         alignItems: 'center',
                     }}
                     >
-                    <Typography component="h1" variant="h5" sx={{fontFamily: 'FingerPaint', fontSize: '40px'}}>
+                    <Typography component="h1" variant="h5" sx={{fontSize: '40px', fontWeight: 'bold', color: '#465d74'}}>
                         Change Password
                     </Typography>
                     <Box 

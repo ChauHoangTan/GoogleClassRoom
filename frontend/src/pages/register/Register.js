@@ -25,7 +25,18 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import toast from 'react-hot-toast';
 
-const defaultTheme = createTheme();
+// const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+    palette: {
+        primary: {
+            main: '#466874',
+        },
+        secondary: {
+            main: '#f2f2f2'
+        },
+
+    }
+})
 
 function Register() {
     const [showPassword, setShowPassword] = React.useState(false);
@@ -106,14 +117,12 @@ function Register() {
                     <CssBaseline />
                     <Box
                     sx={{
-                        marginTop: 4,
-                        marginBottom: 4,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}
                     >
-                    <Typography component="h1" variant="h5" sx={{fontSize: '60px'}}>
+                    <Typography component="h1" variant="h5" sx={{fontSize: '50px', fontWeight: 'bold', color: '#465d74'}}>
                         Sign up
                     </Typography>
                     <Box 
@@ -199,8 +208,9 @@ function Register() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50 }}
+                            disabled={isLoading}
                         >
-                        Sign Up
+                        {isLoading ? "Signing up..." : "Sign Up"}
                         </Button>
                         <Grid container justifyContent="flex-end">
                         <Grid item>

@@ -28,7 +28,7 @@
                 transform: translate(-50%, 0%);
                 width: 50px;
                 height: 50px;
-                background-color: rgb(169, 131, 226);
+                background-color: #466874;
                 border-radius: 50%;
                 box-shadow: 0px 1px 2px rgb(107, 62, 62);
             }
@@ -40,10 +40,12 @@
             font-size: 20px;
             border-radius: 10px;
             margin-top: 30px;
+            margin-bottom: 30px;
             border: 2px solid #5d5560;
             color: #504854;
             background-color: #b0a7b1;
             transition: 0.2s ease;
+        
         }
     
         .btnStart:hover{
@@ -147,6 +149,15 @@
                     margin-top: 10px;
                 }
             }
+        }
+    }
+    
+    @media (max-width: 1200px) {
+        .showResponsive{
+            width: 100%;
+        }
+        .hideResponsive{
+            display: none;
         }
     }
     

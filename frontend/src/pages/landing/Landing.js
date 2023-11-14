@@ -1,10 +1,8 @@
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Card, CardContent, Grid, Paper, Rating, Stack, TextField, TextareaAutosize, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React, { useState } from 'react';
 import './style.scss'
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useNavigate } from 'react-router-dom';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 
 const theme = createTheme({
@@ -40,7 +38,7 @@ const Introduction = () => {
         <ThemeProvider theme={theme}>
             <Stack direction='row' justifyContent='center' >
                 <Grid container sx={{ width: '100%', backgroundColor: '#9CB3E9' }} alignItems='center'>
-                    <Grid item xs='6' >
+                    <Grid item md={12} lg={6} className='showResponsive'>
                         <Stack direction='column' alignItems='center' justifyContent='center' className='containerText'>
                             <Stack direction='column' alignItems='center' justifyContent='center' className='containerText'
                                 sx={{ width: '90%' }}>
@@ -64,7 +62,7 @@ const Introduction = () => {
                         </Stack>
                     </Grid>
 
-                    <Grid item xs='6'>
+                    <Grid item md={12} lg={6} className='hideResponsive'>
                         <Stack direction='column' className='containerImg'>
                             <div className='circular'></div>
                             <img src='https://www.distancelearningcollege.co.uk/wp-content/uploads/2022/02/Online-learning-scaled.jpg' />
@@ -84,8 +82,8 @@ const Famous = () => {
         <Stack direction='row' justifyContent='center' mt={10}>
             <Stack direction='column' sx={{ width: '90%' }}>
                 
-                <Grid container spacing={3}>
-                    <Grid item xs={8}>
+                <Grid container spacing={3} className='showResponsive'>
+                    <Grid item  md={12} lg={8}>
                     <Title>Why Should Use My Google Classroom</Title>
                         <Stack direction='column' mt={6}>
                             <Paper elevation={1} sx={{ borderRadius: '20px' }} className='paperQuantity'>
@@ -162,7 +160,7 @@ const Famous = () => {
 
                     </Grid>
 
-                    <Grid item xs={4}>
+                    <Grid item lg={4} className='hideResponsive'>
                         <img 
                             className='img'
                             src='https://i.pinimg.com/564x/03/f2/34/03f23479c81a356126bc1ba54a091c0f.jpg'/>
@@ -183,7 +181,7 @@ const Features = () => {
             
             <Grid container sx={{width:'90%'}} spacing={2} className='gridFeatures' mt={2}>
                 
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
                     <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
                         <img src='https://i.pinimg.com/564x/4a/30/13/4a30135c32abbea9693ce564b7f02348.jpg'/>
                         <CardContent>
@@ -193,7 +191,7 @@ const Features = () => {
                     </Card>
                 </Grid>
 
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
                     <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
                         <img src='https://i.pinimg.com/564x/1f/ec/bc/1fecbc7d8496e7d6a7251d46ca1a84f6.jpg'/>
                         <CardContent>
@@ -204,7 +202,7 @@ const Features = () => {
                     </Card>
                 </Grid>
 
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
                     <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
                         <img src='https://i.pinimg.com/564x/b8/b4/e1/b8b4e1118277242dfcdd0624217ee560.jpg'/>
                         <CardContent>
@@ -215,7 +213,7 @@ const Features = () => {
                     </Card>
                 </Grid>
 
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
                     <Card variant='outlined' sx={{padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD'}}>
                         <img src='https://i.pinimg.com/564x/2d/30/14/2d301464613de4d3421e8572dc051ecb.jpg'/>
                         <CardContent>
@@ -330,14 +328,14 @@ const FrequentlyQuestions = () => {
 
 const CustomerReviewsAndFrequentlyQuestions = () => {
     return (
-        <Stack direction='row' justifyContent='center' mt={10}>
+        <Stack direction='row' justifyContent='center'>
             <Grid container sx={{width:'90%'}} spacing={2}>
-                <Grid item xs={6}>
+                <Grid item md={12} lg={6} mt={10}>
                     <Title>Customer Reviews</Title>
                     <CustomerReviews/>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item md={12} lg={6} mt={10}>
                     <Title>Frequently Questions</Title>
                     <FrequentlyQuestions/>
                 </Grid>
@@ -410,14 +408,14 @@ const Contact = () => {
 
 const SubmitQuestionAndContact = () => {
     return (
-        <Stack direction='row' justifyContent='center' mt={10}>
+        <Stack direction='row' justifyContent='center'>
             <Grid container sx={{width:'90%'}} spacing={2}>
-                <Grid item xs={6}>
+                <Grid item md={6} lg={6} mt={10}>
                     <Title>Have Any Question?</Title>
                     <SubmitQuestion/>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item md={6} lg={6} mt={10}>
                     <Title>Contact Us</Title>
                     <Contact/>
                 </Grid>

@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/GoogleClassRoom/static/css/main.4d64a944.css",
-    "main.js": "/GoogleClassRoom/static/js/main.2984e131.js",
+    "main.js": "/GoogleClassRoom/static/js/main.9ea80723.js",
     "static/js/787.88d15c4b.chunk.js": "/GoogleClassRoom/static/js/787.88d15c4b.chunk.js",
     "static/media/FingerPaint-Regular.ttf": "/GoogleClassRoom/static/media/FingerPaint-Regular.3c3a9cdbff527a1cdb37.ttf",
     "static/media/logo.png": "/GoogleClassRoom/static/media/logo.b7b01667ea57e75d3e23.png",
     "index.html": "/GoogleClassRoom/index.html",
     "main.4d64a944.css.map": "/GoogleClassRoom/static/css/main.4d64a944.css.map",
-    "main.2984e131.js.map": "/GoogleClassRoom/static/js/main.2984e131.js.map",
+    "main.9ea80723.js.map": "/GoogleClassRoom/static/js/main.9ea80723.js.map",
     "787.88d15c4b.chunk.js.map": "/GoogleClassRoom/static/js/787.88d15c4b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4d64a944.css",
-    "static/js/main.2984e131.js"
+    "static/js/main.9ea80723.js"
   ]
 }

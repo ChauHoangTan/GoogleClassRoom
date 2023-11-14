@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const uuid = require("uuid");
-const storage = require("../config/firebaseStorage.js");
+const storage = require("../config/firebaseStorage");
 
 const uuidv4 = uuid.v4;
 const uploadController = async (req, res) => {

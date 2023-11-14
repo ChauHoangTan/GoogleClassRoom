@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv")
-const  connectDB  = require("./config/db.js")
-const userRouter = require("./Routes/UserRoute.js")
-const UploadRouter = require("./Routes/UploadRouter.js")
+const  connectDB  = require("./config/db")
+const userRouter = require("./Routes/UserRoute")
+const UploadRouter = require("./Routes/UploadRouter")
 
 dotenv.config();
 

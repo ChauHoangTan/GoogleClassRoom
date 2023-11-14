@@ -2,14 +2,32 @@
 
 #header{
     font-family: 'Arima', cursive;
-    .link{
-        text-decoration: none;
+    
+    .responsive{
+        background-color: #72919c;
+        color:rgb(255, 255, 255);
+        backdrop-filter: blur(20px);
+        height: 200px;
     }
-    color: red;
 
+    .responsive.hide{
+        height: 0px;
+    }
+    
+    @media (min-width: 890px) {
+    
+        .responsive{
+            height: 0px;
+        }
+        
+        
+    }
 }
+
+
 
 #footer{
     font-family: 'Arima', cursive;
 }
+
 

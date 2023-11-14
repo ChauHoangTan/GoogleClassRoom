@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
+import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import { Avatar, Stack, Button, Hidden } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
@@ -18,6 +20,23 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import {setMoreIcon} from '../redux/actions/moreIconActions.js'
 
 import './style.scss';
+
+const ResponsiveHeader = ({isClickMore}) => {
+
+  return (
+    <Stack direction='column' className={`responsive ${!isClickMore && 'hide'}`}>
+      <Stack direction='column' alignItems='center'>
+          {pages.map((page) => (
+                <Typography key={page} variant="body-1" py={2} sx={{fontSize:'18px'}}>
+                  <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {page}
+                  </Link>
+                </Typography>
+              ))}
+      </Stack>
+    </Stack>
+  )
+}
 
 const pages = ['Home', 'Blog', 'My Course'];
 
@@ -54,128 +73,157 @@ export default function ResponsiveAppBar() {
     navigate('/login');
   };
 
+    // state responsive
+    const [isClickMore, setIsClickMore] = useState(false);
+
+    const handleIsClickMore = () => {
+      setIsClickMore(isClickMore ? false : true)
+    }
+    ///////////////////
+
   const imgURL = userInfo?.image ? userInfo?.image : "https://www.vietnamfineart.com.vn/wp-content/uploads/2023/03/avatar-chill-anime-2.jpg";
 
   return (
-    <AppBar position="static" sx={{ overflow: 'hidden', backgroundColor: '#466874' }}>
-      <Box sx={{ flexGrow: 1, paddingInline: 3 }}>
-        <Toolbar disableGutters>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleOpenNavMenu}
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon/>
-          </IconButton>
-          <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
-            <Link to="/">
-              <Avatar src={logo} sx={{ width: 210, height: 60, margin: 2, borderRadius: 0 }} />
-            </Link>
-          </Stack>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Typography key={page} variant="h6" sx={{fontFamily:'Arima', mr: 2 }}>
-                <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  {page}
-                </Link>
-              </Typography>
-            ))}
-          </Box>
-          { userInfo ? (
-            <>
-              <Typography variant="h6" sx={{fontFamily:'Arima', mr: 2, display: { xs: 'none', md: 'inline-flex' }}}>
-                Hi, {userInfo?.firstName}
-              </Typography>
+    <Stack id='header' >
+      <AppBar position="static" >
+        <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: '#466874' }}>
+          <Toolbar disableGutters>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleOpenNavMenu}
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon/>
+            </IconButton>
+            <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
+              <Link to="/">
+                <Avatar src={logo} sx={{ width: 210, height: 60, margin: 2, borderRadius: 0 }} />
+              </Link>
+            </Stack>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page) => (
+                <Typography key={page} variant="h6" sx={{fontFamily:'Arima', mr: 2 }}>
+                  <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {page}
+                  </Link>
+                </Typography>
+              ))}
+            </Box>
+            
+            
+            { userInfo ? (
+              <>
+                <Typography variant="h6" sx={{fontFamily:'Arima', mr: 2, display: { xs: 'none', md: 'inline-flex' }}}>
+                  Hi, {userInfo?.firstName}
+                </Typography>
 
-              <Box sx={{ flexGrow: 0 }}>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleOpenUserMenu}
-                  color="inherit"
-                >
-                  <Avatar
-                    src={imgURL}
-                    sx={{ width: 40, height: 40, mr: 1 }}
-                  />
-                </IconButton>
-                <IconButton color="inherit" sx={{
-                   display: { xs: 'none', md: 'inline-flex' }
-                }}>
-                  <Badge badgeContent={5} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to="/profile" style={{ textDecoration: 'none', color: 'black' }}>
-                      Profile account
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to="/password" style={{ textDecoration: 'none', color: 'black' }}>
-                      Change password
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={logoutHandler}>Log out</MenuItem>
-                </Menu>
-              </Box>
-            </>
-          ) : (
-            <>
-              <Button
-                className='btnCustom'
-                href="/login"
-                variant="outlined"
-                sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50, 
-                  color: '#ffffff', borderColor: '#ffffff',
-                  '&:hover': {
-                    borderColor: '#ffffff',
-                    backgroundColor: '#283643'
-                  },
-                }}
-              >
-                  Login
-              </Button>
+                <Box sx={{ flexGrow: 0 }}>
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleOpenUserMenu}
+                    color="inherit"
+                  >
+                    <Avatar
+                      src={imgURL}
+                      sx={{ width: 40, height: 40, mr: 1 }}
+                    />
+                  </IconButton>
+                  <IconButton color="inherit" sx={{
+                    display: { xs: 'none', md: 'inline-flex' }
+                  }}>
+                    <Badge badgeContent={5} color="error">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link to="/profile" style={{ textDecoration: 'none', color: 'black' }}>
+                        Profile account
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link to="/password" style={{ textDecoration: 'none', color: 'black' }}>
+                        Change password
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={logoutHandler}>Log out</MenuItem>
+                  </Menu>
+                </Box>
 
-              <Button
-                className='btnCustom'
-                href="/register"
-                variant="outlined"
-                sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50, 
-                  color: '#ffffff', borderColor: '#ffffff',
-                  '&:hover': {
-                    borderColor: '#ffffff',
-                    backgroundColor: '#283643'
-                  },
-                }}
-              >
-                Register
-              </Button>
-            </>
-          )}
-          
-        </Toolbar>
-      </Box>
-    </AppBar>
+                
+              </>
+            ) : (
+              <>
+                <Button
+                  className='btnCustom'
+                  href="/login"
+                  variant="outlined"
+                  sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50, 
+                    color: '#ffffff', borderColor: '#ffffff',
+                    '&:hover': {
+                      borderColor: '#ffffff',
+                      backgroundColor: '#283643'
+                    },
+                  }}
+                >
+                    Login
+                </Button>
+
+                <Button
+                  className='btnCustom'
+                  href="/register"
+                  variant="outlined"
+                  sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50, 
+                    color: '#ffffff', borderColor: '#ffffff',
+                    '&:hover': {
+                      borderColor: '#ffffff',
+                      backgroundColor: '#283643'
+                    },
+                  }}
+                >
+                  Register
+                </Button>
+              </>
+            )}
+
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton onClick={handleIsClickMore}>
+                <div style={{ backgroundColor:'#97AFB9'}}>
+                  {isClickMore ?
+                    <ArrowDropUpRoundedIcon sx={{width:'50px', height:'50px', color:'white'}}/>
+                    :
+                    <ArrowDropDownRoundedIcon sx={{width:'50px', height:'50px', color:'white'}}/> }
+                </div>
+                  
+                  
+              </IconButton>
+            </Box>
+            
+          </Toolbar>
+        </Box>
+      </AppBar>
+      <ResponsiveHeader isClickMore={isClickMore}/>
+    </Stack>
+    
   );
 }

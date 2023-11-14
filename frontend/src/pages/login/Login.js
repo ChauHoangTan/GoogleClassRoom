@@ -27,7 +27,18 @@ import { LoginValidation } from "../../components/validation/userValidation";
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-const defaultTheme = createTheme();
+// const defaultTheme = createTheme()
+const defaultTheme = createTheme({
+    palette: {
+        primary: {
+            main: '#466874',
+        },
+        secondary: {
+            main: '#f2f2f2'
+        },
+
+    }
+})
 
 function Login({rememberMe, setRememberMe}) {
     const [showPassword, setShowPassword] = useState(false);
@@ -85,7 +96,7 @@ function Login({rememberMe, setRememberMe}) {
     // useEffect
     useEffect(() => {
         if (userInfo) {
-            navigate("/");
+            navigate("/home");
         }
 
         if (isSuccess) {
@@ -151,7 +162,7 @@ function Login({rememberMe, setRememberMe}) {
                     alignItems: 'center',
                 }}
             >
-                <Typography component="h1" variant="h5" sx={{fontSize: '60px', fontWeight: 'bold'}}>
+                <Typography component="h1" variant="h5" sx={{fontSize: '60px', fontWeight: 'bold', color: '#465d74'}}>
                     Login
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
@@ -204,8 +215,9 @@ function Login({rememberMe, setRememberMe}) {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50}}
+                        disabled={isLoading}
                     >
-                        Login
+                        {isLoading ? "Loging..." : "Login"}
                     </Button>
                     <Grid container sx={{justifyContent: 'flex-end'}}>
                         <Grid item>

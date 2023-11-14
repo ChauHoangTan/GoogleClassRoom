@@ -81,7 +81,7 @@ export default function ResponsiveAppBar() {
           </Box>
           { userInfo ? (
             <>
-              <Typography variant="h6" sx={{fontFamily:'Arima', mr: 2 }}>
+              <Typography variant="h6" sx={{fontFamily:'Arima', mr: 2, display: { xs: 'none', md: 'inline-flex' }}}>
                 Hi, {userInfo?.firstName}
               </Typography>
 
@@ -99,7 +99,9 @@ export default function ResponsiveAppBar() {
                     sx={{ width: 40, height: 40, mr: 1 }}
                   />
                 </IconButton>
-                <IconButton color="inherit">
+                <IconButton color="inherit" sx={{
+                   display: { xs: 'none', md: 'inline-flex' }
+                }}>
                   <Badge badgeContent={5} color="error">
                     <NotificationsIcon />
                   </Badge>
@@ -108,13 +110,13 @@ export default function ResponsiveAppBar() {
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: 'bottom',
+                    horizontal: 'left',
                   }}
                   keepMounted
                   transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'right',
+                    horizontal: 'left',
                   }}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}

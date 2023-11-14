@@ -34,6 +34,9 @@ const Introduction = () => {
         navigate('/login')
     }
 
+    // handle for form submit
+
+
     return (
         <ThemeProvider theme={theme}>
             <Stack direction='row' justifyContent='center' >
@@ -42,10 +45,12 @@ const Introduction = () => {
                         <Stack direction='column' alignItems='center' justifyContent='center' className='containerText'>
                             <Stack direction='column' alignItems='center' justifyContent='center' className='containerText'
                                 sx={{ width: '90%' }}>
-                                <Typography variant='h4' mt={5} className='title'>
+                                <Typography variant='h4' mt={5} className='title'
+                                    sx={{fontFamily:'Arima',}}>
                                     Welcome to Google Classroom!
                                 </Typography>
-                                <Typography variant='h6' className='title'>
+                                <Typography variant='h6' className='title'
+                                    sx={{fontFamily:'Arima',}}>
                                     Come to us, we will bring you the best education experience!
                                 </Typography>
                                 <Typography variant='body-1' mt={3}
@@ -374,7 +379,7 @@ const Contact = () => {
             </Grid>
 
             <Grid item xs={4}>
-                <img src='https://vinalands.com/Uploads/images/EditSetting/z4313921095166_71d45f90f745627adfcdac62037299f8.jpg's/>
+                <img src='https://i.pinimg.com/564x/c8/ba/09/c8ba096cfa66d6bf68b43b233953df66.jpg'/>
             </Grid>
         </Grid>
         

@@ -53,7 +53,7 @@ export default function ResponsiveAppBar() {
 
   return (
     <AppBar position="static" sx={{ overflow: 'hidden' }}>
-      <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: 'black' }}>
+      <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: '#466874' }}>
         <Toolbar disableGutters>
           <IconButton
             size="large"
@@ -72,7 +72,7 @@ export default function ResponsiveAppBar() {
           </Stack>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Typography key={page} variant="h6" sx={{ mr: 2 }}>
+              <Typography key={page} variant="h6" sx={{fontFamily:'Arima', mr: 2 }}>
                 <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   {page}
                 </Link>
@@ -81,7 +81,7 @@ export default function ResponsiveAppBar() {
           </Box>
           { userInfo ? (
             <>
-              <Typography variant="h6" sx={{ mr: 2 }}>
+              <Typography variant="h6" sx={{fontFamily:'Arima', mr: 2 }}>
                 Hi, {userInfo?.firstName}
               </Typography>
 

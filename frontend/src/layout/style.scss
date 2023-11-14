@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Arima:wght@500&display=swap');
+
 #header{
+    font-family: 'Arima', cursive;
     .link{
         text-decoration: none;
     }
@@ -7,12 +10,6 @@
 }
 
 #footer{
-
+    font-family: 'Arima', cursive;
 }
 
-@font-face {
-    font-family: 'FingerPaint';
-    src: url('../assets/fonts/FingerPaint-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}

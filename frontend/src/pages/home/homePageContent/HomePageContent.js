@@ -20,8 +20,8 @@ const CardClass = ({title, tagline, author,}) => {
             <div className='expandBottom'></div>
             <Stack direction='row' sx={{borderTop:'2px solid rgb(199, 199, 199)', padding:'10px 20px', color:'black'}}
                 justifyContent='end'>
-                <AssignmentIndOutlinedIcon/>
-                <FolderOpenOutlinedIcon sx={{marginLeft:'20px'}}/>
+                <AssignmentIndOutlinedIcon sx={{cursor:'pointer'}}/>
+                <FolderOpenOutlinedIcon sx={{marginLeft:'20px', cursor:'pointer'}}/>
             </Stack>
             
             

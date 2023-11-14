@@ -174,35 +174,41 @@ export default function ResponsiveAppBar() {
               </>
             ) : (
               <>
-                <Button
-                  className='btnCustom'
-                  href="/login"
-                  variant="outlined"
-                  sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50, 
-                    color: '#ffffff', borderColor: '#ffffff',
-                    '&:hover': {
-                      borderColor: '#ffffff',
-                      backgroundColor: '#283643'
-                    },
-                  }}
-                >
-                    Login
-                </Button>
+                <Link to='/login'>
+                  <Button
+                    className='btnCustom'
+                    href="/login"
+                    variant="outlined"
+                    sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50, 
+                      color: '#ffffff', borderColor: '#ffffff',
+                      '&:hover': {
+                        borderColor: '#ffffff',
+                        backgroundColor: '#283643'
+                      },
+                    }}
+                  >
+                      Login
+                  </Button>
+                </Link>
+                
+                <Link to=''>
+                  <Button
+                    className='btnCustom'
+                    href="/register"
+                    variant="outlined"
+                    sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50, 
+                      color: '#ffffff', borderColor: '#ffffff',
+                      '&:hover': {
+                        borderColor: '#ffffff',
+                        backgroundColor: '#283643'
+                      },
+                    }}
+                  >
+                    Register
+                  </Button>
+                </Link>
 
-                <Button
-                  className='btnCustom'
-                  href="/register"
-                  variant="outlined"
-                  sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50, 
-                    color: '#ffffff', borderColor: '#ffffff',
-                    '&:hover': {
-                      borderColor: '#ffffff',
-                      backgroundColor: '#283643'
-                    },
-                  }}
-                >
-                  Register
-                </Button>
+                
               </>
             )}
 

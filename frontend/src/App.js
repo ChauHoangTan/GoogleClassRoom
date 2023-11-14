@@ -27,14 +27,15 @@ function App() {
             <Route index element = {<Landing/>}/>
             <Route path="account" element = {<Account/>}/>
             <Route path="*" element = {<NoPage/>} />
+            <Route path="login" element = {<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
+            <Route path="register" element = {<Register/>}/>
             <Route element={<ProtectedRouter />} >
               <Route path="password" element = {<Password/>}/>
               <Route path="profile" element = {<Profile />}/>
               <Route path="home" element = {<Home/>}/>
             </Route>
 
-            <Route path="login" element = {<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
-            <Route path="register" element = {<Register/>}/>
+            
           </Route>
 
           

@@ -15,6 +15,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import './style.scss'
 import HomePageContent from './homePageContent/HomePageContent';
+import { useSelector } from 'react-redux';
 const Tabs = ({indexTab, setIndexTab}) => {
 
     const handleOnclick = (index) => {
@@ -185,10 +186,12 @@ const Tabs = ({indexTab, setIndexTab}) => {
 function Home() {
     const [indexTab, setIndexTab] = useState(0)
 
+    const isOpenMenu = useSelector(state=>state.isOpenMenu);
+    console.log(isOpenMenu)
     return ( 
 
         <Stack direction='row' container id='home'>
-            <div item className='grid1' style={{flex:'0 0 350px'}}>
+            <div item className={`grid1 ${!isOpenMenu && "show"}`} style={{flex:'0 0 350px'}}>
                 <Tabs indexTab={indexTab} setIndexTab={setIndexTab}/>
             </div>
 

@@ -1,5 +1,6 @@
 import { combineReducers, configureStore} from "@reduxjs/toolkit";
 import * as User from "./reducers/userReducers";
+import { moreIconReducer } from "./reducers/moreIconReducers";
 
 const rootReducer = combineReducers({
     // User reducer
@@ -7,6 +8,10 @@ const rootReducer = combineReducers({
     userRegister: User.userRegisterReducer,
     userChangePassword: User.userChangePasswordReducer,
     userUpdateProfile: User.userUpdateProfileReducer,
+    
+    //
+    isOpenMenu: moreIconReducer,
+
 });
 
 // Get userInfo from localStorage

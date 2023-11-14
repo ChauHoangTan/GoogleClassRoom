@@ -27,7 +27,7 @@ const ResponsiveHeader = ({isClickMore}) => {
     <Stack direction='column' className={`responsive ${!isClickMore && 'hide'}`}>
       <Stack direction='column' alignItems='center'>
           {pages.map((page) => (
-                <Typography key={page} variant="body-1" py={2} sx={{fontSize:'18px'}}>
+                <Typography className='nav' key={page} variant="body-1" py={2} sx={{fontSize:'18px'}}>
                   <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     {page}
                   </Link>
@@ -105,7 +105,7 @@ export default function ResponsiveAppBar() {
             </Stack>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
-                <Typography key={page} variant="h6" sx={{fontFamily:'Arima', mr: 2 }}>
+                <Typography className='nav' key={page} variant="h6" sx={{fontFamily:'Arima', mr: 2 }}>
                   <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     {page}
                   </Link>

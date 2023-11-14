@@ -13,6 +13,14 @@
     .responsive.hide{
         height: 0px;
     }
+
+    .nav{
+        transition: 0.2s ease;
+    }
+
+    .nav:hover{
+        color:rgb(255, 187, 0);
+    }
     
     @media (min-width: 890px) {
     

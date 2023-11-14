@@ -14,8 +14,13 @@
         overflow: hidden;
         .containerPanel{
             border-top: 2px solid rgb(199, 199, 199);
+
         }
 
+        .containerPanel:nth-child(3){
+            border-bottom: 2px solid rgb(199, 199, 199);
+        }
+            
         .panel{
             
             margin-right: 20px;

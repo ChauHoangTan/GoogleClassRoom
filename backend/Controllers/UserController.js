@@ -1,7 +1,6 @@
-import { generateToken } from "../Middlewares/verifyToken.js";
-import asyncHandler from "express-async-handler";
-import User from "../Models/UserModel.js";
-import bcrypt from "bcryptjs";
+const { generateToken } = require("../Middlewares/verifyToken");
+const User = require("../Models/UserModel");
+const bcrypt = require("bcryptjs");
 
 // @desc Register user
 // @route POST /api/users/register
@@ -164,7 +163,7 @@ const changeUserPassword = async (req, res) => {
     }
 }
 
-export {
+module.exports = {
     registerUser,
     loginUser,
     updateUserProfile,

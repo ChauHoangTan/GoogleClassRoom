@@ -1,6 +1,6 @@
-import { getStorage } from "firebase-admin/storage";
-import { cert, initializeApp } from "firebase-admin/app";
-import dotenv from "dotenv";
+const { getStorage } = require("firebase-admin/storage");
+const { cert, initializeApp } = require("firebase-admin/app");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -23,4 +23,4 @@ initializeApp({
 
 const storage = getStorage().bucket();
 
-export default storage;
+module.exports = storage;

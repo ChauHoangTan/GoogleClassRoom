@@ -1,11 +1,10 @@
-import express from "express";
-import multer from "multer";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
-import storage from "../config/firebaseStorage.js";
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const uuid = require("uuid");
+const storage = require("../config/firebaseStorage");
 
-
-
+const uuidv4 = uuid.v4;
 const uploadController = async (req, res) => {
     try {
         // get file from request
@@ -43,4 +42,32 @@ const uploadController = async (req, res) => {
     }
 };
 
-export default uploadController;
+const deleteFileByUrl = async (req, res) => {
+    try {
+        const imageUrl = req.body.imageUrl;
+                const parts = imageUrl.split("/");
+
+        // Lấy phần tử cuối cùng của mảng (tức là tên tập tin)
+        const part = parts[parts.length - 1];
+
+        // Sử dụng substring để loại bỏ phần đuôi (?alt=media)
+        const fileName = part.split("?")[0];
+        const file = storage.file(fileName);
+
+        // Check if the file exists
+        const exists = await file.exists();
+        if (exists[0]) {
+            await file.delete();
+            res.status(200).json({ imageUrl });
+
+        } else {
+            res.status(500).json(`File not found`);
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+// export default uploadController;
+
+module.exports = { uploadController, deleteFileByUrl}

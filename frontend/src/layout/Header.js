@@ -57,8 +57,8 @@ export default function ResponsiveAppBar() {
   const imgURL = userInfo?.image ? userInfo?.image : "https://www.vietnamfineart.com.vn/wp-content/uploads/2023/03/avatar-chill-anime-2.jpg";
 
   return (
-    <AppBar position="static" sx={{ overflow: 'hidden' }}>
-      <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: '#466874' }}>
+    <AppBar position="static" sx={{ overflow: 'hidden', backgroundColor: '#466874' }}>
+      <Box sx={{ flexGrow: 1, paddingInline: 3 }}>
         <Toolbar disableGutters>
           <IconButton
             size="large"

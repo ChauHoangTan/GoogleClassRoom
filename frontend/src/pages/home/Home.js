@@ -101,7 +101,7 @@ const Tabs = ({indexTab, setIndexTab}) => {
                     </Collapse>
                 </List>
             </nav>
-            <nav aria-label="secondary mailbox folders" className='containerPanel'>
+            <nav aria-label="third mailbox folders" className='containerPanel'>
                 <List>
                     <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}
                         onClick={() => handleOnclick(3)}>

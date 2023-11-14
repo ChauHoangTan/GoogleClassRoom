@@ -37,9 +37,6 @@ function App() {
 
             
           </Route>
-
-          
-
         </Routes>
       </HashRouter>
     </>

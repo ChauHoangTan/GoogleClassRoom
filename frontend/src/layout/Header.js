@@ -177,7 +177,6 @@ export default function ResponsiveAppBar() {
                 <Link to='/login'>
                   <Button
                     className='btnCustom'
-                    href="/login"
                     variant="outlined"
                     sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50, 
                       color: '#ffffff', borderColor: '#ffffff',
@@ -194,7 +193,6 @@ export default function ResponsiveAppBar() {
                 <Link to=''>
                   <Button
                     className='btnCustom'
-                    href="/register"
                     variant="outlined"
                     sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50, 
                       color: '#ffffff', borderColor: '#ffffff',

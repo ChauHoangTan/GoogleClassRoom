@@ -15,6 +15,8 @@ import { logoutAction } from '../redux/actions/userActions';
 import toast from 'react-hot-toast';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import {setMoreIcon} from '../redux/actions/moreIconActions.js'
+
 import './style.scss';
 
 const pages = ['Home', 'Blog', 'My Course'];
@@ -28,11 +30,13 @@ export default function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
+    dispatch(setMoreIcon())
     setAnchorElNav(event.currentTarget);
   };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+    
   };
 
   const handleCloseNavMenu = () => {
@@ -64,7 +68,7 @@ export default function ResponsiveAppBar() {
             onClick={handleOpenNavMenu}
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <MenuIcon/>
           </IconButton>
           <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
             <Link to="/">

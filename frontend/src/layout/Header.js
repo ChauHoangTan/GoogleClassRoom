@@ -15,6 +15,7 @@ import { logoutAction } from '../redux/actions/userActions';
 import toast from 'react-hot-toast';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import './style.scss';
 
 const pages = ['Home', 'Blog', 'My Course'];
 
@@ -138,17 +139,31 @@ export default function ResponsiveAppBar() {
           ) : (
             <>
               <Button
+                className='btnCustom'
                 href="/login"
-                variant="contained"
-                sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50}}
+                variant="outlined"
+                sx={{ mt: 3, mb: 2, mx: 1, borderRadius: 50, 
+                  color: '#ffffff', borderColor: '#ffffff',
+                  '&:hover': {
+                    borderColor: '#ffffff',
+                    backgroundColor: '#283643'
+                  },
+                }}
               >
                   Login
               </Button>
 
               <Button
+                className='btnCustom'
                 href="/register"
-                variant="contained"
-                sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50}}
+                variant="outlined"
+                sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50, 
+                  color: '#ffffff', borderColor: '#ffffff',
+                  '&:hover': {
+                    borderColor: '#ffffff',
+                    backgroundColor: '#283643'
+                  },
+                }}
               >
                 Register
               </Button>

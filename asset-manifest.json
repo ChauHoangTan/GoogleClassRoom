@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/GoogleClassroom/static/css/main.11a9110b.css",
-    "main.js": "/GoogleClassroom/static/js/main.8f8cc7c1.js",
-    "static/js/787.88d15c4b.chunk.js": "/GoogleClassroom/static/js/787.88d15c4b.chunk.js",
-    "static/media/FingerPaint-Regular.ttf": "/GoogleClassroom/static/media/FingerPaint-Regular.3c3a9cdbff527a1cdb37.ttf",
-    "static/media/logo.png": "/GoogleClassroom/static/media/logo.b7b01667ea57e75d3e23.png",
-    "index.html": "/GoogleClassroom/index.html",
-    "main.11a9110b.css.map": "/GoogleClassroom/static/css/main.11a9110b.css.map",
-    "main.8f8cc7c1.js.map": "/GoogleClassroom/static/js/main.8f8cc7c1.js.map",
-    "787.88d15c4b.chunk.js.map": "/GoogleClassroom/static/js/787.88d15c4b.chunk.js.map"
+    "main.css": "/GoogleClassRoom/static/css/main.4d64a944.css",
+    "main.js": "/GoogleClassRoom/static/js/main.d2d98ba2.js",
+    "static/js/787.88d15c4b.chunk.js": "/GoogleClassRoom/static/js/787.88d15c4b.chunk.js",
+    "static/media/FingerPaint-Regular.ttf": "/GoogleClassRoom/static/media/FingerPaint-Regular.3c3a9cdbff527a1cdb37.ttf",
+    "static/media/logo.png": "/GoogleClassRoom/static/media/logo.b7b01667ea57e75d3e23.png",
+    "index.html": "/GoogleClassRoom/index.html",
+    "main.4d64a944.css.map": "/GoogleClassRoom/static/css/main.4d64a944.css.map",
+    "main.d2d98ba2.js.map": "/GoogleClassRoom/static/js/main.d2d98ba2.js.map",
+    "787.88d15c4b.chunk.js.map": "/GoogleClassRoom/static/js/787.88d15c4b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.11a9110b.css",
-    "static/js/main.8f8cc7c1.js"
+    "static/css/main.4d64a944.css",
+    "static/js/main.d2d98ba2.js"
   ]
 }

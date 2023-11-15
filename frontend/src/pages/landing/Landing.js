@@ -408,7 +408,7 @@ const Contact = () => {
 
 const SubmitQuestionAndContact = () => {
     return (
-        <Stack direction='row' justifyContent='center'>
+        <Stack direction='row' justifyContent='center' sx={{ my: 2 }}>
             <Grid container sx={{width:'90%'}} spacing={2}>
                 <Grid item md={6} lg={6} mt={10}>
                     <Title>Have Any Question?</Title>

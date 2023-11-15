@@ -17,7 +17,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import IconButton from '@mui/material/IconButton';
 import { Container } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginAction } from '../../redux/actions/userActions';
@@ -164,7 +164,7 @@ function Login({rememberMe, setRememberMe}) {
                 }}
             >
                 <Typography component="h1" variant="h5" sx={{fontSize: '60px', fontWeight: 'bold', color: '#465d74'}}>
-                    Login
+                    Sign in
                 </Typography>
                 <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
                     <TextField
@@ -215,7 +215,7 @@ function Login({rememberMe, setRememberMe}) {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50}}
+                        sx={{ mt: 3, mb: 2, p: 2 }}
                         disabled={isLoading}
                     >
                         {
@@ -231,8 +231,8 @@ function Login({rememberMe, setRememberMe}) {
                     </Button>
                     <Grid container sx={{justifyContent: 'flex-end'}}>
                         <Grid item>
-                            <Link href="/register" variant="body2">
-                            {"Don't have an account? Sign Up"}
+                            <Link component={RouterLink} to="/register" variant="body2">
+                                {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
                     </Grid>
@@ -242,7 +242,7 @@ function Login({rememberMe, setRememberMe}) {
                         alignItems="center"
                         height="10vh">
                         <Typography sx={{ mt: 2, pb: 2, mr: 4, fontSize: '20px' }}>
-                            Or login with
+                            Or sign in with
                         </Typography>
                         <IconButton 
                             variant="rounded"

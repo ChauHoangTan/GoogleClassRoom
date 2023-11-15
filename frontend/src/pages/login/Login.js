@@ -27,6 +27,7 @@ import { LoginValidation } from "../../components/validation/userValidation";
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { FiLogIn } from 'react-icons/fi';
 // const defaultTheme = createTheme()
 const defaultTheme = createTheme({
     palette: {
@@ -217,7 +218,15 @@ function Login({rememberMe, setRememberMe}) {
                         sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50}}
                         disabled={isLoading}
                     >
-                        {isLoading ? "Loging..." : "Login"}
+                        {
+                            isLoading ? (
+                                "Loading..." 
+                            ) : (
+                                <>
+                                    <FiLogIn /> Sign In
+                                </>
+                            )
+                        }
                     </Button>
                     <Grid container sx={{justifyContent: 'flex-end'}}>
                         <Grid item>

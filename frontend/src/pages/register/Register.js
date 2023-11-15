@@ -24,6 +24,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import toast from 'react-hot-toast';
+import { FiLogIn } from 'react-icons/fi';
 
 // const defaultTheme = createTheme();
 const defaultTheme = createTheme({
@@ -210,7 +211,13 @@ function Register() {
                             sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50 }}
                             disabled={isLoading}
                         >
-                        {isLoading ? "Signing up..." : "Sign Up"}
+                            {isLoading ? (
+                                "Loading..." 
+                            ) : (
+                                <>
+                                    <FiLogIn /> Sign Up
+                                </>
+                            )}
                         </Button>
                         <Grid container justifyContent="flex-end">
                         <Grid item>

@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/login" element = {<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
           <Route path="/register" element = {<Register/>}/>
@@ -35,7 +35,7 @@ function App() {
             </Route>
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }

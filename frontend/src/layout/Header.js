@@ -100,7 +100,7 @@ export default function ResponsiveAppBar() {
             </IconButton>
             <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
               <Link to="/">
-                <Avatar src={logo} sx={{ width: 210, height: 60, margin: 2, borderRadius: 0 }} />
+                  <Avatar src={logo} sx={{ width: 210, height: 60, margin: 2, borderRadius: 0, display: { xs: 'none', sm: 'block' } }} />
               </Link>
             </Stack>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

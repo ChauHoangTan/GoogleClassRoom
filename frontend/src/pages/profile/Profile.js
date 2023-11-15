@@ -68,7 +68,9 @@ const EditProfile = () => {
 
   // update profile
   const onSubmit = async (data) => {
-    await deleteImageService(imageUpdateUrl);
+    if(imageUpdateUrl !== imageUrl) {
+      await deleteImageService(imageUpdateUrl);
+    }
     dispatch(updateProfileAction({ ...data, ...{ image: imageUrl, dob: date.format("MM/DD/YYYY") } }));
   };
   

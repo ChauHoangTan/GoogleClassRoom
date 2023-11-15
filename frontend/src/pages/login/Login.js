@@ -223,7 +223,8 @@ function Login({rememberMe, setRememberMe}) {
                                 "Loading..." 
                             ) : (
                                 <>
-                                    <FiLogIn /> Sign In
+                                    <FiLogIn />
+                                    <span style={{ marginLeft: '4px' }}>Sign In</span>
                                 </>
                             )
                         }

@@ -215,7 +215,8 @@ function Register() {
                                 "Loading..." 
                             ) : (
                                 <>
-                                    <FiLogIn /> Sign Up
+                                    <FiLogIn /> 
+                                    <span style={{ marginLeft: '4px' }}>Sign Up</span>
                                 </>
                             )}
                         </Button>

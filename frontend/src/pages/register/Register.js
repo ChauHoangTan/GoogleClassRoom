@@ -14,7 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import './style.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { registerAction } from '../../redux/actions/userActions';
 import { useForm } from 'react-hook-form';
 import { RegisterValidation } from '../../components/validation/userValidation';
@@ -208,7 +208,7 @@ function Register() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2, p: 2, borderRadius: 50 }}
+                            sx={{ mt: 3, mb: 2, p: 2 }}
                             disabled={isLoading}
                         >
                             {isLoading ? (
@@ -222,7 +222,7 @@ function Register() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <Link href="/login" variant="body2">
+                            <Link component={RouterLink} to="/login" variant="body2">
                                 Already have an account? Login
                             </Link>
                         </Grid>

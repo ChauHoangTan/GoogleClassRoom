@@ -223,7 +223,7 @@ const EditProfile = () => {
                   </LocalizationProvider>
                 </Grid>
               </Grid>
-              <Button  disabled={isLoading} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button  disabled={isLoading} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, py: 1 }}>
                 {isLoading ? "Updating..." : "Update Profile"}
               </Button>
             </Box>

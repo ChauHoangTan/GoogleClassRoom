@@ -193,11 +193,11 @@ export default function ResponsiveAppBar() {
                       },
                     }}
                   >
-                      Login
+                      Sign in
                   </Button>
                 </Link>
                 
-                <Link to=''>
+                {/* <Link to=''>
                   <Button
                     className='btnCustom'
                     variant="outlined"
@@ -209,9 +209,9 @@ export default function ResponsiveAppBar() {
                       },
                     }}
                   >
-                    Register
+                    Sign up
                   </Button>
-                </Link>
+                </Link> */}
 
                 
               </>

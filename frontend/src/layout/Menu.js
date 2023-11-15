@@ -14,8 +14,11 @@ import ListItemText from '@mui/material/ListItemText';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
+import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import './style.scss'
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const ClassRegisterd = ({avatar, title, tagline}) => {
     return (
@@ -46,15 +49,46 @@ const Tabs = ({indexTab, setIndexTab}) => {
                 <List>
                     <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
                         onClick={() => handleOnclick(0)}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <HomeIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Home" />
-                        </ListItemButton>
+                        <Link to='/home' className='link'>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <HomeIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Home" />
+                            </ListItemButton>
+                        </Link>
+                        
                     </ListItem>
                     <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
                         onClick={() => handleOnclick(1)}>
+                        <Link to='/blog' className='link'>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <BookOutlinedIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Blog" />
+                            </ListItemButton>
+                        </Link>
+                        
+                    </ListItem>
+                    <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}
+                        onClick={() => handleOnclick(2)}>
+                        <Link to='/myCourse' className='link'>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <TaskOutlinedIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="My Courses" />
+                            </ListItemButton>
+                        </Link>
+                        
+                    </ListItem>
+                </List>
+            </nav>
+            <nav aria-label="main mailbox folders" className='containerPanel'>
+                <List>
+                    <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}
+                        onClick={() => handleOnclick(3)}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <CalendarTodayIcon />
@@ -66,8 +100,8 @@ const Tabs = ({indexTab, setIndexTab}) => {
             </nav>
             <nav aria-label="secondary mailbox folders" className='containerPanel'>
                 <List>
-                    <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}
-                        onClick={() => {handleOnclick(2); handleIsOpenRegistered() }}>
+                    <ListItem disablePadding className={`panel ${indexTab === 4 && 'highlight'}`}
+                        onClick={() => {handleOnclick(4); handleIsOpenRegistered() }}>
 
                         <ListItemButton>
                             <ListItemIcon>
@@ -102,8 +136,8 @@ const Tabs = ({indexTab, setIndexTab}) => {
             </nav>
             <nav aria-label="third mailbox folders" className='containerPanel'>
                 <List>
-                    <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}
-                        onClick={() => handleOnclick(3)}>
+                    <ListItem disablePadding className={`panel ${indexTab === 5 && 'highlight'}`}
+                        onClick={() => handleOnclick(5)}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <SystemUpdateAltIcon />
@@ -111,8 +145,8 @@ const Tabs = ({indexTab, setIndexTab}) => {
                             <ListItemText primary="Archived class" />
                         </ListItemButton>
                     </ListItem>
-                    <ListItem disablePadding className={`panel ${indexTab === 4 && 'highlight'}`}
-                        onClick={() => handleOnclick(4)}>
+                    <ListItem disablePadding className={`panel ${indexTab === 6 && 'highlight'}`}
+                        onClick={() => handleOnclick(6)}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <SettingsIcon />

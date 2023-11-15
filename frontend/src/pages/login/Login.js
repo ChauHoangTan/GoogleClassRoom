@@ -102,7 +102,7 @@ function Login({rememberMe, setRememberMe}) {
         }
 
         if (isSuccess) {
-            toast.success(`Welcome back ${userInfo?.firstName} ${userInfo?.lastName}`);
+            toast.success(`Welcome back ${userInfo?.firstName}`);
         }
         if (isError) {
             toast.error(isError);

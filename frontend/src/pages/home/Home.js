@@ -131,7 +131,6 @@ function Home() {
     const [indexTab, setIndexTab] = useState(0)
 
     const isOpenMenu = useSelector(state=>state.isOpenMenu);
-    console.log(isOpenMenu)
     return ( 
 
         <Stack direction='row' container id='home'>

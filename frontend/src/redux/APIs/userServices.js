@@ -18,7 +18,6 @@ const logoutService = () => {
 
 // Login user API
 const loginService = async (user) => {
-    console.log(user, "456")
     const {data} = await Axios.post("/users/login", user);
 
     if (data) {

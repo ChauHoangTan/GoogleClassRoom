@@ -44,7 +44,6 @@ const defaultTheme = createTheme({
 
 const EditProfile = () => {
   const [date, setDate] = useState(dayjs());
-  // console.log(date.format("MM/DD/YYYY") )
   const dispatch = useDispatch();
   const { userInfo } = useSelector(
       (state) => state.userLogin

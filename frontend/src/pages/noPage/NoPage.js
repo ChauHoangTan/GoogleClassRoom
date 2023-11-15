@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom'
 
-
+import imgErr from '../../assets/img/404.png'
 
 function NoPage() {
   return (
@@ -18,7 +18,7 @@ function NoPage() {
     >
       <img 
         style={{ width: '100%', objectFit: 'contain', height: '28rem'}} 
-        src='/images/404.png' 
+        src={imgErr} 
         alt='notfound'
       />
       <Typography variant="h5" gutterBottom sx={{ my: 2 }}>

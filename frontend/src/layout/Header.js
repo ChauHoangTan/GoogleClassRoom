@@ -18,8 +18,10 @@ import toast from 'react-hot-toast';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import {setMoreIcon} from '../redux/actions/moreIconActions.js'
+import { RiLockPasswordLine, RiLogoutCircleLine } from 'react-icons/ri'
 
 import './style.scss';
+import { FiSettings } from 'react-icons/fi';
 
 const ResponsiveHeader = ({isClickMore}) => {
 
@@ -157,16 +159,21 @@ export default function ResponsiveAppBar() {
                     onClose={handleCloseUserMenu}
                   >
                     <MenuItem onClick={handleCloseUserMenu}>
-                      <Link to="/profile" style={{ textDecoration: 'none', color: 'black' }}>
-                        Profile account
+                      <Link to="/profile" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center' }}>
+                        <FiSettings />
+                        <span style={{ marginLeft: '4px'}} >Profile account</span>
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleCloseUserMenu}>
-                      <Link to="/password" style={{ textDecoration: 'none', color: 'black' }}>
-                        Change password
+                      <Link to="/password" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center' }}>
+                        <RiLockPasswordLine /> 
+                        <span style={{ marginLeft: '4px' }} >Change password</span>
                       </Link>
                     </MenuItem>
-                    <MenuItem onClick={logoutHandler}>Log out</MenuItem>
+                    <MenuItem onClick={logoutHandler} style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center' }}>
+                      <RiLogoutCircleLine />
+                      <span style={{ marginLeft: '4px' }} >Log Out</span>
+                    </MenuItem>
                   </Menu>
                 </Box>
 

@@ -38,6 +38,65 @@
 
 
 
+#menuAndOutlet{
+
+    min-height: 100vh;
+    border-top: 2px solid rgb(199, 199, 199);
+    border-bottom: 2px solid rgb(199, 199, 199);
+    color: #466874;
+    .grid1{
+        border-right: 2px solid rgb(199, 199, 199);
+        transition: width 0.5s ease;
+        display: flex;
+        width: 300px;
+        overflow: hidden;
+        .containerPanel{
+            border-top: 2px solid rgb(199, 199, 199);
+        }
+
+        .containerPanel:nth-child(3){
+            border-bottom: 2px solid rgb(199, 199, 199);
+        }
+            
+        .panel{
+            margin-right: 20px;
+            transition: 0.2s ease;
+        }
+
+        .highlight{
+            background-color: #cadff6;
+            border-radius: 0px 20px 20px 0px;
+        }
+
+    }
+
+    .grid1.hide{
+        width: 0px;
+    }
+
+    .grid2{
+        position: relative;
+        flex-grow: 1;
+        height: 100%;
+        width: 60%;
+    }
+}
+
+@media (max-width: 1000px){
+    #menuAndOutlet{
+        .grid1{
+                position: absolute;
+                height: 100%;
+                z-index: 10;
+            }
+
+        .grid1.hide{
+            width: 0px;
+        }
+    }
+    
+}
+
 #footer{
     font-family: 'Arima', cursive;
 }

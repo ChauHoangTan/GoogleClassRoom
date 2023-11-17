@@ -38,10 +38,18 @@ const UserSchema = mongoose.Schema(
             default: "",
         },
 
-        isAdmin: {
-            type: Boolean,
-            default: false,
+        role: { 
+            type: String, 
+            enum: ['admin', 'teacher', 'student'], 
+            required: true 
         },
+        googleId: { 
+            type: String 
+        },
+        facebookId: { 
+            type: String 
+        },
+        isVerified: { type: Boolean, default: true },
     },
     {
         timestamps: true,

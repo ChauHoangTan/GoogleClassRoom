@@ -126,7 +126,7 @@ function Login({rememberMe, setRememberMe}) {
         <CssBaseline />
         <Grid item
             xs={false}
-            sm={4}
+            sm={false}
             md={7}
             sx={{
             backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
@@ -137,7 +137,8 @@ function Login({rememberMe, setRememberMe}) {
             backgroundPosition: 'center',
             display: 'flex',
             textAlign: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            display: { xs: 'none', md: 'inline-flex', sm: 'none'}
             }}
         >
             <Container sx={{ width: '100%' }}>
@@ -150,7 +151,7 @@ function Login({rememberMe, setRememberMe}) {
                 </Typography>
             </Container>
         </Grid>
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square
+        <Grid item xs={12} sm={12} md={5} component={Paper} elevation={6} square
             sx={{
                 display: 'flex',
                 alignItems: 'center'

@@ -23,22 +23,6 @@ import { RiLockPasswordLine, RiLogoutCircleLine } from 'react-icons/ri'
 import './style.scss';
 import { FiSettings } from 'react-icons/fi';
 
-const ResponsiveHeader = ({isClickMore}) => {
-
-  return (
-    <Stack direction='column' className={`responsive ${!isClickMore && 'hide'}`}>
-      <Stack direction='column' alignItems='center'>
-          {pages.map((page) => (
-                <Typography className='nav' key={page} variant="body-1" py={2} sx={{fontSize:'18px'}}>
-                  <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    {page}
-                  </Link>
-                </Typography>
-              ))}
-      </Stack>
-    </Stack>
-  )
-}
 
 const pages = ['Home', 'Blog', 'My Course'];
 
@@ -72,7 +56,7 @@ export default function ResponsiveAppBar() {
     handleCloseUserMenu();
     dispatch(logoutAction());
     toast.success('Logged out successfully');
-    navigate('/login');
+    navigate('/');
   };
 
     // state responsive
@@ -90,7 +74,8 @@ export default function ResponsiveAppBar() {
       <AppBar position="static" >
         <Box sx={{ flexGrow: 1, paddingInline: 3, backgroundColor: '#466874' }}>
           <Toolbar disableGutters>
-            <IconButton
+            {userInfo && 
+              <IconButton
               size="large"
               edge="start"
               color="inherit"
@@ -99,7 +84,8 @@ export default function ResponsiveAppBar() {
               sx={{ mr: 2 }}
             >
               <MenuIcon/>
-            </IconButton>
+            </IconButton>}
+            
             <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
               <Link to="/">
                   <Avatar src={logo} sx={{ width: 210, height: 60, margin: 2, borderRadius: 0, display: { xs: 'none', sm: 'block' } }} />
@@ -136,9 +122,8 @@ export default function ResponsiveAppBar() {
                       sx={{ width: 40, height: 40, mr: 1 }}
                     />
                   </IconButton>
-                  <IconButton color="inherit" sx={{
-                    display: { xs: 'none', md: 'inline-flex' }
-                  }}>
+                  <IconButton color="inherit" 
+                    >
                     <Badge badgeContent={5} color="error">
                       <NotificationsIcon />
                     </Badge>
@@ -216,24 +201,10 @@ export default function ResponsiveAppBar() {
                 
               </>
             )}
-
-            <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
-              <IconButton onClick={handleIsClickMore}>
-                <div style={{ backgroundColor:'#97AFB9'}}>
-                  {isClickMore ?
-                    <ArrowDropUpRoundedIcon sx={{width:'50px', height:'50px', color:'white'}}/>
-                    :
-                    <ArrowDropDownRoundedIcon sx={{width:'50px', height:'50px', color:'white'}}/> }
-                </div>
-                  
-                  
-              </IconButton>
-            </Box>
             
           </Toolbar>
         </Box>
       </AppBar>
-      <ResponsiveHeader isClickMore={isClickMore}/>
     </Stack>
     
   );

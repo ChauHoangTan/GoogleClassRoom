@@ -141,10 +141,10 @@ const activateEmail = async (req, res) => {
 // desc Login user
 // @route POST api/user/login
 const loginUser = async (req, res) => {
-    const { userName, password } = req.body;
+    const { email, password } = req.body;
     try {
         // find user in DB
-        const user = await User.findOne({ userName });
+        const user = await User.findOne({ email });
         // compare password with hash password
         
         // if user exists and correct password send user data and token to client
@@ -153,14 +153,13 @@ const loginUser = async (req, res) => {
             if(checkPassword) {
                 res.status(200).json({
                     _id: user._id,
-                    userName: user.userName,
+                    email: user.email,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     image: user.image,
                     isAdmin: user.isAdmin,
                     phone: user.phone,
                     dob: user.dob,
-                    email: user.email,
                     token: generateToken(user._id)
                 });
             }
@@ -170,7 +169,7 @@ const loginUser = async (req, res) => {
             }
         }  else {
             res.status(400);
-            throw new Error(" Invalid userName ");
+            throw new Error(" Invalid email ");
         } 
 
     } catch (error) {
@@ -181,16 +180,15 @@ const loginUser = async (req, res) => {
 // @desc Update user profile
 // @route PUT/api/users/profile
 const updateUserProfile = async(req, res) => {
-    const { userName, firstName, lastName, image, phone, email, dob } = req.body;
+    const { email, firstName, lastName, image, phone, dob } = req.body;
     try {
         // find user in DB  
         const user = await User.findById(req.user.id);
         // if users exists update user data and save it in DB
         if(user) {
-            user.userName = userName || user.userName;
+            user.email = email || user.email;
             user.firstName = firstName || user.firstName;
             user.lastName = lastName || user.lastName;
-            user.email = email || user.email;
             user.image = image || user.image;
             user.phone = phone || user.phone;
             user.dob = dob || user.dob;
@@ -198,11 +196,10 @@ const updateUserProfile = async(req, res) => {
             const updatedUser = await user.save();
             // send updated user data and token to client
             res.json({
+                email: updatedUser.email,
                 _id: updatedUser._id,
-                userName: updatedUser.userName,
                 firstName: updatedUser.firstName,
                 lastName: updatedUser.lastName,
-                email: updatedUser.email,
                 image: updatedUser.image,
                 phone: updatedUser.phone,
                 dob: updatedUser.dob,

@@ -250,7 +250,6 @@ const changeUserPassword = async (req, res) => {
     }
 }
 
-
 // @desc user forgot password
 // @route PUT /api/users/forgot
     const forgotUserPassword = async (req, res) => {
@@ -276,6 +275,24 @@ const changeUserPassword = async (req, res) => {
     }
 }
 
+// @desc user reset password
+// @route PUT /api/users/reset
+const resetUserPassword = async (req, res) => {
+    const { password } = req.body;
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        console.log(password)
+        await User.findOneAndUpdate({_id: req.user.id}, {
+            password: hashedPassword
+        })
+
+        res.json({ message: "Password successfully changed!"});
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     registerUser,
     activateEmail,
@@ -283,4 +300,5 @@ module.exports = {
     updateUserProfile,
     changeUserPassword,
     forgotUserPassword,
+    resetUserPassword,
 }

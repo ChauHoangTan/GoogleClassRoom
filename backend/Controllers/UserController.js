@@ -1,7 +1,8 @@
-const { createActivationToken } = require("../Middlewares/verifyToken");
+const { createActivationToken, generateToken } = require("../Middlewares/verifyToken");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const sendMail = require('./sendMail')
+const jwt = require("jsonwebtoken");
 
 const {google} = require('googleapis')
 const {OAuth2} = google.auth
@@ -60,39 +61,82 @@ const {CLIENT_URL} = process.env
 // };
 
 const registerUser = async(req, res) => {
-        const { email, firstName, lastName, password, image } = req.body;
-        try {
-            const userExists = await User.findOne({ email });
-            // check if user exists
-            if(userExists) {
-                res.status(400);
-                throw new Error("User already exists");
-            }
-    
-            // hash password
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
-    
-            // create user in DB
-            const newUser = {
-                email,
-                firstName,
-                lastName,
-                password: hashedPassword,
-                image,
-            };
-            
-
-            const activation_token = createActivationToken(newUser)
-
-            const url = `${CLIENT_URL}/user/activate/${activation_token}`
-            await sendMail(email, url, "Verify your email address")
-
-            res.json({ message: "Register Success! Please activate your email to start." })
-        } catch(error) {
-            res.status(400).json({ message: error.message });
+    const { email, firstName, lastName, password, image } = req.body;
+    try {
+        const userExists = await User.findOne({ email });
+        // check if user exists
+        if(userExists) {
+            res.status(400);
+            throw new Error("User already exists");
         }
-    };
+
+        // hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // create user in DB
+        const newUser = {
+            email,
+            firstName,
+            lastName,
+            password: hashedPassword,
+            image,
+        };
+        
+
+        const activation_token = createActivationToken(newUser)
+
+        const url = `${CLIENT_URL}/user/activate/${activation_token}`
+        await sendMail(email, url, "Verify your email address")
+
+        res.json({ message: "Register Success! Please activate your email to start." })
+    } catch(error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const activateEmail = async (req, res) => {
+    try {
+        const { activation_token } = req.body;
+        const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET);
+
+        const { email, firstName, lastName, password, image } = user;
+
+        const userExist = await User.findOne({ email });
+        if(userExist) {
+            res.status(400);
+            throw new Error("User already exists");
+        }
+
+        const newUser = await User.create({
+            email,
+            firstName,
+            lastName,
+            password,
+            image,
+        });
+
+        // if newUser create successfully send user data and token to client 
+        if(newUser) {
+            res.status(201).json({
+                _id: newUser._id,
+                email: newUser.email,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                phone: newUser.phone,
+                dob: newUser.dob,
+                image: newUser.image,
+                isAdmin: newUser.isAdmin,
+                token: generateToken(newUser._id)
+            });
+        } else {
+            res.status(400);
+            throw new Error("Invalid user data");
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
 // desc Login user
 // @route POST api/user/login
@@ -208,6 +252,7 @@ const changeUserPassword = async (req, res) => {
 
 module.exports = {
     registerUser,
+    activateEmail,
     loginUser,
     updateUserProfile,
     changeUserPassword,

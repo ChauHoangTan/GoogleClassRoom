@@ -2,12 +2,6 @@ const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema(
     {
-        userName: {
-            type: String,
-            required: [true, "Please add an userName"],
-            unique: true,
-            trim: true,
-        },
         firstName:  {
             type: String,
             required: [true, "Please add a full name"],
@@ -15,6 +9,10 @@ const UserSchema = mongoose.Schema(
         lastName:  {
             type: String,
             required: [true, "Please add a full name"],
+        },
+        email: {
+            type: String,
+            default: "",
         },
         password: {
             type: String,
@@ -29,10 +27,6 @@ const UserSchema = mongoose.Schema(
             type: String,
             default: "",
         },
-        email: {
-            type: String,
-            default: "",
-        },
         dob: {
             type: String,
             default: "",
@@ -41,7 +35,8 @@ const UserSchema = mongoose.Schema(
         role: { 
             type: String, 
             enum: ['admin', 'teacher', 'student'], 
-            required: true 
+            required: true,
+            default: 'student', 
         },
         googleId: { 
             type: String 

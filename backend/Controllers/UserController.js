@@ -1,4 +1,4 @@
-const { createActivationToken, generateToken } = require("../Middlewares/verifyToken");
+const { createActivationToken, generateToken, createAccessToken } = require("../Middlewares/verifyToken");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const sendMail = require('./sendMail')
@@ -250,10 +250,37 @@ const changeUserPassword = async (req, res) => {
     }
 }
 
+
+// @desc user forgot password
+// @route PUT /api/users/forgot
+    const forgotUserPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+        // find user in DB
+        const user = await User.findOne({ email });
+        // if user exists, send email to user to get url change password 
+        if(user) {
+            const access_token = createAccessToken({ id: user._id });
+            const url = `${CLIENT_URL}/user/reset/${access_token}`;
+
+            sendMail(email, url, "Reset your password");
+            res.json({ message: "Re-send the password, please check your email." });
+        }
+        // else send error message
+        else {
+            res.status(401);
+            throw new Error("This email does not exist");
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     registerUser,
     activateEmail,
     loginUser,
     updateUserProfile,
     changeUserPassword,
+    forgotUserPassword,
 }

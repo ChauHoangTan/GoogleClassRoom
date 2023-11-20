@@ -196,8 +196,8 @@ const Features = () => {
                         <img src='https://i.pinimg.com/564x/1f/ec/bc/1fecbc7d8496e7d6a7251d46ca1a84f6.jpg'/>
                         <CardContent>
                             <Typography variant='body-1' sx={{fontWeight:'bold'}}>Empowering Educators: </Typography>Discover tips, tricks,
-                             and best practices to maximize your teaching potential with Google Classroom. From innovative assignments 
-                             to effective communication strategies, we've got you covered.
+                                and best practices to maximize your teaching potential with Google Classroom. From innovative assignments 
+                                to effective communication strategies, we've got you covered.
                         </CardContent>
                     </Card>
                 </Grid>
@@ -207,8 +207,8 @@ const Features = () => {
                         <img src='https://i.pinimg.com/564x/b8/b4/e1/b8b4e1118277242dfcdd0624217ee560.jpg'/>
                         <CardContent>
                             <Typography variant='body-1' sx={{fontWeight:'bold'}}>Engaging Student Experiences: </Typography>Students, embark
-                             on an interactive learning journey! Explore ways to make the most of Google Classroom, participate in discussions, 
-                             and elevate your academic experience.
+                                on an interactive learning journey! Explore ways to make the most of Google Classroom, participate in discussions, 
+                                and elevate your academic experience.
                         </CardContent>
                     </Card>
                 </Grid>
@@ -248,9 +248,9 @@ const CustomerReviews = () => {
                     review='Google Classroom has truly transformed my teaching experience. 
                     The user-friendly interface makes it easy to manage classes, share resources, 
                     and interact with students. The seamless integration with Google Drive is a game-changer
-                     for organizing and accessing educational materials. The ability to provide real-time 
-                     feedback enhances communication and student engagement. A highly recommended platform 
-                     for educators seeking efficiency and collaboration.'
+                    for organizing and accessing educational materials. The ability to provide real-time 
+                    feedback enhances communication and student engagement. A highly recommended platform 
+                    for educators seeking efficiency and collaboration.'
                     rating={5}
                     avatar='https://i.pinimg.com/564x/93/75/ae/9375aef3b0ea35e0cf4ca12862bb5fef.jpg'
                     name='Oreki'/>

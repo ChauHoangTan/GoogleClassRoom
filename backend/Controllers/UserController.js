@@ -143,7 +143,14 @@ const activateEmail = async (req, res) => {
 const loginUser = async (req, res) => {
     const Authorization = createAccessToken(req.user._id)
     res.setHeader("Authorization", Authorization)
-    res.status(200).json(req.user);
+    console.log({...req.user._doc, Authorization })
+    res.status(200).json({...req.user._doc, Authorization });
+};
+
+// desc Login user
+// @route POST api/user/auth/google
+const authGoogle = async (req, res) => {
+  console.log('auth google', req.user);
 };
 
 // @desc Update user profile
@@ -272,5 +279,6 @@ module.exports = {
     changeUserPassword,
     forgotUserPassword,
     resetUserPassword,
-    secret
+    secret,
+    authGoogle,
 }

@@ -71,10 +71,10 @@ function Login({rememberMe, setRememberMe}) {
         dispatch(loginAction(data));
         if (rememberMe) {
             localStorage.setItem('rememberedCheck', rememberMe);
-            localStorage.setItem('rememberedUsername', data.userName);
+            localStorage.setItem('rememberedEmail', data.email);
             localStorage.setItem('rememberedPassword', data.password);
         } else {
-            localStorage.removeItem('rememberedUsername');
+            localStorage.removeItem('rememberedEmail');
             localStorage.removeItem('rememberedPassword');
         }
     };
@@ -85,12 +85,12 @@ function Login({rememberMe, setRememberMe}) {
 
     useEffect(() => {
         const rememberedCheck = localStorage.getItem('rememberedCheck');
-        const rememberedUsername = localStorage.getItem('rememberedUsername');
+        const rememberedEmail = localStorage.getItem('rememberedEmail');
         const rememberedPassword = localStorage.getItem('rememberedPassword');
         
         if (rememberMe) {
             setRememberMe(rememberedCheck);
-            setValue("userName", rememberedUsername);
+            setValue("email", rememberedEmail);
             setValue("password", rememberedPassword);
         } 
     },[]);
@@ -173,14 +173,14 @@ function Login({rememberMe, setRememberMe}) {
                         margin="normal"
                         required
                         fullWidth
-                        id="userName"
-                        label="User Name"
-                        name="userName"
-                        autoComplete="userName"
+                        id="email"
+                        label="Email"
+                        name="email"
+                        autoComplete="email"
                         autoFocus
-                        {...register("userName")}
-                        error={!!errors.userName}
-                        helperText={errors.userName?.message || ''}
+                        {...register("email")}
+                        error={!!errors.email}
+                        helperText={errors.email?.message || ''}
                     />
                     <TextField
                             margin="normal"

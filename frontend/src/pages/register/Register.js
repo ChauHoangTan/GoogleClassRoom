@@ -148,12 +148,12 @@ function Register() {
                                         <TextField
                                             required
                                             fullWidth
-                                            id="userName"
-                                            label="User Name"
-                                            name="userName"
-                                            {...register("userName")}
-                                            error={!!errors.userName}
-                                            helperText={errors.userName?.message || ''}
+                                            id="email"
+                                            label="Email"
+                                            name="email"
+                                            {...register("email")}
+                                            error={!!errors.email}
+                                            helperText={errors.email?.message || ''}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>

@@ -2,8 +2,11 @@ import * as yup from 'yup';
 
 // Login validation
 const LoginValidation = yup.object().shape({
-    userName: yup.string().required("User name is required")
-    .matches(/^\S*$/, 'User name must not contain whitespaces'),
+    email: yup
+        .string()
+        .email()
+        .required("Email is required")
+        .trim(),
     password: yup.string()
         .required("Password is required")
         .min(6, "Password must be at least 6 characters")
@@ -13,10 +16,11 @@ const LoginValidation = yup.object().shape({
 
 // Register validation
 const RegisterValidation = yup.object().shape({
-    userName: yup
+    email: yup
         .string()
-        .required("User name is required")
-        .matches(/^\S*$/, 'User name must not contain whitespaces'),
+        .email()
+        .required("Email is required")
+        .trim(),
     password: yup
         .string()
         .required("Password is required")
@@ -58,10 +62,6 @@ const PasswordValidation = yup.object().shape({
 });
 
 const ProfileValidation = yup.object().shape({
-    userName: yup
-        .string()
-        .required("User name is required")
-        .matches(/^\S*$/, 'User name must not contain whitespaces'),
     firstName: yup
         .string()
         .required("First name is required")

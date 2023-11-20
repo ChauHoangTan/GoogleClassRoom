@@ -10,8 +10,8 @@ const createActivationToken = (payload) => {
     return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '5m'})
 }
 
-const createAccessToken = (payload) => {
-    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+const createAccessToken = (id) => {
+    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
 }
 
 const createRefreshToken = (payload) => {
@@ -19,10 +19,10 @@ const createRefreshToken = (payload) => {
 }
 
 const verify = (req, res, next) => {
-    const authHeader = req.headers.token;
+    const authHeader = req.headers.Authorization;
     if(authHeader) {
-        const token = authHeader.split(" ")[1];
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        const Authorization = authHeader.split(" ")[1];
+        jwt.verify(Authorization, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if(err){ 
                 res.status(403);
                 throw new Error("Token is not valid!");

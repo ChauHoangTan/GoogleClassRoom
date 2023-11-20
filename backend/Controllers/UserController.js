@@ -1,4 +1,4 @@
-const { createActivationToken, generateToken, createAccessToken } = require("../Middlewares/verifyToken");
+const { createActivationToken, createAccessToken } = require("../Middlewares/verifyToken");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const sendMail = require('./sendMail')
@@ -48,7 +48,7 @@ const {CLIENT_URL} = process.env
 //                 email: user.email,
 //                 image: user.image,
 //                 isAdmin: user.isAdmin,
-//                 token: generateToken(user._id)
+//                 token: createAccessToken(user._id)
 //             });
 //         } else {
 //             res.status(400);
@@ -127,7 +127,7 @@ const activateEmail = async (req, res) => {
                 dob: newUser.dob,
                 image: newUser.image,
                 isAdmin: newUser.isAdmin,
-                token: generateToken(newUser._id)
+                Authorization: createAccessToken(newUser._id)
             });
         } else {
             res.status(400);
@@ -141,40 +141,9 @@ const activateEmail = async (req, res) => {
 // desc Login user
 // @route POST api/user/login
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        // find user in DB
-        const user = await User.findOne({ email });
-        // compare password with hash password
-        
-        // if user exists and correct password send user data and token to client
-        if(user) {
-            const checkPassword = await bcrypt.compare(password, user.password);
-            if(checkPassword) {
-                res.status(200).json({
-                    _id: user._id,
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    image: user.image,
-                    isAdmin: user.isAdmin,
-                    phone: user.phone,
-                    dob: user.dob,
-                    token: generateToken(user._id)
-                });
-            }
-            else {
-                res.status(400);
-                throw new Error(" Invalid password");
-            }
-        }  else {
-            res.status(400);
-            throw new Error(" Invalid email ");
-        } 
-
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+    const Authorization = createAccessToken(req.user._id)
+    res.setHeader("Authorization", Authorization)
+    res.status(200).json(req.user);
 };
 
 // @desc Update user profile
@@ -204,7 +173,7 @@ const updateUserProfile = async(req, res) => {
                 phone: updatedUser.phone,
                 dob: updatedUser.dob,
                 isAdmin: updatedUser.isAdmin,
-                token: generateToken(updatedUser._id),
+                Authorization: createAccessToken(updatedUser._id),
             })
         }
         // else send error message
@@ -290,6 +259,11 @@ const resetUserPassword = async (req, res) => {
     }
 }
 
+const secret = async (req, res) => {
+ console.log("hello");
+}
+
+
 module.exports = {
     registerUser,
     activateEmail,
@@ -298,4 +272,5 @@ module.exports = {
     changeUserPassword,
     forgotUserPassword,
     resetUserPassword,
+    secret
 }

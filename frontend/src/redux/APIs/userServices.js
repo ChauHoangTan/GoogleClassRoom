@@ -30,7 +30,7 @@ const loginService = async (user) => {
 const changePasswordService = async (password, token) => {
     const { data } = await Axios.put("/users/password", password, {
         headers: {
-            token: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         }
     });
     return data;
@@ -40,7 +40,7 @@ const changePasswordService = async (password, token) => {
 const updateProfileService = async (user, token) => {
     const { data } = await Axios.put("/users/profile", user, {
         headers: {
-            token: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     });
     if(data) {

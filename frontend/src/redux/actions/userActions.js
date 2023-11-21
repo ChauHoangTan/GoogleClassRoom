@@ -11,7 +11,6 @@ const loginAction = (provider, datas) => async (dispatch) => {
         case 'google':
             try {
                 dispatch({ type: userConstants.USER_LOGIN_GOOGLE_REQUEST });
-                console.log(datas, 'userAction.js')
                 const response = await userApi.loginSuccessService(datas);
                 dispatch({ type: userConstants.USER_LOGIN_GOOGLE_SUCCESS, payload: response });
             } catch (error) {
@@ -71,6 +70,8 @@ const logoutAction = (datas) => async (dispatch) => {
     dispatch({ type: userConstants.USER_LOGOUT });
     dispatch({ type: userConstants.USER_REGISTER_RESET });
     dispatch({ type: userConstants.USER_LOGIN_RESET });
+    dispatch({ type: userConstants.USER_LOGIN_GOOGLE_RESET });
+    // dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_RESET });
 };
 
 // Change password action

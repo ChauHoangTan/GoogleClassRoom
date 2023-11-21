@@ -113,9 +113,9 @@ function Login ({ rememberMe, setRememberMe }) {
         window.open('http://localhost:5000/api/users/google', '_self');
     }
 
-    const handleFacebookLogin = response => {
+    const handleFacebookLogin = () => {
         // Handle when user click login by Facebook
-        console.log('Facebook login response:', response)
+        window.open('http://localhost:5000/api/users/facebook', '_self');
     }
 
     return (

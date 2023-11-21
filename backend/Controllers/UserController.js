@@ -1,4 +1,4 @@
-const { createActivationToken, createAccessToken } = require("../Middlewares/verifyToken");
+const { createActivationToken, createAccessToken, createRefreshToken } = require("../Middlewares/verifyToken");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const sendMail = require('./sendMail')
@@ -144,8 +144,7 @@ const loginUser = async (req, res) => {
     try {
         if(req.user) {
             const Authorization = createAccessToken(req.user._id)
-            res.setHeader("Authorization", Authorization)
-            console.log({...req.user._doc, Authorization })
+            // res.setHeader("Authorization", Authorization)
             res.status(200).json({ ...req.user._doc, Authorization });
         } else {
             res.status(400).json({ message: req.error })
@@ -158,22 +157,48 @@ const loginUser = async (req, res) => {
 // desc Login user
 // @route POST api/user/login-success
 const loginSuccess = async (req, res) => {
-    const { userId } = req.body;
+    const { userId, tokenLogin } = req.body;
     try {
-        if( !userId) {
+        if (!userId || !tokenLogin) {
             res.status(400).json({ message: "Missing inputs" });
         }
-        console.log(userId)
+        const user = await User.findOne({ 
+            authLoginId: userId, 
+            authLoginToken: tokenLogin 
+        });
 
-        const user = await User.findOne({ authGoogleId: userId });
         const Authorization = createAccessToken(user._id)
-        console.log(user)
+
         res.status(200).json({...user._doc, Authorization})
     } catch (error) {
         res.status(500).json({ message: error.message });
-
     }
 };
+
+// const loginSuccessService = (userId, tokenLogin) => new Promise(async(resolve, reject) => {
+//     try {
+//         const user = await User.findOne({ 
+//             authGoogleId: userId, 
+//             authGoogleToken: tokenLogin 
+//         });
+
+//         const Authorization = createAccessToken(user._id)
+//         const newLoginToken = createRefreshToken(user._id);
+
+//         resolve({...user._doc, Authorization});
+
+//         if (user) {
+//             await User.findOneAndUpdate(
+//                 { _id: userId },
+//                 { $set: { authGoogleToken: newLoginToken } }
+//             );
+//         }
+
+//     } catch (error) {
+//         reject({message: error.message});
+//     }  
+// })
+
 
 // desc Login user
 // @route POST api/user/auth/google
@@ -283,7 +308,6 @@ const resetUserPassword = async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        console.log(password)
         await User.findOneAndUpdate({_id: req.user.id}, {
             password: hashedPassword
         })

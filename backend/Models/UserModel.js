@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema(
     {
-        studentId:  {
-            type: String,
-            // trim: true,
-            // unique: true,
-            default: "",
-        },
+        // studentId:  {
+        //     type: String,
+        //     trim: true,
+        //     unique: true,
+        //     default: "",
+        // },
         firstName:  {
             type: String,
             required: true,
@@ -48,16 +48,23 @@ const UserSchema = mongoose.Schema(
             required: true,
             default: 'local', 
         },
-        authGoogleId: { 
+        // authGoogleId: { 
+        //     type: String 
+        // },
+        // authFacebookId: { 
+        //     type: String 
+        // },
+        // authGoogleToken: { 
+        //     type: String 
+        // },
+        // authFacebookToken: { 
+        //     type: String 
+        // },
+
+        authLoginId: { 
             type: String 
         },
-        authFacebookId: { 
-            type: String 
-        },
-        authGoogleToken: { 
-            type: String 
-        },
-        authFacebookToken: { 
+        authLoginToken: { 
             type: String 
         },
         isBanned:  { 

@@ -1,5 +1,4 @@
 import Axios from "./Axios";
-import axios from "axios";
 
 // Register new user API
 const registerService = async (user) => {
@@ -28,9 +27,8 @@ const loginService = async (user) => {
 };
 
 // LoginSuccess user API
-const loginSuccessService = async (id) => {
-    console.log(id, 'userServices.js')
-    const {data} = await Axios.post("/users/login-success", id);
+const loginSuccessService = async (user) => {
+    const {data} = await Axios.post("/users/login-success", user);
 
     if (data) {
         localStorage.setItem("userInfo", JSON.stringify(data));

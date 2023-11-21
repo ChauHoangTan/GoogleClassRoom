@@ -5,17 +5,15 @@ import { loginAction } from '../../redux/actions/userActions';
 
 function LoginSuccess() {
     
-    const { userId } = useParams();
+    const { userId, tokenLogin } = useParams();
     const dispatch = useDispatch();
     const { isLoading, isError, userInfo, isSuccess } = useSelector(
         state => state.userLogin
     )
-    console.log(userId, 'LoginSuccess.js')
     useEffect(() => {
         const fetchToken = async () => {
-            // const response = await loginAction('google', userId);
-            const id = { userId };
-            dispatch(loginAction('google', id))
+            const data = { userId, tokenLogin };
+            dispatch(loginAction('google', data))
         }
 
         fetchToken();

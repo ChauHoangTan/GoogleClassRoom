@@ -32,7 +32,7 @@ function App () {
                             />
                         }
                     />
-                    <Route path='/login-success/:userId' element={<LoginSuccess />} />
+                    <Route path='/login-success/:userId/:tokenLogin' element={<LoginSuccess />} />
                     <Route path='/register' element={<Register />} />
                     <Route path='/' element={<Layout />}>
                         <Route index element={<Landing />} />

@@ -17,14 +17,25 @@ router.post("/login", (req, res, next) => {
 }, userController.loginUser);
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+
 router.get('/google/callback', (req, res, next) => {
     passport.authenticate('google', (err, user) => {
         req.user = user;
-        console.log(user)
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authGoogleId}`)
+    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authLoginId}/${req.user?.authLoginToken}`)
+});
+
+router.get('/facebook', passport.authenticate('facebook', { scope: ['email'], session: false }));
+
+router.get('/facebook/callback', (req, res, next) => {
+    passport.authenticate('facebook', (err, user) => {
+        req.user = user;
+        next();
+    })(req, res, next)
+}, (req, res) => {
+    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authLoginId}/${req.user?.authLoginToken}`)
 });
 
 router.post("/login-success", userController.loginSuccess)

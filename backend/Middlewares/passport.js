@@ -6,6 +6,7 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 // Passport jwt
 passport.use(new JwtStrategy({
@@ -15,12 +16,9 @@ passport.use(new JwtStrategy({
     try {
         const user = await User.findById(payload.id);
 
-        console.log(user);
         if (!user) {
-            console.log("oooh");
-            
             return done(null, false);
-        } 
+        }
 
         done(null, user)
     } catch (error) {
@@ -41,7 +39,7 @@ passport.use(new LocalStrategy({
 
         const isCorrectPassword = await bcrypt.compare(password, user.password);
 
-        if(!isCorrectPassword) {
+        if (!isCorrectPassword) {
             return done("Invalid password", false);
         }
 
@@ -56,16 +54,16 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "/api/users/google/callback"
-    },
+},
     async (accessToken, refreshToken, profile, done) => {
-        const existUser = await User.findOne({ 
-            authGoogleId: profile?.id,
+        const existUser = await User.findOne({
+            authLoginId: profile?.id,
             typeLogin: "google",
         });
 
         if (existUser) {
             const updateUser = {
-                authGoogleToken: accessToken,
+                authLoginToken: accessToken,
             };
 
             const user = await User.findOneAndUpdate(
@@ -81,8 +79,50 @@ passport.use(new GoogleStrategy({
                 lastName: profile?.name.familyName,
                 email: profile?.emails[0].value,
                 image: profile?.photos[0]?.value,
-                authGoogleId: profile.id,
-                authGoogleToken: accessToken,
+                authLoginId: profile.id,
+                authLoginToken: accessToken,
+                typeLogin: profile.provider,
+                isVerified: true,
+            })
+
+            const user = await newUser.save();
+            return done(null, user);
+        }
+    }
+));
+
+passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: "/api/users/facebook/callback",
+    profileFields: ['id', 'displayName', 'photos', 'email']
+},
+    async (accessToken, refreshToken, profile, done) => {
+        const existUser = await User.findOne({
+            authLoginId: profile?.id,
+            typeLogin: "facebook",
+        });
+
+        if (existUser) {
+            const updateUser = {
+                authLoginToken: accessToken,
+            };
+
+            const user = await User.findOneAndUpdate(
+                { _id: existUser.id },
+                { $set: updateUser },
+                { new: true }
+            );
+
+            return done(null, user);
+        } else {
+            const newUser = new User({
+                firstName: profile?.name.givenName ? profile?.name.givenName : profile?.displayName.split(" ")[0],
+                lastName: profile?.name.familyName ? profile?.name.familyName : profile?.displayName.split(" ")[profile?.displayName.split(" ").length - 1],
+                email: profile?.emails[0].value,
+                image: profile?.photos[0]?.value,
+                authLoginId: profile.id,
+                authLoginToken: accessToken,
                 typeLogin: profile.provider,
                 isVerified: true,
             })

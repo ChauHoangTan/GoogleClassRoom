@@ -54,8 +54,8 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "/api/users/google/callback"
   },
-    function(accessToken, refreshToken, profile, done) {
-        console.log(profile)
+    async (accessToken, refreshToken, profile, done) => {
+        const user = await User.findOne({ googleId: profile})
         return done(null, profile);
     }
 ));

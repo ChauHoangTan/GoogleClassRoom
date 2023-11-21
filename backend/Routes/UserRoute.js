@@ -16,7 +16,7 @@ router.post("/login", (req, res, next) => {
     })(req, res, next)
 }, userController.loginUser);
 
-router.get('/google', passport.authenticate('google', { scope: ['profile'], session: false }));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
 router.get('/google/callback', (req, res, next) => {
     passport.authenticate('google', (err, profile) => {
         req.user = profile;

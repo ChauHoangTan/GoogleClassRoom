@@ -141,10 +141,14 @@ const activateEmail = async (req, res) => {
 // desc Login user
 // @route POST api/user/login
 const loginUser = async (req, res) => {
-    const Authorization = createAccessToken(req.user._id)
-    res.setHeader("Authorization", Authorization)
-    console.log({...req.user._doc, Authorization })
-    res.status(200).json({...req.user._doc, Authorization });
+    if(req.user) {
+        const Authorization = createAccessToken(req.user._id)
+        res.setHeader("Authorization", Authorization)
+        console.log({...req.user._doc, Authorization })
+        res.status(200).json({ ...req.user._doc, Authorization });
+    } else {
+        res.status(400).json({ message: req.error })
+    }
 };
 
 // desc Login user

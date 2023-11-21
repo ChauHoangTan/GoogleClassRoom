@@ -9,7 +9,7 @@ const UploadRouter = require("./Routes/UploadRouter")
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 // connect database
 connectDB();
 

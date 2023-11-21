@@ -3,11 +3,15 @@ const userController = require("../Controllers/UserController");
 const { verify } = require("../Middlewares/verifyToken");
 const passport = require("passport");
 const passportConfig = require("../Middlewares/passport");
+
 const router = express.Router();
 
 router.post("/register", userController.registerUser);
-router.post("/login", passport.authenticate('local', { session: false }), userController.loginUser);
-router.post("/auth/google", passport.authenticate('google'), userController.authGoogle);
+router.post("/login", (req, res, next) => { passport.authenticate('local', { session: false }, (error, user) => {
+    req.error = error,
+    req.user = user
+    next();})(req, res, next)
+}, userController.loginUser);
 
 router.post("/activation", userController.activateEmail);
 router.post("/forgot", userController.forgotUserPassword);

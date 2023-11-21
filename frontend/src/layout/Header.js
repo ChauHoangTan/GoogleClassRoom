@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
-import { Avatar, Stack, Button, Hidden } from '@mui/material'
+import { Avatar, Stack, Button } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../assets/img/logo.png'
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,6 +28,7 @@ export default function ResponsiveAppBar () {
   const navigate = useNavigate()
   const { userInfo } = useSelector(state => state.userLogin)
 
+  // eslint-disable-next-line no-unused-vars
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
 

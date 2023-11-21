@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Card, CardContent, Grid, Paper, Rating, Stack, ThemeProvider, Typography, createTheme } from '@mui/material'
 import { useState } from 'react'
 import './style.scss'
@@ -52,11 +53,11 @@ const Introduction = () => {
                 <Typography variant='body-1' mt={3}
                   sx={{ fontSize: '16px' }}>
                                     Greetings, educators and students alike! We extend a warm welcome to our dedicated space
-                                    for Google Classroom, where learning and collaboration thrive. Whether you're a teacher
+                                    for Google Classroom, where learning and collaboration thrive. Whether you&apos;re a teacher
                                     shaping minds or a student on a quest for knowledge, this hub is designed with you in mind.
                 </Typography>
                 <button className='btnStart'
-                  onClick={handleClickBthStart}>Let's Start</button>
+                  onClick={handleClickBthStart}>Let&apos;s Start</button>
               </Stack>
             </Stack>
           </Grid>
@@ -196,7 +197,7 @@ const Features = () => {
             <CardContent>
               <Typography variant='body-1' sx={{ fontWeight:'bold' }}>Empowering Educators: </Typography>Discover tips, tricks,
                                 and best practices to maximize your teaching potential with Google Classroom. From innovative assignments
-                                to effective communication strategies, we've got you covered.
+                                to effective communication strategies, we&apos;ve got you covered.
             </CardContent>
           </Card>
         </Grid>
@@ -375,7 +376,7 @@ const SubmitQuestion = () => {
           <textarea placeholder='Your questions...'
             value={inputQuestion}
             onChange={(e) => handleInputQuestion(e)}/>
-          <button variant='outlined'>Submit</button>
+          <button>Submit</button>
         </Stack>
 
 

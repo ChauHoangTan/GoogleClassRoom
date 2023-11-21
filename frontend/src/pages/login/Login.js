@@ -89,6 +89,7 @@ function Login ({ rememberMe, setRememberMe }) {
       setValue('email', rememberedEmail)
       setValue('password', rememberedPassword)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // useEffect
@@ -111,6 +112,7 @@ function Login ({ rememberMe, setRememberMe }) {
     // console.log('Google login clicked')
   }
 
+  // eslint-disable-next-line no-unused-vars
   const handleFacebookLogin = response => {
     // Handle when user click login by Facebook
     // console.log('Facebook login response:', response)

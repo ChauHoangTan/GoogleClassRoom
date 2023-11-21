@@ -16,10 +16,10 @@ function Layout() {
       <Header />
 
       <Stack direction='row' container id='menuAndOutlet'>
-        <div item className={`grid1 ${!isOpenMenu && 'hide'}`}>
+        <div className={`grid1 ${!isOpenMenu && 'hide'}`}>
           <Menu/>
         </div>
-        <div item className='grid2'>
+        <div className='grid2'>
           <Outlet />
         </div>
       </Stack>

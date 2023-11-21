@@ -1,4 +1,5 @@
 import Axios from "./Axios";
+import axios from "axios";
 
 // Register new user API
 const registerService = async (user) => {
@@ -26,6 +27,18 @@ const loginService = async (user) => {
     return data;
 };
 
+// LoginSuccess user API
+const loginSuccessService = async (id) => {
+    console.log(id, 'userServices.js')
+    const {data} = await Axios.post("/users/login-success", id);
+
+    if (data) {
+        localStorage.setItem("userInfo", JSON.stringify(data));
+    }
+    return data;
+};
+
+
 // Change password API 
 const changePasswordService = async (password, token) => {
     const { data } = await Axios.put("/users/password", password, {
@@ -49,4 +62,4 @@ const updateProfileService = async (user, token) => {
     return data;
 }
 
-export { registerService, logoutService, loginService, changePasswordService, updateProfileService };
+export { registerService, logoutService, loginService, changePasswordService, updateProfileService, loginSuccessService };

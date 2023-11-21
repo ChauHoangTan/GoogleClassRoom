@@ -14,13 +14,14 @@ import Profile from './pages/profile/Profile.js'
 import { ProtectedRouter } from './ProtectedRouter.js'
 import { useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import LoginSuccess from './pages/loginSuccess/LoginSuccess.js'
 
 function App () {
     const [rememberMe, setRememberMe] = useState(false)
     return (
         <>
             <ToastContainer />
-            <HashRouter>
+            <BrowserRouter>
                 <Routes>
                     <Route
                         path='/login'
@@ -31,6 +32,7 @@ function App () {
                             />
                         }
                     />
+                    <Route path='/login-success/:userId' element={<LoginSuccess />} />
                     <Route path='/register' element={<Register />} />
                     <Route path='/' element={<Layout />}>
                         <Route index element={<Landing />} />
@@ -42,7 +44,7 @@ function App () {
                         </Route>
                     </Route>
                 </Routes>
-            </HashRouter>
+            </BrowserRouter>
         </>
     )
 }

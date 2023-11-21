@@ -4,8 +4,9 @@ const UserSchema = mongoose.Schema(
     {
         studentId:  {
             type: String,
-            unique: true,
-            trim: true,
+            // trim: true,
+            // unique: true,
+            default: "",
         },
         firstName:  {
             type: String,

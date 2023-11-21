@@ -91,7 +91,7 @@ const registerUser = async(req, res) => {
 
         res.json({ message: "Register Success! Please activate your email to start." })
     } catch(error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -134,33 +134,51 @@ const activateEmail = async (req, res) => {
             throw new Error("Invalid user data");
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
 // desc Login user
 // @route POST api/user/login
 const loginUser = async (req, res) => {
-    if(req.user) {
-        const Authorization = createAccessToken(req.user._id)
-        res.setHeader("Authorization", Authorization)
-        console.log({...req.user._doc, Authorization })
-        res.status(200).json({ ...req.user._doc, Authorization });
-    } else {
-        res.status(400).json({ message: req.error })
+    try {
+        if(req.user) {
+            const Authorization = createAccessToken(req.user._id)
+            res.setHeader("Authorization", Authorization)
+            console.log({...req.user._doc, Authorization })
+            res.status(200).json({ ...req.user._doc, Authorization });
+        } else {
+            res.status(400).json({ message: req.error })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
 // desc Login user
 // @route POST api/user/login-success
 const loginSuccess = async (req, res) => {
+    const { userId } = req.body;
+    try {
+        if( !userId) {
+            res.status(400).json({ message: "Missing inputs" });
+        }
+        console.log(userId)
 
+        const user = await User.findOne({ authGoogleId: userId });
+        const Authorization = createAccessToken(user._id)
+        console.log(user)
+        res.status(200).json({...user._doc, Authorization})
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+
+    }
 };
 
 // desc Login user
 // @route POST api/user/auth/google
 const authGoogle = async (req, res) => {
-  console.log('auth google', req.user);
+    console.log('auth google', req.user);
 };
 
 // @desc Update user profile
@@ -201,7 +219,7 @@ const updateUserProfile = async(req, res) => {
         
     
     }  catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -235,7 +253,7 @@ const changeUserPassword = async (req, res) => {
 
 // @desc user forgot password
 // @route PUT /api/users/forgot
-    const forgotUserPassword = async (req, res) => {
+const forgotUserPassword = async (req, res) => {
     const { email } = req.body;
     try {
         // find user in DB
@@ -254,7 +272,7 @@ const changeUserPassword = async (req, res) => {
             throw new Error("This email does not exist");
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -272,7 +290,7 @@ const resetUserPassword = async (req, res) => {
 
         res.json({ message: "Password successfully changed!"});
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 

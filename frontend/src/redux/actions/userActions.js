@@ -5,15 +5,53 @@ import { ErrorsAction, tokenProtection } from "../protection";
 import toast from "react-hot-toast";
 
 // Login action
-const loginAction = (datas) => async (dispatch) => {
-    try {
-        dispatch({ type: userConstants.USER_LOGIN_REQUEST });
-        const response = await userApi.loginService(datas);
-        dispatch({ type: userConstants.USER_LOGIN_SUCCESS, payload: response });
-    } catch (error) {
-        ErrorsAction(error, dispatch, userConstants.USER_LOGIN_FAIL);
+const loginAction = (provider, datas) => async (dispatch) => {
+
+    switch (provider) {
+        case 'google':
+            try {
+                dispatch({ type: userConstants.USER_LOGIN_GOOGLE_REQUEST });
+                console.log(datas, 'userAction.js')
+                const response = await userApi.loginSuccessService(datas);
+                dispatch({ type: userConstants.USER_LOGIN_GOOGLE_SUCCESS, payload: response });
+            } catch (error) {
+                ErrorsAction(error, dispatch, userConstants.USER_LOGIN_GOOGLE_FAIL);
+            }
+            break;
+        // case 'facebook':
+        //     try {
+        //         const { id, token } = data;
+        //         dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_REQUEST });
+        //         const response = await userApi.loginFacebookGoogle(id, token);
+        //         dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_SUCCESS, payload: response });
+        //     } catch (error) {
+        //         ErrorsAction(error, dispatch, userConstants.USER_LOGIN_FACEBOOK_FAIL);
+        //     }
+        //     break;
+        case 'local':
+            try {
+                dispatch({ type: userConstants.USER_LOGIN_REQUEST });
+                const response = await userApi.loginService(datas);
+                dispatch({ type: userConstants.USER_LOGIN_SUCCESS, payload: response });
+            } catch (error) {
+                ErrorsAction(error, dispatch, userConstants.USER_LOGIN_FAIL);
+            }
+            break;
+        default:
+            // Xử lý đăng nhập thông thường nếu cần
+            break;
     }
 };
+
+// const loginAction = (datas) => async (dispatch) => {
+//     try {
+//         dispatch({ type: userConstants.USER_LOGIN_REQUEST });
+//         const response = await userApi.loginService(datas);
+//         dispatch({ type: userConstants.USER_LOGIN_SUCCESS, payload: response });
+//     } catch (error) {
+//         ErrorsAction(error, dispatch, userConstants.USER_LOGIN_FAIL);
+//     }
+// };
 
 // Register action
 const registerAction = (datas) => async (dispatch) => {

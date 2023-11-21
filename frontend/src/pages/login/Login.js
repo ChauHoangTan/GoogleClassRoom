@@ -66,7 +66,7 @@ function Login ({ rememberMe, setRememberMe }) {
 
     // On submit
     const onSubmit = data => {
-        dispatch(loginAction(data))
+        dispatch(loginAction('local', data))
         if (rememberMe) {
             localStorage.setItem('rememberedCheck', rememberMe)
             localStorage.setItem('rememberedEmail', data.email)
@@ -110,7 +110,7 @@ function Login ({ rememberMe, setRememberMe }) {
 
     const handleGoogleLogin = () => {
         // Handle when user click login by Google
-        console.log('Google login clicked')
+        window.open('http://localhost:5000/api/users/google', '_self');
     }
 
     const handleFacebookLogin = response => {

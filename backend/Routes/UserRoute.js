@@ -24,10 +24,11 @@ router.get('/google/callback', (req, res, next) => {
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.id}`)
+    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authGoogleId}`)
 });
 
 router.post("/login-success", userController.loginSuccess)
+
 router.post("/activation", userController.activateEmail);
 
 router.post("/forgot", userController.forgotUserPassword);

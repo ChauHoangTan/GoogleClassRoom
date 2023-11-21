@@ -152,6 +152,12 @@ const loginUser = async (req, res) => {
 };
 
 // desc Login user
+// @route POST api/user/login-success
+const loginSuccess = async (req, res) => {
+
+};
+
+// desc Login user
 // @route POST api/user/auth/google
 const authGoogle = async (req, res) => {
   console.log('auth google', req.user);
@@ -271,14 +277,14 @@ const resetUserPassword = async (req, res) => {
 }
 
 const secret = async (req, res) => {
- console.log("hello");
+    console.log("hello");
 }
-
 
 module.exports = {
     registerUser,
     activateEmail,
     loginUser,
+    loginSuccess,
     updateUserProfile,
     changeUserPassword,
     forgotUserPassword,

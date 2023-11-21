@@ -48,3 +48,14 @@ passport.use(new LocalStrategy({
     }
 }))
 
+// Passport Google
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/api/users/google/callback"
+  },
+    function(accessToken, refreshToken, profile, done) {
+        console.log(profile)
+        return done(null, profile);
+    }
+));

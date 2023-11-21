@@ -13,38 +13,37 @@ import Password from './pages/password/Password.js'
 import Profile from './pages/profile/Profile.js'
 import { ProtectedRouter } from './ProtectedRouter.js'
 import { useState } from 'react'
-import { BrowserRouter } from 'react-router-dom'
 
 function App () {
-    const [rememberMe, setRememberMe] = useState(false)
-    return (
-        <>
-            <ToastContainer />
-            <HashRouter>
-                <Routes>
-                    <Route
-                        path='/login'
-                        element={
-                            <Login
-                                rememberMe={rememberMe}
-                                setRememberMe={setRememberMe}
-                            />
-                        }
-                    />
-                    <Route path='/register' element={<Register />} />
-                    <Route path='/' element={<Layout />}>
-                        <Route index element={<Landing />} />
-                        <Route path='*' element={<NoPage />} />
-                        <Route element={<ProtectedRouter />}>
-                            <Route path='password' element={<Password />} />
-                            <Route path='profile' element={<Profile />} />
-                            <Route path='home' element={<Home />} />
-                        </Route>
-                    </Route>
-                </Routes>
-            </HashRouter>
-        </>
-    )
+  const [rememberMe, setRememberMe] = useState(false)
+  return (
+    <>
+      <ToastContainer />
+      <HashRouter>
+        <Routes>
+          <Route
+            path='/login'
+            element={
+              <Login
+                rememberMe={rememberMe}
+                setRememberMe={setRememberMe}
+              />
+            }
+          />
+          <Route path='/register' element={<Register />} />
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Landing />} />
+            <Route path='*' element={<NoPage />} />
+            <Route element={<ProtectedRouter />}>
+              <Route path='password' element={<Password />} />
+              <Route path='profile' element={<Profile />} />
+              <Route path='home' element={<Home />} />
+            </Route>
+          </Route>
+        </Routes>
+      </HashRouter>
+    </>
+  )
 }
 
 export default App

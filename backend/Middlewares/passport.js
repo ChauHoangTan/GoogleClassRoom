@@ -15,7 +15,10 @@ passport.use(new JwtStrategy({
     try {
         const user = await User.findById(payload.id);
 
+        console.log(user);
         if (!user) {
+            console.log("oooh");
+            
             return done(null, false);
         } 
 

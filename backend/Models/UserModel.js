@@ -38,13 +38,31 @@ const UserSchema = mongoose.Schema(
             required: true,
             default: 'student', 
         },
-        googleId: { 
+        authType: { 
+            type: String, 
+            enum: ['local', 'google', 'facebook'], 
+            required: true,
+            default: 'local', 
+        },
+        authGoogleId: { 
             type: String 
         },
-        facebookId: { 
+        authFacebookId: { 
             type: String 
         },
-        isVerified: { type: Boolean, default: true },
+
+        isBanned:  { 
+            type: Boolean, 
+            default: false 
+        },
+        isBlocked:  { 
+            type: Boolean, 
+            default: false 
+        },
+        isVerified: { 
+            type: Boolean, 
+            default: false 
+        },
     },
     {
         timestamps: true,

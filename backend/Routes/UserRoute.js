@@ -18,8 +18,9 @@ router.post("/login", (req, res, next) => {
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
 router.get('/google/callback', (req, res, next) => {
-    passport.authenticate('google', (err, profile) => {
-        req.user = profile;
+    passport.authenticate('google', (err, user) => {
+        req.user = user;
+        console.log(user)
         next();
     })(req, res, next)
 }, (req, res) => {

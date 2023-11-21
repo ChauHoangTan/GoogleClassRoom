@@ -2,13 +2,18 @@ const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema(
     {
+        studentId:  {
+            type: String,
+            unique: true,
+            trim: true,
+        },
         firstName:  {
             type: String,
-            required: [true, "Please add a full name"],
+            required: true,
         },
         lastName:  {
             type: String,
-            required: [true, "Please add a full name"],
+            required: true,
         },
         email: {
             type: String,
@@ -16,8 +21,6 @@ const UserSchema = mongoose.Schema(
         },
         password: {
             type: String,
-            required: [true, "Please add a password"],
-            minLength: [6, "Password must be at least 6 characters"],
         },
         image: {
             type: String,
@@ -38,7 +41,7 @@ const UserSchema = mongoose.Schema(
             required: true,
             default: 'student', 
         },
-        authType: { 
+        typeLogin: { 
             type: String, 
             enum: ['local', 'google', 'facebook'], 
             required: true,
@@ -50,7 +53,12 @@ const UserSchema = mongoose.Schema(
         authFacebookId: { 
             type: String 
         },
-
+        authGoogleToken: { 
+            type: String 
+        },
+        authFacebookToken: { 
+            type: String 
+        },
         isBanned:  { 
             type: Boolean, 
             default: false 

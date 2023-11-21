@@ -54,13 +54,18 @@ function Login ({ rememberMe, setRememberMe }) {
     state => state.userLogin
   )
 
-  // Validate user
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ resolver: yupResolver(LoginValidation) })
+   // On submit
+   const onSubmit = data => {
+       dispatch(loginAction('local', data))
+       if (rememberMe) {
+           localStorage.setItem('rememberedCheck', rememberMe)
+           localStorage.setItem('rememberedEmail', data.email)
+           localStorage.setItem('rememberedPassword', data.password)
+       } else {
+           localStorage.removeItem('rememberedEmail')
+           localStorage.removeItem('rememberedPassword')
+       }
+   }
 
   // On submit
   const onSubmit = data => {
@@ -92,11 +97,10 @@ function Login ({ rememberMe, setRememberMe }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // useEffect
-  useEffect(() => {
-    if (userInfo) {
-      navigate('/home')
-    }
+   const handleGoogleLogin = () => {
+       // Handle when user click login by Google
+       window.open('http://localhost:5000/api/users/google', '_self');
+   }
 
     if (isSuccess) {
       toast.success(`Welcome back ${userInfo?.firstName}`)

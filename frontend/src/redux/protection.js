@@ -14,12 +14,12 @@ export const ErrorsAction = (error, dispatch, action) => {
 
 // api token protection
 export const tokenProtection = (getState) => {
-  const {
-    userLogin: { userInfo }
-  } = getState()
-  if (!userInfo?.token) {
-    return null
-  } else {
-    return userInfo.token
-  }
-}
+    const {
+        userLogin: { userInfo },
+    } = getState();
+    if(!userInfo?.Authorization) {
+        return null;
+    } else {
+        return userInfo.Authorization;
+    }
+}; 

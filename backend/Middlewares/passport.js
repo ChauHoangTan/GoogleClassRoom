@@ -15,7 +15,10 @@ passport.use(new JwtStrategy({
     try {
         const user = await User.findById(payload.id);
 
+        console.log(user);
         if (!user) {
+            console.log("oooh");
+            
             return done(null, false);
         } 
 
@@ -53,9 +56,39 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "/api/users/google/callback"
-  },
+    },
     async (accessToken, refreshToken, profile, done) => {
-        const user = await User.findOne({ googleId: profile})
-        return done(null, profile);
+        const existUser = await User.findOne({ 
+            authGoogleId: profile?.id,
+            typeLogin: "google",
+        });
+
+        if (existUser) {
+            const updateUser = {
+                authGoogleToken: accessToken,
+            };
+
+            const user = await User.findOneAndUpdate(
+                { _id: existUser.id },
+                { $set: updateUser },
+                { new: true }
+            );
+
+            return done(null, user);
+        } else {
+            const newUser = new User({
+                firstName: profile?.name.givenName,
+                lastName: profile?.name.familyName,
+                email: profile?.emails[0].value,
+                image: profile?.photos[0]?.value,
+                authGoogleId: profile.id,
+                authGoogleToken: accessToken,
+                typeLogin: profile.provider,
+                isVerified: true,
+            })
+
+            const user = await newUser.save();
+            return done(null, user);
+        }
     }
 ));

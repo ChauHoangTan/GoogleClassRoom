@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 import imgErr from '../../assets/img/404.png'
@@ -13,36 +12,36 @@ function NoPage() {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        minHeight: '100%',
+        minHeight: '100%'
       }}
     >
-      <img 
-        style={{ width: '100%', objectFit: 'contain', height: '28rem'}} 
-        src={imgErr} 
+      <img
+        style={{ width: '100%', objectFit: 'contain', height: '28rem' }}
+        src={imgErr}
         alt='notfound'
       />
       <Typography variant="h5" gutterBottom sx={{ my: 2 }}>
         The page you are looking for might be unavailable or does not exist.
       </Typography>
-      <Button 
-        component={Link} 
-        to="/" 
-        variant="outlined" 
-        sx={{ 
-          backgroundColor: '#466874', 
-          my: 2, 
+      <Button
+        component={Link}
+        to="/"
+        variant="outlined"
+        sx={{
+          backgroundColor: '#466874',
+          my: 2,
           color: '#fff',
           '&:hover': {
             backgroundColor: '#fff',
             color: '#466874',
-            border: '1px solid #466874',
-          }, 
+            border: '1px solid #466874'
+          }
         }}
       >
         Go to Home
       </Button>
     </Box>
-  );
+  )
 }
 
-export default NoPage;
+export default NoPage

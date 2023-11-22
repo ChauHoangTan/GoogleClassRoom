@@ -44,12 +44,14 @@
     border-top: 2px solid rgb(199, 199, 199);
     border-bottom: 2px solid rgb(199, 199, 199);
     color: #466874;
+    
     .grid1{
         border-right: 2px solid rgb(199, 199, 199);
         transition: width 0.5s ease;
         display: flex;
         width: 300px;
-        overflow: hidden;
+        height: 100vh;
+        overflow: scroll;
         .containerPanel{
             border-top: 2px solid rgb(199, 199, 199);
         }
@@ -82,8 +84,9 @@
     .grid2{
         position: relative;
         flex-grow: 1;
-        height: 100%;
+        height: 100vh;
         width: 60%;
+        overflow: scroll;
     }
 }
 

@@ -35,16 +35,16 @@ const Tabs = ({ indexTab, setIndexTab }) => {
 
   const [isOpenTeaching, setIsOpenTeaching] = useState(false)
   const handleIsOpenTeaching = () => {
-    setIsOpenTeaching(isOpenTeaching ? false : true)
+    setIsOpenTeaching(!isOpenTeaching)
   }
 
-  const [isOpenMyCourses, setIsOpeMyCourses] = useState(false)
+  const [isOpenMyCourses, setIsOpenMyCourses] = useState(false)
   const handleIsOpenMyCourses = () => {
-    setIsOpeMyCourses(isOpenMyCourses ? false : true)
+    setIsOpenMyCourses(!isOpenMyCourses)
   }
 
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper', overflow:'scroll' }}>
+    <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
       <nav aria-label="main mailbox folders" className='containerPanel'>
         <List>
           <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
@@ -93,11 +93,56 @@ const Tabs = ({ indexTab, setIndexTab }) => {
           <Collapse in={isOpenTeaching} timeout="auto" unmountOnExit>
             <Divider/>
             <List>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                  title='2310-CLC-AWP-20KTPM2'
-                  tagline='Advanced Web Programming'/>
-              </ListItemButton>
+              <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+              </Stack>
             </List>
           </Collapse>
         </List>
@@ -121,51 +166,57 @@ const Tabs = ({ indexTab, setIndexTab }) => {
           <Collapse in={isOpenMyCourses} timeout="auto" unmountOnExit>
             <Divider/>
             <List>
-              <ListItemButton sx={{ pl: 4 }}>
+              <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+                <ListItemButton>
+                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                    title='2310-CLC-AWP-20KTPM2'
+                    tagline='Advanced Web Programming'/>
+                </ListItemButton>
+                <Divider/>
+              </Stack>
 
-                <Stack spacing={2} sx={{ height:'100%' }}>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                  <Divider/>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </Stack>
-
-              </ListItemButton>
             </List>
           </Collapse>
         </List>

@@ -19,7 +19,7 @@ module.exports = {
     'react-refresh/only-export-components': 'warn',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    'react/prop-types': 0,
+    'react/prop-types': 'off',
     'react/display-name': 0,
 
     'no-console': 1,

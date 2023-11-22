@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -30,6 +30,7 @@ export default function ResponsiveAppBar () {
 
   const [anchorElUser, setAnchorElUser] = React.useState(null)
 
+  // eslint-disable-next-line no-unused-vars
   const handleOpenNavMenu = event => {
     dispatch(setMoreIcon())
   }
@@ -47,14 +48,6 @@ export default function ResponsiveAppBar () {
     dispatch(logoutAction())
     toast.success('Logged out successfully')
     navigate('/')
-  }
-
-  // state responsive
-  const [isClickMore, setIsClickMore] = useState(false)
-
-  // eslint-disable-next-line no-unused-vars
-  const handleIsClickMore = () => {
-    setIsClickMore(isClickMore ? false : true)
   }
 
   const imgURL = userInfo?.image

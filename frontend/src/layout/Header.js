@@ -30,20 +30,14 @@ export default function ResponsiveAppBar () {
     const navigate = useNavigate()
     const { userInfo } = useSelector(state => state.userLogin)
 
-    const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
 
     const handleOpenNavMenu = event => {
         dispatch(setMoreIcon())
-        setAnchorElNav(event.currentTarget)
     }
 
     const handleOpenUserMenu = event => {
         setAnchorElUser(event.currentTarget)
-    }
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null)
     }
 
     const handleCloseUserMenu = () => {

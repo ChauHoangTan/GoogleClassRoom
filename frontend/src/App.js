@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 
-import { Routes, Route, HashRouter } from 'react-router-dom'
+import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import Layout from './layout/Layout.js'
 import Home from './pages/home/Home.js'
 import Register from './pages/register/Register.js'
@@ -13,7 +13,6 @@ import Password from './pages/password/Password.js'
 import Profile from './pages/profile/Profile.js'
 import { ProtectedRouter } from './ProtectedRouter.js'
 import { useState } from 'react'
-import { BrowserRouter } from 'react-router-dom'
 import LoginSuccess from './pages/loginSuccess/LoginSuccess.js'
 
 function App () {

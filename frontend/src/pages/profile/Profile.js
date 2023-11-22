@@ -3,7 +3,6 @@ import {
   Button,
   Box,
   Container,
-  CssBaseline,
   Grid,
   Paper,
   TextField,
@@ -98,7 +97,6 @@ const EditProfile = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <CssBaseline />
       <Grid
         container
         sx={{
@@ -124,7 +122,6 @@ const EditProfile = () => {
           component={Paper}
           elevation={6}
         >
-          <CssBaseline />
           <Box
             sx={{
               marginTop: 4,
@@ -136,8 +133,7 @@ const EditProfile = () => {
               variant='h5'
               sx={{
                 fontSize: '40px',
-                fontWeight: 'bold',
-                color: '#465d74'
+                fontWeight: 'bold'
               }}
             >
                             Edit Profile

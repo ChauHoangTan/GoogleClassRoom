@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
@@ -66,7 +65,6 @@ function Password() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <CssBaseline />
       <Grid container
         sx={{
           height: '100vh',
@@ -83,7 +81,6 @@ function Password() {
         maxWidth="xs"
       >
         <Container maxWidth="xs" component={Paper} elevation={6}>
-          <CssBaseline />
           <Box
             sx={{
               marginTop: 4,
@@ -93,7 +90,7 @@ function Password() {
               alignItems: 'center'
             }}
           >
-            <Typography component="h1" variant="h5" sx={{ fontSize: '40px', fontWeight: 'bold', color: '#465d74' }}>
+            <Typography component="h1" variant="h5" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
                         Change Password
             </Typography>
             <Box

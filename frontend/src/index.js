@@ -5,12 +5,18 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
+import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
+import theme from './theme'
+import { CssBaseline } from '@mui/material'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <CssVarsProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </CssVarsProvider>
     </Provider>
   </React.StrictMode>
 )

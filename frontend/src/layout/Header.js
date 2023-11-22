@@ -9,7 +9,8 @@ import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import { Avatar, Stack, Button } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
-import logo from '../assets/img/logo.png'
+import logoLight from '../assets/img/logo_light_mode.png'
+import logoDark from '../assets/img/logo_dark_mode.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutAction } from '../redux/actions/userActions'
 import toast from 'react-hot-toast'
@@ -17,15 +18,18 @@ import Badge from '@mui/material/Badge'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import { setMoreIcon } from '../redux/actions/moreIconActions.js'
 import { RiLockPasswordLine, RiLogoutCircleLine } from 'react-icons/ri'
+import { useColorScheme } from '@mui/material/styles'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
+import Tooltip from '@mui/material/Tooltip'
 
 import './style.scss'
 import { FiSettings } from 'react-icons/fi'
 
-const pages = ['Home', 'Blog', 'My Course']
-
 export default function ResponsiveAppBar () {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { mode, setMode } = useColorScheme()
   const { userInfo } = useSelector(state => state.userLogin)
 
   const [anchorElUser, setAnchorElUser] = React.useState(null)
@@ -60,8 +64,7 @@ export default function ResponsiveAppBar () {
         <Box
           sx={{
             flexGrow: 1,
-            paddingInline: 3,
-            backgroundColor: '#466874'
+            paddingInline: 3
           }}
         >
           <Toolbar disableGutters>
@@ -85,41 +88,27 @@ export default function ResponsiveAppBar () {
             >
               <Link to='/'>
                 <Avatar
-                  src={logo}
+                  src={mode === 'dark' ? logoDark : logoLight}
                   sx={{
-                    width: 210,
+                    width: 230,
                     height: 60,
                     margin: 2,
                     borderRadius: 0,
+                    objectFit: 'cover',
                     display: { xs: 'none', sm: 'block' }
                   }}
                 />
               </Link>
             </Stack>
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: { xs: 'none', md: 'flex' }
-              }}
-            >
-              {pages.map(page => (
-                <Typography
-                  className='nav'
-                  key={page}
-                  variant='h6'
-                  sx={{ fontFamily: 'Arima', mr: 2 }}
-                >
-                  <Link
-                    to={`/${page.toLowerCase()}`}
-                    style={{
-                      textDecoration: 'none',
-                      color: 'inherit'
-                    }}
-                  >
-                    {page}
-                  </Link>
-                </Typography>
-              ))}
+
+            <Box>
+              <Tooltip title= {mode === 'light' ? 'Turn dark' : 'Turn light'} mode>
+                <IconButton sx={{ mr: 2 }} onClick={() => {
+                  setMode(mode === 'light' ? 'dark' : 'light')
+                }} color="inherit">
+                  {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+                </IconButton>
+              </Tooltip>
             </Box>
 
             {userInfo ? (
@@ -127,15 +116,14 @@ export default function ResponsiveAppBar () {
                 <Typography
                   variant='h6'
                   sx={{
-                    fontFamily: 'Arima',
-                    mr: 2,
+                    mr: 1,
                     display: {
                       xs: 'none',
                       md: 'inline-flex'
                     }
                   }}
                 >
-                                    Hi, {userInfo?.firstName}
+                  Hi, {userInfo?.firstName}
                 </Typography>
 
                 <Box sx={{ flexGrow: 0 }}>
@@ -181,9 +169,9 @@ export default function ResponsiveAppBar () {
                         to='/profile'
                         style={{
                           textDecoration: 'none',
-                          color: 'black',
                           display: 'flex',
-                          alignItems: 'center'
+                          alignItems: 'center',
+                          color: 'inherit'
                         }}
                       >
                         <FiSettings />
@@ -192,7 +180,7 @@ export default function ResponsiveAppBar () {
                             marginLeft: '4px'
                           }}
                         >
-                                                    Profile account
+                            Profile account
                         </span>
                       </Link>
                     </MenuItem>
@@ -201,9 +189,9 @@ export default function ResponsiveAppBar () {
                         to='/password'
                         style={{
                           textDecoration: 'none',
-                          color: 'black',
                           display: 'flex',
-                          alignItems: 'center'
+                          alignItems: 'center',
+                          color: 'inherit'
                         }}
                       >
                         <RiLockPasswordLine />
@@ -212,7 +200,7 @@ export default function ResponsiveAppBar () {
                             marginLeft: '4px'
                           }}
                         >
-                                                    Change password
+                          Change password
                         </span>
                       </Link>
                     </MenuItem>
@@ -220,14 +208,13 @@ export default function ResponsiveAppBar () {
                       onClick={logoutHandler}
                       style={{
                         textDecoration: 'none',
-                        color: 'black',
                         display: 'flex',
                         alignItems: 'center'
                       }}
                     >
                       <RiLogoutCircleLine />
                       <span style={{ marginLeft: '4px' }}>
-                                                Log Out
+                        Log Out
                       </span>
                     </MenuItem>
                   </Menu>
@@ -240,8 +227,6 @@ export default function ResponsiveAppBar () {
                     className='btnCustom'
                     variant='outlined'
                     sx={{
-                      mt: 3,
-                      mb: 2,
                       mx: 1,
                       borderRadius: 50,
                       color: '#ffffff',
@@ -252,25 +237,9 @@ export default function ResponsiveAppBar () {
                       }
                     }}
                   >
-                                        Sign in
+                    Sign in
                   </Button>
                 </Link>
-
-                {/* <Link to=''>
-                  <Button
-                    className='btnCustom'
-                    variant="outlined"
-                    sx={{ mt: 3, mb: 2, mx: 2, borderRadius: 50,
-                      color: '#ffffff', borderColor: '#ffffff',
-                      '&:hover': {
-                        borderColor: '#ffffff',
-                        backgroundColor: '#283643'
-                      },
-                    }}
-                  >
-                    Sign up
-                  </Button>
-                </Link> */}
               </>
             )}
           </Toolbar>

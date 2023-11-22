@@ -1,25 +1,25 @@
-import { logoutAction } from "./actions/userActions";
+import { logoutAction } from './actions/userActions'
 
 export const ErrorsAction = (error, dispatch, action) => {
-    const message =
+  const message =
         error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message
-    if (message === "Not authorized, token failed") {
-        // Logout if token fail
-        dispatch(logoutAction());
-    }
-    return dispatch({ type: action, payload: message });
-};
+          ? error.response.data.message
+          : error.message
+  if (message === 'Not authorized, token failed') {
+    // Logout if token fail
+    dispatch(logoutAction())
+  }
+  return dispatch({ type: action, payload: message })
+}
 
 // api token protection
 export const tokenProtection = (getState) => {
-    const {
-        userLogin: { userInfo },
-    } = getState();
-    if(!userInfo?.Authorization) {
-        return null;
-    } else {
-        return userInfo.Authorization;
-    }
-}; 
+  const {
+    userLogin: { userInfo }
+  } = getState()
+  if (!userInfo?.Authorization) {
+    return null
+  } else {
+    return userInfo.Authorization
+  }
+}

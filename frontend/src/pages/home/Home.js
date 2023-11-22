@@ -1,11 +1,11 @@
 import './style.scss'
-import HomePageContent from './homePageContent/HomePageContent';
+import HomePageContent from './homePageContent/HomePageContent'
 
 function Home() {
 
-    return ( 
-        <HomePageContent/>
-    );
+  return (
+    <HomePageContent/>
+  )
 }
 
-export default Home;
+export default Home

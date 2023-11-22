@@ -61,7 +61,7 @@ const {CLIENT_URL} = process.env
 // };
 
 const registerUser = async(req, res) => {
-    const { email, firstName, lastName, password, image } = req.body;
+    const { email, firstName, lastName, password } = req.body;
     try {
         const userExists = await User.findOne({ email });
         // check if user exists
@@ -86,9 +86,9 @@ const registerUser = async(req, res) => {
         const url = `${CLIENT_URL}/user/activate/${activation_token}`
         await sendMail(email, url, "Verify your email address")
 
-        res.json({ message: "Register Success! Please activate your email to start." })
+        return res.json({ message: "Register Success! Please activate your email to start." })
     } catch(error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -97,12 +97,13 @@ const activateEmail = async (req, res) => {
         const { activation_token } = req.body;
         const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET);
 
-        console.log(user)
         const { email, firstName, lastName, password } = user;
 
         const userExist = await User.findOne({ email });
+        console.log(userExist)
         if(userExist) {
-            res.status(400).json({message: "This email already exists."});
+        console.log(userExist, "123")
+            return res.status(400).json({message: "This email already exists."});
         }
 
         const newUser = await User.create({
@@ -113,12 +114,13 @@ const activateEmail = async (req, res) => {
         });
 
         if(newUser) {
-            res.status(200).json({ message: "Account has been activated!" })
+            return res.status(200).json({ message: "Account has been activated!" })
         } else {
-            res.status(400).json({ message: "Invalid user data" });
+            res.status(400)
+            throw new Error("Invalid user data");
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: "This Activation Email is unavailable!" });
     }
 };
 
@@ -129,12 +131,12 @@ const loginUser = async (req, res) => {
         if(req.user) {
             const Authorization = createAccessToken(req.user._id)
             // res.setHeader("Authorization", Authorization)
-            res.status(200).json({ ...req.user._doc, Authorization });
+return             res.status(200).json({ ...req.user._doc, Authorization });
         } else {
-            res.status(400).json({ message: req.error })
+            return res.status(400).json({ message: req.error })
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -144,7 +146,7 @@ const loginSuccess = async (req, res) => {
     const { userId, tokenLogin } = req.body;
     try {
         if (!userId || !tokenLogin) {
-            res.status(400).json({ message: "Missing inputs" });
+            return res.status(400).json({ message: "Missing inputs" });
         }
         const user = await User.findOne({ 
             authLoginId: userId, 
@@ -153,9 +155,9 @@ const loginSuccess = async (req, res) => {
 
         const Authorization = createAccessToken(user._id)
 
-        res.status(200).json({...user._doc, Authorization})
+        return res.status(200).json({...user._doc, Authorization})
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -208,7 +210,7 @@ const updateUserProfile = async(req, res) => {
 
             const updatedUser = await user.save();
             // send updated user data and token to client
-            res.json({
+            return res.json({
                 email: updatedUser.email,
                 _id: updatedUser._id,
                 firstName: updatedUser.firstName,
@@ -222,13 +224,13 @@ const updateUserProfile = async(req, res) => {
         }
         // else send error message
         else {
-            res.status(404);
+            return res.status(404);
             throw new Error("User not found");
         }
         
     
     }  catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -248,15 +250,15 @@ const changeUserPassword = async (req, res) => {
             const hashedPassword = await bcrypt.hash(newPassword, salt);
             user.password = hashedPassword;
             await user.save();
-            res.json({ message: "Password changed! "});
+            return res.json({ message: "Password changed! "});
         }
         // else send error message
         else {
-            res.status(401);
+            return res.status(401);
             throw new Error("Invalid old password");
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return res.status(400).json({ message: error.message });
     }
 }
 
@@ -273,15 +275,15 @@ const forgotUserPassword = async (req, res) => {
             const url = `${CLIENT_URL}/user/reset/${access_token}`;
 
             sendMail(email, url, "Reset your password");
-            res.json({ message: "Re-send the password, please check your email." });
+            return res.json({ message: "Re-send the password, please check your email." });
         }
         // else send error message
         else {
-            res.status(401);
+            return res.status(401);
             throw new Error("This email does not exist");
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -296,9 +298,9 @@ const resetUserPassword = async (req, res) => {
             password: hashedPassword
         })
 
-        res.json({ message: "Password successfully changed!"});
+        return res.json({ message: "Password successfully changed!"});
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 

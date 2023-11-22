@@ -11,14 +11,12 @@ function ActivationEmail() {
 
   useEffect(() => {
     if(activation_token) {
-        const activateEmail = async () => {
-            try {
-                const res = await activationEmailService(activation_token);
-                setSuccess(res.message);
-                console.log(activation_token,)
+      const activateEmail = async () => {
+        try {
+          const res = await activationEmailService({activation_token})
+          setSuccess(res.message)
         } catch (error) {
-          console.log(error);
-          error.message && setErr(error.message)
+          error.message && setErr(error.response.data.message)
         }
       }
       activateEmail();
@@ -28,8 +26,7 @@ function ActivationEmail() {
   return (
     <div className='active-page'>
       <Stack sx={{ width: '100%' }} spacing={2}>
-        {err && (<Alert severity="error">{err}</Alert>)}
-        {success && (<Alert severity="success">{success}</Alert>)}
+        {success ? (<Alert severity="success">{success}</Alert>) : (<Alert severity="error">{err}</Alert>)}
       </Stack>
     </div>
   )

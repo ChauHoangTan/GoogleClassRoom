@@ -56,8 +56,8 @@ const updateProfileService = async (user, token) => {
   return data
 }
 
-const activationEmailService = async (activation_token) => {
-  const { data } = await Axios.post('users/activation', {activation_token});
+const activationEmailService = async (token) => {
+  const { data } = await Axios.post('users/activation', token);
   console.log(data);
   return data;
 }

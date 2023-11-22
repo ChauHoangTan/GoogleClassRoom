@@ -74,16 +74,13 @@ const registerUser = async(req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // create user in DB
         const newUser = {
             email,
             firstName,
             lastName,
             password: hashedPassword,
-            image,
         };
         
-
         const activation_token = createActivationToken(newUser)
 
         const url = `${CLIENT_URL}/user/activate/${activation_token}`
@@ -100,12 +97,12 @@ const activateEmail = async (req, res) => {
         const { activation_token } = req.body;
         const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET);
 
-        const { email, firstName, lastName, password, image } = user;
+        console.log(user)
+        const { email, firstName, lastName, password } = user;
 
         const userExist = await User.findOne({ email });
         if(userExist) {
-            res.status(400);
-            throw new Error("User already exists");
+            res.status(400).json({message: "This email already exists."});
         }
 
         const newUser = await User.create({
@@ -113,25 +110,12 @@ const activateEmail = async (req, res) => {
             firstName,
             lastName,
             password,
-            image,
         });
 
-        // if newUser create successfully send user data and token to client 
         if(newUser) {
-            res.status(201).json({
-                _id: newUser._id,
-                email: newUser.email,
-                firstName: newUser.firstName,
-                lastName: newUser.lastName,
-                phone: newUser.phone,
-                dob: newUser.dob,
-                image: newUser.image,
-                isAdmin: newUser.isAdmin,
-                Authorization: createAccessToken(newUser._id)
-            });
+            res.status(200).json({ message: "Account has been activated!" })
         } else {
-            res.status(400);
-            throw new Error("Invalid user data");
+            res.status(400).json({ message: "Invalid user data" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

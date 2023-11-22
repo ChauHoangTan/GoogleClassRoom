@@ -56,4 +56,18 @@ const updateProfileService = async (user, token) => {
   return data
 }
 
-export { registerService, logoutService, loginService, changePasswordService, updateProfileService, loginSuccessService }
+const activationEmailService = async (activation_token) => {
+  const { data } = await Axios.post('users/activation', {activation_token});
+  console.log(data);
+  return data;
+}
+
+export { 
+  registerService,
+  logoutService,
+  loginService,
+  changePasswordService,
+  updateProfileService,
+  loginSuccessService,
+  activationEmailService 
+}

@@ -14,6 +14,7 @@ import Profile from './pages/profile/Profile.js'
 import { ProtectedRouter } from './ProtectedRouter.js'
 import { useState } from 'react'
 import LoginSuccess from './pages/auth/loginSuccess/LoginSuccess.js'
+import ActivationEmail from './pages/auth/activationEmail/ActivationEmail.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
@@ -22,19 +23,12 @@ function App () {
       <ToastContainer />
       <BrowserRouter>
         <Routes>
-          <Route
-            path='/login'
-            element={
-              <Login
-                rememberMe={rememberMe}
-                setRememberMe={setRememberMe}
-              />
-            }
-          />
+          <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe}/>}/>
           <Route path='/login-success/:userId/:tokenLogin' element={<LoginSuccess />} />
           <Route path='/register' element={<Register />} />
           <Route path='/' element={<Layout />}>
             <Route index element={<Landing />} />
+            <Route path='/user/activate/:activation_token' element={<ActivationEmail/>}/>
             <Route path='*' element={<NoPage />} />
             <Route element={<ProtectedRouter />}>
               <Route path='password' element={<Password />} />

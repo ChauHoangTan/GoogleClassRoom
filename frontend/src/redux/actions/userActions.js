@@ -57,8 +57,7 @@ const registerAction = (datas) => async (dispatch) => {
   try {
     dispatch({ type: userConstants.USER_REGISTER_REQUEST })
     const response = await userApi.registerService(datas)
-    dispatch({ type: userConstants.USER_REGISTER_SUCCESS, payload: response })
-    dispatch({ type: userConstants.USER_LOGIN_SUCCESS, payload: response })
+    dispatch({ type: userConstants.USER_REGISTER_SUCCESS, payload: response.message })
   } catch (error) {
     ErrorsAction(error, dispatch, userConstants.USER_REGISTER_FAIL)
   }

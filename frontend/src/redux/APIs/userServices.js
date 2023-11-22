@@ -3,10 +3,6 @@ import Axios from './Axios'
 // Register new user API
 const registerService = async (user) => {
   const { data } = await Axios.post('/users/register', user)
-
-  if (data) {
-    localStorage.setItem('userInfo', JSON.stringify(data))
-  }
   return data
 }
 

@@ -49,7 +49,7 @@ function Register() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { isLoading, isError, userInfo, isSuccess } = useSelector(
+  const { isLoading, isError, message, isSuccess } = useSelector(
     (state) => state.userRegister
   )
 
@@ -64,18 +64,16 @@ function Register() {
 
   // useEffect
   useEffect(() => {
-    if ( userInfo) {
-      navigate('/profile')
-    }
     if (isSuccess) {
-      toast.success(`Welcome ${userInfo?.firstName} ${userInfo?.lastName}`)
+      navigate('/login')
+      toast.success(message)
       dispatch({ type: 'USER_REGISTER_RESET' })
     }
     if (isError) {
       toast.error(isError)
       dispatch({ type: 'USER_REGISTER_RESET' })
     }
-  }, [userInfo, isSuccess, isError, navigate, dispatch])
+  }, [message, isSuccess, isError, navigate, dispatch])
 
   // onSubmit
   const onSubmit = (data) => {

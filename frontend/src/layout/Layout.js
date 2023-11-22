@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 
 function Layout() {
 
-  const isOpenMenu = useSelector(state => state.isOpenMenu)
+  const isOpenMenu = useSelector(state=>state.isOpenMenu)
 
   return (
     <>

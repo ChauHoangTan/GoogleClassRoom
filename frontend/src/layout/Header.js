@@ -28,22 +28,14 @@ export default function ResponsiveAppBar () {
   const navigate = useNavigate()
   const { userInfo } = useSelector(state => state.userLogin)
 
-  // eslint-disable-next-line no-unused-vars
-  const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
 
   const handleOpenNavMenu = event => {
     dispatch(setMoreIcon())
-    setAnchorElNav(event.currentTarget)
   }
 
   const handleOpenUserMenu = event => {
     setAnchorElUser(event.currentTarget)
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
   }
 
   const handleCloseUserMenu = () => {

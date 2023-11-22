@@ -13,6 +13,7 @@ import { useColorScheme } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 
 const Footer = () => {
+  // eslint-disable-next-line no-unused-vars
   const { mode, setMode } = useColorScheme()
 
   // eslint-disable-next-line no-unused-vars

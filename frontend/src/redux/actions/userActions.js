@@ -88,7 +88,7 @@ const logoutAction = datas => async dispatch => {
   dispatch({ type: userConstants.USER_REGISTER_RESET })
   dispatch({ type: userConstants.USER_LOGIN_RESET })
   dispatch({ type: userConstants.USER_LOGIN_GOOGLE_RESET })
-  dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_RESET });
+  dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_RESET })
 }
 
 // Change password action

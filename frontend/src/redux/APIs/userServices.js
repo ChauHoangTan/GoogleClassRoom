@@ -62,7 +62,7 @@ const activationEmailService = async (token) => {
   return data;
 }
 
-export { 
+export {
   registerService,
   logoutService,
   loginService,

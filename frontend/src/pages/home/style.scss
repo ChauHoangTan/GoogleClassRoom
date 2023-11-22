@@ -1,12 +1,16 @@
 #home{
-    height: 100vh;
+    min-height: 100vh;
     .content{
         // min-height: 90vh;
         flex: 1;
+        
+        margin-left: 2rem;
+        
     }
     .pagination{
         // height: 6vh;
         // margin: 2vh 0;
+        margin-top: 2rem;
         margin-bottom: 2rem; /* Đảm bảo element 2 luôn ở dưới cùng */
     }
 }

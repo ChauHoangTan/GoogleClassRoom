@@ -37,47 +37,35 @@ const UserSchema = mongoose.Schema(
             type: String,
             default: "",
         },
-
-        role: { 
-            type: String, 
-            enum: ['admin', 'teacher', 'student'], 
-            required: true,
-            default: 'student', 
+        isAdmin: { 
+            type: Boolean,
+            default: false, 
         },
-        typeLogin: { 
-            type: String, 
-            enum: ['local', 'google', 'facebook'], 
-            required: true,
-            default: 'local', 
+        isThirdPartyLogin: {
+            type: Boolean,
+            default: false,
         },
-        // authGoogleId: { 
-        //     type: String 
-        // },
-        // authFacebookId: { 
-        //     type: String 
-        // },
-        // authGoogleToken: { 
-        //     type: String 
-        // },
-        // authFacebookToken: { 
-        //     type: String 
-        // },
-
-        authLoginId: { 
-            type: String 
+        authGoogleId: { 
+            type: String,
+            default: "",
         },
-        authLoginToken: { 
-            type: String 
+        authFacebookId: { 
+            type: String,
+            default: "",
+        },
+        authGoogleToken: { 
+            type: String,
+            default: "",
+        },
+        authFacebookToken: { 
+            type: String,
+            default: "",
         },
         isBanned:  { 
             type: Boolean, 
             default: false 
         },
         isBlocked:  { 
-            type: Boolean, 
-            default: false 
-        },
-        isVerified: { 
             type: Boolean, 
             default: false 
         },

@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
+import GitHubIcon from '@mui/icons-material/GitHub';
 import IconButton from '@mui/material/IconButton'
 import { Container } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
@@ -115,6 +116,12 @@ function Login ({ rememberMe, setRememberMe }) {
     window.open('http://localhost:5000/api/users/facebook', '_self')
   }
 
+  const handleGithubLogin = () => {
+    // Handle when user click login by Facebook
+    // window.open('http://localhost:5000/api/users/github', '_self')
+  }
+
+
   return (
     // <ThemeProvider theme={defaultTheme}>
     <Grid container component='main' sx={{ height: '100vh' }}>
@@ -124,8 +131,7 @@ function Login ({ rememberMe, setRememberMe }) {
         sm={false}
         md={7}
         sx={{
-          backgroundImage:
-                            'url(https://source.unsplash.com/random?wallpapers)',
+          backgroundImage:'url(https://source.unsplash.com/random?wallpapers)',
           backgroundRepeat: 'no-repeat',
           backgroundColor: t =>
             t.palette.mode === 'light'
@@ -324,6 +330,13 @@ function Login ({ rememberMe, setRememberMe }) {
                 size='large'
               >
                 <FacebookIcon />
+              </IconButton>
+              <IconButton
+                variant='rounded'
+                onClick={handleGithubLogin}
+                size='large'
+              >
+                <GitHubIcon />
               </IconButton>
             </Box>
           </Box>

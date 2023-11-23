@@ -24,7 +24,7 @@ router.get('/google/callback', (req, res, next) => {
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authLoginId}/${req.user?.authLoginToken}`)
+    res.redirect(`${process.env.CLIENT_URL}/login-success/google/${req.user?.authGoogleId}/${req.user?.authGoogleToken}`)
 });
 
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email'], session: false }));
@@ -35,7 +35,22 @@ router.get('/facebook/callback', (req, res, next) => {
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authLoginId}/${req.user?.authLoginToken}`)
+    res.redirect(`${process.env.CLIENT_URL}/login-success/facebook/${req.user?.authFacebookId}/${req.user?.authFacebookToken}`)
+});
+
+router.get('/github',passport.authenticate('github', { scope: [ 'user:email' ], session: false }));
+
+router.get('/github/callback', (req, res, next) => {
+    passport.authenticate('github', (err, user) => {
+        // if(err) {
+        //     res.redirect(`${process.env.CLIENT_URL}/login`)
+        // }
+        // req.err = err;
+        req.user = user;
+        next();
+    })(req, res, next)
+}, (req, res) => {
+    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authGithubId}/${req.user?.authGithubToken}`)
 });
 
 router.post("/login-success", userController.loginSuccess)

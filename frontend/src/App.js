@@ -26,7 +26,7 @@ function App () {
       <BrowserRouter>
         <Routes>
           <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe}/>}/>
-          <Route path='/login-success/:userId/:tokenLogin' element={<LoginSuccess />} />
+          <Route path='/login-success/:provider/:userId/:tokenLogin' element={<LoginSuccess />} />
           <Route path='/register' element={<Register />} />
           <Route path='/user/forgot' element={<ForgotPassword />} />
           <Route path='/user/reset/:token' element={<ResetPassword />} />

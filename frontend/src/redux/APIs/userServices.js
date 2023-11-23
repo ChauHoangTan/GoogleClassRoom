@@ -24,6 +24,7 @@ const loginService = async (user) => {
 
 // LoginSuccess user API
 const loginSuccessService = async (user) => {
+    console.log(user)
   const { data } = await Axios.post('/users/login-success', user)
 
   if (data) {

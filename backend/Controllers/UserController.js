@@ -141,15 +141,22 @@ const loginUser = async (req, res) => {
 // desc Login user
 // @route POST api/user/login-success
 const loginSuccess = async (req, res) => {
-    const { userId, tokenLogin } = req.body;
+    const { userId, tokenLogin, provider } = req.body;
     try {
-        if (!userId || !tokenLogin) {
+        if (!userId || !tokenLogin || !provider) {
             return res.status(400).json({ message: "Missing inputs" });
         }
-        const user = await User.findOne({ 
-            authLoginId: userId, 
-            authLoginToken: tokenLogin 
-        });
+
+        const user = provider === "google" 
+            ? await User.findOne({ 
+                authGoogleId: userId, 
+                authGoogleToken: tokenLogin 
+            }) 
+            :  await User.findOne({ 
+                authFacebookId: userId, 
+                authFacebookToken: tokenLogin 
+            });
+            console.log(user)
 
         const Authorization = createAccessToken(user._id)
 

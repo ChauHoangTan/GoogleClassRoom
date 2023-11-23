@@ -10,7 +10,7 @@ const loginAction = (provider, datas) => async dispatch => {
   case 'google':
     try {
       dispatch({ type: userConstants.USER_LOGIN_GOOGLE_REQUEST })
-      const response = await userApi.loginSuccessService(datas)
+      const response = await userApi.loginSuccessService({...datas, provider})
       dispatch({
         type: userConstants.USER_LOGIN_GOOGLE_SUCCESS,
         payload: response
@@ -26,7 +26,7 @@ const loginAction = (provider, datas) => async dispatch => {
   case 'facebook':
     try {
       dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_REQUEST })
-      const response = await userApi.loginSuccessService(datas)
+      const response = await userApi.loginSuccessService({...datas, provider})
       dispatch({
         type: userConstants.USER_LOGIN_FACEBOOK_SUCCESS,
         payload: response
@@ -36,6 +36,22 @@ const loginAction = (provider, datas) => async dispatch => {
         error,
         dispatch,
         userConstants.USER_LOGIN_FACEBOOK_FAIL
+      )
+    }
+    break
+  case 'Github':
+    try {
+      dispatch({ type: userConstants.USER_LOGIN_GITHUB_REQUEST })
+      const response = await userApi.loginSuccessService({...datas, provider})
+      dispatch({
+        type: userConstants.USER_LOGIN_GITHUB_SUCCESS,
+        payload: response
+      })
+    } catch (error) {
+      ErrorsAction(
+        error,
+        dispatch,
+        userConstants.USER_LOGIN_GITHUB_FAIL
       )
     }
     break

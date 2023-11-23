@@ -147,7 +147,7 @@ function Login ({ rememberMe, setRememberMe }) {
               color: 'white'
             }}
           >
-                            Google Class Room
+            Google Class Room
           </Typography>
 
           <Typography
@@ -193,7 +193,7 @@ function Login ({ rememberMe, setRememberMe }) {
               fontWeight: 'bold'
             }}
           >
-                            Sign in
+            Sign in
           </Typography>
           <Box
             component='form'
@@ -273,12 +273,17 @@ function Login ({ rememberMe, setRememberMe }) {
                 <>
                   <FiLogIn />
                   <span style={{ marginLeft: '4px' }}>
-                                            Sign In
+                        Sign In
                   </span>
                 </>
               )}
             </Button>
             <Grid container sx={{ justifyContent: 'flex-end' }}>
+              <Grid item xs>
+                <Link href="/user/forgot" variant="body2">
+                Forgot password?
+                </Link>
+              </Grid>
               <Grid item>
                 <Link
                   component={RouterLink}
@@ -304,7 +309,7 @@ function Login ({ rememberMe, setRememberMe }) {
                   fontSize: '20px'
                 }}
               >
-                                    Or sign in with
+                Or sign in with
               </Typography>
               <IconButton
                 variant='rounded'

@@ -1,7 +1,16 @@
+.MuiGrid-item{
+    transition: transform 0.3s ease;
+}
+
+.MuiGrid-item:hover{
+    
+    transform: scale(1.03);
+}
+
 .card{
     
-    width: 320px;
-
+    width: 280px;
+    cursor: pointer;
     .cardHeader{
         position: relative;
         padding: 0px 30px;
@@ -9,7 +18,7 @@
         color: white;
      
         .text-limit {
-            max-width: 300px; /* Giới hạn chiều rộng tối đa */
+            max-width: 260px; /* Giới hạn chiều rộng tối đa */
             overflow: hidden; /* Ẩn phần dư thừa */
             text-overflow: ellipsis; /* Hiển thị dấu ba chấm (...) nếu vượt quá chiều rộng */
             white-space: nowrap; /* Ngăn chặn xuống dòng */
@@ -47,11 +56,15 @@
     
 }
 
+.card:hover{
+    box-shadow: 0px 4px 5px rgb(22, 130, 24);
+}
+
 
 
 @media (max-width: 400px){
     .card{
-        width: 280px;
+        width: 250px;
         .expandBottom{
             height: 150px;
         }

@@ -100,9 +100,7 @@ const activateEmail = async (req, res) => {
         const { email, firstName, lastName, password } = user;
 
         const userExist = await User.findOne({ email });
-        console.log(userExist)
         if(userExist) {
-        console.log(userExist, "123")
             return res.status(400).json({message: "This email already exists."});
         }
 
@@ -131,7 +129,7 @@ const loginUser = async (req, res) => {
         if(req.user) {
             const Authorization = createAccessToken(req.user._id)
             // res.setHeader("Authorization", Authorization)
-return             res.status(200).json({ ...req.user._doc, Authorization });
+            return res.status(200).json({ ...req.user._doc, Authorization });
         } else {
             return res.status(400).json({ message: req.error })
         }
@@ -224,7 +222,7 @@ const updateUserProfile = async(req, res) => {
         }
         // else send error message
         else {
-            return res.status(404);
+            res.status(404);
             throw new Error("User not found");
         }
         
@@ -254,7 +252,7 @@ const changeUserPassword = async (req, res) => {
         }
         // else send error message
         else {
-            return res.status(401);
+            res.status(401);
             throw new Error("Invalid old password");
         }
     } catch (error) {
@@ -271,7 +269,7 @@ const forgotUserPassword = async (req, res) => {
         const user = await User.findOne({ email });
         // if user exists, send email to user to get url change password 
         if(user) {
-            const access_token = createAccessToken({ id: user._id });
+            const access_token = createAccessToken(user._id);
             const url = `${CLIENT_URL}/user/reset/${access_token}`;
 
             sendMail(email, url, "Reset your password");
@@ -279,7 +277,7 @@ const forgotUserPassword = async (req, res) => {
         }
         // else send error message
         else {
-            return res.status(401);
+            res.status(401);
             throw new Error("This email does not exist");
         }
     } catch (error) {
@@ -290,14 +288,18 @@ const forgotUserPassword = async (req, res) => {
 // @desc user reset password
 // @route PUT /api/users/reset
 const resetUserPassword = async (req, res) => {
-    const { password } = req.body;
+    const { newPassword } = req.body;
     try {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        await User.findOneAndUpdate({_id: req.user.id}, {
-            password: hashedPassword
-        })
+        const user = await User.findById(req.user.id);
 
+        const isExistPassword = await bcrypt.compare(newPassword, user.password);
+        if(isExistPassword) {
+            return res.status(404).json({ message: "New password must be different old" });
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        user.password = hashedPassword;
+        await user.save();
         return res.json({ message: "Password successfully changed!"});
     } catch (error) {
         return res.status(500).json({ message: error.message });

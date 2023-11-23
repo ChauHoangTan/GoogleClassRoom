@@ -54,11 +54,11 @@ const PasswordValidation = yup.object().shape({
     .matches(/(?=.*[0-9])/, 'New Password must contain a number'),
   confirmPassword: yup
     .string()
-    .required('New password is required')
-    .min(6, 'New password must be at least 6 characters')
-    .max(20, 'New password must be less than 20 characters')
-    .matches(/(?=.*[0-9])/, 'New password must contain a number')
-    .oneOf([yup.ref('newPassword'), null], 'New password must match')
+    .required('Confirm password is required')
+    .min(6, 'Confirm password must be at least 6 characters')
+    .max(20, 'Confirm password must be less than 20 characters')
+    .matches(/(?=.*[0-9])/, 'Confirm password must contain a number')
+    .oneOf([yup.ref('newPassword'), null], 'Confirm password must match')
 })
 
 const ProfileValidation = yup.object().shape({
@@ -85,4 +85,34 @@ const ProfileValidation = yup.object().shape({
     .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits')
 })
 
-export { LoginValidation, RegisterValidation, PasswordValidation, ProfileValidation }
+const ForgotPasswordValidation = yup.object().shape({
+  email: yup
+    .string()
+    .email()
+    .required('Email is required')
+})
+
+const ResetPasswordValidation = yup.object().shape({
+  newPassword: yup
+    .string()
+    .required('New password is required')
+    .min(6, 'New Password must be at least 6 characters')
+    .max(20, 'New Password must be less than 20 characters')
+    .matches(/(?=.*[0-9])/, 'New Password must contain a number'),
+  confirmPassword: yup
+    .string()
+    .required('Confirm password is required')
+    .min(6, 'Confirm password must be at least 6 characters')
+    .max(20, 'Confirm password must be less than 20 characters')
+    .matches(/(?=.*[0-9])/, 'Confirm password must contain a number')
+    .oneOf([yup.ref('newPassword'), null], 'Confirm password must match')
+})
+
+export {
+  LoginValidation,
+  RegisterValidation,
+  PasswordValidation,
+  ProfileValidation,
+  ForgotPasswordValidation,
+  ResetPasswordValidation
+}

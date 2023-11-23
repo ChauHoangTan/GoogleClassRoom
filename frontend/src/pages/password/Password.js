@@ -91,7 +91,7 @@ function Password() {
             }}
           >
             <Typography component="h1" variant="h5" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
-                        Change Password
+                Change Password
             </Typography>
             <Box
               component="form"

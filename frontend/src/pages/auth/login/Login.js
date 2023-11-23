@@ -158,8 +158,8 @@ function Login ({ rememberMe, setRememberMe }) {
             }}
             marginTop={4}
           >
-                            Building a High-Quality Online Learning Platform -
-                            Connecting Knowledge, Elevating Wisdom!
+            Building a High-Quality Online Learning Platform -
+            Connecting Knowledge, Elevating Wisdom!
           </Typography>
         </Container>
       </Grid>

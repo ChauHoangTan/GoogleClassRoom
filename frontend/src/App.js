@@ -15,6 +15,8 @@ import { ProtectedRouter } from './ProtectedRouter.js'
 import { useState } from 'react'
 import LoginSuccess from './pages/auth/loginSuccess/LoginSuccess.js'
 import ActivationEmail from './pages/auth/activationEmail/ActivationEmail.js'
+import ForgotPassword from './pages/auth/ForgotPassword.js/ForgotPassword.js'
+import ResetPassword from './pages/auth/ResetPassword.js/ResetPassword.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
@@ -26,6 +28,8 @@ function App () {
           <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe}/>}/>
           <Route path='/login-success/:userId/:tokenLogin' element={<LoginSuccess />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/user/forgot' element={<ForgotPassword />} />
+          <Route path='/user/reset/:token' element={<ResetPassword />} />
           <Route path='/' element={<Layout />}>
             <Route index element={<Landing />} />
             <Route path='/user/activate/:activation_token' element={<ActivationEmail/>}/>

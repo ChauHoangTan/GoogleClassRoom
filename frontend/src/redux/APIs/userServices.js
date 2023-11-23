@@ -32,7 +32,6 @@ const loginSuccessService = async (user) => {
   return data
 }
 
-
 // Change password API
 const changePasswordService = async (password, token) => {
   const { data } = await Axios.put('/users/password', password, {
@@ -42,6 +41,23 @@ const changePasswordService = async (password, token) => {
   })
   return data
 }
+
+// Forgot password API
+const forgotPasswordService = async (user) => {
+  const { data } = await Axios.post('/users/forgot', user)
+  return data
+}
+
+// Reset password API
+const resetPasswordService = async (user, token) => {
+  const { data } = await Axios.post('/users/reset', user, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return data
+}
+
 
 // update profile API call
 const updateProfileService = async (user, token) => {
@@ -58,16 +74,17 @@ const updateProfileService = async (user, token) => {
 
 const activationEmailService = async (token) => {
   const { data } = await Axios.post('users/activation', token);
-  console.log(data);
   return data;
 }
 
-export {
+export { 
   registerService,
   logoutService,
   loginService,
   changePasswordService,
   updateProfileService,
   loginSuccessService,
-  activationEmailService 
+  activationEmailService,
+  forgotPasswordService,
+  resetPasswordService
 }

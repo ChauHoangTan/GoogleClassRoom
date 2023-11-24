@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { resetPasswordService } from '../../../redux/APIs/userServices'
 import toast from 'react-hot-toast'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 // const defaultTheme = createTheme();
 const defaultTheme = createTheme({
   palette: {
@@ -30,6 +30,13 @@ const defaultTheme = createTheme({
 
 const ResetPassword = () => {
   const { token } = useParams()
+  const navigate = useNavigate()
+
+  const { type } = useParams()
+  const [isLoading, setIsLoading] = useState(false)
+  const [err, setErr] = useState('')
+  const [success, setSuccess] = useState('')
+
   // Validate user
   const {
     register,
@@ -37,15 +44,30 @@ const ResetPassword = () => {
     formState: { errors }
   } = useForm({ resolver: yupResolver(ResetPasswordValidation) })
 
+  useEffect(() => {
+    if (err) {
+      toast.error(err)
+      setErr('')
+      setIsLoading(false)
+    }
+
+    if (success) {
+      toast.success(success)
+      setSuccess('')
+      setIsLoading(false)
+      navigate('/login')
+    }
+
+  }, [err, success, navigate])
+
+
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
-      const res = await resetPasswordService(
-        data,
-        token
-      )
-      toast.success(res.message)
+      const res = await resetPasswordService(data, token)
+      setSuccess(res.message)
     } catch (error) {
-      error.message && toast.error(error.response.data.message)
+      error.message && setErr(error.response.data.message)
     }
   }
   return (
@@ -127,10 +149,11 @@ const ResetPassword = () => {
               <Button
                 type='submit'
                 fullWidth
+                disabled={isLoading}
                 variant='contained'
                 sx={{ mt: 3, mb: 2, py: 1 }}
               >
-                Reset Password
+                {isLoading ? 'Reset Password' : 'Reseting'}
               </Button>
             </Box>
           </Box>

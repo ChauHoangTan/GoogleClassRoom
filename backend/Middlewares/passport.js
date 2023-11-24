@@ -44,6 +44,10 @@ passport.use(new LocalStrategy({
             return done("Invalid password", false);
         }
 
+        if(!user.isVerifiedEmail) {
+            return done("Account need to been verified", false);
+        }
+
         done(null, user);
     } catch (error) {
         done(error, false);

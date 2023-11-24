@@ -59,6 +59,9 @@ router.post("/activation", userController.activateEmail);
 
 router.post("/forgot", userController.forgotUserPassword);
 
+router.post("/resend-activation", userController.resendActivateEmail);
+
+
 router.post("/reset", passport.authenticate('jwt', { session: false }), userController.resetUserPassword);
 
 router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);

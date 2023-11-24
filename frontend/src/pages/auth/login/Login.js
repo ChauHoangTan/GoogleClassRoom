@@ -124,7 +124,7 @@ function Login ({ rememberMe, setRememberMe }) {
 
   return (
     // <ThemeProvider theme={defaultTheme}>
-    <Grid container component='main' sx={{ height: '100vh' }}>
+    <Grid container component='main' sx={{ height: '100vh', overflow: 'hidden' }}>
       <Grid
         item
         xs={false}
@@ -188,7 +188,8 @@ function Login ({ rememberMe, setRememberMe }) {
             mx: 4,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
+            width: '100%'
           }}
         >
           <Typography
@@ -205,7 +206,7 @@ function Login ({ rememberMe, setRememberMe }) {
             component='form'
             noValidate
             onSubmit={handleSubmit(onSubmit)}
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, width: '100%' }}
           >
             <TextField
               margin='normal'
@@ -220,6 +221,17 @@ function Login ({ rememberMe, setRememberMe }) {
               error={!!errors.email}
               helperText={errors.email?.message || ''}
             />
+            <Grid container sx={{ justifyContent: 'flex-end' }}>
+              <Grid item>
+                <Link
+                  component={RouterLink}
+                  to='/user/activation'
+                  variant='body2'
+                >
+                  Resend activation email
+                </Link>
+              </Grid>
+            </Grid>
             <TextField
               margin='normal'
               required
@@ -255,6 +267,21 @@ function Login ({ rememberMe, setRememberMe }) {
                 )
               }}
             />
+            <Grid container sx={{ justifyContent: 'flex-end' }}>
+              <Grid item>
+                <Link
+                  component={RouterLink}
+                  to='/user/forgot'
+                  variant='body2'
+                >
+                  Forgot password?
+                </Link>
+              </Grid>
+            </Grid>
+            <Grid item xs sx={{ textAlign: 'right' }}>
+              <Link href="/user/forgot" variant="body2">
+              </Link>
+            </Grid>
             <FormControlLabel
               control={
                 <Checkbox
@@ -279,17 +306,12 @@ function Login ({ rememberMe, setRememberMe }) {
                 <>
                   <FiLogIn />
                   <span style={{ marginLeft: '4px' }}>
-                        Sign In
+                    Sign In
                   </span>
                 </>
               )}
             </Button>
             <Grid container sx={{ justifyContent: 'flex-end' }}>
-              <Grid item xs>
-                <Link href="/user/forgot" variant="body2">
-                Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
                 <Link
                   component={RouterLink}

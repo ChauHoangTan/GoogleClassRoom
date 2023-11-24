@@ -45,7 +45,9 @@ const changePasswordService = async (password, token) => {
 
 // Forgot password API
 const forgotPasswordService = async (user) => {
+  console.log(user)
   const { data } = await Axios.post('/users/forgot', user)
+  console.log(data)
   return data
 }
 
@@ -74,8 +76,13 @@ const updateProfileService = async (user, token) => {
 }
 
 const activationEmailService = async (token) => {
-  const { data } = await Axios.post('users/activation', token);
-  return data;
+  const { data } = await Axios.post('/users/activation', token);
+  return data
+}
+
+const resendActivationEmailService = async (token) => {
+  const { data } = await Axios.post('/users/resend-activation', token);
+  return data
 }
 
 export { 
@@ -87,5 +94,6 @@ export {
   loginSuccessService,
   activationEmailService,
   forgotPasswordService,
-  resetPasswordService
+  resetPasswordService,
+  resendActivationEmailService,
 }

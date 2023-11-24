@@ -13,8 +13,9 @@ import { createTheme } from '@mui/material'
 import { ForgotPasswordValidation } from '../../../components/validation/userValidation'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { forgotPasswordService } from '../../../redux/APIs/userServices'
+import { resendActivationEmailService, forgotPasswordService } from '../../../redux/APIs/userServices'
 import toast from 'react-hot-toast'
+import { useParams } from 'react-router-dom'
 // const defaultTheme = createTheme();
 const defaultTheme = createTheme({
   palette: {
@@ -28,6 +29,11 @@ const defaultTheme = createTheme({
 })
 
 const ForgotPassword = () => {
+  const { type } = useParams()
+  const [isLoading, setIsLoading] = useState(false)
+  const [err, setErr] = useState('')
+  const [success, setSuccess] = useState('')
+
   // Validate user
   const {
     register,
@@ -35,14 +41,38 @@ const ForgotPassword = () => {
     formState: { errors }
   } = useForm({ resolver: yupResolver(ForgotPasswordValidation) })
 
+  useEffect(() => {
+    if (err) {
+      toast.error(err)
+      setErr('')
+    }
+
+    if (success) {
+      toast.success(success)
+      setSuccess('')
+    }
+
+    setIsLoading(false)
+  }, [err, success])
+
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
-      const res = await forgotPasswordService(data)
-      toast.success(res.message)
+      if (type === 'forgot') {
+        const res = await forgotPasswordService(data)
+        setSuccess(res.message)
+      } else {
+        const res = await resendActivationEmailService(data)
+        setSuccess(res.message)
+      }
     } catch (error) {
-      error.message && toast.error(error.response.data.message)
+      error.message && setErr(error.response.data.message)
+    }
+    finally {
+      setIsLoading(false); // Reset isLoading to false after success/error
     }
   }
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid
@@ -83,7 +113,7 @@ const ForgotPassword = () => {
                 fontWeight: 'bold'
               }}
             >
-              Forgot Password
+              {type === 'forgot' ? 'Forgot Password' : 'Resend activation email'}
             </Typography>
             <Box
               component='form'
@@ -108,9 +138,10 @@ const ForgotPassword = () => {
                 type='submit'
                 fullWidth
                 variant='contained'
+                disabled={isLoading}
                 sx={{ mt: 3, mb: 2, py: 1 }}
               >
-                Verify your email
+                {isLoading ? 'verifying....' : 'Verify your email' }
               </Button>
             </Box>
           </Box>

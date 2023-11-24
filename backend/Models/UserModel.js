@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema(
     {
-        // studentId:  {
-        //     type: String,
-        //     trim: true,
-        //     unique: true,
-        //     default: "",
-        // },
+        studentId:  {
+            type: String,
+            trim: true,
+            default: "",
+        },
         firstName:  {
             type: String,
             required: true,
@@ -66,6 +65,10 @@ const UserSchema = mongoose.Schema(
             default: false 
         },
         isBlocked:  { 
+            type: Boolean, 
+            default: false 
+        },
+        isVerifiedEmail: { 
             type: Boolean, 
             default: false 
         },

@@ -63,9 +63,13 @@ const {CLIENT_URL} = process.env
 const registerUser = async(req, res) => {
     const { email, firstName, lastName, password } = req.body;
     try {
-        const userExists = await User.findOne({ email });
+        const userExist = await User.findOne({ email });
         // check if user exists
-        if(userExists) {
+        if(userExist) {
+            if(!userExist.isVerifiedEmail) {
+                return res.status(400).json({message: "Account need to been verified."});
+            }
+    
             res.status(400);
             throw new Error("User already exists");
         }
@@ -74,14 +78,15 @@ const registerUser = async(req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUser = {
+        const newUser = await User.create({
             email,
             firstName,
             lastName,
             password: hashedPassword,
-        };
+        });
         
-        const activation_token = createActivationToken(newUser)
+
+        const activation_token = createActivationToken(newUser.email)
 
         const url = `${CLIENT_URL}/user/activate/${activation_token}`
         await sendMail(email, url, "Verify your email address")
@@ -92,24 +97,49 @@ const registerUser = async(req, res) => {
     }
 };
 
+const resendActivateEmail = async(req, res) => {
+    const { email} = req.body;
+    try {
+        const userExist = await User.findOne({ email });
+        // check if user exists
+        if(!userExist) {
+            res.status(400);
+            throw new Error("This email is not exists in system.");
+        }
+
+        if(userExist.isVerifiedEmail) {
+            throw new Error("This email already verified.");
+        }
+
+        const activation_token = createActivationToken(userExist.email)
+
+        const url = `${CLIENT_URL}/user/activate/${activation_token}`
+        await sendMail(email, url, "Verify your email address")
+
+        return res.json({ message: "Resend Success! Please activate your email to start." })
+    } catch(error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 const activateEmail = async (req, res) => {
     try {
         const { activation_token } = req.body;
         const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET);
 
-        const { email, firstName, lastName, password } = user;
+        const { email } = user;
 
         const userExist = await User.findOne({ email });
-        if(userExist) {
-            return res.status(400).json({message: "This email already exists."});
+        if(!userExist) {
+            return res.status(400).json({message: "This email is not exists in system."});
         }
 
-        const newUser = await User.create({
-            email,
-            firstName,
-            lastName,
-            password,
-        });
+        if(userExist.isVerifiedEmail) {
+            return res.status(400).json({message: "This email already verified."});
+        }
+
+        userExist.isVerifiedEmail = true;
+        const newUser = await userExist.save();
 
         if(newUser) {
             return res.status(200).json({ message: "Account has been activated!" })
@@ -156,7 +186,6 @@ const loginSuccess = async (req, res) => {
                 authFacebookId: userId, 
                 authFacebookToken: tokenLogin 
             });
-            console.log(user)
 
         const Authorization = createAccessToken(user._id)
 
@@ -284,6 +313,7 @@ const forgotUserPassword = async (req, res) => {
         }
         // else send error message
         else {
+        console.log(email)
             res.status(401);
             throw new Error("This email does not exist");
         }
@@ -328,4 +358,5 @@ module.exports = {
     resetUserPassword,
     secret,
     authGoogle,
+    resendActivateEmail,
 }

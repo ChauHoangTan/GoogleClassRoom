@@ -6,8 +6,8 @@ const generateToken = (id) => {
     });
 };
 
-const createActivationToken = (payload) => {
-    return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '5m'})
+const createActivationToken = (email) => {
+    return jwt.sign({email}, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '5m'})
 }
 
 const createAccessToken = (id) => {

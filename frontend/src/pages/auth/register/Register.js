@@ -63,7 +63,7 @@ function Register() {
   // useEffect
   useEffect(() => {
     if (isSuccess) {
-      navigate('/login')
+    //   navigate('/login')
       toast.success(message)
       dispatch({ type: 'USER_REGISTER_RESET' })
     }

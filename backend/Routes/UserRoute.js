@@ -70,5 +70,8 @@ router.put("/password", passport.authenticate('jwt', { session: false }), userCo
 
 router.get("/info", passport.authenticate('jwt', { session: false }), userController.getUserInfo);
 
+router.post("/refresh-token", userController.refreshAccessToken);
+
+router.get("/logout",  userController.logout);
 
 module.exports = router;

@@ -11,11 +11,11 @@ const createActivationToken = (email) => {
 }
 
 const createAccessToken = (id) => {
-    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1m'})
 }
 
-const createRefreshToken = (payload) => {
-    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'})
+const createRefreshToken = (id) => {
+    return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '5m'})
 }
 
 const verify = (req, res, next) => {

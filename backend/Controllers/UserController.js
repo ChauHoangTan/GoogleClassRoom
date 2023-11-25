@@ -70,8 +70,7 @@ const registerUser = async(req, res) => {
                 return res.status(400).json({message: "Account need to been verified."});
             }
     
-            res.status(400);
-            throw new Error("User already exists");
+            res.status(400).json({message: "User already exists"});
         }
 
         // hash password
@@ -103,12 +102,12 @@ const resendActivateEmail = async(req, res) => {
         const userExist = await User.findOne({ email });
         // check if user exists
         if(!userExist) {
-            res.status(400);
-            throw new Error("This email is not exists in system.");
+            res.status(400).json({message: "This email is not exists in system."});
         }
 
         if(userExist.isVerifiedEmail) {
-            throw new Error("This email already verified.");
+            res.status(400).json({message: "This email already verified."});
+
         }
 
         const activation_token = createActivationToken(userExist.email)
@@ -125,30 +124,33 @@ const resendActivateEmail = async(req, res) => {
 const activateEmail = async (req, res) => {
     try {
         const { activation_token } = req.body;
-        const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET);
+        jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET, async (err, user) => {
+            if(err) {
+                return res.status(401).json({ message: "This Activation Email is unavailable!" });
+            }
 
-        const { email } = user;
+            const { email } = user;
 
-        const userExist = await User.findOne({ email });
-        if(!userExist) {
-            return res.status(400).json({message: "This email is not exists in system."});
-        }
+            const userExist = await User.findOne({ email });
+            if(!userExist) {
+                return res.status(400).json({message: "This email is not exists in system."});
+            }
 
-        if(userExist.isVerifiedEmail) {
-            return res.status(400).json({message: "This email already verified."});
-        }
+            if(userExist.isVerifiedEmail) {
+                return res.status(400).json({message: "This email already verified."});
+            }
 
-        userExist.isVerifiedEmail = true;
-        const newUser = await userExist.save();
+            userExist.isVerifiedEmail = true;
+            const newUser = await userExist.save();
 
-        if(newUser) {
-            return res.status(200).json({ message: "Account has been activated!" })
-        } else {
-            res.status(400)
-            throw new Error("Invalid user data");
-        }
+            if(newUser) {
+                return res.status(200).json({ message: "Account has been activated!" })
+            } else {
+                return res.status(400).json({message: "Invalid user data" });
+            }
+        });
     } catch (error) {
-        return res.status(500).json({ message: "This Activation Email is unavailable!" });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -157,15 +159,24 @@ const activateEmail = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         if(req.user) {
-            const Authorization = createAccessToken(req.user._id)
-            // res.setHeader("Authorization", Authorization)
+            // create access token
+            const accessToken = createAccessToken(req.user._id)
+            // create refresh token
+            const refreshToken = createRefreshToken(req.user._id)
+            // save refreshToken in database
+            await User.findByIdAndUpdate(req.user._id, { refreshToken }, { new: true })
+            // save refreshToken in cookie
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                maxAge: 5*60*1000
+            })
             return res.status(200).json({ 
                 _id: req.user._id,
                 firstName: req.user.firstName,
                 image: req.user.image,
                 isAdmin: req.user.isAdmin,
                 isThirdPartyLogin: req.user.isThirdPartyLogin,
-                Authorization 
+                Authorization: accessToken 
             });
         } else {
             return res.status(400).json({ message: req.error })
@@ -173,6 +184,58 @@ const loginUser = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
+}
+
+const refreshAccessToken = async(req, res) => {
+   try {
+        // get refresh token from cookie
+        const cookie = req.cookies
+        // const { _id }
+        // check refresh token is exist
+        if(!cookie && !cookie.refreshToken) {
+            return res.status(401).json({ message: '"Please login now!'})
+        }
+        // check refresh token is valid
+       jwt.verify(cookie.refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
+            if(!user) {
+                return res.status(401).json({ message: "Invalid refresh token" })
+            }
+            // check refresh token is exist in db
+            const existUser = await User.findOne({
+                _id: user.id,
+                refreshToken: cookie.refreshToken
+            })
+
+            if(!existUser) {
+                return res.status(400).json({ message: "Refresh token invalid"})
+            }
+
+            const newAccessToken = createAccessToken(existUser._id) 
+
+            return res.status(200).json({newAccessToken})
+        })
+   } catch (error) {
+        return res.status(500).json({ message: error.message });
+   }
+}
+
+const logout = async (req, res) => {
+    const cookie = req.cookies
+    if (!cookie || !cookie.refreshToken) {
+        return res.status(401).json({ message: '"Please login now!'})
+    }
+
+    await User.findOneAndUpdate(
+        { refreshToken: cookie.refreshToken },
+        {refreshToken: ''},
+        {new: true}
+    )
+
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: true
+    })
+    return res.status(200).json({ message: "Logout successfully" })
 }
 
 // desc Login user
@@ -194,15 +257,16 @@ const loginSuccess = async (req, res) => {
                 authFacebookToken: tokenLogin 
             });
 
-        const Authorization = createAccessToken(user._id)
+        const accessToken = createAccessToken(user._id)
 
+        re 
         res.status(200).json({ 
                 _id: user._id,
                 firstName: user.firstName,
                 image: user.image,
                 isAdmin: user.isAdmin,
                 isThirdPartyLogin: user.isThirdPartyLogin,
-                Authorization 
+                Authorization: accessToken, 
             })
         // const newAuthorization = createAccessToken(user._id)
         // user.authGoogleToken = newAuthorization
@@ -269,8 +333,8 @@ const updateUserProfile = async(req, res) => {
         }
         // else send error message
         else {
-            res.status(404);
-            throw new Error("User not found");
+            res.status(400).json({message: "User not found"});
+
         }
         
     
@@ -299,8 +363,7 @@ const changeUserPassword = async (req, res) => {
         }
         // else send error message
         else {
-            res.status(401);
-            throw new Error("Invalid old password");
+            res.status(400).json({message: "Invalid old password"});
         }
     } catch (error) {
         return res.status(400).json({ message: error.message });
@@ -324,8 +387,7 @@ const forgotUserPassword = async (req, res) => {
         }
         // else send error message
         else {
-            res.status(401);
-            throw new Error("This email does not exist");
+            res.status(400).json({message: "This email does not exist" });
         }
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -355,7 +417,7 @@ const resetUserPassword = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
     console.log(req.user.id)
-    const user = await User.findById(req.user.id).select('-password')
+    const user = await User.findById(req.user.id).select('-password -refreshToken')
     return res.status(200).json(user)
 }
 
@@ -370,4 +432,6 @@ module.exports = {
     resetUserPassword,
     resendActivateEmail,
     getUserInfo,
+    refreshAccessToken,
+    logout,
 }

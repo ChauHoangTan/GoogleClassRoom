@@ -5,6 +5,7 @@ import { useState } from 'react'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
+import Participants from './participants/Participants'
 function ClassDetails() {
   const [value, setValue] = useState('1')
 
@@ -25,7 +26,7 @@ function ClassDetails() {
         </Box>
         <TabPanel value="1">Stream</TabPanel>
         <TabPanel value="2">Classwork</TabPanel>
-        <TabPanel value="3">People</TabPanel>
+        <TabPanel value="3"><Participants /></TabPanel>
         <TabPanel value="4">Grade Composition</TabPanel>
       </TabContext>
     </Box>

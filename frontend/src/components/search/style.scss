@@ -1,0 +1,34 @@
+.search{
+    width: 70vw;
+    display: flex;
+    input{
+        flex-grow: 1;
+        height: 56px;
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 20px 0px 0px 20px;
+        border: 1px solid rgb(35, 171, 126);
+        outline: none;
+        transition: 0.2s ease;
+    }
+    input:focus{
+        border-radius: 20px 0px 0px 20px;
+        outline: none;
+        box-shadow: 2px 1px 6px rgba(35, 171, 126, 0.482);
+    }
+    button{
+        width: 56px;
+        height: 56px;
+        background-color: rgb(35, 171, 126);
+        border-radius: 0px 20px 20px 0px;
+        color: white;
+        transition: 0.2s ease;
+    }
+    button:hover{
+        width: 56px;
+        height: 56px;
+        background-color: rgb(68, 194, 152);
+        border-radius: 0px 20px 20px 0px;
+        color: white;
+    }
+}

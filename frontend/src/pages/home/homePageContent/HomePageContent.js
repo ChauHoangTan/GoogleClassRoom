@@ -3,6 +3,7 @@ import './style.scss'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined'
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined'
+import { useNavigate } from 'react-router-dom'
 
 const CardClass = ({ title, tagline, author }) => {
   return (
@@ -29,9 +30,13 @@ const CardClass = ({ title, tagline, author }) => {
 }
 
 function HomePageContent() {
+  const navigate = useNavigate()
+  const handleNavigateToClassDetails = () => {
+    navigate('/class/1')
+  }
   return (
-    <Grid container spacing={2} pl={5} mt={1}>
-      <Grid item>
+    <Grid container spacing={2} mt={1} id='homePageContent'>
+      <Grid item component='div' onClick={handleNavigateToClassDetails}>
         <CardClass title='2310-CLC-AWP-20KTPM2'
           tagline='Advanced Web Programming'
           author='Khánh Nguyễn Huy'/>

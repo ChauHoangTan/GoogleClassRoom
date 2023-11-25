@@ -4,6 +4,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import Layout from './layout/Layout.js'
 import Home from './pages/home/Home.js'
+import ClassDetails from './pages/class/ClassDetails.js'
 import Register from './pages/auth/register/Register.js'
 import Login from './pages/auth/login/Login.js'
 import Landing from './pages/landing/Landing.js'
@@ -40,6 +41,7 @@ function App () {
               <Route path='password' element={<Password />} />
               <Route path='profile' element={<Profile />} />
               <Route path='home' element={<Home />} />
+              <Route path='/class/:classId' element={<ClassDetails/>}/>
             </Route>
           </Route>
         </Routes>

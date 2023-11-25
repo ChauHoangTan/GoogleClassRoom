@@ -1,10 +1,10 @@
-import { Button, Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Grid, IconButton, Stack, Typography } from '@mui/material'
 import './style.scss'
 import Container from '@mui/material/Container'
-import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 const HeadComponent = ({ name, title }) => {
   return (
     <Stack className='headComponent'>
@@ -14,7 +14,7 @@ const HeadComponent = ({ name, title }) => {
         <Typography className='title' variant='h6'>{title}</Typography>
       </Stack>
       <IconButton>
-        <InfoOutlinedIcon sx={{transform:'scale(1.2)' }}/>
+        <InfoOutlinedIcon sx={{ transform:'scale(1.2)' }}/>
       </IconButton>
     </Stack>
   )

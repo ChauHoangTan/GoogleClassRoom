@@ -1,112 +1,122 @@
 @import url('https://fonts.googleapis.com/css2?family=Arima:wght@500&display=swap');
 
-#header{
-    font-family: 'Arima', cursive;
-    
-    .responsive{
-        background-color: #72919c;
-        color:rgb(255, 255, 255);
-        backdrop-filter: blur(20px);
-        height: 200px;
-        opacity: 1;
-        overflow: hidden;
-        transition: opacity 0.5s ease,height 0.5s ease;
-    }
-
-    .responsive.hide{
-        height: 0px;
-        transition: opacity 0.5s ease,height 0.5s ease;
-    }
-
-    .nav{
-        transition: 0.2s ease;
-    }
-
-    .nav:hover{
-        color:rgb(255, 187, 0);
-    }
-    
-    @media (min-width: 890px) {
-    
-        .responsive{
-            height: 0px;
-        }
-        
-        
-    }
+body{
+    overflow: hidden;
 }
+#layout{
+    max-height: 100vh;
 
-
-
-#menuAndOutlet{
-
-    min-height: 100vh;
-    border-top: 2px solid rgb(199, 199, 199);
-    border-bottom: 2px solid rgb(199, 199, 199);
-    color: #466874;
+    #header{
+        height: 12.5vh;
+        font-family: 'Arima', cursive;
+        
+        .responsive{
+            background-color: #72919c;
+            color:rgb(255, 255, 255);
+            backdrop-filter: blur(20px);
+            height: 200px;
+            opacity: 1;
+            overflow: hidden;
+            transition: opacity 0.5s ease,height 0.5s ease;
+        }
     
-    .grid1{
-        border-right: 2px solid rgb(199, 199, 199);
-        transition: width 0.5s ease;
-        display: flex;
-        width: 300px;
-        height: 100vh;
-        overflow: scroll;
-        .containerPanel{
-            border-top: 2px solid rgb(199, 199, 199);
+        .responsive.hide{
+            height: 0px;
+            transition: opacity 0.5s ease,height 0.5s ease;
         }
-
-        .containerPanel:nth-child(4){
-            border-bottom: 2px solid rgb(199, 199, 199);
-        }
-            
-        .panel{
-            margin-right: 20px;
+    
+        .nav{
             transition: 0.2s ease;
         }
-
-        .highlight{
-            background-color: #cadff6;
-            border-radius: 0px 20px 20px 0px;
+    
+        .nav:hover{
+            color:rgb(255, 187, 0);
         }
-
-        .link{
-            width: 100%;
-            text-decoration: none;
-            color: #466874;
-        }
-    }
-
-    .grid1.hide{
-        width: 0px;
-    }
-
-    .grid2{
-        position: relative;
-        flex-grow: 1;
-        height: 100vh;
-        width: 60%;
-        overflow: scroll;
-    }
-}
-
-@media (max-width: 1000px){
-    #menuAndOutlet{
-        .grid1{
-                position: absolute;
-                height: 100%;
-                z-index: 10;
+        
+        @media (min-width: 890px) {
+        
+            .responsive{
+                height: 0px;
             }
-
+            
+            
+        }
+    }
+    
+    
+    
+    #menuAndOutlet{
+    
+        border-top: 2px solid rgb(199, 199, 199);
+        border-bottom: 2px solid rgb(199, 199, 199);
+        color: #466874;
+        
+        .grid1{
+            border-right: 2px solid rgb(199, 199, 199);
+            transition: width 0.5s ease;
+            display: flex;
+            width: 300px;
+            height: 87.5vh;
+            overflow: scroll;
+            overflow-x: hidden;
+            .containerPanel{
+                border-top: 2px solid rgb(199, 199, 199);
+            }
+    
+            .containerPanel:nth-child(4){
+                border-bottom: 2px solid rgb(199, 199, 199);
+            }
+                
+            .panel{
+                margin-right: 20px;
+                transition: 0.2s ease;
+            }
+    
+            .highlight{
+                background-color: #cadff6;
+                border-radius: 0px 20px 20px 0px;
+            }
+    
+            .link{
+                width: 100%;
+                text-decoration: none;
+                color: #466874;
+            }
+        }
+    
         .grid1.hide{
             width: 0px;
         }
+    
+        .grid2{
+            position: relative;
+            flex-grow: 1;
+            height: 87.5vh;
+            width: 60%;
+            overflow: scroll;
+            overflow-x: hidden;
+        }
     }
     
-}
-
-#footer{
+    @media (max-width: 1000px){
+        #menuAndOutlet{
+            .grid1{
+                    position: absolute;
+                    height: 100%;
+                    z-index: 10;
+                }
+    
+            .grid1.hide{
+                width: 0px;
+            }
+        }
+        
+    }
+    
+    #footer{
+        
+    }
+    
+    
     
 }
-
-

@@ -12,7 +12,7 @@ function Layout() {
   const isOpenMenu = useSelector(state => state.isOpenMenu)
 
   return (
-    <>
+    <div id='layout'>
       <Header />
 
       <Stack direction='row' container id='menuAndOutlet'>
@@ -24,7 +24,8 @@ function Layout() {
           <Footer/>
         </div>
       </Stack>
-    </>
+
+    </div>
   )
 }
 

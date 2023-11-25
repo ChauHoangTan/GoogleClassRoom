@@ -4,10 +4,9 @@ const cors = require("cors");
 const  connectDB  = require("./config/db")
 const userRouter = require("./Routes/UserRoute")
 const UploadRouter = require("./Routes/UploadRouter")
-var cookieParser = require('cookie-parser')
+
 
 const app = express();
-app.use(cookieParser())
 // app.use(cors());
 app.use(cors({
     origin: process.env.CLIENT_URL

@@ -1,72 +1,74 @@
-.MuiGrid-item{
-    transition: transform 0.3s ease;
-}
-
-.MuiGrid-item:hover{
-    
-    transform: scale(1.03);
-}
-
-.card{
-    
-    width: 280px;
-    cursor: pointer;
-    .cardHeader{
-        position: relative;
-        padding: 0px 30px;
-        padding-top: 15px;
-        color: white;
-     
-        .text-limit {
-            max-width: 260px; /* Giới hạn chiều rộng tối đa */
-            overflow: hidden; /* Ẩn phần dư thừa */
-            text-overflow: ellipsis; /* Hiển thị dấu ba chấm (...) nếu vượt quá chiều rộng */
-            white-space: nowrap; /* Ngăn chặn xuống dòng */
-          }
-        >div{
-            z-index: 1;
-        }
-        img{
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            object-fit: cover;
-            height: 150px;
-        }
-
-        .avatar{
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 80px;
-            height: 80px;
-            transform: translate(-50%, 100%);
-            object-fit: cover;
-            color: rgb(81, 81, 255);
-            background-color: rgb(160, 160, 255);
-            z-index: 1;
-        }
-    }
-
-    .expandBottom{
-        content: '';
-        height: 200px;
+#homePageContent{
+    .MuiGrid-item{
+        transition: transform 0.3s ease;
     }
     
-}
-
-.card:hover{
-    box-shadow: 0px 4px 5px rgb(22, 130, 24);
-}
-
-
-
-@media (max-width: 400px){
+    .MuiGrid-item:hover{
+        
+        transform: scale(1.03);
+    }
+    
     .card{
-        width: 250px;
+        
+        width: 280px;
+        cursor: pointer;
+        .cardHeader{
+            position: relative;
+            padding: 0px 30px;
+            padding-top: 15px;
+            color: white;
+         
+            .text-limit {
+                max-width: 260px; /* Giới hạn chiều rộng tối đa */
+                overflow: hidden; /* Ẩn phần dư thừa */
+                text-overflow: ellipsis; /* Hiển thị dấu ba chấm (...) nếu vượt quá chiều rộng */
+                white-space: nowrap; /* Ngăn chặn xuống dòng */
+              }
+            >div{
+                z-index: 1;
+            }
+            img{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                object-fit: cover;
+                height: 150px;
+            }
+    
+            .avatar{
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 80px;
+                height: 80px;
+                transform: translate(-50%, 100%);
+                object-fit: cover;
+                color: rgb(81, 81, 255);
+                background-color: rgb(160, 160, 255);
+                z-index: 1;
+            }
+        }
+    
         .expandBottom{
-            height: 150px;
+            content: '';
+            height: 200px;
+        }
+        
+    }
+    
+    .card:hover{
+        box-shadow: 0px 4px 5px rgb(22, 130, 24);
+    }
+    
+    
+    
+    @media (max-width: 400px){
+        .card{
+            width: 250px;
+            .expandBottom{
+                height: 150px;
+            }
         }
     }
 }

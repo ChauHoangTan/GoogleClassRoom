@@ -5,6 +5,7 @@ import SearchBar from '../../components/search/SearchBar'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import PinIcon from '@mui/icons-material/Pin'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 
 const styleModalJoin = {
@@ -66,10 +67,17 @@ const ModalJoin = () => {
 
 const ModalNewClass = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleOpen = () => {
     setIsOpen(!isOpen)
   }
+
+  const handleNavigate = () => {
+    navigate('/class/1')
+  }
+
+
   return (
     <div>
       <Button variant='contained' sx={{ backgroundColor:'#005B48' }} onClick={handleOpen}>
@@ -88,7 +96,7 @@ const ModalNewClass = () => {
           <TextField id="inputTitle" label="Enter class subject" variant="outlined" sx={{ mt:'20px', width:'100%' }}/>
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
             <Button variant='contained' color='error' onClick={handleOpen}>Cancel</Button>
-            <Button variant='contained' onClick={handleOpen}>Create</Button>
+            <Button variant='contained' onClick={( ) => { handleOpen(); handleNavigate() }}>Create</Button>
           </Stack>
         </Box>
       </Modal>

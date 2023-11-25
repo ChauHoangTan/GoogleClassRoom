@@ -6,22 +6,18 @@ export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
   case userConstants.USER_LOGIN_GOOGLE_REQUEST:
   case userConstants.USER_LOGIN_FACEBOOK_REQUEST:
-  case userConstants.USER_LOGIN_GITHUB_REQUEST:
   case userConstants.USER_LOGIN_REQUEST:
     return { isLoading: true }
   case userConstants.USER_LOGIN_GOOGLE_SUCCESS:
   case userConstants.USER_LOGIN_FACEBOOK_SUCCESS:
-  case userConstants.USER_LOGIN_GITHUB_SUCCESS:
   case userConstants.USER_LOGIN_SUCCESS:
     return { isLoading: false, userInfo: action.payload, isSuccess: true }
   case userConstants.USER_LOGIN_GOOGLE_FAIL:
   case userConstants.USER_LOGIN_FACEBOOK_FAIL:
-  case userConstants.USER_LOGIN_GITHUB_FAIL:
   case userConstants.USER_LOGIN_FAIL:
     return { isLoading: false, isError: action.payload }
   case userConstants.USER_LOGIN_RESET:
   case userConstants.USER_LOGIN_FACEBOOK_RESET:
-  case userConstants.USER_LOGIN_GITHUB_RESET:
   case userConstants.USER_LOGIN_GOOGLE_RESET:
     return {}
   case userConstants.USER_LOGOUT:
@@ -32,6 +28,7 @@ export const userLoginReducer = (state = {}, action) => {
 }
 
 // REGISTER
+
 export const userRegisterReducer = (state = {}, action) => {
   switch (action.type) {
   case userConstants.USER_REGISTER_REQUEST:
@@ -74,22 +71,6 @@ export const userUpdateProfileReducer = ( state = {}, action) => {
   case userConstants.USER_UPDATE_PROFILE_FAIL:
     return { isLoading: false, isError: action.payload }
   case userConstants.USER_UPDATE_PROFILE_RESET:
-    return {}
-  default:
-    return state
-  }
-}
-
-// USER INFO
-export const userGetProfileReducer = ( state = {}, action) => {
-  switch (action.type) {
-  case userConstants.USER_GET_PROFILE_REQUEST:
-    return { isLoading: true }
-  case userConstants.USER_GET_PROFILE_SUCCESS:
-    return { isLoading: false, userInfo: action.payload, isSuccess: true }
-  case userConstants.USER_GET_PROFILE_FAIL:
-    return { isLoading: false, isError: action.payload }
-  case userConstants.USER_GET_PROFILE_RESET:
     return {}
   default:
     return state

@@ -11,7 +11,6 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
-import GitHubIcon from '@mui/icons-material/GitHub';
 import IconButton from '@mui/material/IconButton'
 import { Container } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
@@ -116,22 +115,17 @@ function Login ({ rememberMe, setRememberMe }) {
     window.open('http://localhost:5000/api/users/facebook', '_self')
   }
 
-  const handleGithubLogin = () => {
-    // Handle when user click login by Facebook
-    // window.open('http://localhost:5000/api/users/github', '_self')
-  }
-
-
   return (
     // <ThemeProvider theme={defaultTheme}>
-    <Grid container component='main' sx={{ height: '100vh', overflow: 'hidden' }}>
+    <Grid container component='main' sx={{ height: '100vh' }}>
       <Grid
         item
         xs={false}
         sm={false}
         md={7}
         sx={{
-          backgroundImage:'url(https://source.unsplash.com/random?wallpapers)',
+          backgroundImage:
+                            'url(https://source.unsplash.com/random?wallpapers)',
           backgroundRepeat: 'no-repeat',
           backgroundColor: t =>
             t.palette.mode === 'light'
@@ -153,7 +147,7 @@ function Login ({ rememberMe, setRememberMe }) {
               color: 'white'
             }}
           >
-            Google Class Room
+                            Google Class Room
           </Typography>
 
           <Typography
@@ -164,8 +158,8 @@ function Login ({ rememberMe, setRememberMe }) {
             }}
             marginTop={4}
           >
-            Building a High-Quality Online Learning Platform -
-            Connecting Knowledge, Elevating Wisdom!
+                            Building a High-Quality Online Learning Platform -
+                            Connecting Knowledge, Elevating Wisdom!
           </Typography>
         </Container>
       </Grid>
@@ -188,8 +182,7 @@ function Login ({ rememberMe, setRememberMe }) {
             mx: 4,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%'
+            alignItems: 'center'
           }}
         >
           <Typography
@@ -200,13 +193,13 @@ function Login ({ rememberMe, setRememberMe }) {
               fontWeight: 'bold'
             }}
           >
-            Sign in
+                            Sign in
           </Typography>
           <Box
             component='form'
             noValidate
             onSubmit={handleSubmit(onSubmit)}
-            sx={{ mt: 1, width: '100%' }}
+            sx={{ mt: 1 }}
           >
             <TextField
               margin='normal'
@@ -221,17 +214,6 @@ function Login ({ rememberMe, setRememberMe }) {
               error={!!errors.email}
               helperText={errors.email?.message || ''}
             />
-            <Grid container sx={{ justifyContent: 'flex-end' }}>
-              <Grid item>
-                <Link
-                  component={RouterLink}
-                  to='/user/activation'
-                  variant='body2'
-                >
-                  Resend activation email
-                </Link>
-              </Grid>
-            </Grid>
             <TextField
               margin='normal'
               required
@@ -267,21 +249,6 @@ function Login ({ rememberMe, setRememberMe }) {
                 )
               }}
             />
-            <Grid container sx={{ justifyContent: 'flex-end' }}>
-              <Grid item>
-                <Link
-                  component={RouterLink}
-                  to='/user/forgot'
-                  variant='body2'
-                >
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
-            <Grid item xs sx={{ textAlign: 'right' }}>
-              <Link href="/user/forgot" variant="body2">
-              </Link>
-            </Grid>
             <FormControlLabel
               control={
                 <Checkbox
@@ -306,7 +273,7 @@ function Login ({ rememberMe, setRememberMe }) {
                 <>
                   <FiLogIn />
                   <span style={{ marginLeft: '4px' }}>
-                    Sign In
+                                            Sign In
                   </span>
                 </>
               )}
@@ -337,7 +304,7 @@ function Login ({ rememberMe, setRememberMe }) {
                   fontSize: '20px'
                 }}
               >
-                Or sign in with
+                                    Or sign in with
               </Typography>
               <IconButton
                 variant='rounded'
@@ -352,13 +319,6 @@ function Login ({ rememberMe, setRememberMe }) {
                 size='large'
               >
                 <FacebookIcon />
-              </IconButton>
-              <IconButton
-                variant='rounded'
-                onClick={handleGithubLogin}
-                size='large'
-              >
-                <GitHubIcon />
               </IconButton>
             </Box>
           </Box>

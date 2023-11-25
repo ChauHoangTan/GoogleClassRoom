@@ -61,96 +61,80 @@ const {CLIENT_URL} = process.env
 // };
 
 const registerUser = async(req, res) => {
-    const { email, firstName, lastName, password } = req.body;
+    const { email, firstName, lastName, password, image } = req.body;
     try {
-        const userExist = await User.findOne({ email });
+        const userExists = await User.findOne({ email });
         // check if user exists
-        if(userExist) {
-            if(!userExist.isVerifiedEmail) {
-                return res.status(400).json({message: "Account need to been verified."});
-            }
-    
-            res.status(400).json({message: "User already exists"});
+        if(userExists) {
+            res.status(400);
+            throw new Error("User already exists");
         }
 
         // hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUser = await User.create({
+        // create user in DB
+        const newUser = {
             email,
             firstName,
             lastName,
             password: hashedPassword,
-        });
+            image,
+        };
         
 
-        const activation_token = createActivationToken(newUser.email)
+        const activation_token = createActivationToken(newUser)
 
         const url = `${CLIENT_URL}/user/activate/${activation_token}`
         await sendMail(email, url, "Verify your email address")
 
-        return res.json({ message: "Register Success! Please activate your email to start." })
+        res.json({ message: "Register Success! Please activate your email to start." })
     } catch(error) {
-        return res.status(500).json({ message: error.message });
-    }
-};
-
-const resendActivateEmail = async(req, res) => {
-    const { email} = req.body;
-    try {
-        const userExist = await User.findOne({ email });
-        // check if user exists
-        if(!userExist) {
-            res.status(400).json({message: "This email is not exists in system."});
-        }
-
-        if(userExist.isVerifiedEmail) {
-            res.status(400).json({message: "This email already verified."});
-
-        }
-
-        const activation_token = createActivationToken(userExist.email)
-
-        const url = `${CLIENT_URL}/user/activate/${activation_token}`
-        await sendMail(email, url, "Verify your email address")
-
-        return res.json({ message: "Resend Success! Please activate your email to start." })
-    } catch(error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
 const activateEmail = async (req, res) => {
     try {
         const { activation_token } = req.body;
-        jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET, async (err, user) => {
-            if(err) {
-                return res.status(401).json({ message: "This Activation Email is unavailable!" });
-            }
+        const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET);
 
-            const { email } = user;
+        const { email, firstName, lastName, password, image } = user;
 
-            const userExist = await User.findOne({ email });
-            if(!userExist) {
-                return res.status(400).json({message: "This email is not exists in system."});
-            }
+        const userExist = await User.findOne({ email });
+        if(userExist) {
+            res.status(400);
+            throw new Error("User already exists");
+        }
 
-            if(userExist.isVerifiedEmail) {
-                return res.status(400).json({message: "This email already verified."});
-            }
-
-            userExist.isVerifiedEmail = true;
-            const newUser = await userExist.save();
-
-            if(newUser) {
-                return res.status(200).json({ message: "Account has been activated!" })
-            } else {
-                return res.status(400).json({message: "Invalid user data" });
-            }
+        const newUser = await User.create({
+            email,
+            firstName,
+            lastName,
+            password,
+            image,
         });
+
+        // if newUser create successfully send user data and token to client 
+        if(newUser) {
+            res.status(201).json({
+                _id: newUser._id,
+                email: newUser.email,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                phone: newUser.phone,
+                dob: newUser.dob,
+                image: newUser.image,
+                isAdmin: newUser.isAdmin,
+                Authorization: createAccessToken(newUser._id)
+            });
+        } else {
+            res.status(400);
+            throw new Error("Invalid user data");
+        }
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -159,120 +143,35 @@ const activateEmail = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         if(req.user) {
-            // create access token
-            const accessToken = createAccessToken(req.user._id)
-            // create refresh token
-            const refreshToken = createRefreshToken(req.user._id)
-            // save refreshToken in database
-            await User.findByIdAndUpdate(req.user._id, { refreshToken }, { new: true })
-            // save refreshToken in cookie
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                maxAge: 5*60*1000
-            })
-            return res.status(200).json({ 
-                _id: req.user._id,
-                firstName: req.user.firstName,
-                image: req.user.image,
-                isAdmin: req.user.isAdmin,
-                isThirdPartyLogin: req.user.isThirdPartyLogin,
-                Authorization: accessToken 
-            });
+            const Authorization = createAccessToken(req.user._id)
+            // res.setHeader("Authorization", Authorization)
+            res.status(200).json({ ...req.user._doc, Authorization });
         } else {
-            return res.status(400).json({ message: req.error })
+            res.status(400).json({ message: req.error })
         }
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
-}
-
-const refreshAccessToken = async(req, res) => {
-   try {
-        // get refresh token from cookie
-        const cookie = req.cookies
-        // const { _id }
-        // check refresh token is exist
-        if(!cookie && !cookie.refreshToken) {
-            return res.status(401).json({ message: '"Please login now!'})
-        }
-        // check refresh token is valid
-       jwt.verify(cookie.refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
-            if(!user) {
-                return res.status(401).json({ message: "Invalid refresh token" })
-            }
-            // check refresh token is exist in db
-            const existUser = await User.findOne({
-                _id: user.id,
-                refreshToken: cookie.refreshToken
-            })
-
-            if(!existUser) {
-                return res.status(400).json({ message: "Refresh token invalid"})
-            }
-
-            const newAccessToken = createAccessToken(existUser._id) 
-
-            return res.status(200).json({newAccessToken})
-        })
-   } catch (error) {
-        return res.status(500).json({ message: error.message });
-   }
-}
-
-const logout = async (req, res) => {
-    const cookie = req.cookies
-    if (!cookie || !cookie.refreshToken) {
-        return res.status(401).json({ message: '"Please login now!'})
-    }
-
-    await User.findOneAndUpdate(
-        { refreshToken: cookie.refreshToken },
-        {refreshToken: ''},
-        {new: true}
-    )
-
-    res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: true
-    })
-    return res.status(200).json({ message: "Logout successfully" })
 }
 
 // desc Login user
 // @route POST api/user/login-success
 const loginSuccess = async (req, res) => {
-    const { userId, tokenLogin, provider } = req.body;
+    const { userId, tokenLogin } = req.body;
     try {
-        if (!userId || !tokenLogin || !provider) {
-            return res.status(400).json({ message: "Missing inputs" });
+        if (!userId || !tokenLogin) {
+            res.status(400).json({ message: "Missing inputs" });
         }
+        const user = await User.findOne({ 
+            authLoginId: userId, 
+            authLoginToken: tokenLogin 
+        });
 
-        const user = provider === "google" 
-            ? await User.findOne({ 
-                authGoogleId: userId, 
-                authGoogleToken: tokenLogin 
-            }) 
-            :  await User.findOne({ 
-                authFacebookId: userId, 
-                authFacebookToken: tokenLogin 
-            });
+        const Authorization = createAccessToken(user._id)
 
-        const accessToken = createAccessToken(user._id)
-
-        re 
-        res.status(200).json({ 
-                _id: user._id,
-                firstName: user.firstName,
-                image: user.image,
-                isAdmin: user.isAdmin,
-                isThirdPartyLogin: user.isThirdPartyLogin,
-                Authorization: accessToken, 
-            })
-        // const newAuthorization = createAccessToken(user._id)
-        // user.authGoogleToken = newAuthorization
-        // await user.save()
+        res.status(200).json({...user._doc, Authorization})
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -301,6 +200,12 @@ const loginSuccess = async (req, res) => {
 // })
 
 
+// desc Login user
+// @route POST api/user/auth/google
+const authGoogle = async (req, res) => {
+    console.log('auth google', req.user);
+};
+
 // @desc Update user profile
 // @route PUT/api/users/profile
 const updateUserProfile = async(req, res) => {
@@ -319,7 +224,7 @@ const updateUserProfile = async(req, res) => {
 
             const updatedUser = await user.save();
             // send updated user data and token to client
-            return res.json({
+            res.json({
                 email: updatedUser.email,
                 _id: updatedUser._id,
                 firstName: updatedUser.firstName,
@@ -333,13 +238,13 @@ const updateUserProfile = async(req, res) => {
         }
         // else send error message
         else {
-            res.status(400).json({message: "User not found"});
-
+            res.status(404);
+            throw new Error("User not found");
         }
         
     
     }  catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -359,14 +264,15 @@ const changeUserPassword = async (req, res) => {
             const hashedPassword = await bcrypt.hash(newPassword, salt);
             user.password = hashedPassword;
             await user.save();
-            return res.json({ message: "Password changed! "});
+            res.json({ message: "Password changed! "});
         }
         // else send error message
         else {
-            res.status(400).json({message: "Invalid old password"});
+            res.status(401);
+            throw new Error("Invalid old password");
         }
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        res.status(400).json({ message: error.message });
     }
 }
 
@@ -379,46 +285,41 @@ const forgotUserPassword = async (req, res) => {
         const user = await User.findOne({ email });
         // if user exists, send email to user to get url change password 
         if(user) {
-            const access_token = createAccessToken(user._id);
+            const access_token = createAccessToken({ id: user._id });
             const url = `${CLIENT_URL}/user/reset/${access_token}`;
 
             sendMail(email, url, "Reset your password");
-            return res.json({ message: "Re-send the password, please check your email." });
+            res.json({ message: "Re-send the password, please check your email." });
         }
         // else send error message
         else {
-            res.status(400).json({message: "This email does not exist" });
+            res.status(401);
+            throw new Error("This email does not exist");
         }
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
 // @desc user reset password
 // @route PUT /api/users/reset
 const resetUserPassword = async (req, res) => {
-    const { newPassword } = req.body;
+    const { password } = req.body;
     try {
-        const user = await User.findById(req.user.id);
-
-        const isExistPassword = await bcrypt.compare(newPassword, user.password);
-        if(isExistPassword) {
-            return res.status(404).json({ message: "New password must be different old" });
-        }
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-        user.password = hashedPassword;
-        await user.save();
-        return res.json({ message: "Password successfully changed!"});
+        const hashedPassword = await bcrypt.hash(password, salt);
+        await User.findOneAndUpdate({_id: req.user.id}, {
+            password: hashedPassword
+        })
+
+        res.json({ message: "Password successfully changed!"});
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
-const getUserInfo = async (req, res) => {
-    console.log(req.user.id)
-    const user = await User.findById(req.user.id).select('-password -refreshToken')
-    return res.status(200).json(user)
+const secret = async (req, res) => {
+    console.log("hello");
 }
 
 module.exports = {
@@ -430,8 +331,6 @@ module.exports = {
     changeUserPassword,
     forgotUserPassword,
     resetUserPassword,
-    resendActivateEmail,
-    getUserInfo,
-    refreshAccessToken,
-    logout,
+    secret,
+    authGoogle,
 }

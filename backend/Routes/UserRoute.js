@@ -24,7 +24,7 @@ router.get('/google/callback', (req, res, next) => {
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/google/${req.user?.authGoogleId}/${req.user?.authGoogleToken}`)
+    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authLoginId}/${req.user?.authLoginToken}`)
 });
 
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email'], session: false }));
@@ -35,22 +35,7 @@ router.get('/facebook/callback', (req, res, next) => {
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/facebook/${req.user?.authFacebookId}/${req.user?.authFacebookToken}`)
-});
-
-router.get('/github',passport.authenticate('github', { scope: [ 'user:email' ], session: false }));
-
-router.get('/github/callback', (req, res, next) => {
-    passport.authenticate('github', (err, user) => {
-        // if(err) {
-        //     res.redirect(`${process.env.CLIENT_URL}/login`)
-        // }
-        // req.err = err;
-        req.user = user;
-        next();
-    })(req, res, next)
-}, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authGithubId}/${req.user?.authGithubToken}`)
+    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user?.authLoginId}/${req.user?.authLoginToken}`)
 });
 
 router.post("/login-success", userController.loginSuccess)
@@ -59,19 +44,14 @@ router.post("/activation", userController.activateEmail);
 
 router.post("/forgot", userController.forgotUserPassword);
 
-router.post("/resend-activation", userController.resendActivateEmail);
-
-
 router.post("/reset", passport.authenticate('jwt', { session: false }), userController.resetUserPassword);
 
 router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
 
 router.put("/password", passport.authenticate('jwt', { session: false }), userController.changeUserPassword);
 
-router.get("/info", passport.authenticate('jwt', { session: false }), userController.getUserInfo);
+router.put("/password", passport.authenticate('jwt', { session: false }), userController.changeUserPassword);
 
-router.post("/refresh-token", userController.refreshAccessToken);
-
-router.get("/logout",  userController.logout);
+router.get("/secret", passport.authenticate('jwt', { session: false }), userController.secret)
 
 module.exports = router;

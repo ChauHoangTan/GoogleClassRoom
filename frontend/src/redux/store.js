@@ -7,7 +7,6 @@ const rootReducer = combineReducers({
   userLogin: User.userLoginReducer,
   userRegister: User.userRegisterReducer,
   userChangePassword: User.userChangePasswordReducer,
-  userGetProfile: User.userGetProfileReducer,
   userUpdateProfile: User.userUpdateProfileReducer,
 
   //

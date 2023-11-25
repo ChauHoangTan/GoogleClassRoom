@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema(
     {
-        studentId:  {
-            type: String,
-            trim: true,
-            default: "",
-        },
+        // studentId:  {
+        //     type: String,
+        //     trim: true,
+        //     unique: true,
+        //     default: "",
+        // },
         firstName:  {
             type: String,
             required: true,
@@ -17,8 +18,6 @@ const UserSchema = mongoose.Schema(
         },
         email: {
             type: String,
-            unique: true,
-            trim: true,   
             default: "",
         },
         password: {
@@ -36,29 +35,37 @@ const UserSchema = mongoose.Schema(
             type: String,
             default: "",
         },
-        isAdmin: { 
-            type: Boolean,
-            default: false, 
+
+        role: { 
+            type: String, 
+            enum: ['admin', 'teacher', 'student'], 
+            required: true,
+            default: 'student', 
         },
-        isThirdPartyLogin: {
-            type: Boolean,
-            default: false,
+        typeLogin: { 
+            type: String, 
+            enum: ['local', 'google', 'facebook'], 
+            required: true,
+            default: 'local', 
         },
-        authGoogleId: { 
-            type: String,
-            default: "",
+        // authGoogleId: { 
+        //     type: String 
+        // },
+        // authFacebookId: { 
+        //     type: String 
+        // },
+        // authGoogleToken: { 
+        //     type: String 
+        // },
+        // authFacebookToken: { 
+        //     type: String 
+        // },
+
+        authLoginId: { 
+            type: String 
         },
-        authFacebookId: { 
-            type: String,
-            default: "",
-        },
-        authGoogleToken: { 
-            type: String,
-            default: "",
-        },
-        authFacebookToken: { 
-            type: String,
-            default: "",
+        authLoginToken: { 
+            type: String 
         },
         isBanned:  { 
             type: Boolean, 
@@ -68,14 +75,10 @@ const UserSchema = mongoose.Schema(
             type: Boolean, 
             default: false 
         },
-        isVerifiedEmail: { 
+        isVerified: { 
             type: Boolean, 
             default: false 
         },
-        refreshToken: {
-            type: String,
-            default: "",
-        }
     },
     {
         timestamps: true,

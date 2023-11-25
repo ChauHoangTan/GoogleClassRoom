@@ -21,9 +21,11 @@ function Layout() {
         </div>
         <div className='grid2'>
           <Outlet />
-          <Footer/>
         </div>
       </Stack>
+
+
+      <Footer/>
     </>
   )
 }

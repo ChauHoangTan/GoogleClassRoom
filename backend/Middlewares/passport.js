@@ -94,7 +94,8 @@ passport.use(new GoogleStrategy({
                 image: profile?.photos[0]?.value,
                 authGoogleId: profile.id,
                 authGoogleToken: accessToken,
-                isThirdPartyLogin: true
+                isThirdPartyLogin: true,
+                isVerifiedEmail: true,
             })
 
             const user = await newUser.save();
@@ -144,7 +145,8 @@ passport.use(new FacebookStrategy({
               image: profile?.photos[0]?.value,
               authFacebookId: profile.id,
               authFacebookToken: accessToken,
-              isThirdPartyLogin: true
+              isThirdPartyLogin: true,
+              isVerifiedEmail: true
           })
 
           const user = await newUser.save();
@@ -161,7 +163,6 @@ passport.use(new GithubStrategy({
   },
   async (accessToken, refreshToken, profile, done) => {
 //   try {
-    console.log(profile)
     const existUser = await User.findOne({
         authLoginId: profile?.id,
         typeLogin: "github",

@@ -68,8 +68,7 @@ router.put("/profile", passport.authenticate('jwt', { session: false }), userCon
 
 router.put("/password", passport.authenticate('jwt', { session: false }), userController.changeUserPassword);
 
-router.put("/password", passport.authenticate('jwt', { session: false }), userController.changeUserPassword);
+router.get("/info", passport.authenticate('jwt', { session: false }), userController.getUserInfo);
 
-router.get("/secret", passport.authenticate('jwt', { session: false }), userController.secret)
 
 module.exports = router;

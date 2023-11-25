@@ -159,7 +159,14 @@ const loginUser = async (req, res) => {
         if(req.user) {
             const Authorization = createAccessToken(req.user._id)
             // res.setHeader("Authorization", Authorization)
-            return res.status(200).json({ ...req.user._doc, Authorization });
+            return res.status(200).json({ 
+                _id: req.user._id,
+                firstName: req.user.firstName,
+                image: req.user.image,
+                isAdmin: req.user.isAdmin,
+                isThirdPartyLogin: req.user.isThirdPartyLogin,
+                Authorization 
+            });
         } else {
             return res.status(400).json({ message: req.error })
         }
@@ -189,7 +196,17 @@ const loginSuccess = async (req, res) => {
 
         const Authorization = createAccessToken(user._id)
 
-        return res.status(200).json({...user._doc, Authorization})
+        res.status(200).json({ 
+                _id: user._id,
+                firstName: user.firstName,
+                image: user.image,
+                isAdmin: user.isAdmin,
+                isThirdPartyLogin: user.isThirdPartyLogin,
+                Authorization 
+            })
+        // const newAuthorization = createAccessToken(user._id)
+        // user.authGoogleToken = newAuthorization
+        // await user.save()
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -219,12 +236,6 @@ const loginSuccess = async (req, res) => {
 //     }  
 // })
 
-
-// desc Login user
-// @route POST api/user/auth/google
-const authGoogle = async (req, res) => {
-    console.log('auth google', req.user);
-};
 
 // @desc Update user profile
 // @route PUT/api/users/profile
@@ -313,7 +324,6 @@ const forgotUserPassword = async (req, res) => {
         }
         // else send error message
         else {
-        console.log(email)
             res.status(401);
             throw new Error("This email does not exist");
         }
@@ -343,8 +353,10 @@ const resetUserPassword = async (req, res) => {
     }
 }
 
-const secret = async (req, res) => {
-    console.log("hello");
+const getUserInfo = async (req, res) => {
+    console.log(req.user.id)
+    const user = await User.findById(req.user.id).select('-password')
+    return res.status(200).json(user)
 }
 
 module.exports = {
@@ -356,7 +368,6 @@ module.exports = {
     changeUserPassword,
     forgotUserPassword,
     resetUserPassword,
-    secret,
-    authGoogle,
     resendActivateEmail,
+    getUserInfo,
 }

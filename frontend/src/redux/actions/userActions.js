@@ -124,6 +124,22 @@ const changePasswordAction = password => async (dispatch, getState) => {
   }
 }
 
+// get profile action
+const getProfileAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: userConstants.USER_GET_PROFILE_REQUEST })
+    const response = await userApi.getProfileService(
+      tokenProtection(getState)
+    )
+    dispatch({
+      type: userConstants.USER_GET_PROFILE_SUCCESS,
+      payload: response
+    })
+  } catch (error) {
+    ErrorsAction(error, dispatch, userConstants.USER_GET_PROFILE_FAIL)
+  }
+}
+
 // update profile action
 const updateProfileAction = user => async (dispatch, getState) => {
   try {
@@ -151,5 +167,6 @@ export {
   registerAction,
   logoutAction,
   changePasswordAction,
-  updateProfileAction
+  updateProfileAction,
+  getProfileAction
 }

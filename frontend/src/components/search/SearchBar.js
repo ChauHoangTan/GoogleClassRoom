@@ -1,15 +1,24 @@
-import { Stack } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
+import { Button } from '@mui/material'
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import './style.scss'
+import { useState } from 'react';
 
 function SearchBar() {
+  const [input, setInput] = useState( '' )
+  const onChange = ( e ) => {
+    setInput(e.target.value)
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+  }
+
   return (
-    <Stack>
-      <Stack className='searchBar' direction='row'>
-        <input/>
-        <SearchIcon className='icon'/>
-      </Stack>
-    </Stack>
+    <form onSubmit={onSubmit} className='search'>
+      <input className='inputSearch' label="Search..." placeholder='Search...' value={input}
+        onChange={onChange}/>
+      <Button><SearchOutlinedIcon/></Button>
+    </form>
   )
 }
 

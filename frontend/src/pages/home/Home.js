@@ -42,7 +42,7 @@ const ModalJoin = () => {
   }
   return (
     <div>
-      <Button variant='contained' sx={{ backgroundColor:'#005B48' }} onClick={handleOpen}>
+      <Button variant='contained' onClick={handleOpen}>
         <PinIcon sx={{ mr:'5px' }}/>Join</Button>
       <Modal
         open={isOpen}
@@ -80,7 +80,7 @@ const ModalNewClass = () => {
 
   return (
     <div>
-      <Button variant='contained' sx={{ backgroundColor:'#005B48' }} onClick={handleOpen}>
+      <Button variant='contained' onClick={handleOpen}>
         <LibraryAddIcon sx={{ mr:'5px' }}/>New class</Button>
       <Modal
         open={isOpen}
@@ -109,12 +109,12 @@ function Home() {
   return (
     <Stack id='home' direction='column'>
       <div className='content'>
-        <Stack direction='row' justifyContent='end' spacing={2} pt={2} pr={2}>
+        <Stack direction='row' justifyContent='end' spacing={2} pt={6} pr={2} pb={2}>
           <ModalJoin/>
           <ModalNewClass/>
         </Stack>
         <SearchBar/>
-        <Typography mt={2} sx={{ fontStyle:'italic' }}>Search results: 3</Typography>
+        <Typography mt={2} mb={5} sx={{ fontStyle:'italic' }}>Search results: 3</Typography>
         <HomePageContent/>
       </div>
       <Stack alignItems='center' className='pagination'>

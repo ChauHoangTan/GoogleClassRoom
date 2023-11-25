@@ -13,7 +13,7 @@ const CardClass = ({ title, tagline, author }) => {
         <div><Typography variant='body-1' className='text-limit'>{tagline}</Typography></div>
         <div><Typography variant='body-2' className='text-limit'>{author}</Typography></div>
 
-        <img src='https://i.pinimg.com/564x/a7/3d/b9/a73db9ebfd5e0cb4ec1fc466026b2349.jpg'/>
+        <img src='https://wallpapercave.com/wp/wp6827255.jpg'/>
         <Avatar className='avatar'/>
       </Stack>
 

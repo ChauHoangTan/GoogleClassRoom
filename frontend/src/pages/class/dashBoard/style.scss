@@ -1,0 +1,111 @@
+.dashBoard{
+  .contentDashBoard{
+    border: 2px solid rgba(56, 202, 97, 0.733);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px rgba(21, 139, 50, 0.614);
+    .headComponent{
+      height: 50vh;
+      position: relative;
+      img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px 10px 0px 0px;
+      }
+
+      >div{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 20px 20px;
+        z-index: 1;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.193);
+      }
+
+      button{
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        z-index: 1;
+        color: rgba(255, 255, 255, 0.734);
+        transition: 0.2s ease;
+      }
+      button:hover{
+        color: white;
+      }
+
+      @media (max-width:599px) {
+        .name{
+          font-size: 25px;
+        }
+        .title{
+          font-size: 18px;
+        }
+      }
+    }
+
+    .component{
+      padding: 10px;
+    }
+
+    .joinComponent{
+      .approachJoin{
+        >div{
+          border: 2px solid rgb(48, 182, 82);
+          border-radius: 5px;
+          width: 80%;
+          min-width: 300px;
+          box-shadow: 0px 0px 4px rgba(21, 139, 50, 0.293);
+          .code{
+            flex: 1;
+            padding: 5px 10px;
+            border-right: 2px solid rgb(48, 182, 82);
+            >span{
+              display: inline-block;
+              width: 220px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+          }
+
+          button{
+            color: rgb(21, 139, 50);
+          }
+        }
+      }
+    }
+
+    .notificationComponent{
+      >div{
+        color: rgb(21, 139, 50);
+        border: 2px solid rgb(48, 182, 82);
+        border-radius: 5px;
+        div:nth-child(1){
+            background-color: rgb(21, 139, 50);
+            color: white;
+            border-radius: 50%;
+            padding: 10px;
+        }
+        box-shadow: 0px 0px 4px rgba(21, 139, 50, 0.293);
+        transition: 0.3s ease;
+
+        button{
+          svg{
+            color: rgb(21, 139, 50);
+          }
+        }
+      }
+
+      >div:hover{
+        box-shadow: 0px 0px 8px rgb(21, 139, 50);
+        transform: scale(1.02);
+      }
+      
+      
+    }
+  }
+}

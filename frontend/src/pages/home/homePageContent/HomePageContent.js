@@ -29,66 +29,34 @@ const CardClass = ({ title, tagline, author }) => {
   )
 }
 
-function HomePageContent() {
+const GridItemClass = () => {
   const navigate = useNavigate()
   const handleNavigateToClassDetails = () => {
     navigate('/class/1')
   }
   return (
+    <Grid item component='div' onClick={handleNavigateToClassDetails}>
+      <CardClass title='2310-CLC-AWP-20KTPM2'
+        tagline='Advanced Web Programming'
+        author='Khánh Nguyễn Huy'/>
+    </Grid>
+  )
+}
+
+function HomePageContent() {
+  return (
     <Grid container spacing={2} mt={1} id='homePageContent'>
-      <Grid item component='div' onClick={handleNavigateToClassDetails}>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
-
-      <Grid item>
-        <CardClass title='2310-CLC-AWP-20KTPM2'
-          tagline='Advanced Web Programming'
-          author='Khánh Nguyễn Huy'/>
-      </Grid>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
+      <GridItemClass/>
     </Grid>
   )
 }

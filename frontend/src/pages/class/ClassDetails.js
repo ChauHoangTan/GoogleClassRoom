@@ -5,10 +5,7 @@ import { useState } from 'react'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-<<<<<<< HEAD
 import DashBoard from './dashBoard/DashBoard'
-=======
->>>>>>> b86c3b131832f4b8c1480bab34a50df99ec2cebf
 import Participants from './participants/Participants'
 function ClassDetails() {
   const [value, setValue] = useState('1')

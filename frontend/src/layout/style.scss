@@ -5,25 +5,11 @@ body{
 }
 #layout{
     max-height: 100vh;
-
+    display: flex;
+    flex-direction: column;
     #header{
-        height: 12.5vh;
+        height: 90px;
         font-family: 'Arima', cursive;
-        
-        .responsive{
-            background-color: #72919c;
-            color:rgb(255, 255, 255);
-            backdrop-filter: blur(20px);
-            height: 200px;
-            opacity: 1;
-            overflow: hidden;
-            transition: opacity 0.5s ease,height 0.5s ease;
-        }
-    
-        .responsive.hide{
-            height: 0px;
-            transition: opacity 0.5s ease,height 0.5s ease;
-        }
     
         .nav{
             transition: 0.2s ease;
@@ -43,10 +29,14 @@ body{
         }
     }
     
-    
+    @media ( max-width: 599px ) {
+        #header{
+            height: 65px;
+        }
+    }
     
     #menuAndOutlet{
-    
+        flex-grow: 1;
         border-top: 2px solid rgb(199, 199, 199);
         border-bottom: 2px solid rgb(199, 199, 199);
         color: #466874;

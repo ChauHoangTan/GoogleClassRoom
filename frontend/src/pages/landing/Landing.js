@@ -44,11 +44,11 @@ const Introduction = () => {
               <Stack direction='column' alignItems='center' justifyContent='center' className='containerText'
                 sx={{ width: '90%' }}>
                 <Typography variant='h4' mt={5}
-                  sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px black' }}>
+                  sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px white' }}>
                                     Welcome to Google Classroom!
                 </Typography>
                 <Typography variant='h6'
-                  sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px black' }}>
+                  sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px white' }}>
                                     Come to us, we will bring you the best education experience!
                 </Typography>
                 <Typography variant='body-1' mt={3}

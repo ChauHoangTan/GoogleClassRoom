@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
-import { Avatar, Stack, Button } from '@mui/material'
+import { Avatar, Stack, Button, Popover } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import logoLight from '../assets/img/logo_light_mode.png'
 import logoDark from '../assets/img/logo_dark_mode.png'
@@ -25,6 +25,7 @@ import Tooltip from '@mui/material/Tooltip'
 
 import './style.scss'
 import { FiSettings } from 'react-icons/fi'
+import Notification from '../pages/notification/Notification.js'
 
 export default function ResponsiveAppBar () {
   const dispatch = useDispatch()
@@ -52,6 +53,17 @@ export default function ResponsiveAppBar () {
     dispatch(logoutAction())
     toast.success('Logged out successfully')
     navigate('/')
+  }
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const handleClickAncorEl = (e) => {
+    setAnchorEl(e.target)
+    handleClickNotification()
+  }
+
+  const [isNoti, setIsNoti] = useState (false)
+  const handleClickNotification = () => {
+    setIsNoti(!isNoti)
   }
 
   const imgURL = userInfo?.image
@@ -146,9 +158,24 @@ export default function ResponsiveAppBar () {
                   </IconButton>
                   <IconButton color='inherit'>
                     <Badge badgeContent={5} color='error'>
-                      <NotificationsIcon />
+                      <NotificationsIcon onClick={( e ) => handleClickAncorEl( e ) }/>
                     </Badge>
                   </IconButton>
+                  <Popover
+                    anchorEl={anchorEl}
+                    open={isNoti}
+                    onClose={handleClickNotification}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right'
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right'
+                    }}
+                  >
+                    <Notification/>
+                  </Popover>
                   <Menu
                     id='menu-appbar'
                     anchorEl={anchorElUser}

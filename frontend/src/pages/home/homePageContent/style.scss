@@ -9,21 +9,16 @@
     }
     
     .card{
-        
         width: 280px;
         cursor: pointer;
+        box-shadow: 3px 3px 4px rgb(140, 164, 158);
         .cardHeader{
             position: relative;
             padding: 0px 30px;
             padding-top: 15px;
+            height: 250px;
             color: white;
-         
-            .text-limit {
-                max-width: 260px; /* Giới hạn chiều rộng tối đa */
-                overflow: hidden; /* Ẩn phần dư thừa */
-                text-overflow: ellipsis; /* Hiển thị dấu ba chấm (...) nếu vượt quá chiều rộng */
-                white-space: nowrap; /* Ngăn chặn xuống dòng */
-              }
+            
             >div{
                 z-index: 1;
             }
@@ -31,41 +26,62 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 100%;
                 object-fit: cover;
-                height: 150px;
+                height: 250px;
+                width: 100%;
             }
     
             .avatar{
                 position: absolute;
                 bottom: 0;
                 right: 0;
-                width: 80px;
-                height: 80px;
-                transform: translate(-50%, 100%);
+                width: 50px;
+                height: 50px;
+                transform: translate(-30%, 40%);
                 object-fit: cover;
-                color: rgb(81, 81, 255);
-                background-color: rgb(160, 160, 255);
+                background-color: rgb(109, 211, 131);
                 z-index: 1;
+            }
+
+            button{
+                position: absolute;
+                top: 10px;
+                right: 10px;
             }
         }
     
-        .expandBottom{
-            content: '';
-            height: 200px;
+        .expandBottom{  
+            height: 120px;
+            background-color: rgba(215, 255, 242, 0.529);
+            >div{
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                padding: 10px;
+                .text-limit {
+                    max-width: 240px; /* Giới hạn chiều rộng tối đa */
+                    overflow: hidden; /* Ẩn phần dư thừa */
+                    text-overflow: ellipsis; /* Hiển thị dấu ba chấm (...) nếu vượt quá chiều rộng */
+                    white-space: nowrap; /* Ngăn chặn xuống dòng */
+                }
+
+                img{
+                    z-index: -1;
+                }
+            }
         }
         
     }
     
     .card:hover{
-        box-shadow: 0px 1px 5px rgba(22, 130, 24, 0.7);
+        box-shadow: 4px 4px 4px rgba(70, 176, 70, 0.7);
     }
     
     
     
     @media (max-width: 400px){
         .card{
-            width: 250px;
+            width: 220px;
             .expandBottom{
                 height: 150px;
             }

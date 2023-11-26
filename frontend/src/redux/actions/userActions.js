@@ -6,70 +6,17 @@ import toast from 'react-hot-toast'
 
 // Login action
 const loginAction = (provider, datas) => async dispatch => {
-  switch (provider) {
-  case 'google':
     try {
-      dispatch({ type: userConstants.USER_LOGIN_GOOGLE_REQUEST })
-      const response = await userApi.loginSuccessService({...datas, provider})
-      dispatch({
-        type: userConstants.USER_LOGIN_GOOGLE_SUCCESS,
-        payload: response
-      })
+        dispatch({ type: userConstants.USER_LOGIN_REQUEST })
+        const response = await userApi.loginService(provider, datas)
+        console.log(response)
+        dispatch({
+            type: userConstants.USER_LOGIN_SUCCESS,
+            payload: response
+        })
     } catch (error) {
-      ErrorsAction(
-        error,
-        dispatch,
-        userConstants.USER_LOGIN_GOOGLE_FAIL
-      )
+        ErrorsAction(error, dispatch, userConstants.USER_LOGIN_FAIL)
     }
-    break
-  case 'facebook':
-    try {
-      dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_REQUEST })
-      const response = await userApi.loginSuccessService({...datas, provider})
-      dispatch({
-        type: userConstants.USER_LOGIN_FACEBOOK_SUCCESS,
-        payload: response
-      })
-    } catch (error) {
-      ErrorsAction(
-        error,
-        dispatch,
-        userConstants.USER_LOGIN_FACEBOOK_FAIL
-      )
-    }
-    break
-  case 'Github':
-    try {
-      dispatch({ type: userConstants.USER_LOGIN_GITHUB_REQUEST })
-      const response = await userApi.loginSuccessService({...datas, provider})
-      dispatch({
-        type: userConstants.USER_LOGIN_GITHUB_SUCCESS,
-        payload: response
-      })
-    } catch (error) {
-      ErrorsAction(
-        error,
-        dispatch,
-        userConstants.USER_LOGIN_GITHUB_FAIL
-      )
-    }
-    break
-  case 'local':
-    try {
-      dispatch({ type: userConstants.USER_LOGIN_REQUEST })
-      const response = await userApi.loginService(datas)
-      dispatch({
-        type: userConstants.USER_LOGIN_SUCCESS,
-        payload: response
-      })
-    } catch (error) {
-      ErrorsAction(error, dispatch, userConstants.USER_LOGIN_FAIL)
-    }
-    break
-  default:
-    break
-  }
 }
 
 // const loginAction = (datas) => async (dispatch) => {
@@ -103,8 +50,6 @@ const logoutAction = datas => async dispatch => {
   dispatch({ type: userConstants.USER_LOGOUT })
   dispatch({ type: userConstants.USER_REGISTER_RESET })
   dispatch({ type: userConstants.USER_LOGIN_RESET })
-  dispatch({ type: userConstants.USER_LOGIN_GOOGLE_RESET })
-  dispatch({ type: userConstants.USER_LOGIN_FACEBOOK_RESET })
 }
 
 // Change password action

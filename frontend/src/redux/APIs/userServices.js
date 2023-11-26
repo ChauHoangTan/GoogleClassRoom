@@ -14,34 +14,24 @@ const logoutService = () => {
 }
 
 const refreshAccessTokenService = async () => {
-    const { data } = await Axios.post('/users/refresh', {}, {
-        withCredentials: true
-    })
-    console.log(data)
+  const { data } = await Axios.post('/users/refresh', {}, {
+    withCredentials: true
+  })
+  console.log(data)
 
-    return data
+  return data
 }
 
 // Login user API
-const loginService = async (user) => {
-  const { data } = await Axios.post('/users/login', user, {
-    withCredentials: true
-})
-
-  if (data) {
-    localStorage.setItem('userInfo', JSON.stringify(data))
-  }
-  return data
-}
-
-// LoginSuccess user API
-const loginSuccessService = async (user) => {
-  const { data } = await Axios.post('/users/login-success', user)
-
-  if (data) {
-    localStorage.setItem('userInfo', JSON.stringify(data))
-  }
-  return data
+const loginService = async (provider, user) => {
+    const { data } = provider === 'local'
+        ? await Axios.post('/users/login', user, { withCredentials: true })
+        : await Axios.post('/users/login-success', { ...user, provider })
+    console.log(data)
+    if (data) {
+        localStorage.setItem('userInfo', JSON.stringify(data))
+    }
+    return data
 }
 
 // Change password API
@@ -85,17 +75,17 @@ const updateProfileService = async (user, token) => {
 }
 
 const activationEmailService = async (token) => {
-  const { data } = await Axios.post('/users/activation', token);
+  const { data } = await Axios.post('/users/activation', token)
   return data
 }
 
 const resendActivationEmailService = async (token) => {
-  const { data } = await Axios.post('/users/resend-activation', token);
+  const { data } = await Axios.post('/users/resend-activation', token)
   return data
 }
 
 const getProfileService = async (userInfo, dispatch, loginSuccess) => {
-    const AxiosJWT = createAxios(userInfo, dispatch, loginSuccess)
+  const AxiosJWT = createAxios(userInfo, dispatch, loginSuccess)
   const { data } = await AxiosJWT.get('/users/info', {
     headers: {
       Authorization: `Bearer ${userInfo.Authorization}`
@@ -107,17 +97,16 @@ const getProfileService = async (userInfo, dispatch, loginSuccess) => {
   return data
 }
 
-export { 
+export {
   registerService,
   logoutService,
   loginService,
   changePasswordService,
   updateProfileService,
-  loginSuccessService,
   activationEmailService,
   forgotPasswordService,
   resetPasswordService,
   resendActivationEmailService,
   getProfileService,
-  refreshAccessTokenService,
+  refreshAccessTokenService
 }

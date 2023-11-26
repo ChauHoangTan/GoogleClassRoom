@@ -69,7 +69,7 @@ const ForgotPassword = () => {
       error.message && setErr(error.response.data.message)
     }
     finally {
-      setIsLoading(false); // Reset isLoading to false after success/error
+      setIsLoading(false) // Reset isLoading to false after success/error
     }
   }
 

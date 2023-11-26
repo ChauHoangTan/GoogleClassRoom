@@ -45,7 +45,7 @@ const EditProfile = () => {
   const { isError, isLoading, userInfo, isSuccess } = useSelector(
     state => state.userGetProfile
   )
-  
+
   const [imageUrl, setImageUrl] = useState('')
   const [imageUpdateUrl, setImageUpdateUrl] = useState('')
 
@@ -169,102 +169,102 @@ const EditProfile = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={9}>
                     <Uploader
-                        setImageUrl={setImageUrl}
-                        imageUrl={imageUrl}
-                        imageUpdateUrl={imageUpdateUrl}
-                      />
-                      </Grid>
-                      {/* image preview */}
-                      <Grid item xs={12} sm={3}>
-                      <ImagePreview
-                              image={imageUrl}
-                              name={
-                              userInfo
-                                ? userInfo.name
-                                : 'user-image'
-                              }
-                      />
-                      </Grid>
-                      <Grid item xs={12}>
-                      <TextField
-                              fullWidth
-                              {...register('email')}
-                              id='email'
-                              label='Email'
-                              name='email'
-                              disabled
-                      />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                      <TextField
-                              name='firstName'
-                              required
-                              fullWidth
-                              autoFocus
-                              id='firstName'
-                              label='First Name'
-                              {...register('firstName')}
-                              error={!!errors.firstName}
-                              helperText={
-                              errors.firstName?.message || ''
-                              }
-                      />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                      <TextField
-                              required
-                              fullWidth
-                              id='lastName'
-                              label='Last Name'
-                              name='lastName'
-                              {...register('lastName')}
-                              error={!!errors.lastName}
-                              helperText={
-                              errors.lastName?.message || ''
-                              }
-                      />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6} sx={{ mt: 1 }}>
-                      <TextField
-                              fullWidth
-                              id='phone'
-                              label='Phone'
-                              name='phone'
-                              autoComplete='phone'
-                              required
-                              {...register('phone')}
-                              error={!!errors.phone}
-                              helperText={errors.phone?.message || ''}
-                      />
-                      </Grid>
-
-                      <Grid item xs={12} sm={6} md={6}>
-                      <LocalizationProvider
-                              dateAdapter={AdapterDayjs}
-                      >
-                              <DemoContainer
-                              components={['DatePicker']}
-                              >
-                              <DatePicker
-                                      label='Date of birth'
-                                      value={date}
-                                      onChange={newValue =>
-                                      setDate(newValue)
-                                      }
-                              />
-                              </DemoContainer>
-                      </LocalizationProvider>
-                      </Grid>
-              </Grid>
-              <Button
-                      disabled={updateLoading}
-                      type='submit'
+                      setImageUrl={setImageUrl}
+                      imageUrl={imageUrl}
+                      imageUpdateUrl={imageUpdateUrl}
+                    />
+                  </Grid>
+                  {/* image preview */}
+                  <Grid item xs={12} sm={3}>
+                    <ImagePreview
+                      image={imageUrl}
+                      name={
+                        userInfo
+                          ? userInfo.name
+                          : 'user-image'
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
                       fullWidth
-                      variant='contained'
-                      sx={{ mt: 3, mb: 2, py: 1 }}
-              >
-                      {updateLoading ? 'Updating...' : 'Update Profile'}
-              </Button>
+                      {...register('email')}
+                      id='email'
+                      label='Email'
+                      name='email'
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      name='firstName'
+                      required
+                      fullWidth
+                      autoFocus
+                      id='firstName'
+                      label='First Name'
+                      {...register('firstName')}
+                      error={!!errors.firstName}
+                      helperText={
+                        errors.firstName?.message || ''
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      id='lastName'
+                      label='Last Name'
+                      name='lastName'
+                      {...register('lastName')}
+                      error={!!errors.lastName}
+                      helperText={
+                        errors.lastName?.message || ''
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={6} sx={{ mt: 1 }}>
+                    <TextField
+                      fullWidth
+                      id='phone'
+                      label='Phone'
+                      name='phone'
+                      autoComplete='phone'
+                      required
+                      {...register('phone')}
+                      error={!!errors.phone}
+                      helperText={errors.phone?.message || ''}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                    >
+                      <DemoContainer
+                        components={['DatePicker']}
+                      >
+                        <DatePicker
+                          label='Date of birth'
+                          value={date}
+                          onChange={newValue =>
+                            setDate(newValue)
+                          }
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </Grid>
+                </Grid>
+                <Button
+                  disabled={updateLoading}
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  sx={{ mt: 3, mb: 2, py: 1 }}
+                >
+                  {updateLoading ? 'Updating...' : 'Update Profile'}
+                </Button>
               </Box>
 
             )}

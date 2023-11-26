@@ -34,4 +34,4 @@ function ClassDetails() {
   )
 }
 
-export default ClassDetails;
+export default ClassDetails

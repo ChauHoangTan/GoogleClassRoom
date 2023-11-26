@@ -75,7 +75,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
         </List>
       </nav>
       <nav aria-label="secondary mailbox folders" className='containerPanel'>
-        <List>
+        <List className='link'>
           <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}
             onClick={() => {handleOnclick(2); handleIsOpenTeaching() }}>
 
@@ -148,7 +148,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
         </List>
       </nav>
       <nav aria-label="third mailbox folders" className='containerPanel'>
-        <List>
+        <List className='link'>
           <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}
             onClick={() => {handleOnclick(3); handleIsOpenMyCourses() }}>
 

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import './style.scss'
 import { useNavigate } from 'react-router-dom'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import landing from '../../assets/img/landing.png'
 
 
 const theme = createTheme({
@@ -37,17 +38,17 @@ const Introduction = () => {
   return (
     <ThemeProvider theme={theme}>
       <Stack direction='row' justifyContent='center' >
-        <Grid container sx={{ width: '100%', backgroundColor: '#9CB3E9' }} alignItems='center'>
+        <Grid container sx={{ width: '100%' }} alignItems='center' className='containerGrid'>
           <Grid item md={12} lg={6} className='showResponsive'>
             <Stack direction='column' alignItems='center' justifyContent='center' className='containerText'>
               <Stack direction='column' alignItems='center' justifyContent='center' className='containerText'
                 sx={{ width: '90%' }}>
-                <Typography variant='h4' mt={5} className='title'
-                  sx={{ fontFamily:'Arima' }}>
+                <Typography variant='h4' mt={5}
+                  sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px black' }}>
                                     Welcome to Google Classroom!
                 </Typography>
-                <Typography variant='h6' className='title'
-                  sx={{ fontFamily:'Arima' }}>
+                <Typography variant='h6'
+                  sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px black' }}>
                                     Come to us, we will bring you the best education experience!
                 </Typography>
                 <Typography variant='body-1' mt={3}
@@ -63,10 +64,8 @@ const Introduction = () => {
           </Grid>
 
           <Grid item md={12} lg={6} className='hideResponsive'>
-            <Stack direction='column' className='containerImg'>
-              <div className='circular'></div>
-              <img src='https://www.distancelearningcollege.co.uk/wp-content/uploads/2022/02/Online-learning-scaled.jpg' />
-              <img src='https://assets-global.website-files.com/61a05ff14c09ecacc06eec05/61f5868b789816331ac6af01_5_Benefits_of_Online_Education.png' />
+            <Stack direction='column' className='containerImg' sx={{padding:'20px'}}>
+              <img src='https://i.pinimg.com/originals/b3/60/fa/b360fa2748b24cb1ed01aab987a03d31.gif'/>
             </Stack>
           </Grid>
         </Grid>

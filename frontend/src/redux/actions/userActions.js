@@ -129,7 +129,9 @@ const getProfileAction = () => async (dispatch, getState) => {
   try {
     dispatch({ type: userConstants.USER_GET_PROFILE_REQUEST })
     const response = await userApi.getProfileService(
-      tokenProtection(getState)
+      tokenProtection(getState),
+      dispatch,
+      userConstants.USER_LOGIN_SUCCESS
     )
     dispatch({
       type: userConstants.USER_GET_PROFILE_SUCCESS,

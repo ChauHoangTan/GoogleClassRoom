@@ -20,6 +20,6 @@ export const tokenProtection = (getState) => {
   if (!userInfo?.Authorization) {
     return null
   } else {
-    return userInfo.Authorization
+    return userInfo
   }
 }

@@ -168,7 +168,7 @@ const loginUser = async (req, res) => {
             // save refreshToken in cookie
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                maxAge: 5*60*1000
+                maxAge: 1*60*1000
             })
             return res.status(200).json({ 
                 _id: req.user._id,
@@ -190,16 +190,19 @@ const refreshAccessToken = async(req, res) => {
    try {
         // get refresh token from cookie
         const cookie = req.cookies
+        console.log(cookie)
+
         // const { _id }
         // check refresh token is exist
         if(!cookie && !cookie.refreshToken) {
-            return res.status(401).json({ message: '"Please login now!'})
+            return res.status(401).json({ message: 'Not authorized, token failed!'})
         }
         // check refresh token is valid
        jwt.verify(cookie.refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
-            if(!user) {
+            if(err) {
                 return res.status(401).json({ message: "Invalid refresh token" })
             }
+            console.log("hello 1")
             // check refresh token is exist in db
             const existUser = await User.findOne({
                 _id: user.id,
@@ -211,7 +214,7 @@ const refreshAccessToken = async(req, res) => {
             }
 
             const newAccessToken = createAccessToken(existUser._id) 
-
+            console.log("hello 2")
             return res.status(200).json({newAccessToken})
         })
    } catch (error) {
@@ -222,7 +225,7 @@ const refreshAccessToken = async(req, res) => {
 const logout = async (req, res) => {
     const cookie = req.cookies
     if (!cookie || !cookie.refreshToken) {
-        return res.status(401).json({ message: '"Please login now!'})
+        return res.status(401).json({ message: 'Not authorized, token failed!'})
     }
 
     await User.findOneAndUpdate(

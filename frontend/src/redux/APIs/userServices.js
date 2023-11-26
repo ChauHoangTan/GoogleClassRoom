@@ -1,4 +1,5 @@
 import Axios from './Axios'
+import createAxios from './createInstance'
 
 // Register new user API
 const registerService = async (user) => {
@@ -12,9 +13,20 @@ const logoutService = () => {
   return null
 }
 
+const refreshAccessTokenService = async () => {
+    const { data } = await Axios.post('/users/refresh', {}, {
+        withCredentials: true
+    })
+    console.log(data)
+
+    return data
+}
+
 // Login user API
 const loginService = async (user) => {
-  const { data } = await Axios.post('/users/login', user)
+  const { data } = await Axios.post('/users/login', user, {
+    withCredentials: true
+})
 
   if (data) {
     localStorage.setItem('userInfo', JSON.stringify(data))
@@ -82,13 +94,15 @@ const resendActivationEmailService = async (token) => {
   return data
 }
 
-const getProfileService = async (token) => {
-  const { data } = await Axios.get('/users/info', {
+const getProfileService = async (userInfo, dispatch, loginSuccess) => {
+    const AxiosJWT = createAxios(userInfo, dispatch, loginSuccess)
+  const { data } = await AxiosJWT.get('/users/info', {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${userInfo.Authorization}`
     }
   })
-  console.log(token)
+
+  console.log(data)
 
   return data
 }
@@ -105,4 +119,5 @@ export {
   resetPasswordService,
   resendActivationEmailService,
   getProfileService,
+  refreshAccessTokenService,
 }

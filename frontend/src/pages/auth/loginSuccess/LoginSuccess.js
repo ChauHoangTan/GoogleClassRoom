@@ -13,7 +13,6 @@ function LoginSuccess() {
   useEffect(() => {
     const fetchToken = async () => {
       const data = { userId, tokenLogin }
-      console.log(data, provider)
       dispatch(loginAction(provider, data))
     }
 

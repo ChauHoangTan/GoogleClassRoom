@@ -259,10 +259,9 @@ const loginSuccess = async (req, res) => {
                 authFacebookId: userId, 
                 authFacebookToken: tokenLogin 
             });
-
+        console.log(user)
         const accessToken = createAccessToken(user._id)
-
-        re 
+        console.log(accessToken)
         res.status(200).json({ 
                 _id: user._id,
                 firstName: user.firstName,

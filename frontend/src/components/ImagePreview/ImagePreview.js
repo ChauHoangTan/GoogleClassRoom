@@ -1,7 +1,7 @@
 import './ImagePreview.css'
 
 const ImagePreview = ({ image, name }) => {
-    console.log(image)
+  console.log(image)
   return (
     <div className="image-preview-container">
       <img

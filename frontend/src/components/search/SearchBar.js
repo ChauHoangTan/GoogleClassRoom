@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import './style.scss'
-import { useState } from 'react';
+import { useState } from 'react'
 
 function SearchBar() {
   const [input, setInput] = useState( '' )

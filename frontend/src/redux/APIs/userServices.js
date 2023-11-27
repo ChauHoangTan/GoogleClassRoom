@@ -1,5 +1,5 @@
 import Axios from './Axios'
-import createAxios from './createInstance'
+import AxiosJWT from './AxiosJWT'
 
 // Register new user API
 const registerService = async (user) => {
@@ -8,39 +8,33 @@ const registerService = async (user) => {
 }
 
 // Logout user
-const logoutService = () => {
-  localStorage.removeItem('userInfo')
-  return null
+const logoutService = async () => {
+  await Axios.post('/users/logout', {}, { withCredentials: true })
+
 }
 
 const refreshAccessTokenService = async () => {
   const { data } = await Axios.post('/users/refresh', {}, {
     withCredentials: true
   })
-  console.log(data)
-
   return data
 }
 
 // Login user API
 const loginService = async (provider, user) => {
-    const { data } = provider === 'local'
-        ? await Axios.post('/users/login', user, { withCredentials: true })
-        : await Axios.post('/users/login-success', { ...user, provider })
-    console.log(data)
-    if (data) {
-        localStorage.setItem('userInfo', JSON.stringify(data))
-    }
-    return data
+  const { data } = provider === 'local'
+    ? await Axios.post('/users/login', user, { withCredentials: true })
+    : await Axios.post('/users/login-success', { ...user, provider }, { withCredentials: true })
+  if (data) {
+    localStorage.setItem('userInfo', JSON.stringify(data))
+  }
+  return data
 }
+
 
 // Change password API
 const changePasswordService = async (password, token) => {
-  const { data } = await Axios.put('/users/password', password, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  const { data } = await AxiosJWT.put('/users/password', password)
   return data
 }
 
@@ -52,22 +46,13 @@ const forgotPasswordService = async (user) => {
 
 // Reset password API
 const resetPasswordService = async (user, token) => {
-  const { data } = await Axios.post('/users/reset', user, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  const { data } = await AxiosJWT.post('/users/reset', user)
   return data
 }
 
-
 // update profile API call
 const updateProfileService = async (user, token) => {
-  const { data } = await Axios.put('/users/profile', user, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  const { data } = await AxiosJWT.put('/users/profile', user)
   if (data) {
     localStorage.setItem('userInfo', JSON.stringify(data))
   }
@@ -84,15 +69,8 @@ const resendActivationEmailService = async (token) => {
   return data
 }
 
-const getProfileService = async (userInfo, dispatch, loginSuccess) => {
-  const AxiosJWT = createAxios(userInfo, dispatch, loginSuccess)
-  const { data } = await AxiosJWT.get('/users/info', {
-    headers: {
-      Authorization: `Bearer ${userInfo.Authorization}`
-    }
-  })
-
-  console.log(data)
+const getProfileService = async (token) => {
+  const { data } = await AxiosJWT.get('/users/info')
 
   return data
 }

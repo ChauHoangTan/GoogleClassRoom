@@ -72,6 +72,6 @@ router.get("/info", passport.authenticate('jwt', { session: false }), userContro
 
 router.post("/refresh", userController.refreshAccessToken);
 
-router.get("/logout",  userController.logout);
+router.post("/logout",  userController.logout);
 
 module.exports = router;

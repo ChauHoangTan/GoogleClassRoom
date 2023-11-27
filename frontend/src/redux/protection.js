@@ -5,7 +5,7 @@ export const ErrorsAction = (error, dispatch, action) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
-  if (message === 'Not authorized, token failed') {
+  if (message === 'Not authorized, token failed' || message === 'Unauthorized') {
     // Logout if token fail
     dispatch(logoutAction())
   }
@@ -20,6 +20,6 @@ export const tokenProtection = (getState) => {
   if (!userInfo?.Authorization) {
     return null
   } else {
-    return userInfo
+    return userInfo.Authorization
   }
 }

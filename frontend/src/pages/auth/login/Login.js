@@ -66,11 +66,9 @@ function Login ({ rememberMe, setRememberMe }) {
     dispatch(loginAction('local', data))
     if (rememberMe) {
       localStorage.setItem('rememberedCheck', rememberMe)
-      localStorage.setItem('rememberedEmail', data.email)
-      localStorage.setItem('rememberedPassword', data.password)
+      localStorage.setItem('rememberedCredentials', JSON.stringify({ email: data.email, password: data.password }))
     } else {
-      localStorage.removeItem('rememberedEmail')
-      localStorage.removeItem('rememberedPassword')
+      localStorage.removeItem('rememberedCredentials')
     }
   }
 
@@ -80,13 +78,12 @@ function Login ({ rememberMe, setRememberMe }) {
 
   useEffect(() => {
     const rememberedCheck = localStorage.getItem('rememberedCheck')
-    const rememberedEmail = localStorage.getItem('rememberedEmail')
-    const rememberedPassword = localStorage.getItem('rememberedPassword')
+    const rememberedCredentials = JSON.parse(localStorage.getItem('rememberedCredentials'))
 
     if (rememberMe) {
       setRememberMe(rememberedCheck)
-      setValue('email', rememberedEmail)
-      setValue('password', rememberedPassword)
+      setValue('email', rememberedCredentials.email)
+      setValue('password', rememberedCredentials.password)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

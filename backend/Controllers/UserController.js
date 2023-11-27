@@ -164,11 +164,15 @@ const loginUser = async (req, res) => {
             // create refresh token
             const refreshToken = createRefreshToken(req.user._id)
             // save refreshToken in database
-            await User.findByIdAndUpdate(req.user._id, { refreshToken }, { new: true })
+            await User.findByIdAndUpdate(
+                req.user._id, 
+                { refreshToken }, 
+                { new: true }
+            )
             // save refreshToken in cookie
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                maxAge: 1*60*1000
+                maxAge: 30*1000
             })
             return res.status(200).json({ 
                 _id: req.user._id,
@@ -190,7 +194,6 @@ const refreshAccessToken = async(req, res) => {
    try {
         // get refresh token from cookie
         const cookie = req.cookies
-        console.log(cookie)
 
         // const { _id }
         // check refresh token is exist
@@ -200,9 +203,8 @@ const refreshAccessToken = async(req, res) => {
         // check refresh token is valid
        jwt.verify(cookie.refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
             if(err) {
-                return res.status(401).json({ message: "Invalid refresh token" })
+                return res.status(401).json({ message: "Not authorized, token failed!" })
             }
-            console.log("hello 1")
             // check refresh token is exist in db
             const existUser = await User.findOne({
                 _id: user.id,
@@ -214,7 +216,6 @@ const refreshAccessToken = async(req, res) => {
             }
 
             const newAccessToken = createAccessToken(existUser._id) 
-            console.log("hello 2")
             return res.status(200).json({newAccessToken})
         })
    } catch (error) {
@@ -259,9 +260,21 @@ const loginSuccess = async (req, res) => {
                 authFacebookId: userId, 
                 authFacebookToken: tokenLogin 
             });
-        console.log(user)
+        // create access token
         const accessToken = createAccessToken(user._id)
-        console.log(accessToken)
+         // create refresh token
+         const refreshToken = createRefreshToken(user._id)
+           // save refreshToken in database
+        await User.findByIdAndUpdate(
+            user._id, 
+            { refreshToken }, 
+            { new: true }
+        )
+        // save refreshToken in cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            maxAge: 1*60*1000
+        })
         res.status(200).json({ 
                 _id: user._id,
                 firstName: user.firstName,
@@ -401,6 +414,7 @@ const forgotUserPassword = async (req, res) => {
 const resetUserPassword = async (req, res) => {
     const { newPassword } = req.body;
     try {
+
         const user = await User.findById(req.user.id);
 
         const isExistPassword = await bcrypt.compare(newPassword, user.password);
@@ -418,9 +432,15 @@ const resetUserPassword = async (req, res) => {
 }
 
 const getUserInfo = async (req, res) => {
-    console.log(req.user.id)
-    const user = await User.findById(req.user.id).select('-password -refreshToken')
-    return res.status(200).json(user)
+    if(req.error) {
+        return res.status(401).json({ message: 'Not authorized, token failed!' });
+    }
+    try {
+        const user = await User.findById(req.user.id).select('-password -refreshToken')
+        return res.status(200).json(user)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 }
 
 module.exports = {

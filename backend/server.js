@@ -5,6 +5,7 @@ const  connectDB  = require("./config/db")
 const userRouter = require("./Routes/UserRoute")
 const UploadRouter = require("./Routes/UploadRouter")
 var cookieParser = require('cookie-parser')
+const errorHandler  = require('./Middlewares/errorMiddleware.js');
 
 const app = express();
 app.use(cookieParser())
@@ -25,6 +26,9 @@ app.get('/', (req, res) => {
 
 app.use("/api/users", userRouter);
 app.use("/api/upload", UploadRouter);
+
+// error handling middleware
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

@@ -36,7 +36,7 @@ function ClassDetails() {
         <TabPanel value="1"><DashBoard/></TabPanel>
         <TabPanel value="2">Classwork</TabPanel>
         <TabPanel value="3"><Participants /></TabPanel>
-        <TabPanel value="4">{userInfo.isAdmin ? <GradeTeacher/> : <GradeStudent/>}</TabPanel>
+        <TabPanel value="4">{!userInfo.isAdmin ? <GradeTeacher/> : <GradeStudent/>}</TabPanel>
       </TabContext>
     </Box>
   )

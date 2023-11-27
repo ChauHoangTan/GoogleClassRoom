@@ -10,7 +10,6 @@ const registerService = async (user) => {
 // Logout user
 const logoutService = async () => {
   await Axios.post('/users/logout', {}, { withCredentials: true })
-
 }
 
 const refreshAccessTokenService = async () => {

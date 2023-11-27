@@ -39,9 +39,10 @@ const registerAction = datas => async dispatch => {
   }
 }
 
+
 // Logout action
 // eslint-disable-next-line no-unused-vars
-const logoutAction = datas => async dispatch => {
+const logoutAction = () => async dispatch => {
   try {
     await userApi.logoutService()
     dispatch({ type: userConstants.USER_LOGOUT })
@@ -49,7 +50,9 @@ const logoutAction = datas => async dispatch => {
     dispatch({ type: userConstants.USER_LOGIN_RESET })
     localStorage.removeItem('userInfo')
   } catch (error) {
-    ErrorsAction(error, dispatch, userConstants.USER_CHANGE_PASSWORD_FAIL)
+    dispatch({ type: userConstants.USER_LOGOUT })
+    dispatch({ type: userConstants.USER_REGISTER_RESET })
+    dispatch({ type: userConstants.USER_LOGIN_RESET })
     localStorage.removeItem('userInfo')
   }
 }
@@ -80,6 +83,7 @@ const getProfileAction = () => async (dispatch) => {
       payload: response
     })
   } catch (error) {
+    console.log(error)
     ErrorsAction(error, dispatch, userConstants.USER_GET_PROFILE_FAIL)
   }
 }

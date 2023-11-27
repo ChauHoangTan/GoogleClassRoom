@@ -28,7 +28,7 @@ app.use("/api/users", userRouter);
 app.use("/api/upload", UploadRouter);
 
 // error handling middleware
-app.use(errorHandler);
+// app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

@@ -7,8 +7,16 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import DashBoard from './dashBoard/DashBoard'
 import Participants from './participants/Participants'
+import GradeTeacher from './grade/teacher/GradeTeacher'
+import GradeStudent from './grade/student/GradeStudent'
+import { useSelector } from 'react-redux'
+
 function ClassDetails() {
   const [value, setValue] = useState('1')
+
+  const { userInfo } = useSelector(
+    state => state.userLogin
+  )
 
   const handleChange = (event, newValue) => {
     setValue( newValue )
@@ -28,7 +36,7 @@ function ClassDetails() {
         <TabPanel value="1"><DashBoard/></TabPanel>
         <TabPanel value="2">Classwork</TabPanel>
         <TabPanel value="3"><Participants /></TabPanel>
-        <TabPanel value="4">Grade Composition</TabPanel>
+        <TabPanel value="4">{userInfo.isAdmin ? <GradeTeacher/> : <GradeStudent/>}</TabPanel>
       </TabContext>
     </Box>
   )

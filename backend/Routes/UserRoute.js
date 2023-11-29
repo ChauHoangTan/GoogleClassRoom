@@ -1,6 +1,6 @@
 const express = require("express");
 const userController = require("../Controllers/UserController");
-const { verify } = require("../Middlewares/verifyToken");
+const { verify, admin } = require("../Middlewares/verifyToken");
 const passport = require("passport");
 const passportConfig = require("../Middlewares/passport");
 
@@ -61,7 +61,6 @@ router.post("/forgot", userController.forgotUserPassword);
 
 router.post("/resend-activation", userController.resendActivateEmail);
 
-
 router.post("/reset", passport.authenticate('jwt', { session: false }), userController.resetUserPassword);
 
 router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
@@ -73,5 +72,15 @@ router.get("/info", passport.authenticate('jwt', { session: false }), userContro
 router.post("/refresh", userController.refreshAccessToken);
 
 router.post("/logout",  userController.logout);
+
+router.post("/user/all", passport.authenticate('jwt', { session: false }), admin, userController.resetUserPassword);
+
+router.post("/user/detail/:id", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
+
+// router.delete("/user/find/:id", passport.authenticate('jwt', { session: false }), admin, userController.resetUserPassword);
+
+router.post("/user/block/:id", passport.authenticate('jwt', { session: false }), admin, userController.blockUser);
+
+router.post("/user/ban/:id", passport.authenticate('jwt', { session: false }), admin, userController.banUser);
 
 module.exports = router;

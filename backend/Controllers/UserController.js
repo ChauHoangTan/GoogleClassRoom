@@ -11,55 +11,8 @@ const client = new OAuth2(process.env.MAILING_SERVICE_CLIENT_ID)
 
 const {CLIENT_URL} = process.env
 
-// @desc Register user
-// @route POST /api/users/register
-// const registerUser = async(req, res) => {
-//     const { userName, firstName, lastName, password, image } = req.body;
-//     try {
-//         const userExists = await User.findOne({ userName });
-//         // check if user exists
-//         if(userExists) {
-//             res.status(400);
-//             throw new Error("User already exists");
-//         }
-
-//         // hash password
-//         const salt = await bcrypt.genSalt(10);
-//         const hashedPassword = await bcrypt.hash(password, salt);
-
-//         // create user in DB
-//         const user = await User.create({
-//             userName,
-//             firstName,
-//             lastName,
-//             password: hashedPassword,
-//             image,
-//         });
-
-//         // if user create successfully send user data and token to client 
-//         if(user) {
-//             res.status(201).json({
-//                 _id: user._id,
-//                 userName: user.userName,
-//                 firstName: user.firstName,
-//                 lastName: user.lastName,
-//                 phone: user.phone,
-//                 dob: user.dob,
-//                 email: user.email,
-//                 image: user.image,
-//                 isAdmin: user.isAdmin,
-//                 token: createAccessToken(user._id)
-//             });
-//         } else {
-//             res.status(400);
-//             throw new Error("Invalid user data");
-
-//         }
-//     } catch(error) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
-
+// desc user register
+// @route POST api/user/register
 const registerUser = async(req, res) => {
     const { email, firstName, lastName, password } = req.body;
     try {
@@ -96,6 +49,8 @@ const registerUser = async(req, res) => {
     }
 };
 
+// desc resend activation
+// @route POST api/user/resend-activation
 const resendActivateEmail = async(req, res) => {
     const { email} = req.body;
     try {
@@ -121,6 +76,8 @@ const resendActivateEmail = async(req, res) => {
     }
 };
 
+// desc activation email
+// @route POST api/user/activation
 const activateEmail = async (req, res) => {
     try {
         const { activation_token } = req.body;
@@ -172,7 +129,7 @@ const loginUser = async (req, res) => {
             // save refreshToken in cookie
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                maxAge: 30*1000
+                maxAge: 2*60*1000
             })
             return res.status(200).json({ 
                 _id: req.user._id,
@@ -190,6 +147,8 @@ const loginUser = async (req, res) => {
     }
 }
 
+// desc refresh token
+// @route POST api/user/refresh
 const refreshAccessToken = async(req, res) => {
    try {
         // get refresh token from cookie
@@ -223,6 +182,8 @@ const refreshAccessToken = async(req, res) => {
    }
 }
 
+// desc Logout user
+// @route POST api/user/logout
 const logout = async (req, res) => {
     const cookie = req.cookies
     if (!cookie || !cookie.refreshToken) {
@@ -273,7 +234,7 @@ const loginSuccess = async (req, res) => {
         // save refreshToken in cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            maxAge: 1*60*1000
+            maxAge: 2*60*1000
         })
         res.status(200).json({ 
                 _id: user._id,
@@ -431,6 +392,8 @@ const resetUserPassword = async (req, res) => {
     }
 }
 
+// @desc user info
+// @route PUT /api/users/info
 const getUserInfo = async (req, res) => {
     if(req.error) {
         return res.status(401).json({ message: 'Not authorized, token failed!' });
@@ -440,6 +403,87 @@ const getUserInfo = async (req, res) => {
         return res.status(200).json(user)
     } catch (error) {
         return res.status(500).json({ message: error.message });
+    }
+}
+
+//  ************** ADMIN CONTROLLERS **************
+// @des Get all users
+// @route GET /api/users
+const getAllUser = async (req, res) => {
+    try {
+        const users = await User.find({}).select('-password -refreshToken'); 
+        return res.status(200).json(users)
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// @des Delete all user
+// @route Delete /api/user/:id
+const deleteUser = async (req, res) => {
+    try {
+        // find user in DB
+        const user = await User.findById(req.params.id);
+        // if user exists delete user from DB
+        if(user) {
+            // else delete user from DB
+            await user.remove();
+            res.json({ message: "User deleted successfully" });
+        }
+        // else send error message
+        else {
+            res.status(400);
+            throw new Error("User not found");
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+// @des ban all users
+// @route ban /api/user/:id
+const banUser = async (req, res) => {
+    try {
+        // find user in DB
+        const user = await User.findById(req.params.id);
+        // if user exists delete user from DB
+        if(user) {
+            // else delete user from DB
+            user.isBanned = true
+            await user.save();
+            res.json({ message: "User was banned successfully" });
+        }
+        // else send error message
+        else {
+            res.status(400);
+            throw new Error("User not found");
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
+// @des block all users
+// @route block /api/user/:id
+const blockUser = async (req, res) => {
+    try {
+        // find user in DB
+        const user = await User.findById(req.params.id);
+        // if user exists delete user from DB
+        if(user) {
+            // else delete user from DB
+            user.isBlocked = true
+            await user.save();
+            res.json({ message: "User  was blocked successfully" });
+        }
+        // else send error message
+        else {
+            res.status(400);
+            throw new Error("User not found");
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 }
 
@@ -456,4 +500,7 @@ module.exports = {
     getUserInfo,
     refreshAccessToken,
     logout,
+    getAllUser,
+    banUser,
+    blockUser,
 }

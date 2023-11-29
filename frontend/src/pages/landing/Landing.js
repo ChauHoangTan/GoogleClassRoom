@@ -64,7 +64,7 @@ const Introduction = () => {
           </Grid>
 
           <Grid item md={12} lg={6} className='hideResponsive'>
-            <Stack direction='column' className='containerImg' sx={{padding:'20px'}}>
+            <Stack direction='column' className='containerImg' sx={{ padding:'20px' }}>
               <img src='https://i.pinimg.com/originals/b3/60/fa/b360fa2748b24cb1ed01aab987a03d31.gif'/>
             </Stack>
           </Grid>

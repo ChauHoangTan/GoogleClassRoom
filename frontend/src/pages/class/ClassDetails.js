@@ -9,6 +9,8 @@ import DashBoard from './dashBoard/DashBoard'
 import Participants from './participants/Participants'
 import GradeTeacher from './grade/teacher/GradeTeacher'
 import GradeStudent from './grade/student/GradeStudent'
+import ReviewStudent from './review/student/ReviewStudent'
+import ReviewTeacher from './review/teacher/ReviewTeacher'
 import { useSelector } from 'react-redux'
 
 function ClassDetails() {
@@ -28,15 +30,17 @@ function ClassDetails() {
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }} ml={ 4 }>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Stream" value="1" sx={{ marginRight:'20px' }}/>
-            <Tab label="Classwork" value="2" sx={{ marginRight:'20px' }}/>
-            <Tab label="People" value="3" sx={{ marginRight:'20px' }}/>
-            <Tab label="Grade Composition" value="4" />
+            <Tab label="People" value="2" sx={{ marginRight:'20px' }}/>
+            <Tab label="Grade Composition" value="3" sx={{ marginRight:'20px' }} />
+            <Tab label="Review" value="4" />
+
           </TabList>
         </Box>
         <TabPanel value="1"><DashBoard/></TabPanel>
-        <TabPanel value="2">Classwork</TabPanel>
-        <TabPanel value="3"><Participants /></TabPanel>
-        <TabPanel value="4">{!userInfo.isAdmin ? <GradeTeacher/> : <GradeStudent/>}</TabPanel>
+        <TabPanel value="2"><Participants /></TabPanel>
+        <TabPanel value="3">{!userInfo.isAdmin ? <GradeTeacher/> : <GradeStudent/>}</TabPanel>
+        <TabPanel value="4">{!userInfo.isAdmin ? <ReviewTeacher/> : <ReviewStudent/>}</TabPanel>
+
       </TabContext>
     </Box>
   )

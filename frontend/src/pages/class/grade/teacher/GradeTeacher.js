@@ -1,4 +1,4 @@
-import { Box, Button, Container, Typography, Card, CardContent, Divider, Stack, IconButton, Modal, TextField } from '@mui/material'
+import { Box, Button, Container, Typography, Card, CardContent, Divider, Stack, IconButton, Modal, TextField, Checkbox, FormControlLabel } from '@mui/material'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
@@ -233,6 +233,15 @@ export default function GradeTeacher () {
             <TextField id="outlined-basic" label="Grade composition title" variant="outlined" sx={{ width: '100%', pb: 2 }}/>
 
             <TextField type='number' label="Percentage" variant="outlined" sx={{ width: '100%' }}/>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value='isPublic'
+                />
+              }
+              label='Public grade'
+            />
           </Box>
 
           <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>

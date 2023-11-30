@@ -32,7 +32,7 @@ const loginService = async (provider, user) => {
 
 
 // Change password API
-const changePasswordService = async (password, token) => {
+const changePasswordService = async (password) => {
   const { data } = await AxiosJWT.put('/users/password', password)
   return data
 }
@@ -44,13 +44,14 @@ const forgotPasswordService = async (user) => {
 }
 
 // Reset password API
-const resetPasswordService = async (user, token) => {
-  const { data } = await AxiosJWT.post('/users/reset', user)
+const resetPasswordService = async (newPassword, activation_token) => {
+    console.log(newPassword, activation_token)
+  const { data } = await Axios.post('/users/reset', { newPassword, activation_token })
   return data
 }
 
 // update profile API call
-const updateProfileService = async (user, token) => {
+const updateProfileService = async (user) => {
   const { data } = await AxiosJWT.put('/users/profile', user)
   if (data) {
     localStorage.setItem('userInfo', JSON.stringify(data))
@@ -58,17 +59,17 @@ const updateProfileService = async (user, token) => {
   return data
 }
 
-const activationEmailService = async (token) => {
-  const { data } = await Axios.post('/users/activation', token)
+const activationEmailService = async (activation_token) => {
+  const { data } = await Axios.post('/users/activation', activation_token)
   return data
 }
 
-const resendActivationEmailService = async (token) => {
-  const { data } = await Axios.post('/users/resend-activation', token)
+const resendActivationEmailService = async (datas) => {
+  const { data } = await Axios.post('/users/resend-activation', datas)
   return data
 }
 
-const getProfileService = async (token) => {
+const getProfileService = async () => {
   const { data } = await AxiosJWT.get('/users/info')
 
   return data

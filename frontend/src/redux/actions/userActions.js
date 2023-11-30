@@ -83,7 +83,6 @@ const getProfileAction = () => async (dispatch) => {
       payload: response
     })
   } catch (error) {
-    console.log(error)
     ErrorsAction(error, dispatch, userConstants.USER_GET_PROFILE_FAIL)
   }
 }

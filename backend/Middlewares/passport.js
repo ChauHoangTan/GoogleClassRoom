@@ -63,7 +63,7 @@ passport.use(new GoogleStrategy({
     async (accessToken, refreshToken, profile, done) => {
         const existUser = await User.findOne({
            email: profile?.emails[0].value,
-           isThirdPartyLogin: true
+        //    isThirdPartyLogin: true
         });
 
         if (existUser) {
@@ -73,7 +73,7 @@ passport.use(new GoogleStrategy({
                 ? {
                     authGoogleToken: accessToken,
                 }
-                // login facebook before
+                // login facebook or local before
                 : {
                     authGoogleToken: accessToken,
                     authGoogleId: profile.id,
@@ -114,7 +114,7 @@ passport.use(new FacebookStrategy({
     async (accessToken, refreshToken, profile, done) => {
       const existUser = await User.findOne({
         email: profile?.emails[0].value,
-        isThirdPartyLogin: true
+        // isThirdPartyLogin: true
       });
 
       if (existUser) {
@@ -139,8 +139,8 @@ passport.use(new FacebookStrategy({
           return done(null, user);
       } else {
           const newUser = new User({
-              firstName: profile?.name.givenName,
-              lastName: profile?.name.familyName,
+            firstName: profile?.name.givenName ? profile?.name.givenName : profile?.displayName.split(" ", 2)[0],
+            lastName: profile?.name.familyName ? profile?.name.familyName : profile?.displayName.split(" ", 2)[1],
               email: profile?.emails[0].value,
               image: profile?.photos[0]?.value,
               authFacebookId: profile.id,

@@ -1,6 +1,6 @@
 const express = require("express");
 const userController = require("../Controllers/UserController");
-const { verify, admin } = require("../Middlewares/verifyToken");
+const { verifyEmail, admin } = require("../Middlewares/verifyToken");
 const passport = require("passport");
 const passportConfig = require("../Middlewares/passport");
 
@@ -55,13 +55,13 @@ router.get('/github/callback', (req, res, next) => {
 
 router.post("/login-success", userController.loginSuccess)
 
-router.post("/activation", userController.activateEmail);
+router.post("/activation", verifyEmail, userController.activateEmail);
 
 router.post("/forgot", userController.forgotUserPassword);
 
 router.post("/resend-activation", userController.resendActivateEmail);
 
-router.post("/reset", passport.authenticate('jwt', { session: false }), userController.resetUserPassword);
+router.post("/reset", verifyEmail, userController.resetUserPassword);
 
 router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
 

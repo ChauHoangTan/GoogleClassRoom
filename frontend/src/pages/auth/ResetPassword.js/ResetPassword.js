@@ -29,7 +29,7 @@ const defaultTheme = createTheme({
 })
 
 const ResetPassword = () => {
-  const { token } = useParams()
+  const { activation_token } = useParams()
   const navigate = useNavigate()
 
   const { type } = useParams()
@@ -64,7 +64,7 @@ const ResetPassword = () => {
   const onSubmit = async (data) => {
     setIsLoading(true)
     try {
-      const res = await resetPasswordService(data, token)
+      const res = await resetPasswordService(data.newPassword, activation_token)
       setSuccess(res.message)
     } catch (error) {
       error.message && setErr(error.response.data.message)

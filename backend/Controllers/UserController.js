@@ -57,11 +57,11 @@ const resendActivateEmail = async(req, res) => {
         const userExist = await User.findOne({ email });
         // check if user exists
         if(!userExist) {
-            res.status(400).json({message: "This email is not exists in system."});
+            return res.status(400).json({message: "This email is not exists in system."});
         }
 
         if(userExist.isVerifiedEmail) {
-            res.status(400).json({message: "This email already verified."});
+            return res.status(400).json({message: "This email already verified."});
 
         }
 
@@ -80,32 +80,25 @@ const resendActivateEmail = async(req, res) => {
 // @route POST api/user/activation
 const activateEmail = async (req, res) => {
     try {
-        const { activation_token } = req.body;
-        jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET, async (err, user) => {
-            if(err) {
-                return res.status(401).json({ message: "This Activation Email is unavailable!" });
-            }
+        const { email } = req.user;
 
-            const { email } = user;
+        const userExist = await User.findOne({ email });
+        if(!userExist) {
+            return res.status(400).json({message: "This email is not exists in system."});
+        }
 
-            const userExist = await User.findOne({ email });
-            if(!userExist) {
-                return res.status(400).json({message: "This email is not exists in system."});
-            }
+        if(userExist.isVerifiedEmail) {
+            return res.status(400).json({message: "This email already verified."});
+        }
 
-            if(userExist.isVerifiedEmail) {
-                return res.status(400).json({message: "This email already verified."});
-            }
+        userExist.isVerifiedEmail = true;
+        const newUser = await userExist.save();
 
-            userExist.isVerifiedEmail = true;
-            const newUser = await userExist.save();
-
-            if(newUser) {
-                return res.status(200).json({ message: "Account has been activated!" })
-            } else {
-                return res.status(400).json({message: "Invalid user data" });
-            }
-        });
+        if(newUser) {
+            return res.status(200).json({ message: "Account has been activated!" })
+        } else {
+            return res.status(400).json({message: "Invalid user data" });
+        }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -350,12 +343,13 @@ const changeUserPassword = async (req, res) => {
 // @route PUT /api/users/forgot
 const forgotUserPassword = async (req, res) => {
     const { email } = req.body;
+    console.log(req.body)
     try {
         // find user in DB
         const user = await User.findOne({ email });
         // if user exists, send email to user to get url change password 
         if(user) {
-            const access_token = createAccessToken(user._id);
+            const access_token = createActivationToken(user.email);
             const url = `${CLIENT_URL}/user/reset/${access_token}`;
 
             sendMail(email, url, "Reset your password");
@@ -363,7 +357,7 @@ const forgotUserPassword = async (req, res) => {
         }
         // else send error message
         else {
-            res.status(400).json({message: "This email does not exist" });
+           return  res.status(400).json({message: "This email does not exist" });
         }
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -374,9 +368,9 @@ const forgotUserPassword = async (req, res) => {
 // @route PUT /api/users/reset
 const resetUserPassword = async (req, res) => {
     const { newPassword } = req.body;
+    console.log(req.body)
     try {
-
-        const user = await User.findById(req.user.id);
+        const user = await User.findOne({ email: req.user.email });
 
         const isExistPassword = await bcrypt.compare(newPassword, user.password);
         if(isExistPassword) {

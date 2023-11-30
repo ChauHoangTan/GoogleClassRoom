@@ -18,20 +18,20 @@ const createRefreshToken = (id) => {
     return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '30s'})
 }
 
-const verify = (req, res, next) => {
-    const authHeader = req.headers.Authorization;
-    if(authHeader) {
-        const Authorization = authHeader.split(" ")[1];
-        jwt.verify(Authorization, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+const verifyEmail = (req, res, next) => {
+    const token = req.body.activation_token;
+    if(token) {
+        jwt.verify(token, process.env.ACTIVATION_TOKEN_SECRET, (err, user) => {
             if(err){ 
-                res.status(403);
-                throw new Error("Token is not valid!");
+                if(err) {
+                    return res.status(401).json({ message: "This Activation Email is unavailable!" });
+                }
             };
             req.user = user;
             next();
         });
     } else {
-        return res.status(401).json("You are not authenticated!");
+        return res.status(401).json("This Email is Invalid!");
     }
 }
 
@@ -45,7 +45,7 @@ const admin = (req, res, next) => {
 
 module.exports = {
     generateToken,
-    verify,
+    verifyEmail,
     createAccessToken,
     createActivationToken,
     createRefreshToken,

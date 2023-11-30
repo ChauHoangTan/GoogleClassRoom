@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { activationEmailService } from '../../../redux/APIs/userServices'
+import { activationEmailService } from '../../../redux/APIs/authServices'
 import Alert from '@mui/material/Alert'
 import Stack from '@mui/material/Stack'
 

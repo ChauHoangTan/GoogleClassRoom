@@ -13,7 +13,7 @@ import { createTheme } from '@mui/material'
 import { ResetPasswordValidation } from '../../../components/validation/userValidation'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { resetPasswordService } from '../../../redux/APIs/userServices'
+import { resetPasswordService } from '../../../redux/APIs/authServices'
 import toast from 'react-hot-toast'
 import { useNavigate, useParams } from 'react-router-dom'
 // const defaultTheme = createTheme();

@@ -58,7 +58,7 @@ passport.use(new LocalStrategy({
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/users/google/callback"
+    callbackURL: "/api/auth/google/callback"
 },
     async (accessToken, refreshToken, profile, done) => {
         const existUser = await User.findOne({
@@ -108,7 +108,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "/api/users/facebook/callback",
+    callbackURL: "/api/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email']
 },
     async (accessToken, refreshToken, profile, done) => {
@@ -159,7 +159,7 @@ passport.use(new FacebookStrategy({
 passport.use(new GithubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "/api/users/github/callback"
+    callbackURL: "/api/auth/github/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
 //   try {

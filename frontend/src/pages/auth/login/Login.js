@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { loginAction } from '../../../redux/actions/userActions'
+import { loginAction } from '../../../redux/actions/authActions'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { LoginValidation } from '../../../components/validation/userValidation'
@@ -105,17 +105,17 @@ function Login ({ rememberMe, setRememberMe }) {
 
   const handleGoogleLogin = () => {
     // Handle when user click login by Google
-    window.open('http://localhost:5000/api/users/google', '_self')
+    window.open('http://localhost:5000/api/auth/google', '_self')
   }
 
   const handleFacebookLogin = () => {
     // Handle when user click login by Facebook
-    window.open('http://localhost:5000/api/users/facebook', '_self')
+    window.open('http://localhost:5000/api/auth/facebook', '_self')
   }
 
   const handleGithubLogin = () => {
     // Handle when user click login by Facebook
-    // window.open('http://localhost:5000/api/users/github', '_self')
+    // window.open('http://localhost:5000/api/auth/github', '_self')
   }
 
 

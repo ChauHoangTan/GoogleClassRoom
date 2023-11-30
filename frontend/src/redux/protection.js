@@ -1,4 +1,4 @@
-import { logoutAction } from './actions/userActions'
+import { logoutAction } from './actions/authActions'
 
 export const ErrorsAction = (error, dispatch, action) => {
   const message =

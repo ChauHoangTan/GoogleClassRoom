@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const  connectDB  = require("./config/db")
 const userRouter = require("./Routes/UserRoute")
+const authRouter = require("./Routes/AuthRouter")
 const UploadRouter = require("./Routes/UploadRouter")
 var cookieParser = require('cookie-parser')
 const errorHandler  = require('./Middlewares/errorMiddleware.js');
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 })
 
 app.use("/api/users", userRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/upload", UploadRouter);
 
 // error handling middleware

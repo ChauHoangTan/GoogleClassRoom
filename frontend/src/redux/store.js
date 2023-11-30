@@ -1,11 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import * as User from './reducers/userReducers'
+import * as Auth from './reducers/authReducers'
+
 import { moreIconReducer } from './reducers/moreIconReducers'
 
 const rootReducer = combineReducers({
   // User reducer
-  userLogin: User.userLoginReducer,
-  userRegister: User.userRegisterReducer,
+  userLogin: Auth.userLoginReducer,
+  userRegister: Auth.userRegisterReducer,
   userChangePassword: User.userChangePasswordReducer,
   userGetProfile: User.userGetProfileReducer,
   userUpdateProfile: User.userUpdateProfileReducer,

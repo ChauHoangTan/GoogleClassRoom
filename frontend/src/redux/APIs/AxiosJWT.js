@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { refreshAccessTokenService } from './userServices'
+import { refreshAccessTokenService } from './authServices'
 import { store } from '../store'
-import * as userActions from '../actions/userActions'
+import * as authActions from '../actions/authActions'
 
 const AxiosJWT = axios.create({
   // baseURL: "https://eduspherehub.onrender.com/api",
@@ -26,11 +26,11 @@ AxiosJWT.interceptors.request.use(
           ...userInfo,
           Authorization: data.newAccessToken
         }
-        store.dispatch(userActions.updateUserInfoAction(refreshUser))
+        store.dispatch(authActions.updateUserInfoAction(refreshUser))
         localStorage.setItem('userInfo', JSON.stringify(refreshUser))
         config.headers['Authorization'] = `Bearer ${data.newAccessToken}`
       } catch (error) {
-        store.dispatch(userActions.logoutAction())
+        store.dispatch(authActions.logoutAction())
       }
     } else {
       config.headers['Authorization'] = `Bearer ${userInfo?.Authorization}`

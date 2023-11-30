@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginAction } from '../../../redux/actions/userActions'
+import { loginAction } from '../../../redux/actions/authActions'
 
 function LoginSuccess() {
   const { userId, tokenLogin, provider } = useParams()

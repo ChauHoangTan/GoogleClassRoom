@@ -114,15 +114,14 @@ const deleteUser = async (req, res) => {
         if(user) {
             // else delete user from DB
             await user.remove();
-            res.json({ message: "User deleted successfully" });
+            return res.json({ message: "User deleted successfully" });
         }
         // else send error message
         else {
-            res.status(400);
-            throw new Error("User not found");
+            return res.status(400).json({ message: "User not found" });
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return res.status(400).json({ message: error.message });
     }
 }
 
@@ -137,12 +136,11 @@ const banUser = async (req, res) => {
             // else delete user from DB
             user.isBanned = true
             await user.save();
-            res.json({ message: "User was banned successfully" });
+            return res.json({ message: "User was banned successfully" });
         }
         // else send error message
         else {
-            res.status(400);
-            throw new Error("User not found");
+            return res.status(400).json({ message: "User not found" });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -161,12 +159,11 @@ const blockUser = async (req, res) => {
             // else delete user from DB
             user.isBlocked = true
             await user.save();
-            res.json({ message: "User  was blocked successfully" });
+            return res.json({ message: "User  was blocked successfully" });
         }
         // else send error message
         else {
-            res.status(400);
-            throw new Error("User not found");
+            return res.status(400).json({ message: "User not found" });
         }
     } catch (error) {
         res.status(400).json({ message: error.message });

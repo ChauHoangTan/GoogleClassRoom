@@ -49,11 +49,11 @@ const logoutAction = () => async dispatch => {
 }
 
 const updateUserInfoAction = (userInfo) => async dispatch => {
-    dispatch({
-      type: authConstants.USER_LOGIN_SUCCESS,
-      payload: userInfo
-    })
-  }
+  dispatch({
+    type: authConstants.USER_LOGIN_SUCCESS,
+    payload: userInfo
+  })
+}
 
 export {
   loginAction,

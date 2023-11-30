@@ -26,5 +26,5 @@ const getProfileService = async () => {
 export {
   changePasswordService,
   updateProfileService,
-  getProfileService,
+  getProfileService
 }

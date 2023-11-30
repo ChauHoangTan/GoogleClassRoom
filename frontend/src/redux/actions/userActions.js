@@ -56,5 +56,5 @@ const updateProfileAction = user => async (dispatch) => {
 export {
   changePasswordAction,
   updateProfileAction,
-  getProfileAction,
+  getProfileAction
 }

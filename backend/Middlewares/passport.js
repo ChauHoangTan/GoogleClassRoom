@@ -180,15 +180,15 @@ passport.use(new GithubStrategy({
 
         return done(null, user);
     } else {
-      const newUser = new User({
-        firstName: profile?.displayName ? profile?.displayName: profile?.username, 
-        lastName: profile?.username? profile?.username: profile?.displayName,
-        email: profile?.email,
-        image: profile?.photos[0]?.value,
-        authLoginId: profile.id,
-        authLoginToken: accessToken,
-        typeLogin: profile.provider,
-        isVerified: true,
+        const newUser = new User({
+            firstName: profile?.displayName ? profile?.displayName: profile?.username, 
+            lastName: profile?.username? profile?.username: profile?.displayName,
+            email: profile?.email,
+            image: profile?.photos[0]?.value,
+            authLoginId: profile.id,
+            authLoginToken: accessToken,
+            typeLogin: profile.provider,
+            isVerified: true,
       })
 
       const user = await newUser.save();

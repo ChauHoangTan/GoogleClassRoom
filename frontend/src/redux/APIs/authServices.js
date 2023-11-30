@@ -56,12 +56,12 @@ const resendActivationEmailService = async (datas) => {
 }
 
 export {
-    registerService,
-    loginService,
-    logoutService,
-    activationEmailService,
-    forgotPasswordService,
-    resetPasswordService,
-    resendActivationEmailService,
-    refreshAccessTokenService
+  registerService,
+  loginService,
+  logoutService,
+  activationEmailService,
+  forgotPasswordService,
+  resetPasswordService,
+  resendActivationEmailService,
+  refreshAccessTokenService
 }

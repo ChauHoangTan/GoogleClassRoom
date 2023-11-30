@@ -147,7 +147,6 @@ const refreshAccessToken = async(req, res) => {
         // get refresh token from cookie
         const cookie = req.cookies
 
-        // const { _id }
         // check refresh token is exist
         if(!cookie && !cookie.refreshToken) {
             return res.status(401).json({ message: 'Not authorized, token failed!'})
@@ -214,6 +213,10 @@ const loginSuccess = async (req, res) => {
                 authFacebookId: userId, 
                 authFacebookToken: tokenLogin 
             });
+        
+        if(!user) {
+            return res.status(401).json({ message: 'Not authorized, token failed!'})
+        }
         // create access token
         const accessToken = createAccessToken(user._id)
          // create refresh token
@@ -221,25 +224,26 @@ const loginSuccess = async (req, res) => {
            // save refreshToken in database
         await User.findByIdAndUpdate(
             user._id, 
-            { refreshToken }, 
+            { 
+                refreshToken,
+                authGoogleId: accessToken
+            }, 
             { new: true }
         )
+
         // save refreshToken in cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             maxAge: 2*60*1000
         })
-        res.status(200).json({ 
-                _id: user._id,
-                firstName: user.firstName,
-                image: user.image,
-                isAdmin: user.isAdmin,
-                isThirdPartyLogin: user.isThirdPartyLogin,
-                Authorization: accessToken, 
-            })
-        // const newAuthorization = createAccessToken(user._id)
-        // user.authGoogleToken = newAuthorization
-        // await user.save()
+        return res.status(200).json({ 
+            _id: user._id,
+            firstName: user.firstName,
+            image: user.image,
+            isAdmin: user.isAdmin,
+            isThirdPartyLogin: user.isThirdPartyLogin,
+            Authorization: accessToken, 
+        })
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -249,22 +253,22 @@ const loginSuccess = async (req, res) => {
 // @route PUT /api/auth/forgot
 const forgotUserPassword = async (req, res) => {
     const { email } = req.body;
-    console.log(req.body)
     try {
         // find user in DB
         const user = await User.findOne({ email });
         // if user exists, send email to user to get url change password 
-        if(user) {
-            const access_token = createActivationToken(user.email);
-            const url = `${CLIENT_URL}/user/reset/${access_token}`;
-
-            sendMail(email, url, "Reset your password");
-            return res.json({ message: "Re-send the password, please check your email." });
+        if(!user) {
+            return  res.status(400).json({message: "This email does not exist" });
         }
-        // else send error message
-        else {
-           return  res.status(400).json({message: "This email does not exist" });
+        if(!user.isVerifiedEmail) {
+            return res.status(400).json({message: "Account need to been verified."});
         }
+        const access_token = createActivationToken(user.email);
+        const url = `${CLIENT_URL}/user/reset/${access_token}`;
+        user.activationEmailToken = access_token;
+        user.save();
+        sendMail(email, url, "Reset your password");
+        return res.json({ message: "Re-send the password, please check your email." });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -274,10 +278,14 @@ const forgotUserPassword = async (req, res) => {
 // @route PUT /api/auth/reset
 const resetUserPassword = async (req, res) => {
     const { newPassword } = req.body;
-    console.log(req.body)
     try {
-        const user = await User.findOne({ email: req.user.email });
-
+        const user = await User.findOne({ 
+            email: req.user.email,
+            activationEmailToken: req.body.activation_token
+        });
+        if(!user || user.activationEmailToken === '') {
+            return res.status(401).json({ message: "The password reset token is incorrect or has expired. Please click the Forgot Password again" });
+        }
         const isExistPassword = await bcrypt.compare(newPassword, user.password);
         if(isExistPassword) {
             return res.status(404).json({ message: "New password must be different old" });
@@ -285,6 +293,7 @@ const resetUserPassword = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
         user.password = hashedPassword;
+        user.activationEmailToken = '';
         await user.save();
         return res.json({ message: "Password successfully changed!"});
     } catch (error) {

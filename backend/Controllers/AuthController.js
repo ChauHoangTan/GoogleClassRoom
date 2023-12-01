@@ -229,7 +229,7 @@ const loginSuccess = async (req, res) => {
             user._id, 
             { 
                 refreshToken,
-                authGoogleId: accessToken
+                authGoogleToken: accessToken
             }, 
             { new: true }
         )

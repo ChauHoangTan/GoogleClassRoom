@@ -112,7 +112,7 @@ function Login ({ rememberMe, setRememberMe }) {
   const handleFacebookLogin = () => {
     // Handle when user click login by Facebook
     // window.open('http://localhost:5000/api/auth/facebook', '_self')
-    window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
+    window.open('https://nexusedu.onrender.com/api/auth/facebook', '_self')
   }
 
   const handleGithubLogin = () => {

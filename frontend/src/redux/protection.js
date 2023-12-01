@@ -10,6 +10,11 @@ export const ErrorsAction = (error, dispatch, action) => {
   // Logout if token fail
   //   if (message === 'Not authorized, token failed' || message === 'Unauthorized' || message === 'Request failed with status code 401) {
   if (error.response.status === 401) {
+    Swal.fire({
+        title: "The Internet?",
+        text: "That thing is still around?",
+        icon: "question"
+      });
     dispatch(logoutAction())
   }
   return dispatch({ type: action, payload: message })

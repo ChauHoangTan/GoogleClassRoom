@@ -108,7 +108,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "/api/auth/facebook/callback",
+    callbackURL: "https://nexusedu.onrender.com/api/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'photos', 'email']
 },
     async (accessToken, refreshToken, profile, done) => {

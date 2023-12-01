@@ -14,6 +14,7 @@ import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined'
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined'
 import './style.scss'
 import { Link } from 'react-router-dom'
+import theme from '../theme'
 
 const ClassRegisterd = ({ avatar, title, tagline }) => {
   return (
@@ -44,29 +45,43 @@ const Tabs = ({ indexTab, setIndexTab }) => {
   }
 
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+    <Box sx={{ width: '100%'
+    
+    }}>
       <nav aria-label="main mailbox folders" className='containerPanel'>
         <List>
           <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
             onClick={() => handleOnclick(0)}>
-            <Link to='/home' className='link'>
+            <Link to='/home' className='link' style={{
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              color: 'inherit',
+              marginTop: '10px'
+            }}>
               <ListItemButton>
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
-                <ListItemText primary="Home" />
+                <Typography variant='body-1' color='inherit'
+                  sx={{
+                    backgroundColor: (theme) => (theme.palette.primary)
+                  }}
+                >Home</Typography>
               </ListItemButton>
             </Link>
 
           </ListItem>
           <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
             onClick={() => handleOnclick(1)}>
-            <Link to='/notification' className='link'>
+            <Link to='/notification' className='link' style={{
+              color: 'inherit', margin: '10px 0px'
+            }}>
               <ListItemButton>
                 <ListItemIcon>
                   <NotificationsActiveOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary="Notification" />
+                <Typography variant='body-1' >Notification</Typography>
               </ListItemButton>
             </Link>
 

@@ -121,8 +121,10 @@ const loginUser = async (req, res) => {
             )
             // save refreshToken in cookie
             res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                maxAge: 2*60*1000
+                // httpOnly: true,
+                maxAge: 2*60*1000,
+                secure: true,
+                sameSite: "none"
             })
             return res.status(200).json({ 
                 _id: req.user._id,
@@ -189,7 +191,8 @@ const logout = async (req, res) => {
     )
 
     res.clearCookie('refreshToken', {
-        httpOnly: true,
+        // httpOnly: true,
+        sameSite: "none",
         secure: true
     })
     return res.status(200).json({ message: "Logout successfully" })
@@ -233,7 +236,9 @@ const loginSuccess = async (req, res) => {
 
         // save refreshToken in cookie
         res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
+            // httpOnly: true,
+            secure: true,
+            sameSite: "none",
             maxAge: 2*60*1000
         })
         return res.status(200).json({ 

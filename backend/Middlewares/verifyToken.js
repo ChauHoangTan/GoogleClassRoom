@@ -15,7 +15,7 @@ const createAccessToken = (id) => {
 }
 
 const createRefreshToken = (id) => {
-    return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '30s'})
+    return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '20s'})
 }
 
 const verifyEmail = (req, res, next) => {

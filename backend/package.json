@@ -29,7 +29,6 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "sweetalert2": "^11.10.1",
     "uuid-v4": "^0.1.0"
   },
   "engines": {

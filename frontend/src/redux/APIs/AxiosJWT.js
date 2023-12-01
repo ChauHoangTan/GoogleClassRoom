@@ -5,8 +5,8 @@ import { store } from '../store'
 import * as authActions from '../actions/authActions'
 
 const AxiosJWT = axios.create({
-  // baseURL: "https://eduspherehub.onrender.com/api",
-  baseURL: 'http://localhost:5000/api'
+    // baseURL: 'http://localhost:5000/api'
+    baseURL: 'https://nexusedu.onrender.com/api',
 })
 
 AxiosJWT.interceptors.request.use(
@@ -20,7 +20,7 @@ AxiosJWT.interceptors.request.use(
     let date = new Date()
     const decodedToken = jwtDecode(userInfo?.Authorization)
     if (decodedToken.exp < date.getTime() / 1000) {
-      try {
+    //   try {
         const data = await refreshAccessTokenService()
         const refreshUser = {
           ...userInfo,
@@ -29,9 +29,9 @@ AxiosJWT.interceptors.request.use(
         store.dispatch(authActions.updateUserInfoAction(refreshUser))
         localStorage.setItem('userInfo', JSON.stringify(refreshUser))
         config.headers['Authorization'] = `Bearer ${data.newAccessToken}`
-      } catch (error) {
-        store.dispatch(authActions.logoutAction())
-      }
+    //   } catch (error) {
+        // store.dispatch(authActions.logoutAction())        
+    //   }
     } else {
       config.headers['Authorization'] = `Bearer ${userInfo?.Authorization}`
 

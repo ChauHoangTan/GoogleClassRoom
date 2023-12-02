@@ -105,8 +105,8 @@ function Login ({ rememberMe, setRememberMe }) {
 
   const handleGoogleLogin = () => {
     // Handle when user click login by Google
-    window.open('http://localhost:5000/api/auth/google', '_self')
-    // window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
+    // window.open('http://localhost:5000/api/auth/google', '_self')
+    window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
   }
 
   const handleFacebookLogin = () => {

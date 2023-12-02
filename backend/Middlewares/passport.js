@@ -40,7 +40,7 @@ passport.use(new LocalStrategy({
         if(!user.isVerifiedEmail) {
             return done("Account need to been verified", false);
         }
-        if(user.password === '' && user.authFacebookId || user.authGoogleId) {
+        if((user.authFacebookId || user.authGoogleId) && !user.password) {
             return done("This email was login by google or facebook", false);
         }
         const isCorrectPassword = await bcrypt.compare(password, user.password);

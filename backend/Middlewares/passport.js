@@ -37,16 +37,19 @@ passport.use(new LocalStrategy({
         if (!user) {
             return done("Invalid email", false);
         }
-
+        if(!user.isVerifiedEmail) {
+            return done("Account need to been verified", false);
+        }
+        if(user.password === '' && user.authFacebookId || user.authGoogleId) {
+            return done("This email was login by google or facebook", false);
+        }
         const isCorrectPassword = await bcrypt.compare(password, user.password);
 
         if (!isCorrectPassword) {
             return done("Invalid password", false);
         }
 
-        if(!user.isVerifiedEmail) {
-            return done("Account need to been verified", false);
-        }
+
 
         done(null, user);
     } catch (error) {
@@ -63,7 +66,6 @@ passport.use(new GoogleStrategy({
     async (accessToken, refreshToken, profile, done) => {
         const existUser = await User.findOne({
            email: profile?.emails[0].value,
-        //    isThirdPartyLogin: true
         });
 
         if (existUser) {
@@ -72,11 +74,15 @@ passport.use(new GoogleStrategy({
                 // login google before
                 ? {
                     authGoogleToken: accessToken,
+                    isThirdPartyLogin: true,
+                    isVerifiedEmail: true,
                 }
                 // login facebook or local before
                 : {
                     authGoogleToken: accessToken,
                     authGoogleId: profile.id,
+                    isThirdPartyLogin: true,
+                    isVerifiedEmail: true,
                 }
 
             const user = await User.findOneAndUpdate(
@@ -122,12 +128,15 @@ passport.use(new FacebookStrategy({
           const updateUser =  existUser.authFacebookId === profile?.id  
             // login facebook before
             ? {
-              authFacebookToken: accessToken,
+                authFacebookToken: accessToken,
+                isThirdPartyLogin: true,
+                isVerifiedEmail: true,
             }
             // login google before
             : {
               authFacebookToken: accessToken,
               authFacebookId: profile.id,
+                isThirdPartyLogin: true
             }
 
           const user = await User.findOneAndUpdate(

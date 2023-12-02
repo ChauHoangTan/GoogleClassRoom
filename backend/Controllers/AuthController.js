@@ -265,6 +265,9 @@ const forgotUserPassword = async (req, res) => {
         if(!user) {
             return  res.status(400).json({message: "This email does not exist" });
         }
+        if(user.password === '' && user.authFacebookId || user.authGoogleId) {
+            return  res.status(400).json({message: "This email address was created by login google or facebook" });
+        }
         if(!user.isVerifiedEmail) {
             return res.status(400).json({message: "Account need to been verified."});
         }

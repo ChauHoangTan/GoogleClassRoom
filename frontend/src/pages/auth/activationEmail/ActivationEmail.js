@@ -85,7 +85,7 @@ function ActivationEmail() {
                   variant='h5'
                   sx={{
                     fontWeight: 'bold',
-                    mt: 1
+                    mt: 2
                   }}
                 >
                   Verify registered email address
@@ -111,7 +111,7 @@ function ActivationEmail() {
                 <Button
                   onClick={handleClose}
                   variant="contained"
-                  sx={{ p: 1 }}
+                  sx={{ py: 1, px: 2 }}
                   color="primary"
                 >
                   Back to Login

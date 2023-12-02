@@ -225,7 +225,7 @@ const ResetPassword = () => {
                   <Button
                     onClick={handleClose}
                     variant="contained"
-                    sx={{ p: 1 }}
+                    sx={{ py: 1, px: 2 }}
                     color="primary"
                   >
                                 Back to Login

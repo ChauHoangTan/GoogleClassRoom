@@ -61,6 +61,8 @@ router.post("/forgot", authController.forgotUserPassword);
 
 router.post("/resend-activation", authController.resendActivateEmail);
 
+router.post("/checkUrl", verifyEmail, authController.checkUrlResetPassword);
+
 router.post("/reset", verifyEmail, authController.resetUserPassword);
 
 router.post("/refresh", authController.refreshAccessToken);

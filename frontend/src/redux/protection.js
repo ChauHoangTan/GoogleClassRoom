@@ -12,16 +12,16 @@ export const ErrorsAction = (error, dispatch, action) => {
   //   if (message === 'Not authorized, token failed' || message === 'Unauthorized' || message === 'Request failed with status code 401) {
   if (error.response.status === 401) {
     Swal.fire({
-        title: 'Session Expired',
-        text: 'Your session has expired. Please log in again.',
-        icon: 'warning',
-        confirmButtonText: 'OK'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Nếu người dùng nhấn nút OK
-          dispatch(logoutAction()); // Gọi hành động để hiển thị cửa sổ đăng nhập
-        }
-      });
+      title: 'Session Expired',
+      text: 'Your session has expired. Please log in again.',
+      icon: 'warning',
+      confirmButtonText: 'OK'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Nếu người dùng nhấn nút OK
+        dispatch(logoutAction()) // Gọi hành động để hiển thị cửa sổ đăng nhập
+      }
+    })
   }
   return dispatch({ type: action, payload: message })
 }

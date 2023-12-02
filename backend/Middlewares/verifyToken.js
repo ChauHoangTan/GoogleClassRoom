@@ -24,7 +24,7 @@ const verifyEmail = (req, res, next) => {
         jwt.verify(token, process.env.ACTIVATION_TOKEN_SECRET, (err, user) => {
             if(err){ 
                 if(err) {
-                    return res.status(401).json({ message: "This Activation Email is unavailable!" });
+                    return res.status(401).json({ message: "The activation token is incorrect or has expired" });
                 }
             };
             req.user = user;

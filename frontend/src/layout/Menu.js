@@ -46,7 +46,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
 
   return (
     <Box sx={{ width: '100%'
-    
+
     }}>
       <nav aria-label="main mailbox folders" className='containerPanel'>
         <List>

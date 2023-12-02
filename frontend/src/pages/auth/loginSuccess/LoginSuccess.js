@@ -14,14 +14,14 @@ function LoginSuccess() {
   )
   useEffect(() => {
     if (!initialized.current) {
-        initialized.current = true
-        const fetchToken = async () => {
+      initialized.current = true
+      const fetchToken = async () => {
         const data = { userId, tokenLogin }
         dispatch(loginAction(provider, data))
-        }
+      }
 
-        fetchToken()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      fetchToken()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }
   }, [])
 

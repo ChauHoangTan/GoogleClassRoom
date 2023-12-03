@@ -218,7 +218,7 @@ const loginSuccess = async (req, res) => {
             });
         
         if(!user) {
-            return res.status(401).json({ message: 'Not authorized, token failed!'})
+            return res.status(400).json({ message: 'You are required to log in to use the website'})
         }
         // create access token
         const accessToken = createAccessToken(user._id)

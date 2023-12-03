@@ -190,35 +190,39 @@ const ResetPassword = () => {
               </Box>
             </Box>
           ) : (
-            <Dialog open={open} sx={{ py: 2 }}>
+            <Dialog open={open} onClose={handleClose}>
               <Box sx={{ padding: 2 }}>
                 <DialogTitle sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <img src={ErrorIcon} alt="error-icon" style={{ width: '80px', height: '80px' }}/>
+                  <img src={ErrorIcon} alt="error-icon" style={{ width: '88px', height: '88px' }}/>
                   <Typography
                     component='h1'
                     variant='h5'
                     sx={{
                       fontWeight: 'bold',
-                      mt: 1
+                      mt: '24px',
+                      color: '#545454',
+                      fontSize: '30px'
                     }}
                   >
-                                    Session Expired
+                    Reset Password
                   </Typography>
                 </DialogTitle>
                 <DialogContent sx={{ textAlign: 'center' }}>
                   <Typography
                     sx={{
-                      fontSize: '20px'
+                      fontSize: '20px',
+                      fontWeight: '500'
                     }}
                   >
                     {err}
                   </Typography>
                   <Typography
                     sx={{
-                      fontSize: '16px'
+                      fontSize: '16px',
+                      mt: 1
                     }}
                   >
-                                    Please click the Forgot Password again
+                    Please click the Forgot Password again
                   </Typography>
                 </DialogContent>
                 <DialogActions sx={{ justifyContent: 'center' }}>
@@ -228,7 +232,7 @@ const ResetPassword = () => {
                     sx={{ py: 1, px: 2 }}
                     color="primary"
                   >
-                                Back to Login
+                    Back To Login
                   </Button>
                 </DialogActions>
               </Box>

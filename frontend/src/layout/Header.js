@@ -212,26 +212,26 @@ export default function ResponsiveAppBar () {
                       </Link>
                     </MenuItem>
                     {!userInfo?.isThirdPartyLogin && (
-                        <MenuItem onClick={handleCloseUserMenu}>
+                      <MenuItem onClick={handleCloseUserMenu}>
                         <Link
-                            to='/password'
-                            style={{
+                          to='/password'
+                          style={{
                             textDecoration: 'none',
                             display: 'flex',
                             alignItems: 'center',
                             color: 'inherit'
-                            }}
+                          }}
                         >
-                            <RiLockPasswordLine />
-                            <span
+                          <RiLockPasswordLine />
+                          <span
                             style={{
-                                marginLeft: '4px'
+                              marginLeft: '4px'
                             }}
-                            >
+                          >
                             Change password
-                            </span>
+                          </span>
                         </Link>
-                        </MenuItem>
+                      </MenuItem>
                     )}
                     <MenuItem
                       onClick={logoutHandler}

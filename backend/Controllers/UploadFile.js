@@ -11,6 +11,13 @@ const uploadController = async (req, res) => {
         const file = req.file;
         // create new filename
         if(file) {
+            if(file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png'){
+                return res.status(400).json({message: "File format is incorrect."})
+            }
+            if(file.size > 1024 * 1024){
+                return res.status(400).json({message: "Size too large (must under 1mb)."})
+            } // 1mb
+    
             const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
 
             const blob = storage.file(fileName);

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { activationEmailService } from '../../../redux/APIs/authServices'
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Paper, ThemeProvider, Typography, createTheme } from '@mui/material'
 
 import ErrorIcon from './../../../assets/img/error.png'
@@ -76,16 +76,18 @@ function ActivationEmail() {
           component={Paper}
           elevation={6}
         >
-          <Dialog open={open} sx={{ py: 2 }}>
+          <Dialog open={open} onClose={handleClose}>
             <Box sx={{ padding: 2 }}>
               <DialogTitle sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <img src={isValidUrl ? SuccessIcon : ErrorIcon} alt={isValidUrl ? 'success-icon' : 'error-icon'} style={{ width: '80px', height: '80px' }}/>
+                <img src={isValidUrl ? SuccessIcon : ErrorIcon} alt={isValidUrl ? 'success-icon' : 'error-icon'} style={{ width: '88px', height: '88px' }}/>
                 <Typography
                   component='h1'
                   variant='h5'
                   sx={{
                     fontWeight: 'bold',
-                    mt: 2
+                    mt: '24px',
+                    color: '#545454',
+                    fontSize: '30px'
                   }}
                 >
                   Verify registered email address
@@ -94,18 +96,20 @@ function ActivationEmail() {
               <DialogContent sx={{ textAlign: 'center' }}>
                 <Typography
                   sx={{
-                    fontSize: '20px'
+                    fontSize: '20px',
+                    fontWeight: '500'
                   }}
                 >
                   {isValidUrl ? success : err}
                 </Typography>
-                {/* <Typography
+                <Typography
                   sx={{
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    mt: 1
                   }}
                 >
-                    Please click the Forgot Password again
-                </Typography> */}
+                    Please log in to use your account
+                </Typography>
               </DialogContent>
               <DialogActions sx={{ justifyContent: 'center' }}>
                 <Button

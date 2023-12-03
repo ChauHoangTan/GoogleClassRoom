@@ -4,7 +4,21 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import GradeTable from './GradeTable'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import {
+  DndContext,
+  // eslint-disable-next-line no-unused-vars
+  PointerSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensors,
+  useSensor
+} from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { mapOrder } from '../../../../components/SortOrderArray/mapOrder'
+import { arrayMove } from '@dnd-kit/sortable'
 
 const columns = [
   { id: 'id', label: 'ID', minWidth: 170 },
@@ -93,9 +107,63 @@ const rows = [
   }
 ]
 
-function CardGrade ({ title, composition, time, percent }) {
+const gradeCompositionList = [
+  {
+    id: 1,
+    title: 'Dev posted a new assignment',
+    composition: 'Finalterm',
+    time: '12:00',
+    percent: '50%'
+  },
+  {
+    id: 2,
+    title: 'Dev posted a new assignment',
+    composition: 'Midterm',
+    time: '12:00',
+    percent: '30%'
+  },
+  {
+    id: 3,
+    title: 'Dev posted a new assignment',
+    composition: 'Exercise 2',
+    time: '12:00',
+    percent: '10%'
+  },
+  {
+    id: 4,
+    title: 'Dev posted a new assignment',
+    composition: 'Exercise 1',
+    time: '12:00',
+    percent: '10%'
+  }
+]
+
+
+function CardGrade ({ id, title, composition, time, percent }) {
+  // Dnd-kit
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition
+  } = useSortable({
+    id: id,
+    data: { id, title, composition, time, percent }
+  })
+
+  const dndKitGradeCompositionStyles = {
+    touchAction: 'none',
+    transform: CSS.Translate.toString(transform),
+    transition
+  }
+
   return (
     <Card
+      ref={setNodeRef}
+      style={dndKitGradeCompositionStyles}
+      {...attributes}
+      {...listeners}
       sx={{
         '&:hover': {
           bgcolor: '#A9A9A9'
@@ -127,6 +195,42 @@ function CardGrade ({ title, composition, time, percent }) {
 }
 
 function GradeComposition () {
+  const sortedIDGradeCompostion = [1, 2, 3, 4]
+  const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
+
+  // Require mouse move 10px then active this event (Fix situation click call event not drag)
+  // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
+  // Require mouse move 10px then active this event (Fix situation click call event not drag)
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
+  // While press in 250ms and move less than 5px (If more than 5px then event will be cancel)
+  const touchSensor = useSensor(TouchSensor, { activationConstraint: {
+    delay: 250,
+    tolerance: 5
+  } })
+  // Using mouse and touch for UX in mobile is the better
+  const sensors = useSensors(mouseSensor, touchSensor)
+
+  useEffect(() => {
+    SetorderedGradeCompostionState (mapOrder(gradeCompositionList, sortedIDGradeCompostion, 'id'))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event
+
+    // Check if drag another position
+    if (!over) return
+
+    if (active.id !== over.id) {
+      // Get old position
+      const oldIndex = orderedGradeCompostionState.findIndex(c => c.id === active.id)
+      // Get new position
+      const newIndex = orderedGradeCompostionState.findIndex(c => c.id === over.id)
+      const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
+      SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
+    }
+  }
+
   return (
     <Container sx={{
       borderRadius: 5,
@@ -138,13 +242,22 @@ function GradeComposition () {
         Grade Composition
       </Typography>
 
-      <Stack spacing={1} py={1}>
-        <CardGrade title='Dev posted a new assignment' composition='Finalterm' time='12:00' percent='50%' />
-        <CardGrade title='Dev posted a new assignment' composition='Midterm' time='12:00' percent='30%' />
-        <CardGrade title='Dev posted a new assignment' composition='Exercise 2' time='12:00' percent='10%' />
-        <CardGrade title='Dev posted a new assignment' composition='Exercise 1' time='12:00' percent='10%' />
-
-      </Stack>
+      <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+        <SortableContext items={orderedGradeCompostionState?.map(c => c.id)} strategy={verticalListSortingStrategy}>
+          <Stack spacing={2} py={1}>
+            {orderedGradeCompostionState.map(({ id, title, composition, time, percent }) => (
+              <CardGrade
+                key={id}
+                id={id}
+                title={title}
+                composition={composition}
+                time={time}
+                percent={percent}
+              />
+            ))}
+          </Stack>
+        </SortableContext>
+      </DndContext>
 
       <Divider />
 

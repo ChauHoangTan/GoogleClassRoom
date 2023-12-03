@@ -1,16 +1,18 @@
-import { Box, Typography, IconButton, Modal, TextField, InputAdornment } from '@mui/material'
+import { Box, Typography, IconButton, Modal, TextField, InputAdornment, Stack, Autocomplete, Avatar } from '@mui/material'
 import SearchBar from '../../../components/search/SearchBar'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ParticipantTable from './ParticipantTable'
 import { useState } from 'react'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
+import './style.scss'
 
 const styleModal = {
   position: 'absolute',
-  top: '50%',
+  top: '40%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 500,
   bgcolor: 'background.paper',
   border: '2px solid #005B48',
   boxShadow: 24,
@@ -148,9 +150,79 @@ const columns = [
   { id: 'isTeacher', label: 'Kick', minWidth: 170 }
 ]
 
+const Emails = [
+  {
+    label: 'chauhoangtan6937@gmail.com',
+    name: 'Chau Hoang Tan',
+    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
+  },
+  {
+    label: 'hualamchicuong@gmail.com',
+    name: 'Hua Lam Chi Cuong',
+    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
+  },
+  {
+    label: 'nguyendinhvan@gmail.com',
+    name: 'Nguyen Dinh Van',
+    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
+  },
+  {
+    label: 'letranphihung@gmail.com',
+    name: 'Le Tran Phi Hung',
+    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
+  }
+]
+
+const ItemResultEmail = ({ email, name, avatar }) => {
+  return (
+    <Stack direction='row' alignItems='center' mb={1}>
+      <Avatar src={avatar} sx={{ margin: '0px 5px' }}/>
+      <Stack>
+        <Typography variant='body-1' sx={{ fontWeight: 'bold' }}>{email}</Typography>
+        <Typography variant='body-2' sx={{ fontStyle:'italic' }}>{name}</Typography>
+      </Stack>
+    </Stack>
+  )
+}
+
+const ApproachJoin = ({ code }) => {
+  return (
+    <Stack className='approachJoin component' spacing={1} mt={1} mb={4}>
+      <Stack direction='row' alignItems='center'>
+        <Stack className='code' direction='row' alignItems='center'>
+          <Typography variant='body-1'>{code}</Typography>
+        </Stack>
+        <IconButton>
+          <ContentCopyOutlinedIcon/>
+        </IconButton>
+      </Stack>
+    </Stack>
+  )
+}
+
 export default function Participants() {
   const [isOpenInviteTeacher, setIsOpenInviteTeacher] = useState(false)
   const [isOpenInviteStudent, setIsOpenInviteStudent] = useState(false)
+
+  const [inviteTeacher, setInviteTeacher] = useState('')
+  const [inviteStudent, setInviteStudent] = useState('')
+
+  const handleInputStudent = ( e ) => {
+    setInviteStudent( e.target.value )
+  }
+  const handleInputTeacher = ( e ) => {
+    setInviteTeacher( e.target.value )
+  }
+  const handleInputTeacherWithAutoComplete = ( newValue ) => {
+    console.log(inviteTeacher)
+    if (newValue !== null) {
+      if (newValue.label !== null) {
+        setInviteTeacher(newValue.label)
+      }
+    } else {
+      setInviteTeacher('')
+    }
+  }
 
   const handleOpenInviteTeacher = () => {
     setIsOpenInviteTeacher(!isOpenInviteTeacher)
@@ -160,7 +232,7 @@ export default function Participants() {
     setIsOpenInviteStudent(!isOpenInviteStudent)
   }
 
-
+  // console.log(inviteTeacher)
   return (
     <Box sx={{
       p: 2
@@ -193,29 +265,41 @@ export default function Participants() {
         </Box>
       </Box>
       <Modal
+        className='modalParticipants'
         open={isOpenInviteTeacher}
         onClose={handleOpenInviteTeacher}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={styleModal}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold', color:'#005B48' }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold' }}>
             Invite teachers
           </Typography>
-          <TextField
-            value= 'http://localhost:3000/class/1daudhiasubdasidbiuasbdu'
-            disabled
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end" sx={{ cursor: 'pointer',
-                  '&:hover': {
-                    color: '#D0D4CA'
-                  } }}>
-                  <ContentCopyIcon onClick={handleOpenInviteTeacher}/>
-                </InputAdornment>
-              )
-            }}
+          <ApproachJoin approach='link' code={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
+          <Autocomplete
+            id="country-select-demo"
             sx={{ width: '100%' }}
+            onChange={ (e, newValue) => handleInputTeacherWithAutoComplete( newValue ) }
+            options={Emails}
+            autoHighlight
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option) => (
+              <Box component="li" {...props}>
+                <ItemResultEmail email={option.label} name={option.name} avatar={option.avatar}/>
+              </Box>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Choose a email"
+                value={inviteTeacher}
+                onChange={ (e) => handleInputTeacher(e) }
+                inputProps={{
+                  ...params.inputProps,
+                  autoComplete: 'new-password' // disable autocomplete and autofill
+                }}
+              />
+            )}
           />
         </Box>
       </Modal>
@@ -245,29 +329,29 @@ export default function Participants() {
         </Box>
 
         <Modal
+          className='modalParticipants'
           open={isOpenInviteStudent}
           onClose={handleOpenInviteStudent}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={styleModal}>
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold', color:'#005B48' }}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold' }}>
             Invite students
             </Typography>
-            <TextField
-              value= 'http://localhost:3000/class/1daudhiasubdasidbiuasbdu'
-              disabled
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end" sx={{ cursor: 'pointer',
-                    '&:hover': {
-                      color: '#D0D4CA'
-                    } }}>
-                    <ContentCopyIcon onClick={handleOpenInviteStudent}/>
-                  </InputAdornment>
-                )
-              }}
+            <Autocomplete
+              value={inviteStudent}
+              onChange={(e) => handleInputStudent(e)}
+              autoHighlight
+              options={Emails}
+              getOptionLabel = {(option) => option.label}
+              renderOption={(props, option) => (
+                <ItemResultEmail email={ option.label } name={ option.name } avatar={ option.avatar }/>
+              )}
+              disablePortal
+              id="combo-box-demo"
               sx={{ width: '100%' }}
+              renderInput={(params) => <TextField {...params} label="Input Email" />}
             />
           </Box>
         </Modal>

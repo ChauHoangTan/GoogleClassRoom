@@ -45,9 +45,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
   }
 
   return (
-    <Box sx={{ width: '100%'
-    
-    }}>
+    <Box sx={{ width: '100%', bgcolor:'background.paper' }}>
       <nav aria-label="main mailbox folders" className='containerPanel'>
         <List>
           <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
@@ -57,7 +55,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
               display: 'flex',
               alignItems: 'center',
               color: 'inherit',
-              marginTop: '10px'
+              margin: '5px 0px'
             }}>
               <ListItemButton>
                 <ListItemIcon>
@@ -75,7 +73,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
           <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
             onClick={() => handleOnclick(1)}>
             <Link to='/notification' className='link' style={{
-              color: 'inherit', margin: '10px 0px'
+              color: 'inherit', margin: '5px 0px'
             }}>
               <ListItemButton>
                 <ListItemIcon>

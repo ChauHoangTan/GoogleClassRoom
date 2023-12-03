@@ -12,9 +12,11 @@ import {
   MouseSensor,
   TouchSensor,
   useSensors,
-  useSensor
+  useSensor,
+  DragOverlay,
+  defaultDropAnimationSideEffects
 } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { SortableContext, defaultAnimateLayoutChanges, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { mapOrder } from '../../../../components/SortOrderArray/mapOrder'
@@ -146,7 +148,8 @@ function CardGrade ({ id, title, composition, time, percent }) {
     listeners,
     setNodeRef,
     transform,
-    transition
+    transition,
+    isDragging
   } = useSortable({
     id: id,
     data: { id, title, composition, time, percent }
@@ -155,7 +158,8 @@ function CardGrade ({ id, title, composition, time, percent }) {
   const dndKitGradeCompositionStyles = {
     touchAction: 'none',
     transform: CSS.Translate.toString(transform),
-    transition
+    transition,
+    opacity: isDragging ? 0.5 : undefined
   }
 
   return (
@@ -197,6 +201,8 @@ function CardGrade ({ id, title, composition, time, percent }) {
 function GradeComposition () {
   const sortedIDGradeCompostion = [1, 2, 3, 4]
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
+  const [activeDragItemID, setActiveDragItemID] = useState(null)
+  const [activeDragItemData, setActiveDragItemData] = useState(null)
 
   // Require mouse move 10px then active this event (Fix situation click call event not drag)
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
@@ -215,6 +221,11 @@ function GradeComposition () {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleDragStart = (event) => {
+    setActiveDragItemID(event?.active?.id)
+    setActiveDragItemData(event?.active?.data?.current)
+  }
+
   const handleDragEnd = (event) => {
     const { active, over } = event
 
@@ -229,6 +240,19 @@ function GradeComposition () {
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
     }
+
+    setActiveDragItemID(null)
+    setActiveDragItemData(null)
+  }
+
+  const customDropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: '0.5'
+        }
+      }
+    })
   }
 
   return (
@@ -242,7 +266,7 @@ function GradeComposition () {
         Grade Composition
       </Typography>
 
-      <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+      <DndContext onDragOver={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
         <SortableContext items={orderedGradeCompostionState?.map(c => c.id)} strategy={verticalListSortingStrategy}>
           <Stack spacing={2} py={1}>
             {orderedGradeCompostionState.map(({ id, title, composition, time, percent }) => (
@@ -255,6 +279,17 @@ function GradeComposition () {
                 percent={percent}
               />
             ))}
+            <DragOverlay dropAnimation={customDropAnimation}>
+              {!!(activeDragItemID) &&
+                <CardGrade
+                  id={activeDragItemData?.id}
+                  title={activeDragItemData?.title}
+                  composition={activeDragItemData?.composition}
+                  time={activeDragItemData?.time}
+                  percent={activeDragItemData?.percent}
+                />
+              }
+            </DragOverlay>
           </Stack>
         </SortableContext>
       </DndContext>

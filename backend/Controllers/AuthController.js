@@ -88,7 +88,7 @@ const activateEmail = async (req, res) => {
         }
 
         if(userExist.isVerifiedEmail) {
-            return res.status(400).json({message: "This email already verified."});
+            return res.json({message: "This email already verified."});
         }
 
         userExist.isVerifiedEmail = true;
@@ -206,7 +206,7 @@ const loginSuccess = async (req, res) => {
         if (!userId || !tokenLogin || !provider) {
             return res.status(400).json({ message: "Missing inputs" });
         }
-
+        console.log(tokenLogin)
         const user = provider === "google" 
             ? await User.findOne({ 
                 authGoogleId: userId, 
@@ -218,7 +218,7 @@ const loginSuccess = async (req, res) => {
             });
         
         if(!user) {
-            return res.status(401).json({ message: 'Not authorized, token failed!'})
+            return res.status(400).json({ message: 'You are required to log in to use the website'})
         }
         // create access token
         const accessToken = createAccessToken(user._id)
@@ -229,7 +229,7 @@ const loginSuccess = async (req, res) => {
             user._id, 
             { 
                 refreshToken,
-                authGoogleId: accessToken
+                authGoogleToken: accessToken
             }, 
             { new: true }
         )
@@ -265,6 +265,9 @@ const forgotUserPassword = async (req, res) => {
         if(!user) {
             return  res.status(400).json({message: "This email does not exist" });
         }
+        if((user.authFacebookId || user.authGoogleId) && !user.password) {
+            return  res.status(400).json({message: "This email address was created by login google or facebook" });
+        }
         if(!user.isVerifiedEmail) {
             return res.status(400).json({message: "Account need to been verified."});
         }
@@ -279,7 +282,19 @@ const forgotUserPassword = async (req, res) => {
     }
 }
 
+const checkUrlResetPassword = async (req, res) => {
+    const user = await User.findOne({ 
+        email: req.user.email,
+        activationEmailToken: req.body.activation_token
+    });
+    if(!user || user.activationEmailToken === '') {
+        return res.status(401).json({ message: "The password reset token is incorrect or has expired" });
+    }
+
+    return res.json({ message: "The password reset url is valid" })
+}
 // @desc user reset password
+
 // @route PUT /api/auth/reset
 const resetUserPassword = async (req, res) => {
     const { newPassword } = req.body;
@@ -313,6 +328,7 @@ module.exports = {
     loginSuccess,
     forgotUserPassword,
     resetUserPassword,
+    checkUrlResetPassword,
     resendActivateEmail,
     refreshAccessToken,
     logout,

@@ -113,7 +113,7 @@ function Home() {
           <ModalJoin/>
           <ModalNewClass/>
         </Stack>
-        <SearchBar/>
+        <Stack direction='row' justifyContent='center'><SearchBar/></Stack>
         <Typography mt={2} mb={5} sx={{ fontStyle:'italic' }}>Search results: 3</Typography>
         <HomePageContent/>
       </div>

@@ -30,7 +30,7 @@ import Notification from '../pages/notification/Notification.js'
 export default function ResponsiveAppBar () {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { mode, setMode } = useColorScheme()
+  const { mode, setMode } = useColorScheme('')
   const { userInfo } = useSelector(state => state.userLogin)
 
   const [anchorElUser, setAnchorElUser] = React.useState(null)
@@ -114,7 +114,7 @@ export default function ResponsiveAppBar () {
             </Stack>
 
             <Box>
-              <Tooltip title= {mode === 'light' ? 'Turn dark' : 'Turn light'} mode>
+              <Tooltip title= {mode === 'light' ? 'Turn dark' : 'Turn light'}>
                 <IconButton sx={{ mr: 2 }} onClick={() => {
                   setMode(mode === 'light' ? 'dark' : 'light')
                 }} color="inherit">

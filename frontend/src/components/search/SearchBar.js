@@ -1,8 +1,7 @@
-import { Box, Button, Stack } from '@mui/material'
+import { Box, Button, Input, Stack, TextField } from '@mui/material'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import './style.scss'
 import { useState } from 'react'
-import theme from '../../theme'
 
 function SearchBar() {
   const [input, setInput] = useState( '' )
@@ -14,12 +13,18 @@ function SearchBar() {
     e.preventDefault()
   }
 
+
   return (
     <Stack>
       <form onSubmit={onSubmit} className='search'>
-        <input className='inputSearch' label="Search..." placeholder='Search...' value={input}
-          onChange={onChange}/>
-        <Button><SearchOutlinedIcon/></Button>
+        <TextField className='inputSearch' label="Search..." value={input}
+          onChange={onChange} sx={{ '& fieldset': {
+            borderColor: (theme) => theme.palette.primary.main
+          },
+          '&:hover fieldset': {
+            borderColor: (theme) => theme.palette.primary.main + '!important'
+          } }}/>
+        <Button sx={{ backgroundColor: (theme) => theme.palette.primary.main }}><SearchOutlinedIcon/></Button>
       </form>
     </Stack>
   )

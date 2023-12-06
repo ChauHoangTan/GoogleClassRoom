@@ -39,7 +39,7 @@ const defaultTheme = createTheme({
 })
 
 const EditProfile = () => {
-  const [date, setDate] = useState(dayjs())
+  const [date, setDate] = useState(null)
   const dispatch = useDispatch()
   const initialized = useRef(false)
 
@@ -260,6 +260,8 @@ const EditProfile = () => {
                           onChange={newValue =>
                             setDate(newValue)
                           }
+                          error={false}
+                          placeholder="MM/DD/YYYY"
                         />
                       </DemoContainer>
                     </LocalizationProvider>

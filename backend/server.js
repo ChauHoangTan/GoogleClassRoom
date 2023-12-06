@@ -9,14 +9,17 @@ var cookieParser = require('cookie-parser')
 const errorHandler  = require('./Middlewares/errorMiddleware.js');
 
 const app = express();
-app.use(cookieParser())
+app.use(express.json());
 // app.use(cors());
 app.use(cors({
     origin: [process.env.CLIENT_URL, "https://accounts.google.com/"],
     credentials: true
 }))
 
-app.use(express.json());
+app.set("trust proxy", 1);
+
+app.use(cookieParser())
+
 app.use(express.urlencoded({ extended: true }));
 // connect database
 connectDB();

@@ -30,7 +30,7 @@ import Notification from '../pages/notification/Notification.js'
 export default function ResponsiveAppBar () {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { mode, setMode } = useColorScheme()
+  const { mode, setMode } = useColorScheme('')
   const { userInfo } = useSelector(state => state.userLogin)
 
   const [anchorElUser, setAnchorElUser] = React.useState(null)
@@ -114,7 +114,7 @@ export default function ResponsiveAppBar () {
             </Stack>
 
             <Box>
-              <Tooltip title= {mode === 'light' ? 'Turn dark' : 'Turn light'} mode>
+              <Tooltip title= {mode === 'light' ? 'Turn dark' : 'Turn light'}>
                 <IconButton sx={{ mr: 2 }} onClick={() => {
                   setMode(mode === 'light' ? 'dark' : 'light')
                 }} color="inherit">
@@ -211,26 +211,28 @@ export default function ResponsiveAppBar () {
                         </span>
                       </Link>
                     </MenuItem>
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Link
-                        to='/password'
-                        style={{
-                          textDecoration: 'none',
-                          display: 'flex',
-                          alignItems: 'center',
-                          color: 'inherit'
-                        }}
-                      >
-                        <RiLockPasswordLine />
-                        <span
+                    {!userInfo?.isThirdPartyLogin && (
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <Link
+                          to='/password'
                           style={{
-                            marginLeft: '4px'
+                            textDecoration: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: 'inherit'
                           }}
                         >
-                          Change password
-                        </span>
-                      </Link>
-                    </MenuItem>
+                          <RiLockPasswordLine />
+                          <span
+                            style={{
+                              marginLeft: '4px'
+                            }}
+                          >
+                            Change password
+                          </span>
+                        </Link>
+                      </MenuItem>
+                    )}
                     <MenuItem
                       onClick={logoutHandler}
                       style={{

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Button,
   Box,
@@ -39,8 +39,9 @@ const defaultTheme = createTheme({
 })
 
 const EditProfile = () => {
-  const [date, setDate] = useState(dayjs())
+  const [date, setDate] = useState(null)
   const dispatch = useDispatch()
+  const initialized = useRef(false)
 
   const { isError, isLoading, userInfo, isSuccess } = useSelector(
     state => state.userGetProfile
@@ -78,11 +79,18 @@ const EditProfile = () => {
 
   // useEffect
   useEffect(() => {
-    dispatch(getProfileAction())
-  }, [])
+    if (!initialized.current) {
+        initialized.current = true
+          const fetchUserInfo = async () => {
+            dispatch(getProfileAction())
+        }
+
+      fetchUserInfo()
+    }
+  }, [editSuccess])
 
   useEffect(() => {
-    if (isSuccess) {
+    if (userInfo) {
       setValue('firstName', userInfo?.firstName)
       setValue('lastName', userInfo?.lastName)
       setValue('email', userInfo?.email)
@@ -91,18 +99,19 @@ const EditProfile = () => {
         setDate(dayjs(userInfo?.dob))
       }
       userInfo?.image && setImageUrl(userInfo?.image)
-      userInfo?.image && setImageUpdateUrl(userInfo?.image)
+    //   userInfo?.image && setImageUpdateUrl(userInfo?.image)
     }
 
-    if (editUserInfo) {
-      setValue('firstName', editUserInfo?.firstName)
-      setValue('lastName', editUserInfo?.lastName)
-      setValue('email', editUserInfo?.email)
-      setValue('phone', editUserInfo?.phone)
-      if (editUserInfo?.dob !== '') {
-        setDate(dayjs(editUserInfo?.dob))
-      }
-    }
+    // if (editUserInfo) {
+    //   setValue('firstName', editUserInfo?.firstName)
+    //   setValue('lastName', editUserInfo?.lastName)
+    //   setValue('email', editUserInfo?.email)
+    //   setValue('phone', editUserInfo?.phone)
+    //   if (editUserInfo?.dob !== '') {
+    //     setDate(dayjs(editUserInfo?.dob))
+    //   }
+    // //   setImageUpdateUrl(editUserInfo?.image)
+    // }
 
     if (editSuccess) {
       setImageUpdateUrl(editUserInfo?.image)
@@ -114,7 +123,7 @@ const EditProfile = () => {
       dispatch({ type: 'USER_UPDATE_PROFILE_RESET' })
       dispatch({ type: 'USER_GET_PROFILE_RESET' })
     }
-  }, [editUserInfo, setValue, editSuccess, editError, dispatch, userInfo, isSuccess])
+  }, [editUserInfo, setValue, editSuccess, editError, dispatch, userInfo])
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -251,6 +260,8 @@ const EditProfile = () => {
                           onChange={newValue =>
                             setDate(newValue)
                           }
+                          error={false}
+                          placeholder="MM/DD/YYYY"
                         />
                       </DemoContainer>
                     </LocalizationProvider>

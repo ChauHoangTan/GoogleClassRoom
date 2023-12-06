@@ -15,7 +15,7 @@ function Layout() {
     <div id='layout'>
       <Header />
 
-      <Stack direction='row' container id='menuAndOutlet'>
+      <Stack direction='row' id='menuAndOutlet'>
         <div className={`grid1 ${!isOpenMenu && 'hide'}`}>
           <Menu/>
         </div>

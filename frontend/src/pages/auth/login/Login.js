@@ -105,12 +105,14 @@ function Login ({ rememberMe, setRememberMe }) {
 
   const handleGoogleLogin = () => {
     // Handle when user click login by Google
-    window.open('http://localhost:5000/api/auth/google', '_self')
+    // window.open('http://localhost:5000/api/auth/google', '_self')
+    window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
   }
 
   const handleFacebookLogin = () => {
     // Handle when user click login by Facebook
-    window.open('http://localhost:5000/api/auth/facebook', '_self')
+    // window.open('http://localhost:5000/api/auth/facebook', '_self')
+    window.open('https://nexusedu.onrender.com/api/auth/facebook', '_self')
   }
 
   const handleGithubLogin = () => {
@@ -194,7 +196,8 @@ function Login ({ rememberMe, setRememberMe }) {
             variant='h5'
             sx={{
               fontSize: '60px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              color: 'primary.main'
             }}
           >
             Sign in
@@ -350,13 +353,13 @@ function Login ({ rememberMe, setRememberMe }) {
               >
                 <FacebookIcon />
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 variant='rounded'
                 onClick={handleGithubLogin}
                 size='large'
               >
                 <GitHubIcon />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Box>
         </Box>

@@ -37,6 +37,14 @@ const forgotPasswordService = async (user) => {
   return data
 }
 
+
+// check reset password url API
+const checkResetPasswordUrlService = async (activation_token) => {
+  const { data } = await Axios.post('/auth/checkUrl', { activation_token })
+  return data
+}
+
+
 // Reset password API
 const resetPasswordService = async (newPassword, activation_token) => {
   const { data } = await Axios.post('/auth/reset', { newPassword, activation_token })
@@ -62,6 +70,7 @@ export {
   activationEmailService,
   forgotPasswordService,
   resetPasswordService,
+  checkResetPasswordUrlService,
   resendActivationEmailService,
   refreshAccessTokenService
 }

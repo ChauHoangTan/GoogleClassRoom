@@ -1,3 +1,4 @@
+import './style.scss'
 import React, { useEffect } from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -9,7 +10,6 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
-import './style.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import { registerAction } from '../../../redux/actions/authActions'
@@ -103,7 +103,7 @@ function Register() {
             alignItems: 'center'
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ fontSize: '50px', fontWeight: 'bold' }}>
+          <Typography component="h1" variant="h5" sx={{ fontSize: '50px', fontWeight: 'bold', color: 'primary.main' }}>
                                 Sign up
           </Typography>
           <Box

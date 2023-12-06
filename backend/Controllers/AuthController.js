@@ -88,7 +88,7 @@ const activateEmail = async (req, res) => {
         }
 
         if(userExist.isVerifiedEmail) {
-            return res.status(400).json({message: "This email already verified."});
+            return res.json({message: "This email already verified."});
         }
 
         userExist.isVerifiedEmail = true;
@@ -121,8 +121,10 @@ const loginUser = async (req, res) => {
             )
             // save refreshToken in cookie
             res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                maxAge: 2*60*1000
+                // httpOnly: true,
+                maxAge: 2 * 60*1000,
+                secure: true,
+                sameSite: "none"
             })
             return res.status(200).json({ 
                 _id: req.user._id,
@@ -179,7 +181,8 @@ const refreshAccessToken = async(req, res) => {
 const logout = async (req, res) => {
     const cookie = req.cookies
     if (!cookie || !cookie.refreshToken) {
-        return res.status(401).json({ message: 'Not authorized, token failed!'})
+        // return res.status(400).json({ message: 'No refresh token in cookies'})
+        return res.status(200).json({ message: "Logout successfully" })
     }
 
     await User.findOneAndUpdate(
@@ -189,7 +192,8 @@ const logout = async (req, res) => {
     )
 
     res.clearCookie('refreshToken', {
-        httpOnly: true,
+        // httpOnly: true,
+        sameSite: "none",
         secure: true
     })
     return res.status(200).json({ message: "Logout successfully" })
@@ -203,7 +207,6 @@ const loginSuccess = async (req, res) => {
         if (!userId || !tokenLogin || !provider) {
             return res.status(400).json({ message: "Missing inputs" });
         }
-
         const user = provider === "google" 
             ? await User.findOne({ 
                 authGoogleId: userId, 
@@ -215,7 +218,7 @@ const loginSuccess = async (req, res) => {
             });
         
         if(!user) {
-            return res.status(401).json({ message: 'Not authorized, token failed!'})
+            return res.status(400).json({ message: 'You are required to log in to use the website'})
         }
         // create access token
         const accessToken = createAccessToken(user._id)
@@ -226,14 +229,16 @@ const loginSuccess = async (req, res) => {
             user._id, 
             { 
                 refreshToken,
-                authGoogleId: accessToken
+                authGoogleToken: accessToken
             }, 
             { new: true }
         )
 
         // save refreshToken in cookie
         res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
+            // httpOnly: true,
+            secure: true,
+            sameSite: "none",
             maxAge: 2*60*1000
         })
         return res.status(200).json({ 
@@ -260,6 +265,9 @@ const forgotUserPassword = async (req, res) => {
         if(!user) {
             return  res.status(400).json({message: "This email does not exist" });
         }
+        if((user.authFacebookId || user.authGoogleId) && !user.password) {
+            return  res.status(400).json({message: "This email address was created by login google or facebook" });
+        }
         if(!user.isVerifiedEmail) {
             return res.status(400).json({message: "Account need to been verified."});
         }
@@ -274,7 +282,19 @@ const forgotUserPassword = async (req, res) => {
     }
 }
 
+const checkUrlResetPassword = async (req, res) => {
+    const user = await User.findOne({ 
+        email: req.user.email,
+        activationEmailToken: req.body.activation_token
+    });
+    if(!user || user.activationEmailToken === '') {
+        return res.status(401).json({ message: "The password reset token is incorrect or has expired" });
+    }
+
+    return res.json({ message: "The password reset url is valid" })
+}
 // @desc user reset password
+
 // @route PUT /api/auth/reset
 const resetUserPassword = async (req, res) => {
     const { newPassword } = req.body;
@@ -308,6 +328,7 @@ module.exports = {
     loginSuccess,
     forgotUserPassword,
     resetUserPassword,
+    checkUrlResetPassword,
     resendActivateEmail,
     refreshAccessToken,
     logout,

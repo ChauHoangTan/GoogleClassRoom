@@ -24,10 +24,10 @@ const ApproachJoin = ({ approach, code }) => {
   return (
     <Stack className='approachJoin component' spacing={1} mt={1}>
       <Typography variant='body-1' sx={{ paddingLeft:'5px' }}>By {approach}</Typography>
-      <Stack direction='row'>
-        <div className='code'>
+      <Stack direction='row' alignItems='center'>
+        <Stack className='code' direction='row' alignItems='center'>
           <Typography variant='body-1'>{code}</Typography>
-        </div>
+        </Stack>
         <IconButton>
           <ContentCopyOutlinedIcon/>
         </IconButton>
@@ -62,7 +62,7 @@ const NotificationItem = ({ title, composition, time }) => {
         </div>
         <Stack sx={{ flexGrow:'1' }}>
           <Typography>{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
-          <Typography variant='body-2' sx={{ fontStyle:'italic', color:'rgba(21, 139, 50, 0.7)' }}>{time}</Typography>
+          <Typography variant='body-2' sx={{ fontStyle:'italic' }}>{time}</Typography>
         </Stack>
         <IconButton><MoreVertOutlinedIcon/></IconButton>
       </Stack>
@@ -89,11 +89,11 @@ const list = [
     time:'00:24' }
 ]
 
-const NotificationComponent = ({ list }) => {
+const StreamItem = ({ list }) => {
   const newList = list.slice().reverse()
   return (
     <Stack className='component'>
-      <Typography variant='h6'>Notification</Typography>
+      <Typography variant='h6'>Stream</Typography>
       {newList.map((item, index) => {
         return (
           <NotificationItem key={index} title={item.title} composition={item.composition} time={item.time}/>
@@ -109,7 +109,7 @@ function DashBoard() {
       <Stack className='contentDashBoard' direction='column' spacing={3}>
         <HeadComponent name={'2310-CLC-AWP-20KTPM2'} title={'Advanced Web Programming'}/>
         <JoinComponent code={'p5uaipt'} link={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
-        <NotificationComponent list={list}/>
+        <StreamItem list={list}/>
       </Stack>
     </Container>
   )

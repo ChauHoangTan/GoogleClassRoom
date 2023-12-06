@@ -10,7 +10,8 @@ const uploadImageService = async (file, setLoading) => {
     return data
   } catch (error) {
     setLoading(false)
-    toast.error('Image Upload Failure')
+    // toast.error('Image Upload Failure')
+    toast.error(error.response.data.message)
   }
 }
 

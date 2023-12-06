@@ -69,10 +69,11 @@ const EditProfile = () => {
     if (imageUpdateUrl !== imageUrl) {
       await deleteImageService(imageUpdateUrl)
     }
+    console.log(data, data.data)
     dispatch(
       updateProfileAction({
         ...data,
-        ...{ image: imageUrl, dob: date.format('MM/DD/YYYY') }
+        ...{ image: imageUrl, dob: date ? date.format('MM/DD/YYYY') : '' }
       })
     )
   }
@@ -87,7 +88,7 @@ const EditProfile = () => {
 
       fetchUserInfo()
     }
-  }, [editSuccess])
+  }, [])
 
   useEffect(() => {
     if (userInfo) {
@@ -99,19 +100,18 @@ const EditProfile = () => {
         setDate(dayjs(userInfo?.dob))
       }
       userInfo?.image && setImageUrl(userInfo?.image)
-    //   userInfo?.image && setImageUpdateUrl(userInfo?.image)
     }
 
-    // if (editUserInfo) {
-    //   setValue('firstName', editUserInfo?.firstName)
-    //   setValue('lastName', editUserInfo?.lastName)
-    //   setValue('email', editUserInfo?.email)
-    //   setValue('phone', editUserInfo?.phone)
-    //   if (editUserInfo?.dob !== '') {
-    //     setDate(dayjs(editUserInfo?.dob))
-    //   }
-    // //   setImageUpdateUrl(editUserInfo?.image)
-    // }
+    if (editUserInfo) {
+      setValue('firstName', editUserInfo?.firstName)
+      setValue('lastName', editUserInfo?.lastName)
+      setValue('email', editUserInfo?.email)
+      setValue('phone', editUserInfo?.phone)
+      if (editUserInfo?.dob !== '') {
+        setDate(dayjs(editUserInfo?.dob))
+      }
+      setImageUrl(editUserInfo?.image)
+    }
 
     if (editSuccess) {
       setImageUpdateUrl(editUserInfo?.image)
@@ -239,7 +239,6 @@ const EditProfile = () => {
                       id='phone'
                       label='Phone'
                       name='phone'
-                      autoComplete='phone'
                       required
                       {...register('phone')}
                       error={!!errors.phone}
@@ -255,6 +254,7 @@ const EditProfile = () => {
                         components={['DatePicker']}
                       >
                         <DatePicker
+                            sx={{width: '100%' }}
                           label='Date of birth'
                           value={date}
                           onChange={newValue =>

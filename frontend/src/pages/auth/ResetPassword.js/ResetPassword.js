@@ -131,7 +131,8 @@ const ResetPassword = () => {
             <Box
               sx={{
                 marginTop: 4,
-                marginBottom: 4
+                marginBottom: 4,
+                textAlign: 'center'
               }}
             >
               <Typography
@@ -139,7 +140,8 @@ const ResetPassword = () => {
                 variant='h5'
                 sx={{
                   fontSize: '40px',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
+                  color: 'primary.main'
                 }}
               >
                         Reset Password

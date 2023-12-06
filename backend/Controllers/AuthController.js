@@ -224,15 +224,29 @@ const loginSuccess = async (req, res) => {
         const accessToken = createAccessToken(user._id)
          // create refresh token
          const refreshToken = createRefreshToken(user._id)
-           // save refreshToken in database
-        await User.findByIdAndUpdate(
-            user._id, 
-            { 
-                refreshToken,
-                authGoogleToken: accessToken
-            }, 
-            { new: true }
-        )
+        // save refreshToken and update token by FB or Google in database
+        if(provider === "google" ) {
+            await User.findByIdAndUpdate(
+                user._id, 
+                { 
+                    refreshToken,
+                    authGoogleToken: accessToken
+                }, 
+                { new: true }
+            )
+        } 
+
+        if(provider === "facebook" ) {
+            await User.findByIdAndUpdate(
+                user._id, 
+                { 
+                    refreshToken,
+                    authFacebookToken: accessToken
+                }, 
+                { new: true }
+            )
+        } 
+            
 
         // save refreshToken in cookie
         res.cookie('refreshToken', refreshToken, {

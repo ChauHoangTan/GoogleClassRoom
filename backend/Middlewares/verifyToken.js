@@ -7,15 +7,15 @@ const generateToken = (id) => {
 };
 
 const createActivationToken = (email) => {
-    return jwt.sign({email}, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '5m'})
+    return jwt.sign({email}, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '2m'})
 }
 
 const createAccessToken = (id) => {
-    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10s'})
+    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
 }
 
 const createRefreshToken = (id) => {
-    return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '20s'})
+    return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '2m'})
 }
 
 const verifyEmail = (req, res, next) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Button,
   Box,
@@ -41,6 +41,7 @@ const defaultTheme = createTheme({
 const EditProfile = () => {
   const [date, setDate] = useState(dayjs())
   const dispatch = useDispatch()
+  const initialized = useRef(false)
 
   const { isError, isLoading, userInfo, isSuccess } = useSelector(
     state => state.userGetProfile
@@ -78,7 +79,14 @@ const EditProfile = () => {
 
   // useEffect
   useEffect(() => {
-    dispatch(getProfileAction())
+    if (!initialized.current) {
+        initialized.current = true
+          const fetchUserInfo = async () => {
+            dispatch(getProfileAction())
+        }
+
+      fetchUserInfo()
+    }
   }, [editSuccess])
 
   useEffect(() => {

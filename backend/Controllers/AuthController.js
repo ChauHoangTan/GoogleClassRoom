@@ -122,7 +122,7 @@ const loginUser = async (req, res) => {
             // save refreshToken in cookie
             res.cookie('refreshToken', refreshToken, {
                 // httpOnly: true,
-                maxAge: 2*60*1000,
+                maxAge: 2 * 60*1000,
                 secure: true,
                 sameSite: "none"
             })

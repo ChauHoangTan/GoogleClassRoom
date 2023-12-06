@@ -181,7 +181,8 @@ const refreshAccessToken = async(req, res) => {
 const logout = async (req, res) => {
     const cookie = req.cookies
     if (!cookie || !cookie.refreshToken) {
-        return res.status(400).json({ message: 'No refresh token in cookies'})
+        // return res.status(400).json({ message: 'No refresh token in cookies'})
+        return res.status(200).json({ message: "Logout successfully" })
     }
 
     await User.findOneAndUpdate(

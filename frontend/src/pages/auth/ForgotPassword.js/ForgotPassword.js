@@ -102,7 +102,8 @@ const ForgotPassword = () => {
           <Box
             sx={{
               marginTop: 4,
-              marginBottom: 4
+              marginBottom: 4,
+              textAlign: 'center'
             }}
           >
             <Typography
@@ -110,7 +111,8 @@ const ForgotPassword = () => {
               variant='h5'
               sx={{
                 fontSize: '40px',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                color: 'primary.main'
               }}
             >
               {type === 'forgot' ? 'Forgot Password' : 'Resend activation email'}
@@ -142,15 +144,15 @@ const ForgotPassword = () => {
                 sx={{ mt: 3, mb: 2, py: 1 }}
               >
                 { type === 'forgot'
-                    ? (
-                        isLoading 
-                        ? 'Forgetting....'
-                        : 'Forgot Password'
-                    ) : (
-                        isLoading
-                        ? 'Verifying....'
-                        : 'Verify your email'
-                    )
+                  ? (
+                    isLoading
+                      ? 'Forgetting....'
+                      : 'Forgot Password'
+                  ) : (
+                    isLoading
+                      ? 'Resending....'
+                      : 'Resend your email'
+                  )
                 }
               </Button>
             </Box>

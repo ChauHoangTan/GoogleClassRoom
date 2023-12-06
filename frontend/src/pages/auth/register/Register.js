@@ -103,7 +103,7 @@ function Register() {
             alignItems: 'center'
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ fontSize: '50px', fontWeight: 'bold' }}>
+          <Typography component="h1" variant="h5" sx={{ fontSize: '50px', fontWeight: 'bold', color: 'primary.main' }}>
                                 Sign up
           </Typography>
           <Box

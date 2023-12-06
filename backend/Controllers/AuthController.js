@@ -207,7 +207,6 @@ const loginSuccess = async (req, res) => {
         if (!userId || !tokenLogin || !provider) {
             return res.status(400).json({ message: "Missing inputs" });
         }
-        console.log(tokenLogin)
         const user = provider === "google" 
             ? await User.findOne({ 
                 authGoogleId: userId, 

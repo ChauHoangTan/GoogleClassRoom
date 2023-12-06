@@ -141,7 +141,17 @@ const ForgotPassword = () => {
                 disabled={isLoading}
                 sx={{ mt: 3, mb: 2, py: 1 }}
               >
-                {isLoading ? 'verifying....' : 'Verify your email' }
+                { type === 'forgot'
+                    ? (
+                        isLoading 
+                        ? 'Forgetting....'
+                        : 'Forgot Password'
+                    ) : (
+                        isLoading
+                        ? 'Verifying....'
+                        : 'Verify your email'
+                    )
+                }
               </Button>
             </Box>
           </Box>

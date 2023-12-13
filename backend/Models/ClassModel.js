@@ -16,13 +16,11 @@ const ClassSchema = mongoose.Schema(
         teachers: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required
         }],
 
         students: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required
         }],
     },
     {

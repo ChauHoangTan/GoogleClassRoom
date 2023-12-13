@@ -5,6 +5,7 @@ const  connectDB  = require("./config/db")
 const userRouter = require("./Routes/UserRoute")
 const authRouter = require("./Routes/AuthRouter")
 const UploadRouter = require("./Routes/UploadRouter")
+const ClassRouter = require("./Routes/ClassRouter.js")
 var cookieParser = require('cookie-parser')
 const errorHandler  = require('./Middlewares/errorMiddleware.js');
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/upload", UploadRouter);
+app.use("api/class", ClassRouter);
 
 // error handling middleware
 // app.use(errorHandler);

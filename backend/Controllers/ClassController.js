@@ -1,5 +1,6 @@
 const Class = require("../Models/ClassModel");
 const User = require("../Models/UserModel");
+const Grade = require("../Models/GradeModel");
 const GradeModel = require('../Models/GradeModel');
 const mongoose = require('mongoose');
 
@@ -113,8 +114,60 @@ function createDefaultGradeModel(classId) {
     });
 }
 
+const getAllTeachers = async (req, res) => {
+    const { classId } = req.body;
+
+    try {
+        const curClass = await Class.findById(classId);
+        if (!curClass) {
+            return res.status(404).json({ success: false, message: 'Can not find Class by ID of Class' });
+        }
+
+        // List Teachers ID
+        const teacherIds = curClass.teachers;
+
+        if (teacherIds.length === 0) {
+            return res.status(200).json({ success: true, message: 'No teachers found for this class' });
+        }
+
+        // Get info teachers
+        const teachers = await User.find({ _id: { $in: teacherIds } });
+
+        return res.status(200).json({ success: true, data: teachers })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+const getAllStudents = async (req, res) => {
+    const { classId } = req.body;
+
+    try {
+        const curClass = await Class.findById(classId);
+        if (!curClass) {
+            return res.status(404).json({ success: false, message: 'Can not find Class by ID of Class' });
+        }
+
+        // List students ID
+        const studentIds = curClass.students;
+
+        if (studentIds.length === 0) {
+            return res.status(200).json({ success: true, message: 'No students found for this class' });
+        }
+
+        // Get info students
+        const students = await User.find({ _id: { $in: studentIds } });
+
+        return res.status(200).json({ success: true, data: students })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getAllClass,
     createNewClass,
-    getAllClassByID
+    getAllClassByID,
+    getAllTeachers,
+    getAllStudents
 }

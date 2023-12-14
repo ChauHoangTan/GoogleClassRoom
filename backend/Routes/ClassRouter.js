@@ -9,6 +9,8 @@ const router = express.Router();
 router.get("/all", passport.authenticate('jwt', { session: false }),classController.getAllClass);
 router.get("/allMyCourses", passport.authenticate('jwt', { session: false }),classController.getAllClassByID);
 router.post("/create", passport.authenticate('jwt', { session: false }), classController.createNewClass);
+router.get("/allTeachers", passport.authenticate('jwt', { session: false }),classController.getAllTeachers);
+router.get("/allStudents", passport.authenticate('jwt', { session: false }),classController.getAllStudents);
 
 // router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
 

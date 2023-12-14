@@ -4,9 +4,22 @@ const GradeComposition = require("../Models/GradeCompositionModel");
 const mongoose = require('mongoose');
 
 const getGradeComposition = async (req, res) => {
+  const { classId } = req.body;
+
   try {
-      const classes = await Class.find({}); 
-      return res.status(200).json(classes)
+      
+    const grade = await Grade.findOne({ classId });
+    if (!grade) {
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+    }
+
+    const { orderGradeComposition, gradeCompositionList } = grade;
+
+    return res.status(200).json({
+      success: true,
+      orderGradeComposition,
+      gradeCompositionList,
+    });
   } catch (error) {
       res.status(400).json({ message: error.message });
   }

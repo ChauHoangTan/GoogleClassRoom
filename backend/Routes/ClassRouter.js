@@ -2,12 +2,13 @@ const express = require("express");
 const classController = require("../Controllers/ClassController");
 // const { verifyEmail, admin } = require("../Middlewares/verifyToken");
 const passport = require("passport");
-// const passportConfig = require("../Middlewares/passport");
+const passportConfig = require("../Middlewares/passport");
 
 const router = express.Router();
 
-router.get("/all", classController.getAllClass);
-router.post("/create", classController.createNewClass);
+router.get("/all", passport.authenticate('jwt', { session: false }),classController.getAllClass);
+router.get("/allMyCourses", passport.authenticate('jwt', { session: false }),classController.getAllClassByID);
+router.post("/create", passport.authenticate('jwt', { session: false }), classController.createNewClass);
 
 // router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
 

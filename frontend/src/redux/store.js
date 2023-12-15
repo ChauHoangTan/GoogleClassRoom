@@ -11,6 +11,7 @@ const rootReducer = combineReducers({
   userChangePassword: User.userChangePasswordReducer,
   userGetProfile: User.userGetProfileReducer,
   userUpdateProfile: User.userUpdateProfileReducer,
+  adminGetAllUsers: User.adminGetAllUsersReducer,
 
   //
   isOpenMenu: moreIconReducer

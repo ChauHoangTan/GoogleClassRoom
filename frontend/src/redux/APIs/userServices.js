@@ -23,8 +23,18 @@ const getProfileService = async () => {
   return data
 }
 
+// *************** ADMIN APIs ***************
+
+// admin get all users
+const getAllUsersService = async (token) => {
+  const { data } = await AxiosJWT.get('/users/all')
+  return data
+}
+
+
 export {
   changePasswordService,
   updateProfileService,
-  getProfileService
+  getProfileService,
+  getAllUsersService
 }

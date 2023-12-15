@@ -18,8 +18,8 @@ const Uploader = ({ imageUrl, setImageUrl, imageUpdateUrl }) => {
       }
     }
     const data = await uploadImageService(file, setLoading)
-    if(data) {
-        setImageUrl(data)
+    if (data) {
+      setImageUrl(data)
     }
 
   }, [setImageUrl, imageUrl, imageUpdateUrl])

@@ -53,8 +53,21 @@ const updateProfileAction = user => async (dispatch) => {
   }
 }
 
+// admin get all users action
+const getAllUsersAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: userConstants.GET_ALL_USERS_REQUEST })
+    const response = await userApi.getAllUsersService()
+    dispatch({ type: userConstants.GET_ALL_USERS_SUCCESS, payload: response })
+  } catch (error) {
+    ErrorsAction(error, dispatch, userConstants.GET_ALL_USERS_FAIL)
+  }
+}
+
+
 export {
   changePasswordAction,
   updateProfileAction,
-  getProfileAction
+  getProfileAction,
+  getAllUsersAction
 }

@@ -94,69 +94,67 @@ function CardGrade ({ title, composition, time, percent }) {
         </CardContent>
       </Card>
 
-      <React.Fragment>
-        <Dialog
-          fullScreen
-          open={openDialog}
-          onClose={handleCloseDialog}
-          TransitionComponent={Transition}
-        >
-          <AppBar sx={{ position: 'relative' }}>
-            <Toolbar>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={handleCloseDialog}
-                aria-label="close"
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography sx={{ ml: 1, flex: 0.5 }} variant="h6" component="div">
-                Review
-              </Typography>
-              <Typography sx={{ flex: 1 }} variant="h6">{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
-              <Button autoFocus color="inherit" onClick={handleCloseDialog}>
-              Review request
-              </Button>
-            </Toolbar>
-          </AppBar>
-          <Container sx={{
-            borderRadius: 5,
-            p: 3,
-            border: '2px solid #A9A9A9',
-            my: 2
-          }}>
-            <Typography gutterBottom variant="h5" >
-            Review Grade
+      <Dialog
+        fullScreen
+        open={openDialog}
+        onClose={handleCloseDialog}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleCloseDialog}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography sx={{ ml: 1, flex: 0.5 }} variant="h6" component="div">
+              Review
             </Typography>
+            <Typography sx={{ flex: 1 }} variant="h6">{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
+            <Button autoFocus color="inherit" onClick={handleCloseDialog}>
+            Review request
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Container sx={{
+          borderRadius: 5,
+          p: 3,
+          border: '2px solid #A9A9A9',
+          my: 2
+        }}>
+          <Typography gutterBottom variant="h5" >
+          Review Grade
+          </Typography>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography>
-                ID: 20127662
-              </Typography>
-              <Typography>
-                Name: Nguyễn Đình Văn
-              </Typography>
-              <Typography>
-                Grade compostion: {composition}
-              </Typography>
-              <Typography>
-                Old grade: {percent}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 0 }}>
-              <Typography variant="body1">Expeted grade:  </Typography>
-              <TextField size='small' sx={{ px: 2 }}></TextField>
-              <Typography variant="body1"> / 100</Typography>
-            </Box>
-            <TextField
-              id=""
-              label="Comment"
-              fullWidth
-            />
-          </ Container>
-        </Dialog>
-      </React.Fragment>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography>
+              ID: 20127662
+            </Typography>
+            <Typography>
+              Name: Nguyễn Đình Văn
+            </Typography>
+            <Typography>
+              Grade compostion: {composition}
+            </Typography>
+            <Typography>
+              Old grade: {percent}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 0 }}>
+            <Typography variant="body1">Expeted grade:  </Typography>
+            <TextField size='small' sx={{ px: 2 }}></TextField>
+            <Typography variant="body1"> / 100</Typography>
+          </Box>
+          <TextField
+            id=""
+            label="Comment"
+            fullWidth
+          />
+        </ Container>
+      </Dialog>
     </>
   )
 }

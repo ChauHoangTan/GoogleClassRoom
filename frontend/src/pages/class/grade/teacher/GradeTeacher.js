@@ -1,6 +1,7 @@
 import { Box, Button, Container, Typography, Card, CardContent, Divider, Stack, IconButton, Modal, TextField, Checkbox, FormControlLabel } from '@mui/material'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import UploadIcon from '@mui/icons-material/Upload'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import GradeTable from './GradeTable'
@@ -348,7 +349,10 @@ export default function GradeTeacher () {
         Create new grade
         </Button>
         <Button variant='contained' startIcon={<FileDownloadIcon />}>
-        Download
+        Download Grade
+        </Button>
+        <Button variant='contained' startIcon={<UploadIcon />}>
+        Upload Grade
         </Button>
       </Box>
 

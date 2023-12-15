@@ -28,7 +28,7 @@ function ClassDetails() {
     <Box sx={{ width: '100%', typography: 'body1' }} mt={ 2 } id = 'classDetails'>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }} ml={ 4 }>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
+          <TabList onChange={handleChange} aria-label="lab API tabs example" scrollButtons>
             <Tab label="Stream" value="1" sx={{ marginRight:'20px' }}/>
             <Tab label="People" value="2" sx={{ marginRight:'20px' }}/>
             <Tab label="Grade Composition" value="3" sx={{ marginRight:'20px' }} />

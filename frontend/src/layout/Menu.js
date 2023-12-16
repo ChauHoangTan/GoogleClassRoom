@@ -98,7 +98,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
         <nav aria-label="secondary mailbox folders" className='containerPanel'>
           <List className='link'>
             <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}onClick={() => handleOnclick(2)}>
-              <Link to='/notification' className='link' style={{
+              <Link to='/users' className='link' style={{
                 color: 'inherit', margin: '5px 0px'
               }}>
                 <ListItemButton>

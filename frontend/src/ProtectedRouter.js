@@ -14,7 +14,7 @@ function AdminProtectedRouter() {
   const { userInfo } = useSelector(
     (state) => state.userLogin
   )
-  return userInfo?.token ? (
+  return userInfo?.Authorization ? (
     userInfo?.isAdmin ? (
       <Outlet />
     ) : (

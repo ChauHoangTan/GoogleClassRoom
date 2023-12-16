@@ -13,11 +13,12 @@ router.put("/password", passport.authenticate('jwt', { session: false }), userCo
 
 router.get("/info", passport.authenticate('jwt', { session: false }), userController.getUserInfo);
 
-router.post("/all", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
+router.get("/all", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
+
 
 // router.post("/detail/:id", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
 
-router.delete("/user/find/:id", passport.authenticate('jwt', { session: false }), admin, userController.deleteUser);
+router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admin, userController.deleteUser);
 
 router.post("/block/:id", passport.authenticate('jwt', { session: false }), admin, userController.blockUser);
 

@@ -23,8 +23,24 @@ const getProfileService = async () => {
   return data
 }
 
+// *************** ADMIN APIs ***************
+
+// admin get all users
+const getAllUsersService = async () => {
+  const { data } = await AxiosJWT.get('/users/all')
+  return data
+}
+
+// admin delete user
+const deleteUserService = async (id) => {
+  const { data } = await AxiosJWT.delete(`/users/all/${id}`)
+  return data
+}
+
 export {
   changePasswordService,
   updateProfileService,
-  getProfileService
+  getProfileService,
+  getAllUsersService,
+  deleteUserService
 }

@@ -34,11 +34,11 @@ const registerAction = datas => async dispatch => {
 // Logout action
 // eslint-disable-next-line no-unused-vars
 const logoutAction = () => async dispatch => {
-    await authApi.logoutService()
-    dispatch({ type: authConstants.USER_LOGOUT })
-    dispatch({ type: authConstants.USER_REGISTER_RESET })
-    dispatch({ type: authConstants.USER_LOGIN_RESET })
-    localStorage.removeItem('userInfo')
+  await authApi.logoutService()
+  dispatch({ type: authConstants.USER_LOGOUT })
+  dispatch({ type: authConstants.USER_REGISTER_RESET })
+  dispatch({ type: authConstants.USER_LOGIN_RESET })
+  localStorage.removeItem('userInfo')
 }
 
 const updateUserInfoAction = (userInfo) => async dispatch => {

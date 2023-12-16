@@ -12,12 +12,13 @@ import NoPage from './pages/noPage/NoPage.js'
 import ToastContainer from './components/notification/ToastContainer.js'
 import Password from './pages/password/Password.js'
 import Profile from './pages/profile/Profile.js'
-import { ProtectedRouter } from './ProtectedRouter.js'
+import { AdminProtectedRouter, ProtectedRouter } from './ProtectedRouter.js'
 import { useState } from 'react'
 import LoginSuccess from './pages/auth/loginSuccess/LoginSuccess.js'
 import ActivationEmail from './pages/auth/activationEmail/ActivationEmail.js'
 import ForgotPassword from './pages/auth/ForgotPassword.js/ForgotPassword.js'
 import ResetPassword from './pages/auth/ResetPassword.js/ResetPassword.js'
+import Users from './pages/admin/users/Users.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
@@ -41,6 +42,10 @@ function App () {
               <Route path='profile' element={<Profile />} />
               <Route path='home' element={<Home />} />
               <Route path='/class/:classId' element={<ClassDetails/>}/>
+                <Route element={<AdminProtectedRouter />}>
+                    <Route path='/users' element={<Users />} />
+                    <Route path='/classes' element={<Users />} />
+                </Route>
             </Route>
           </Route>
         </Routes>

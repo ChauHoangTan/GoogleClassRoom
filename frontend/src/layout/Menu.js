@@ -12,9 +12,14 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined'
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined'
+import {
+  PeopleAlt,
+  KingBed
+} from '@mui/icons-material'
 import './style.scss'
 import { Link } from 'react-router-dom'
 import theme from '../theme'
+import { useSelector } from 'react-redux'
 
 const ClassRegisterd = ({ avatar, title, tagline }) => {
   return (
@@ -29,7 +34,9 @@ const ClassRegisterd = ({ avatar, title, tagline }) => {
 }
 
 const Tabs = ({ indexTab, setIndexTab }) => {
-
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
   const handleOnclick = (index) => {
     setIndexTab(index)
   }
@@ -45,218 +52,296 @@ const Tabs = ({ indexTab, setIndexTab }) => {
   }
 
   return (
-    <Box sx={{ width: '100%', bgcolor:'background.paper' }}>
-      <nav aria-label="main mailbox folders" className='containerPanel'>
-        <List>
-          <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
-            onClick={() => handleOnclick(0)}>
-            <Link to='/home' className='link' style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              color: 'inherit',
-              margin: '5px 0px'
-            }}>
+    userInfo?.isAdmin ? (
+      <Box sx={{ width: '100%', bgcolor:'background.paper' }}>
+        <nav aria-label="main mailbox folders" className='containerPanel'>
+          <List>
+            <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
+              onClick={() => handleOnclick(0)}>
+              <Link to='/home' className='link' style={{
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                color: 'inherit',
+                margin: '5px 0px'
+              }}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <HomeIcon />
+                  </ListItemIcon>
+                  <Typography variant='body-1' color='inherit'
+                    sx={{
+                      backgroundColor: (theme) => (theme.palette.primary)
+                    }}
+                  >Home</Typography>
+                </ListItemButton>
+              </Link>
+
+            </ListItem>
+            <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
+              onClick={() => handleOnclick(1)}>
+              <Link to='/notification' className='link' style={{
+                color: 'inherit', margin: '5px 0px'
+              }}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <NotificationsActiveOutlinedIcon />
+                  </ListItemIcon>
+                  <Typography variant='body-1' >Notification</Typography>
+                </ListItemButton>
+              </Link>
+
+            </ListItem>
+
+          </List>
+        </nav>
+        <nav aria-label="secondary mailbox folders" className='containerPanel'>
+          <List className='link'>
+            <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}onClick={() => handleOnclick(2)}>
+              <Link to='/users' className='link' style={{
+                color: 'inherit', margin: '5px 0px'
+              }}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <PeopleAlt/>
+                  </ListItemIcon>
+                  <Typography variant='body-1' >Users</Typography>
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          </List>
+        </nav>
+        <nav aria-label="third mailbox folders" className='containerPanel'>
+          <List className='link'>
+            <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}onClick={() => handleOnclick(3)}>
+              <Link to='/classes' className='link' style={{
+                color: 'inherit', margin: '5px 0px'
+              }}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <KingBed/>
+                  </ListItemIcon>
+                  <Typography variant='body-1' >Classes</Typography>
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          </List>
+        </nav>
+      </Box>
+    ): (
+      <Box sx={{ width: '100%', bgcolor:'background.paper' }}>
+        <nav aria-label="main mailbox folders" className='containerPanel'>
+          <List>
+            <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
+              onClick={() => handleOnclick(0)}>
+              <Link to='/home' className='link' style={{
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                color: 'inherit',
+                margin: '5px 0px'
+              }}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <HomeIcon />
+                  </ListItemIcon>
+                  <Typography variant='body-1' color='inherit'
+                    sx={{
+                      backgroundColor: (theme) => (theme.palette.primary)
+                    }}
+                  >Home</Typography>
+                </ListItemButton>
+              </Link>
+
+            </ListItem>
+            <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
+              onClick={() => handleOnclick(1)}>
+              <Link to='/notification' className='link' style={{
+                color: 'inherit', margin: '5px 0px'
+              }}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <NotificationsActiveOutlinedIcon />
+                  </ListItemIcon>
+                  <Typography variant='body-1' >Notification</Typography>
+                </ListItemButton>
+              </Link>
+
+            </ListItem>
+
+          </List>
+        </nav>
+        <nav aria-label="secondary mailbox folders" className='containerPanel'>
+          <List className='link'>
+            <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}
+              onClick={() => {handleOnclick(2); handleIsOpenTeaching() }}>
+
               <ListItemButton>
                 <ListItemIcon>
-                  <HomeIcon />
+                  <SchoolIcon/>
                 </ListItemIcon>
-                <Typography variant='body-1' color='inherit'
-                  sx={{
-                    backgroundColor: (theme) => (theme.palette.primary)
-                  }}
-                >Home</Typography>
+                <ListItemText primary="Teaching" />
+                <ListItemIcon>
+                  {isOpenTeaching ? <ArrowDropDownIcon sx={{ width:'30px', height:'30px' }}/> : <ArrowRightIcon sx={{ width:'30px', height:'30px' }}/>}
+                </ListItemIcon>
               </ListItemButton>
-            </Link>
 
-          </ListItem>
-          <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
-            onClick={() => handleOnclick(1)}>
-            <Link to='/notification' className='link' style={{
-              color: 'inherit', margin: '5px 0px'
-            }}>
+            </ListItem>
+            <Collapse in={isOpenTeaching} timeout="auto" unmountOnExit>
+              <Divider/>
+              <List>
+                <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                </Stack>
+              </List>
+            </Collapse>
+          </List>
+        </nav>
+        <nav aria-label="third mailbox folders" className='containerPanel'>
+          <List className='link'>
+            <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}
+              onClick={() => {handleOnclick(3); handleIsOpenMyCourses() }}>
+
               <ListItemButton>
                 <ListItemIcon>
-                  <NotificationsActiveOutlinedIcon />
+                  <TaskOutlinedIcon/>
                 </ListItemIcon>
-                <Typography variant='body-1' >Notification</Typography>
+                <ListItemText primary="My Courses" />
+                <ListItemIcon>
+                  {isOpenMyCourses ? <ArrowDropDownIcon sx={{ width:'30px', height:'30px' }}/> : <ArrowRightIcon sx={{ width:'30px', height:'30px' }}/>}
+                </ListItemIcon>
               </ListItemButton>
-            </Link>
 
-          </ListItem>
+            </ListItem>
+            <Collapse in={isOpenMyCourses} timeout="auto" unmountOnExit>
+              <Divider/>
+              <List>
+                <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                  <ListItemButton>
+                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
+                      title='2310-CLC-AWP-20KTPM2'
+                      tagline='Advanced Web Programming'/>
+                  </ListItemButton>
+                  <Divider/>
+                </Stack>
 
-        </List>
-      </nav>
-      <nav aria-label="secondary mailbox folders" className='containerPanel'>
-        <List className='link'>
-          <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}
-            onClick={() => {handleOnclick(2); handleIsOpenTeaching() }}>
-
-            <ListItemButton>
-              <ListItemIcon>
-                <SchoolIcon/>
-              </ListItemIcon>
-              <ListItemText primary="Teaching" />
-              <ListItemIcon>
-                {isOpenTeaching ? <ArrowDropDownIcon sx={{ width:'30px', height:'30px' }}/> : <ArrowRightIcon sx={{ width:'30px', height:'30px' }}/>}
-              </ListItemIcon>
-            </ListItemButton>
-
-          </ListItem>
-          <Collapse in={isOpenTeaching} timeout="auto" unmountOnExit>
-            <Divider/>
-            <List>
-              <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-              </Stack>
-            </List>
-          </Collapse>
-        </List>
-      </nav>
-      <nav aria-label="third mailbox folders" className='containerPanel'>
-        <List className='link'>
-          <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}
-            onClick={() => {handleOnclick(3); handleIsOpenMyCourses() }}>
-
-            <ListItemButton>
-              <ListItemIcon>
-                <TaskOutlinedIcon/>
-              </ListItemIcon>
-              <ListItemText primary="My Courses" />
-              <ListItemIcon>
-                {isOpenMyCourses ? <ArrowDropDownIcon sx={{ width:'30px', height:'30px' }}/> : <ArrowRightIcon sx={{ width:'30px', height:'30px' }}/>}
-              </ListItemIcon>
-            </ListItemButton>
-
-          </ListItem>
-          <Collapse in={isOpenMyCourses} timeout="auto" unmountOnExit>
-            <Divider/>
-            <List>
-              <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-                <ListItemButton>
-                  <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                    title='2310-CLC-AWP-20KTPM2'
-                    tagline='Advanced Web Programming'/>
-                </ListItemButton>
-                <Divider/>
-              </Stack>
-
-            </List>
-          </Collapse>
-        </List>
-      </nav>
-      {/* <nav aria-label="third mailbox folders" className='containerPanel'>
-                <List>
-                    <ListItem disablePadding className={`panel ${indexTab === 5 && 'highlight'}`}
-                        onClick={() => handleOnclick(5)}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <SystemUpdateAltIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Archived class" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding className={`panel ${indexTab === 6 && 'highlight'}`}
-                        onClick={() => handleOnclick(6)}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <SettingsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Setting" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </nav> */}
-    </Box>
+              </List>
+            </Collapse>
+          </List>
+        </nav>
+        {/* <nav aria-label="third mailbox folders" className='containerPanel'>
+                        <List>
+                            <ListItem disablePadding className={`panel ${indexTab === 5 && 'highlight'}`}
+                                onClick={() => handleOnclick(5)}>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <SystemUpdateAltIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Archived class" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding className={`panel ${indexTab === 6 && 'highlight'}`}
+                                onClick={() => handleOnclick(6)}>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <SettingsIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Setting" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </nav> */}
+      </Box>
+    )
   )
 }
 

@@ -9,4 +9,20 @@ const ProtectedRouter = () => {
   return userInfo?.Authorization ? <Outlet /> : <Navigate to="/" />
 }
 
-export { ProtectedRouter }
+// admin router protection
+function AdminProtectedRouter() {
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+  return userInfo?.Authorization ? (
+    userInfo?.isAdmin ? (
+      <Outlet />
+    ) : (
+      <Navigate to="/*" />
+    )
+  ) : (
+    <Navigate to="/" />
+  )
+}
+
+export { ProtectedRouter, AdminProtectedRouter }

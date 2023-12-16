@@ -1,7 +1,9 @@
-import { Box, Typography, IconButton, Modal, TextField, InputAdornment, Stack, Autocomplete, Avatar } from '@mui/material'
+import { Box, Typography, IconButton, Modal, TextField, InputAdornment, Stack, Autocomplete, Avatar, Button } from '@mui/material'
 import SearchBar from '../../../components/search/SearchBar'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ParticipantTable from './ParticipantTable'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import UploadIcon from '@mui/icons-material/Upload'
 import { useState } from 'react'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
@@ -214,7 +216,6 @@ export default function Participants() {
     setInviteTeacher( e.target.value )
   }
   const handleInputTeacherWithAutoComplete = ( newValue ) => {
-    console.log(inviteTeacher)
     if (newValue !== null) {
       if (newValue.label !== null) {
         setInviteTeacher(newValue.label)
@@ -237,6 +238,14 @@ export default function Participants() {
     <Box sx={{
       p: 2
     }}>
+      <Stack direction='row' justifyContent='end' spacing={3}>
+        <Button variant='contained' startIcon={<FileDownloadIcon />}>
+          Download Student List
+        </Button>
+        <Button variant='contained' startIcon={<UploadIcon />}>
+          Upload  Student List
+        </Button>
+      </Stack>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <SearchBar />
       </Box>

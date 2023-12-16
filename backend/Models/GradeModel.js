@@ -1,34 +1,16 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const GradeCompositionSchema = require('../Models/GradeCompositionModel')
+const { Schema } = mongoose;
 
-const GradeSchema = mongoose.Schema(
-    {
-        name: {
-            type: String,
-            required: [true, "Please add a grade name"],
-        },
-        studentId: {
-            type: String,
-            required: [true, "Please add a student id"],
-            trim: true,
-        },
-        classId: {
-            type: String,
-            required: [true, "Please add a class id"],
-            trim: true,
-        },
-        grade: {
-            type: Number,
-            required: true
-        },
-        scale: {
-            type: Number,
-            required: true
-        },
-        assignmentList: [AssignmentSchema],
-    },
-    {
-        timestamps: true,
-    }
-)
+// Define Grade Schema
+const GradeSchema = new Schema({
+  classId: { type: String, required: true },
+  orderGradeComposition: { type: [String], default: []  },
+  gradeCompositionList: { type: [GradeCompositionSchema], default: [] }
+});
 
-module.exports = mongoose.model("Grade", GradeSchema);  
+// Create a model from the schema
+const GradeModel = mongoose.model('Grade', GradeSchema);
+
+// Export GradeModel for use elsewhere in the application
+module.exports = GradeModel;

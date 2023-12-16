@@ -11,7 +11,7 @@ const createActivationToken = (email) => {
 }
 
 const createAccessToken = (id) => {
-    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'})
+    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2d'})
 }
 
 const createRefreshToken = (id) => {

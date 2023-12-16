@@ -160,6 +160,35 @@ const blockUser = async (req, res) => {
     }
 }
 
+// @desc Update user profile
+// @route POST/api/users/all/:id
+const updateUser = async(req, res) => {
+    const { email, firstName, lastName, phone, isVerifiedEmail, isBanned } = req.body;
+    try {
+        // find user in DB  
+        const user = await User.findById(req.params.id);
+        // if users exists update user data and save it in DB
+        if(user) {
+            user.email = email || user.email;
+            user.firstName = firstName || user.firstName;
+            user.lastName = lastName || user.lastName;
+            user.isVerifiedEmail = isVerifiedEmail || user.isVerifiedEmail;
+            user.phone = phone || user.phone;
+            user.isBanned = isBanned || user.isBanned;
+
+            await user.save();
+            return res.json( {message: "User was edit successfully" })
+        }
+        // else send error message
+        else {
+            res.status(400).json({message: "User not found"});
+
+        }
+    }  catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     updateUserProfile,
     changeUserPassword,
@@ -168,4 +197,5 @@ module.exports = {
     getAllUser,
     banUser,
     blockUser,
+    updateUser,
 }

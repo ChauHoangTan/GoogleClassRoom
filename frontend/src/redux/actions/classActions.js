@@ -15,7 +15,6 @@ const getAllClassesAction = () => async (dispatch) => {
   }
 }
 
-
 // admin delete Class action
 const deleteClassAction = (id) => async (dispatch) => {
   try {
@@ -28,7 +27,22 @@ const deleteClassAction = (id) => async (dispatch) => {
   }
 }
 
+// admin update class action
+const updateClassAction = (id, classData) => async (dispatch) => {
+    try {
+        dispatch({ type: classConstants.UPDATE_CLASS_REQUEST })
+        const reponse = await classApi.updateClassService(id, classData)
+        dispatch({ 
+            type: classConstants.UPDATE_CLASS_SUCCESS,
+            payload: reponse
+        })
+        toast.success('Class Edit successfully')
+    } catch(error) {
+        ErrorsAction(error, dispatch, classConstants.UPDATE_CLASS_FAIL)
+    }
+}
 export {
   getAllClassesAction,
-  deleteClassAction
+  deleteClassAction,
+  updateClassAction,
 }

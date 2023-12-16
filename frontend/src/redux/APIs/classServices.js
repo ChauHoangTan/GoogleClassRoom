@@ -15,7 +15,14 @@ const deleteClassService = async (id) => {
   return data
 }
 
+// admin edit class
+const updateClassService = async(id, classData) => {
+    const {data } = await AxiosJWT.post(`/class/all/${id}`, classData);
+    return data
+}
+
 export {
   getAllClassesService,
   deleteClassService,
+  updateClassService,
 }

@@ -177,6 +177,32 @@ const getAllStudents = async (req, res) => {
     }
 }
 
+
+// @desc Update user profile
+// @route POST/api/classes/all/:id
+const updateClass = async(req, res) => {
+    const { classId, className, isActive } = req.body;
+    try {
+        // find user in DB  
+        const existClass = await Class.findById(req.params.id);
+        // if existClasss exists update existClass data and save it in DB
+        if(existClass) {
+            existClass.classId = classId || existClass.classId;
+            existClass.className = className || existClass.className;
+            existClass.isActive = isActive || existClass.isActive;
+
+            await existClass.save();
+            return res.json( {message: "Class was edit successfully" })
+        }
+        // else send error message
+        else {
+            res.status(400).json({message: "User not found"});
+
+        }
+    }  catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
 module.exports = {
     getAllClass,
     createNewClass,
@@ -184,4 +210,5 @@ module.exports = {
     getAllTeachers,
     getAllStudents,
     deleteClass,
+    updateClass,
 }

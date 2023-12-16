@@ -13,6 +13,8 @@ router.post("/createNewClass", passport.authenticate('jwt', { session: false }),
 router.get("/allTeachers", passport.authenticate('jwt', { session: false }),classController.getAllTeachers);
 router.get("/allStudents", passport.authenticate('jwt', { session: false }), admin, classController.getAllStudents);
 router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.deleteClass);
+router.post("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.updateClass);
+
 
 // router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
 

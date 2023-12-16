@@ -77,10 +77,26 @@ const deleteUserAction = (id) => async (dispatch) => {
   }
 }
 
+// update profile action
+const updateUserAction = (id, user) => async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.UPDATE_USER_REQUEST })
+      const response = await userApi.updateUserService(id, user)
+      dispatch({
+        type: userConstants.UPDATE_USER_SUCCESS,
+        payload: response
+      })
+      toast.success('User Edit successfully')
+    } catch (error) {
+      ErrorsAction(error, dispatch, userConstants.UPDATE_USER_FAIL)
+    }
+  }
+
 export {
   changePasswordAction,
   updateProfileAction,
   getProfileAction,
   getAllUsersAction,
-  deleteUserAction
+  deleteUserAction,
+  updateUserAction,
 }

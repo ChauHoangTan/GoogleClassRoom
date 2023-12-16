@@ -15,10 +15,13 @@ const rootReducer = combineReducers({
   userUpdateProfile: User.userUpdateProfileReducer,
   adminGetAllUsers: User.adminGetAllUsersReducer,
   adminDeleteUser: User.adminDeleteUserReducer,
+  adminEditUser: User.adminEditUserReducer,
+
 
   //Class reducer
   adminGetAllClasses: Class.adminGetAllClassesReducer,
   adminDeleteClass: Class.adminDeleteClassReducer,
+  adminUpdateClass: Class.adminUpdateClassReducer,
 
   isOpenMenu: moreIconReducer
 

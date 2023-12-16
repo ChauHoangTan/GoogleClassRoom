@@ -189,7 +189,7 @@ const updateClass = async(req, res) => {
         if(existClass) {
             existClass.classId = classId || existClass.classId;
             existClass.className = className || existClass.className;
-            existClass.isActive = isActive || existClass.isActive;
+            existClass.isActive = isActive;
 
             await existClass.save();
             return res.json( {message: "Class was edit successfully" })

@@ -30,6 +30,7 @@ const deleteClassAction = (id) => async (dispatch) => {
 // admin update class action
 const updateClassAction = (id, classData) => async (dispatch) => {
     try {
+        console.log(classData)
         dispatch({ type: classConstants.UPDATE_CLASS_REQUEST })
         const reponse = await classApi.updateClassService(id, classData)
         dispatch({ 

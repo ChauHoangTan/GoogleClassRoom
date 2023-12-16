@@ -172,9 +172,9 @@ const updateUser = async(req, res) => {
             user.email = email || user.email;
             user.firstName = firstName || user.firstName;
             user.lastName = lastName || user.lastName;
-            user.isVerifiedEmail = isVerifiedEmail || user.isVerifiedEmail;
+            user.isVerifiedEmail = isVerifiedEmail;
             user.phone = phone || user.phone;
-            user.isBanned = isBanned || user.isBanned;
+            user.isBanned = isBanned;
 
             await user.save();
             return res.json( {message: "User was edit successfully" })

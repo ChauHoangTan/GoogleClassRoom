@@ -19,6 +19,7 @@ import ActivationEmail from './pages/auth/activationEmail/ActivationEmail.js'
 import ForgotPassword from './pages/auth/ForgotPassword.js/ForgotPassword.js'
 import ResetPassword from './pages/auth/ResetPassword.js/ResetPassword.js'
 import Users from './pages/admin/users/Users.js'
+import Classes from './pages/admin/classes/Classes.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
@@ -44,7 +45,7 @@ function App () {
               <Route path='/class/:classId' element={<ClassDetails/>}/>
                 <Route element={<AdminProtectedRouter />}>
                     <Route path='/users' element={<Users />} />
-                    <Route path='/classes' element={<Users />} />
+                    <Route path='/classes' element={<Classes />} />
                 </Route>
             </Route>
           </Route>

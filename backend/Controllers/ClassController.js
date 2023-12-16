@@ -61,18 +61,8 @@ const deleteClass = async (req, res) => {
     try {
         console.log(req.params.id)
         // find Class in DB
-        const classDelete = await Class.findById(req.params.id);
-        console.log(classDelete)
-        // if class exists delete class from DB
-        if(classDelete) {
-            // else delete class from DB
-            await classDelete.remove();
-            return res.json({ message: "Class deleted successfully" });
-        }
-        // else send error message
-        else {
-            return res.status(400).json({ message: "Class not found" });
-        }
+        await Class.findByIdAndDelete(req.params.id);
+        return res.json({ message: "Class deleted successfully" });
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }

@@ -55,6 +55,29 @@ const getAllClassByID = async (req, res) => {
     }
 }
 
+// @des Delete class
+// @route Delete /api/class/:id
+const deleteClass = async (req, res) => {
+    try {
+        console.log(req.params.id)
+        // find Class in DB
+        const classDelete = await Class.findById(req.params.id);
+        console.log(classDelete)
+        // if class exists delete class from DB
+        if(classDelete) {
+            // else delete class from DB
+            await classDelete.remove();
+            return res.json({ message: "Class deleted successfully" });
+        }
+        // else send error message
+        else {
+            return res.status(400).json({ message: "Class not found" });
+        }
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+}
+
 const createNewClass = async (req, res) => {
     const { classId, className } = req.body;
 
@@ -169,5 +192,6 @@ module.exports = {
     createNewClass,
     getAllClassByID,
     getAllTeachers,
-    getAllStudents
+    getAllStudents,
+    deleteClass,
 }

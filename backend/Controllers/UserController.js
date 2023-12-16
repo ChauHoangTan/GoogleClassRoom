@@ -104,7 +104,7 @@ const getAllUser = async (req, res) => {
     }
 }
 
-// @des Delete all user
+// @des Delete user
 // @route Delete /api/user/:id
 const deleteUser = async (req, res) => {
     try {

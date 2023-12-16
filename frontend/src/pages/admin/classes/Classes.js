@@ -4,7 +4,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
-import { deleteUserAction, getAllUsersAction } from '../../../redux/actions/userActions'
+import { deleteClassAction, getAllClassesAction } from '../../../redux/actions/classActions'
 import Loader from '../../../components/notification/Loader'
 import { Empty, DateFormat } from '../../../components/notification/Empty'
 import { Delete, Edit, Preview } from '@mui/icons-material'
@@ -14,69 +14,81 @@ const Classes = () => {
     const [pageSize, setPageSize] = useState(5);
     const [rowId, setRowId] = useState(null);
 
-    const { isLoading, isError, users } = useSelector(
-      (state) => state.adminGetAllUsers
+    const { isLoading, isError, classes } = useSelector(
+      (state) => state.adminGetAllClasses
     );
-
+        console.log(classes)
       const { isError: deleteError, isSuccess } = useSelector(
-    (state) => state.adminDeleteUser
+    (state) => state.adminDeleteClass
   );
 
-  // delete user handler
-  const deleteUserHandler = (id) => {
-    if(window.confirm('Are you sure you want to delete this user?' + id)) {
-      dispatch(deleteUserAction(id));
+  // delete Class handler
+  const deleteClassHandler = (id) => {
+    if(window.confirm('Are you sure you want to delete this class?' + id)) {
+      dispatch(deleteClassAction(id));
     }
   };
 
-  const handleUserEdit = () => {
+  const handleClassEdit = () => {
 
   }
 
   // useEffect
   useEffect(() => {
-    dispatch(getAllUsersAction());
+    dispatch(getAllClassesAction());
     if (isError || deleteError) {
       toast.error(isError || deleteError);
-      dispatch({ type: isError ? 'GET_ALL_USERS_RESET' : 'USER_DELETE_USER_RESET'});
+      dispatch({ type: isError ? 'GET_ALL_CLASSES_RESET' : 'Class_DELETE_CLASSES_RESET'});
     }
   }, [dispatch, isError, deleteError, isSuccess]);
 
-  console.log(pageSize)
   const columns = useMemo(
     () => [
+      { field: 'classId', headerName: 'Class Id', width: 150 },
+      { field: 'className', headerName: 'Class Name', width: 350 },
       {
-        field: 'photoURL',
-        headerName: 'Avatar',
-        width: 60,
-        renderCell: (params) => <Avatar src={params.row.image} />,
-        sortable: false,
-        filterable: false
-      },
-      { field: 'firstName', headerName: 'First Name', width: 100 },
-      { field: 'lastName', headerName: 'Last Name', width: 100 },
-      { field: 'email', headerName: 'Email', width: 300 },
-      { field: 'phone', headerName: 'Phone', width: 150 },
-      {
-        field: 'isVerifiedEmail',
+        field: 'isActive',
         headerName: 'Active',
-        width: 100,
-        type: 'boolean',
-      },
-      {
-        field: 'isBanned',
-        headerName: 'Ban',
         width: 100,
         type: 'boolean',
       },
       {
         field: 'createdAt',
         headerName: 'Created At',
-        width: 200,
+        width: 150,
         renderCell: (params) =>
           DateFormat(params.row.createdAt)
       },
-      { field: 'userId', headerName: 'studentId', width: 150 },
+      {
+        field: 'userCreator',
+        headerName: 'Created By',
+        width: 250,
+        renderCell: (params) => {
+            const firstTeacher = params.row.teachers[0]; // Người tạo là giáo viên đầu tiên trong danh sách giáo viên
+            return (
+                firstTeacher ? (
+                    <Box>
+                        <Avatar src={params.row.image} />
+                        {firstTeacher.firstName}
+                    </Box>
+                ) : (
+                    'No Creator'
+                )
+            )
+        },
+      },
+      {
+        field: 'teacherCount',
+        headerName: 'Teacher Count',
+        width: 150,
+        valueGetter: (params) => params.row.teachers.length,
+      },
+      {
+        field: 'studentCount',
+        headerName: 'Student Count',
+        width: 150,
+        valueGetter: (params) => params.row.students.length,
+      },
       {
         field: 'actions',
         headerName: 'Actions',
@@ -91,13 +103,13 @@ const Classes = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title="Edit this room">
-              <IconButton onClick={handleUserEdit}>
+              <IconButton onClick={handleClassEdit}>
                 <Edit />
               </IconButton>
             </Tooltip>
             <Tooltip title="Delete this room">
               <IconButton
-                onClick={() => deleteUserHandler(params.row._id)}
+                onClick={() => deleteClassHandler(params.row._id)}
               >
                 <Delete />
               </IconButton>
@@ -128,14 +140,14 @@ const Classes = () => {
             component='h3'
             sx={{ textAlign: 'center', mt: 3, mb: 3 }}
           >
-            Manage Users
+            Manage Classes
           </Typography>
           {
             isLoading ? (
               <Loader />
               ) : ( 
               <DataGrid
-                rows={users}
+                rows={classes}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{

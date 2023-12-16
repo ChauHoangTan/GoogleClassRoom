@@ -1,5 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import * as User from './reducers/userReducers'
+import * as Class from './reducers/classReducers'
+
 import * as Auth from './reducers/authReducers'
 
 import { moreIconReducer } from './reducers/moreIconReducers'
@@ -14,7 +16,10 @@ const rootReducer = combineReducers({
   adminGetAllUsers: User.adminGetAllUsersReducer,
   adminDeleteUser: User.adminDeleteUserReducer,
 
-  //
+  //Class reducer
+  adminGetAllClasses: Class.adminGetAllClassesReducer,
+  adminDeleteClass: Class.adminDeleteClassReducer,
+
   isOpenMenu: moreIconReducer
 
 })

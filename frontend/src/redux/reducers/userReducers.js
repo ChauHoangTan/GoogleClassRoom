@@ -85,16 +85,16 @@ export const adminDeleteUserReducer = (state = {}, action) => {
 
 // ADMIN UPDATE PROFILE
 export const adminEditUserReducer = ( state = {}, action) => {
-    switch (action.type) {
-    case userConstants.UPDATE_USER_REQUEST:
-      return { isLoading: true }
-    case userConstants.UPDATE_USER_SUCCESS:
-      return { isLoading: false, userInfo: action.payload, isSuccess: true }
-    case userConstants.UPDATE_USER_FAIL:
-      return { isLoading: false, isError: action.payload }
-    case userConstants.UPDATE_USER_RESET:
-      return {}
-    default:
-      return state
-    }
+  switch (action.type) {
+  case userConstants.UPDATE_USER_REQUEST:
+    return { isLoading: true }
+  case userConstants.UPDATE_USER_SUCCESS:
+    return { isLoading: false, userInfo: action.payload, isSuccess: true }
+  case userConstants.UPDATE_USER_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case userConstants.UPDATE_USER_RESET:
+    return {}
+  default:
+    return state
   }
+}

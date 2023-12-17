@@ -14,7 +14,8 @@ import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined'
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined'
 import {
   PeopleAlt,
-  KingBed
+  KingBed,
+  Dashboard
 } from '@mui/icons-material'
 import './style.scss'
 import { Link } from 'react-router-dom'
@@ -58,7 +59,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
           <List>
             <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
               onClick={() => handleOnclick(0)}>
-              <Link to='/home' className='link' style={{
+              <Link to='/dashboard' className='link' style={{
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
@@ -67,13 +68,13 @@ const Tabs = ({ indexTab, setIndexTab }) => {
               }}>
                 <ListItemButton>
                   <ListItemIcon>
-                    <HomeIcon />
+                    <Dashboard />
                   </ListItemIcon>
                   <Typography variant='body-1' color='inherit'
                     sx={{
                       backgroundColor: (theme) => (theme.palette.primary)
                     }}
-                  >Home</Typography>
+                  >Dashboard</Typography>
                 </ListItemButton>
               </Link>
 

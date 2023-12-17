@@ -27,8 +27,8 @@ const styleModalEditUser = {
 
 const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) => {
   const dispatch = useDispatch()
-  const [isVerifiedEmail, setIsVerifiedEmail] = useState('');
-  const [isBanned, setIsBanned] = useState('');
+  const [isVerifiedEmail, setIsVerifiedEmail] = useState('')
+  const [isBanned, setIsBanned] = useState('')
 
   const { isLoading: updateLoading, isError: editError, userInfo: editUserInfo, isSuccess: editSuccess } = useSelector(
     state => state.adminEditUser
@@ -42,21 +42,21 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
   } = useForm({
     resolver: yupResolver(EditUserInfoValidation)
   })
-  
+
   useEffect(() => {
     if (userRow) {
-      setValue('firstName', userRow?.firstName);
-      setValue('lastName', userRow?.lastName);
-      setValue('email', userRow?.email);
-      setValue('phone', userRow?.phone);
-      setIsVerifiedEmail(userRow?.isVerifiedEmail ? 'active' : 'inactive');
+      setValue('firstName', userRow?.firstName)
+      setValue('lastName', userRow?.lastName)
+      setValue('email', userRow?.email)
+      setValue('phone', userRow?.phone)
+      setIsVerifiedEmail(userRow?.isVerifiedEmail ? 'active' : 'inactive')
       setIsBanned(userRow?.isBanned ? 'banned' : 'unbanned')
     }
-  }, [userRow, setValue, setIsVerifiedEmail, setIsBanned]);
+  }, [userRow, setValue, setIsVerifiedEmail, setIsBanned])
 
   useEffect(() => {
     if (editUserInfo) {
-      dispatch(getAllUsersAction());
+      dispatch(getAllUsersAction())
     }
 
     if (editSuccess) {
@@ -68,14 +68,14 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
       setIsOpen(!isOpen)
       dispatch({ type: 'UPDATE_USER_RESET' })
     }
-  }, [editUserInfo,  editSuccess, editError, dispatch, setIsOpen])
+  }, [editUserInfo, editSuccess, editError, dispatch, setIsOpen])
 
   const onSubmit = (data) => {
     dispatch(updateUserAction(
-      userRow?._id, 
+      userRow?._id,
       {
-        ...data, 
-        isVerifiedEmail: isVerifiedEmail === 'active' ? true : false, 
+        ...data,
+        isVerifiedEmail: isVerifiedEmail === 'active' ? true : false,
         isBanned: isBanned === 'banned' ? true : false
       }
     ))
@@ -85,17 +85,17 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
     <div>
       <Modal
         open={isOpen}
-        onClose={() => { handleOpen(); setUserRow(null); }}
+        onClose={() => { handleOpen(); setUserRow(null) }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box 
+        <Box
           sx={styleModalEditUser}
           component="form"
           onSubmit={handleSubmit(onSubmit)}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold', color:'#005B48' }}>
-            Edit User 
+            Edit User
           </Typography>
 
           <Grid container spacing={2} sx={{ mt: '20px' }}>
@@ -169,7 +169,7 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
             </Grid>
           </Grid>
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
-            <Button variant='contained' color='error' onClick={() => {handleOpen(); setUserRow(null);}}>Cancel</Button>
+            <Button variant='contained' color='error' onClick={() => {handleOpen(); setUserRow(null)}}>Cancel</Button>
             <Button variant='contained' type="submit">Save</Button>
           </Stack>
         </Box>
@@ -179,12 +179,12 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
 }
 
 const Users = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [pageSize, setPageSize] = useState(5);
-  const [rowId, setRowId] = useState(null);
-  const [userRow, setUserRow] = useState(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const [pageSize, setPageSize] = useState(5)
+  const [rowId, setRowId] = useState(null)
+  const [userRow, setUserRow] = useState(null)
 
   const handleOpen = () => {
     setIsOpen(!isOpen)
@@ -192,28 +192,28 @@ const Users = () => {
 
   const { isLoading, isError, users } = useSelector(
     (state) => state.adminGetAllUsers
-  );
+  )
 
-      const { isError: deleteError, isSuccess } = useSelector(
+  const { isError: deleteError, isSuccess } = useSelector(
     (state) => state.adminDeleteUser
-  );
+  )
 
   // delete user handler
   const deleteUserHandler = (id) => {
-    if(window.confirm('Are you sure you want to delete this user?' + id)) {
-      dispatch(deleteUserAction(id));
+    if (window.confirm('Are you sure you want to delete this user?' + id)) {
+      dispatch(deleteUserAction(id))
     }
-  };
+  }
 
 
   // useEffect
   useEffect(() => {
-    dispatch(getAllUsersAction());
+    dispatch(getAllUsersAction())
     if (isError || deleteError) {
-      toast.error(isError || deleteError);
-      dispatch({ type: isError ? 'GET_ALL_USERS_RESET' : 'USER_DELETE_USER_RESET'});
+      toast.error(isError || deleteError)
+      dispatch({ type: isError ? 'GET_ALL_USERS_RESET' : 'DELETE_USER_RESET' })
     }
-  }, [dispatch, isError, deleteError, isSuccess]);
+  }, [dispatch, isError, deleteError, isSuccess])
 
   const columns = useMemo(
     () => [
@@ -233,13 +233,13 @@ const Users = () => {
         field: 'isVerifiedEmail',
         headerName: 'Active',
         width: 100,
-        type: 'boolean',
+        type: 'boolean'
       },
       {
         field: 'isBanned',
         headerName: 'Ban',
         width: 100,
-        type: 'boolean',
+        type: 'boolean'
       },
       {
         field: 'role',
@@ -247,13 +247,13 @@ const Users = () => {
         width: 100,
         renderCell: (params) => {
           if (params.row.isAdmin) {
-            return 'Admin';
+            return 'Admin'
           } else if (params.row.teacherClassList && params.row.teacherClassList.length > 0) {
-            return 'Teacher';
+            return 'Teacher'
           } else {
-            return 'Student';
+            return 'Student'
           }
-        },
+        }
       },
       {
         field: 'createdAt',
@@ -277,7 +277,7 @@ const Users = () => {
               </IconButton>
             </Tooltip>
             <Tooltip title="Edit this room">
-              <IconButton onClick={() => { handleOpen(); setUserRow(params.row); }}>
+              <IconButton onClick={() => { handleOpen(); setUserRow(params.row) }}>
                 <Edit />
               </IconButton>
             </Tooltip>
@@ -307,7 +307,7 @@ const Users = () => {
           sx={{
             width: '100%',
             minHeight: '400px',
-            textAlign: 'center',
+            textAlign: 'center'
           }}
         >
           <Typography
@@ -320,16 +320,16 @@ const Users = () => {
           {
             isLoading ? (
               <Loader />
-              ) : ( 
+            ) : (
               <DataGrid
                 rows={users}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{
                   pagination: {
-                      paginationModel: { page: 0, pageSize: pageSize },
-                  },
-                  }}
+                    paginationModel: { page: 0, pageSize: pageSize }
+                  }
+                }}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 pageSizeOptions={[5, 10, 20]}
                 checkboxSelection
@@ -338,19 +338,19 @@ const Users = () => {
                   bottom: params.isLastVisible ? 0 : 1
                 })}
                 sx={{
-                    [`& .${gridClasses.row}`]: {
+                  [`& .${gridClasses.row}`]: {
                     bgcolor: (theme) =>
-                        theme.palette.mode === 'light' ? grey[200] : grey[900]
-                    },
-                      '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
-                        'mt': '1em',
-                        'mb': '1em'
-                      }
+                      theme.palette.mode === 'light' ? grey[200] : grey[900]
+                  },
+                  '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
+                    'mt': '1em',
+                    'mb': '1em'
+                  }
                 }}
                 onCellEditCommit={(params) => setRowId(params.id)}
                 disableRowSelectionOnClick
               />
-              )
+            )
           }
         </Box>
       </Grid>

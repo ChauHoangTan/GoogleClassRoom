@@ -133,6 +133,12 @@ export default function GradeTable ({ columns, rows }) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+            '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
+              'mt': '1em',
+              'mb': '1em'
+            }
+          }}
       />
     </Paper>
   )

@@ -20,6 +20,8 @@ import ForgotPassword from './pages/auth/ForgotPassword.js/ForgotPassword.js'
 import ResetPassword from './pages/auth/ResetPassword.js/ResetPassword.js'
 import Users from './pages/admin/users/Users.js'
 import Classes from './pages/admin/classes/Classes.js'
+import DashBoard from './pages/class/dashBoard/DashBoard.js'
+import Main from './pages/admin/main/Main.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
@@ -43,10 +45,11 @@ function App () {
               <Route path='profile' element={<Profile />} />
               <Route path='home' element={<Home />} />
               <Route path='/class/:classId' element={<ClassDetails/>}/>
-                <Route element={<AdminProtectedRouter />}>
-                    <Route path='/users' element={<Users />} />
-                    <Route path='/classes' element={<Classes />} />
-                </Route>
+              <Route element={<AdminProtectedRouter />}>
+                <Route path='/dashboard' element={<Main />} />
+                <Route path='/users' element={<Users />} />
+                <Route path='/classes' element={<Classes />} />
+              </Route>
             </Route>
           </Route>
         </Routes>

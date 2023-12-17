@@ -37,16 +37,16 @@ export const adminDeleteClassReducer = (state = {}, action) => {
 // ADMIN UPDATE CLASS
 
 export const adminUpdateClassReducer = (state = {}, action ) => {
-    switch (action.type) {
-        case classConstants.UPDATE_CLASS_REQUEST:
-            return { isLoading: true }
-        case classConstants.UPDATE_CLASS_SUCCESS:
-            return { isLoading: false, classInfo: action.payload, isSuccess: true }
-        case classConstants.UPDATE_CLASS_FAIL:
-            return { isLoading: false, isError: action.payload }
-        case classConstants.UPDATE_CLASS_RESET:
-            return {}
-        default:
-            return state
-    }
+  switch (action.type) {
+  case classConstants.UPDATE_CLASS_REQUEST:
+    return { isLoading: true }
+  case classConstants.UPDATE_CLASS_SUCCESS:
+    return { isLoading: false, classInfo: action.payload, isSuccess: true }
+  case classConstants.UPDATE_CLASS_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case classConstants.UPDATE_CLASS_RESET:
+    return {}
+  default:
+    return state
+  }
 }

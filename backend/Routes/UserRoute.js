@@ -26,5 +26,6 @@ router.post("/ban/:id", passport.authenticate('jwt', { session: false }), admin,
 
 router.post("/all/:id", passport.authenticate('jwt', { session: false }), admin, userController.updateUser);
 
+router.get("/count-method-login", passport.authenticate('jwt', { session: false }), admin, userController.countUserMethodLogin);
 
 module.exports = router;

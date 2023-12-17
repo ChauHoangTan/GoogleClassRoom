@@ -39,10 +39,15 @@ const deleteUserService = async (id) => {
 
 // admin update profile API call
 const updateUserService = async (id, user) => {
-    const { data } = await AxiosJWT.post(`/users/all/${id}`, user)
-    console.log(data);
-    return data
-  }
+  const { data } = await AxiosJWT.post(`/users/all/${id}`, user)
+  console.log(data)
+  return data
+}
+
+const countUsersByLoginMethods = async () => {
+    const { data } = await AxiosJWT.get('/users/count-method-login')
+    return data;
+}
 
 export {
   changePasswordService,
@@ -51,4 +56,5 @@ export {
   getAllUsersService,
   deleteUserService,
   updateUserService,
+  countUsersByLoginMethods,
 }

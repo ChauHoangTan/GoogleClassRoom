@@ -179,15 +179,36 @@ const updateUser = async(req, res) => {
             await user.save();
             return res.json( {message: "User was edit successfully" })
         }
-        // else send error message
         else {
             res.status(400).json({message: "User not found"});
-
         }
     }  catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(400).json({ message: error.message });
     }
 }
+
+
+const countUserMethodLogin = async (req, res) => {
+    try {
+      const users = await User.find({});
+  
+      const counts = {
+        gmail: users.filter((user) => user.authGoogleId === '' && user.authFacebookId === '' && user.password !== undefined).length,
+        facebook: users.filter((user) => user.authFacebookId !== '' && user.authGoogleId === '' && user.password === undefined).length,
+        google: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === ''&& user.password === undefined).length,
+        googleAndGmail: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === '' && user.password !== undefined).length,
+        facebookAndGmail: users.filter((user) => user.authGoogleId === '' && user.authFacebookId !== '' && user?.password !== undefined).length,
+        facebookAndGoogle: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password === undefined).length,
+        allMethods: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password !== undefined).length,
+      };
+  
+      return res.status(200).json(counts);
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+  };
+  
+
 
 module.exports = {
     updateUserProfile,
@@ -198,4 +219,5 @@ module.exports = {
     banUser,
     blockUser,
     updateUser,
+    countUserMethodLogin,
 }

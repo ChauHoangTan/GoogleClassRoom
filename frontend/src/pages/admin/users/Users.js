@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Avatar, Box, Button, Grid, IconButton, MenuItem, Modal, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
-import { DataGrid, gridClasses } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
@@ -48,7 +48,7 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
       setValue('firstName', userRow?.firstName)
       setValue('lastName', userRow?.lastName)
       setValue('email', userRow?.email)
-      setValue('phone', userRow?.phone)
+      setValue('userId', userRow?.userId)
       setIsVerifiedEmail(userRow?.isVerifiedEmail ? 'active' : 'inactive')
       setIsBanned(userRow?.isBanned ? 'banned' : 'unbanned')
     }
@@ -136,13 +136,13 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
             sx={{ mt:'20px', width:'100%' }}
           />
           <TextField
-            name="phone"
-            id="phone"
-            label="Phone"
+            name="userId"
+            id="userId"
+            label="Student Id"
             variant="outlined"
-            {...register('phone')}
-            error={!!errors.phone}
-            helperText={errors.phone?.message || ''}
+            {...register('userId')}
+            error={!!errors.userId}
+            helperText={errors.userId?.message || ''}
             sx={{ mt:'20px', width:'100%' }}
           />
 
@@ -190,6 +190,8 @@ const Users = () => {
     setIsOpen(!isOpen)
   }
 
+  const isOpenMenu = useSelector(state => state.isOpenMenu);
+
   const { isLoading, isError, users } = useSelector(
     (state) => state.adminGetAllUsers
   )
@@ -204,7 +206,6 @@ const Users = () => {
       dispatch(deleteUserAction(id))
     }
   }
-
 
   // useEffect
   useEffect(() => {
@@ -267,15 +268,16 @@ const Users = () => {
         field: 'actions',
         headerName: 'Actions',
         type: 'actions',
+        width: 135,
         renderCell: (params) => (
           <Box>
-            <Tooltip title="View room details">
+            {/* <Tooltip title="View room details">
               <IconButton
                 onClick={() => dispatch({ type: 'UPDATE_ROOM', payload: params.row })}
               >
                 <Preview />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title="Edit this room">
               <IconButton onClick={() => { handleOpen(); setUserRow(params.row) }}>
                 <Edit />
@@ -299,7 +301,7 @@ const Users = () => {
     <Grid
       container
       justifyContent="center"
-      style={{ padding: '0 40px' }}
+        sx={{ padding: '40px'}}
     >
       <ModalEditUser isOpen={isOpen} handleOpen={handleOpen} userRow={userRow} setUserRow={setUserRow} setIsOpen={setIsOpen} />
       <Grid item xs={12}>
@@ -307,7 +309,7 @@ const Users = () => {
           sx={{
             width: '100%',
             minHeight: '400px',
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           <Typography
@@ -349,6 +351,11 @@ const Users = () => {
                 }}
                 onCellEditCommit={(params) => setRowId(params.id)}
                 disableRowSelectionOnClick
+                slots={{ toolbar: GridToolbar }}
+                columnVisibilityModel={{
+                    phone: !isOpenMenu,
+                    role: !isOpenMenu
+                }}
               />
             )
           }

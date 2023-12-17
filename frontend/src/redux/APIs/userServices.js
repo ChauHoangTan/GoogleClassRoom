@@ -44,9 +44,14 @@ const updateUserService = async (id, user) => {
   return data
 }
 
-const countUsersByLoginMethods = async () => {
-    const { data } = await AxiosJWT.get('/users/count-method-login')
-    return data;
+const countUsersByLoginMethodsService = async () => {
+  const { data } = await AxiosJWT.get('/users/count-method-login')
+  return data
+}
+
+const countUsersByRoleJoinService = async () => {
+  const { data } = await AxiosJWT.get('/users/count-role-join')
+  return data
 }
 
 export {
@@ -56,5 +61,6 @@ export {
   getAllUsersService,
   deleteUserService,
   updateUserService,
-  countUsersByLoginMethods,
+  countUsersByLoginMethodsService,
+  countUsersByRoleJoinService
 }

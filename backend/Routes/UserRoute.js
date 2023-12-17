@@ -28,4 +28,6 @@ router.post("/all/:id", passport.authenticate('jwt', { session: false }), admin,
 
 router.get("/count-method-login", passport.authenticate('jwt', { session: false }), admin, userController.countUserMethodLogin);
 
+router.get("/count-role-join", passport.authenticate('jwt', { session: false }), admin, userController.countUseRoleJoin);
+
 module.exports = router;

@@ -115,12 +115,12 @@ const EditUserInfoValidation = yup.object().shape({
     .email()
     .required('Email is required')
     .trim(),
-  phone: yup
+  userId: yup
     .string()
     .trim()
-    .required('Phone number is required')
-    .matches(/^[0-9]+$/, 'Only contain numbers')
-    .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits'),
+    .matches(/^[0-9]+$/, 'Only contain numbers'),
+    // .required('Phone number is required')
+    // .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits'),
   firstName: yup
     .string()
     .required('First name is required')

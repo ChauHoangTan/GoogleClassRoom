@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Avatar, Box, Grid, IconButton, MenuItem, Modal, Select, Stack, TextField, Tooltip, Typography, Button } from '@mui/material'
-import { DataGrid, gridClasses } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
@@ -145,10 +145,11 @@ const Classes = () => {
   const [rowId, setRowId] = useState(null)
   const [classRow, setClassRow] = useState(null)
 
-
   const handleOpen = () => {
     setIsOpen(!isOpen)
   }
+
+  const isOpenMenu = useSelector(state => state.isOpenMenu);
 
   const { isLoading, isError, classes } = useSelector(
     (state) => state.adminGetAllClasses
@@ -180,7 +181,7 @@ const Classes = () => {
       {
         field: 'isActive',
         headerName: 'Active',
-        width: 100,
+        width: 150,
         type: 'boolean'
       },
       {
@@ -224,6 +225,7 @@ const Classes = () => {
         field: 'actions',
         headerName: 'Actions',
         type: 'actions',
+        width: 140,
         renderCell: (params) => (
           <Box>
             <Tooltip title="View room details">
@@ -256,7 +258,7 @@ const Classes = () => {
     <Grid
       container
       justifyContent="center"
-      style={{ padding: '0 40px' }}
+      style={{ padding: '40px' }}
     >
       <ModalEditClass isOpen={isOpen} handleOpen={handleOpen} classRow={classRow} setClassRow={setClassRow} setIsOpen={setIsOpen} />
       <Grid item xs={12}>
@@ -306,6 +308,10 @@ const Classes = () => {
                 }}
                 onCellEditCommit={(params) => setRowId(params.id)}
                 disableRowSelectionOnClick
+                slots={{ toolbar: GridToolbar }}
+                columnVisibilityModel={{
+                    userCreator: !isOpenMenu,
+                }}
               />
             )
           }

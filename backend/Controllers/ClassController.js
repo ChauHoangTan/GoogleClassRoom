@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 
 const getAllClass = async (req, res) => {
     try {
-        const classes = await Class.find({}); 
+        const classes = await Class.find({}).sort({ _id: -1 }); 
         return res.status(200).json(classes)
     } catch (error) {
         res.status(400).json({ message: error.message });

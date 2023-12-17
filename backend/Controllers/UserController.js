@@ -97,7 +97,7 @@ const getUserInfo = async (req, res) => {
 // @route GET /api/users
 const getAllUser = async (req, res) => {
     try {
-        const users = await User.find({}).select('-password -refreshToken'); 
+        const users = await User.find({}).select('-password -refreshToken').sort({ _id: -1 }); 
         return res.status(200).json(users)
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -163,7 +163,7 @@ const blockUser = async (req, res) => {
 // @desc Update user profile
 // @route POST/api/users/all/:id
 const updateUser = async(req, res) => {
-    const { email, firstName, lastName, phone, isVerifiedEmail, isBanned } = req.body;
+    const { email, firstName, lastName, userId, isVerifiedEmail, isBanned } = req.body;
     try {
         // find user in DB  
         const user = await User.findById(req.params.id);
@@ -173,7 +173,7 @@ const updateUser = async(req, res) => {
             user.firstName = firstName || user.firstName;
             user.lastName = lastName || user.lastName;
             user.isVerifiedEmail = isVerifiedEmail;
-            user.phone = phone || user.phone;
+            user.userId = userId || user.userId;
             user.isBanned = isBanned;
 
             await user.save();
@@ -193,13 +193,13 @@ const countUserMethodLogin = async (req, res) => {
       const users = await User.find({});
   
       const counts = {
-        gmail: users.filter((user) => user.authGoogleId === '' && user.authFacebookId === '' && user.password !== undefined).length,
-        facebook: users.filter((user) => user.authFacebookId !== '' && user.authGoogleId === '' && user.password === undefined).length,
-        google: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === ''&& user.password === undefined).length,
-        googleAndGmail: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === '' && user.password !== undefined).length,
-        facebookAndGmail: users.filter((user) => user.authGoogleId === '' && user.authFacebookId !== '' && user?.password !== undefined).length,
-        facebookAndGoogle: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password === undefined).length,
-        allMethods: users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password !== undefined).length,
+        "Gmail": users.filter((user) => user.authGoogleId === '' && user.authFacebookId === '' && user.password !== undefined).length,
+        "Facebook": users.filter((user) => user.authFacebookId !== '' && user.authGoogleId === '' && user.password === undefined).length,
+        "Google": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === ''&& user.password === undefined).length,
+        "Google And Gmail": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === '' && user.password !== undefined).length,
+        "Facebook And Gmail": users.filter((user) => user.authGoogleId === '' && user.authFacebookId !== '' && user?.password !== undefined).length,
+        "Facebook And Google": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password === undefined).length,
+        "All Methods": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password !== undefined).length,
       };
   
       return res.status(200).json(counts);
@@ -209,6 +209,22 @@ const countUserMethodLogin = async (req, res) => {
   };
   
 
+const countUseRoleJoin = async (req, res) => {
+    try {
+        const users = await User.find({});
+
+        const counts = {
+            "User Basic": users.filter((user) => user.teacherClassList.length === 0 && user.studentClassList.length === 0).length,
+            "Student": users.filter((user) => user.teacherClassList.length === 0 && user.studentClassList.length !== 0).length,
+            "Teacher": users.filter((user) => user.teacherClassList.length !== 0 && user.studentClassList.length === 0).length,
+            "Student And Teacher": users.filter((user) => user.teacherClassList.length !== 0 && user.studentClassList.length !== 0).length,
+        };
+
+        return res.status(200).json(counts);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+};
 
 module.exports = {
     updateUserProfile,
@@ -220,4 +236,5 @@ module.exports = {
     blockUser,
     updateUser,
     countUserMethodLogin,
+    countUseRoleJoin,
 }

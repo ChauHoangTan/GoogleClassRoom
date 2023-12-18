@@ -6,6 +6,13 @@ import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import PinIcon from '@mui/icons-material/Pin'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { createNewClassActions, getAllMyClassesAction } from '../../redux/actions/classActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import toast from 'react-hot-toast'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { createClassInfoValidation } from '../../components/validation/classValidation'
 
 
 const styleModalJoin = {
@@ -66,6 +73,11 @@ const ModalJoin = () => {
 }
 
 const ModalNewClass = () => {
+  const dispatch = useDispatch()
+  const { isLoading, isError, message, isSuccess } = useSelector(
+    (state) => state.userCreateNewClass
+  )
+
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -77,6 +89,36 @@ const ModalNewClass = () => {
     navigate('/class/1')
   }
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(createClassInfoValidation)
+  })
+
+  // on submit
+  const onSubmit = (data) => {
+    handleOpen()
+    dispatch(createNewClassActions(data))
+  }
+
+  // useEffect
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch({ type: 'CREATE_CLASS_RESET' })
+      dispatch(getAllMyClassesAction())
+    }
+    if (isError) {
+      toast.error(isError)
+      dispatch({ type: 'CREATE_CLASS_RESET' })
+    }
+    if (message) {
+      toast.success(message)
+      reset()
+    }
+  }, [isSuccess, isError, message, reset, dispatch])
 
   return (
     <div>
@@ -88,15 +130,34 @@ const ModalNewClass = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={styleModalNewClass}>
+        <Box sx={styleModalNewClass}
+          onSubmit={handleSubmit(onSubmit)}
+          component="form"
+          noValidate
+        >
           <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold', color:'#005B48' }}>
             Create new class
           </Typography>
-          <TextField id="inputName" label="Enter class name" variant="outlined" sx={{ mt:'20px', width:'100%' }}/>
-          <TextField id="inputTitle" label="Enter class subject" variant="outlined" sx={{ mt:'20px', width:'100%' }}/>
+          <TextField {...register('className')}
+            error={!!errors.className}
+            helperText={errors.className?.message || ''}
+            required
+            name="className"
+            id="inputName"
+            label="Enter class name"
+            variant="outlined"
+            sx={{ mt:'20px', width:'100%' }}/>
+          <TextField {...register('classId')}
+            error={!!errors.classId}
+            helperText={errors.classId?.message || ''}
+            required
+            name="classId" id="inputTitle"
+            label="Enter class ID"
+            variant="outlined"
+            sx={{ mt:'20px', width:'100%' }}/>
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
             <Button variant='contained' color='error' onClick={handleOpen}>Cancel</Button>
-            <Button variant='contained' onClick={( ) => { handleOpen(); handleNavigate() }}>Create</Button>
+            <Button type="submit" variant='contained'>Create</Button>
           </Stack>
         </Box>
       </Modal>

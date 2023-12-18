@@ -22,6 +22,8 @@ const rootReducer = combineReducers({
   adminGetAllClasses: Class.adminGetAllClassesReducer,
   adminDeleteClass: Class.adminDeleteClassReducer,
   adminUpdateClass: Class.adminUpdateClassReducer,
+  userGetAllMyClasses: Class.adminGetAllMyClassesReducer,
+  userCreateNewClass: Class.userCreateNewClassReducer,
 
   isOpenMenu: moreIconReducer
 

@@ -1,6 +1,20 @@
 import Axios from './Axios'
 import AxiosJWT from './AxiosJWT'
 
+// *************** USER APIs ***************
+
+// Get all courses of user
+const getAllMyClassesService = async () => {
+  const { data } = await AxiosJWT.get('/class/allMyCourses')
+  return data
+}
+
+// Create new class API
+const createNewClassService = async (info) => {
+  const { data } = await AxiosJWT.post('/class/createNewClass', info)
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -24,5 +38,7 @@ const updateClassService = async(id, classData) => {
 export {
   getAllClassesService,
   deleteClassService,
-  updateClassService
+  updateClassService,
+  getAllMyClassesService,
+  createNewClassService
 }

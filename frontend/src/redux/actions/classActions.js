@@ -4,6 +4,33 @@ import * as classApi from '../APIs/classServices'
 import { ErrorsAction } from '../protection'
 import toast from 'react-hot-toast'
 
+// User get all their Classes action
+const getAllMyClassesAction = () => async (dispatch) => {
+  try {
+    dispatch({ type: classConstants.GET_ALL_MY_CLASSES_REQUEST })
+    const response = await classApi.getAllMyClassesService()
+    dispatch({ type: classConstants.GET_ALL_MY_CLASSES_SUCCESS, payload: response })
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.GET_ALL_MY_CLASSES_FAIL)
+  }
+}
+
+// User create new Classes action
+const createNewClassActions = (classData) => async (dispatch) => {
+  try {
+    console.log(classData)
+    dispatch({ type: classConstants.CREATE_CLASS_REQUEST })
+    const reponse = await classApi.createNewClassService(classData)
+    dispatch({
+      type: classConstants.CREATE_CLASS_SUCCESS,
+      payload: reponse
+    })
+    toast.success('Class create successfully')
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.CREATE_CLASS_FAIL)
+  }
+}
+
 // admin get all Classes action
 const getAllClassesAction = () => async (dispatch) => {
   try {
@@ -45,5 +72,7 @@ const updateClassAction = (id, classData) => async (dispatch) => {
 export {
   getAllClassesAction,
   deleteClassAction,
-  updateClassAction
+  updateClassAction,
+  getAllMyClassesAction,
+  createNewClassActions
 }

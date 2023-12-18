@@ -1,6 +1,5 @@
 const Class = require("../Models/ClassModel");
 const User = require("../Models/UserModel");
-const Grade = require("../Models/GradeModel");
 const GradeModel = require('../Models/GradeModel');
 const mongoose = require('mongoose');
 
@@ -87,45 +86,37 @@ const createNewClass = async (req, res) => {
 
         // Create a new class
         const newClass = await Class.create({
-            classId: classId,
-            className: className,
-            isPublic: false,
-            isActive: true,
+            classId,
+            className,
             teachers: teachersObjectIds,
-            students: []
         });
 
-        // Check if isAdmin not assign a role teacher to account admin
-        if(!user?.isAdmin) {
+        console.log("Hello", classId, className)
+
+        if (newClass && newClass._id) {
             // Get the ID of the newly created class
             const newClassId = newClass._id;
+            // Check if isAdmin not assign a role teacher to account admin
+            if(!user?.isAdmin) {
+                // Add new class ID to the teacherClassList of the user
+                user.teacherClassList.push(newClassId);
 
-            // Add new class ID to the teacherClassList of the user
-            user.teacherClassList.push(newClassId);
+                // Save the updated user
+                const updatedUser = await user.save();
+            }
 
-            // Save the updated user
-            const updatedUser = await user.save();
-
-            // Create new default grade model
-            const defaultGrade = createDefaultGradeModel(newClassId);
-
-            // Save the default GradeModel to the database
-            await defaultGrade.save();
+            // // Create new default grade model
+            await GradeModel.create({
+                classId: newClassId
+            })
         }
-        
+    
         return res.status(201).json({ success: true, data: newClass });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ success: false, message: error.message });
     }
 };
-
-// Function create new Grade Model
-function createDefaultGradeModel(classId) {
-    return new GradeModel({
-        classId
-    });
-}
 
 const getAllTeachers = async (req, res) => {
     const { classId } = req.body;

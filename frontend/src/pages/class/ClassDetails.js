@@ -11,9 +11,30 @@ import GradeTeacher from './grade/teacher/GradeTeacher'
 import GradeStudent from './grade/student/GradeStudent'
 import ReviewStudent from './review/student/ReviewStudent'
 import ReviewTeacher from './review/teacher/ReviewTeacher'
-import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
+import { useEffect } from 'react'
+import Loader from '../../components/notification/Loader'
+import { getClassByIDActions } from '../../redux/actions/classActions'
 
 function ClassDetails() {
+  const dispatch = useDispatch()
+  // useEffect
+  const { isLoading: classLoading, isError: classError, classes } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  const { classId } = useParams()
+
+  useEffect(() => {
+    dispatch(getClassByIDActions(classId))
+    if (classError) {
+      toast.error(classError)
+      dispatch({ type: 'GET_ALL_MY_CLASSES_RESET' })
+    }
+  }, [dispatch, classError])
+
   const [value, setValue] = useState('1')
 
   const { userInfo } = useSelector(

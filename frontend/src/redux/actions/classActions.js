@@ -31,6 +31,35 @@ const createNewClassActions = (classData) => async (dispatch) => {
   }
 }
 
+// User get Classes by ID
+const getClassByIDActions = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: classConstants.GET_CLASS_BY_ID_REQUEST })
+    const reponse = await classApi.getClassByIDService(id)
+    dispatch({
+      type: classConstants.GET_CLASS_BY_ID_SUCCESS,
+      payload: reponse
+    })
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.GET_CLASS_BY_ID_FAIL)
+  }
+}
+
+// Student join Class by code
+const joinClassByCodeActions = (code) => async (dispatch) => {
+  try {
+    dispatch({ type: classConstants.JOIN_CLASS_BY_CODE_REQUEST })
+    const reponse = await classApi.joinClassByCodeService(code)
+    dispatch({
+      type: classConstants.JOIN_CLASS_BY_CODE_SUCCESS,
+      payload: reponse
+    })
+    toast.success('You are joined the class')
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.JOIN_CLASS_BY_CODE_FAIL)
+  }
+}
+
 // admin get all Classes action
 const getAllClassesAction = () => async (dispatch) => {
   try {
@@ -74,5 +103,7 @@ export {
   deleteClassAction,
   updateClassAction,
   getAllMyClassesAction,
-  createNewClassActions
+  createNewClassActions,
+  getClassByIDActions,
+  joinClassByCodeActions
 }

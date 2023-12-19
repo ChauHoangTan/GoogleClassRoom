@@ -15,6 +15,18 @@ const createNewClassService = async (info) => {
   return data
 }
 
+// Get class by ID API
+const getClassByIDService = async (id) => {
+  const { data } = await AxiosJWT.get(`/class/getClassByID/${id}`)
+  return data
+}
+
+// Join class by code API
+const joinClassByCodeService = async (code) => {
+  const { data } = await AxiosJWT.post('/class/joinClassByCode/', code)
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -40,5 +52,7 @@ export {
   deleteClassService,
   updateClassService,
   getAllMyClassesService,
-  createNewClassService
+  createNewClassService,
+  getClassByIDService,
+  joinClassByCodeService
 }

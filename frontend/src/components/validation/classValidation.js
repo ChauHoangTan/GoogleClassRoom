@@ -28,7 +28,17 @@ const createClassInfoValidation = yup.object().shape({
     .max(20, 'Class name must be less than 20 characters')
 })
 
+// User create Class info validation
+const joinClassByCodeFormInfoValidation = yup.object().shape({
+  code: yup
+    .string()
+    .trim()
+    .required('Class Id is required')
+    .matches(/^[0-9]+$/, 'Only contain numbers')
+})
+
 export {
   editUserInfoValidation,
-  createClassInfoValidation
+  createClassInfoValidation,
+  joinClassByCodeFormInfoValidation
 }

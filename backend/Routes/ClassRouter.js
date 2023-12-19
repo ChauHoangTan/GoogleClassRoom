@@ -3,15 +3,17 @@ const classController = require("../Controllers/ClassController");
 // const { verifyEmail, admin } = require("../Middlewares/verifyToken");
 const passport = require("passport");
 const passportConfig = require("../Middlewares/passport");
-const { admin } = require("../Middlewares/verifyToken");
+const { admin, teacher, student, isTeacherOrStudent } = require("../Middlewares/verifyToken");
 
 const router = express.Router();
 
 router.get("/all", passport.authenticate('jwt', { session: false }),classController.getAllClass);
-router.get("/allMyCourses", passport.authenticate('jwt', { session: false }),classController.getAllClassByID);
+router.get("/allMyCourses", passport.authenticate('jwt', { session: false }), classController.getAllClassByID);
 router.post("/createNewClass", passport.authenticate('jwt', { session: false }),classController.createNewClass);
-router.get("/allTeachers", passport.authenticate('jwt', { session: false }),classController.getAllTeachers);
-router.get("/allStudents", passport.authenticate('jwt', { session: false }), admin, classController.getAllStudents);
+router.get("/allTeachers", passport.authenticate('jwt', { session: false }), classController.getAllTeachers);
+router.get("/allStudents", passport.authenticate('jwt', { session: false }), classController.getAllStudents);
+router.get("/getClassByID/:id", passport.authenticate('jwt', { session: false }), isTeacherOrStudent, classController.getClassByID);
+router.post("/joinClassByCode/", passport.authenticate('jwt', { session: false }), classController.joinClassByCode);
 router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.deleteClass);
 router.post("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.updateClass);
 

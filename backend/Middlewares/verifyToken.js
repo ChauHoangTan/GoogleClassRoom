@@ -43,11 +43,74 @@ const admin = (req, res, next) => {
     }
 }
 
+// Middleware isTeacher
+const teacher = (req, res, next) => {
+    // Get the value of id from the URL param
+    const classId = req.params.id;
+
+    // Check if classId is in the teacher's list of classes
+    const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
+    console.log('isClassTeacher', isClassTeacher)
+    console.log('req.user.teacherClassList', req.user.teacherClassList)
+
+    if (isClassTeacher) {
+        // If the user is the teacher of the class, allow the request to continue processing
+        console.log('Class ID:', classId);
+        next();
+    } else {
+        // If not the teacher of the class, return an error or redirect as needed
+        next();
+        res.status(403).json({ error: 'Unauthorized. You are not the teacher of this class.' });
+    }
+};
+
+// Middleware isStudent
+const student = (req, res, next) => {
+    // Get the value of id from the URL param
+    const classId = req.params.id;
+  
+    // Check if classId is in the student's list of classes
+    const isClassStudent = req.user.studentClassList.some(id => id.equals(classId));
+  
+    if (isClassStudent) {
+      // If the user is a student of the class, allow the request to continue processing
+      console.log('Class ID:', classId);
+      next();
+    } else {
+      // If not a student of the class, return an error or redirect as needed
+      next();
+      res.status(403).json({ error: 'Unauthorized. You are not a student of this class.' });
+    }
+};
+
+// Middleware to combine teacher and student middleware
+const isTeacherOrStudent = (req, res, next) => {
+    const classId = req.params.id;
+  
+    // Check if the user is a teacher
+    const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
+  
+    // Check if the user is a student
+    const isClassStudent = req.user.studentClassList.some(id => id.equals(classId));
+  
+    // If the user is either a teacher or a student, allow the request to continue
+    if (isClassTeacher || isClassStudent) {
+      console.log('Class ID:', classId);
+      next();
+    } else {
+      // If not a teacher or a student, return an error or redirect as needed
+      res.status(403).json({ error: 'Unauthorized. You are not authorized for this class.' });
+    }
+};
+
 module.exports = {
     generateToken,
     verifyEmail,
     createAccessToken,
     createActivationToken,
     createRefreshToken,
-    admin
+    admin,
+    teacher,
+    student,
+    isTeacherOrStudent
 }

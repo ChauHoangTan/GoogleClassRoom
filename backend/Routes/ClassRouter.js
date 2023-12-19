@@ -10,26 +10,9 @@ const router = express.Router();
 router.get("/all", passport.authenticate('jwt', { session: false }),classController.getAllClass);
 router.get("/allMyCourses", passport.authenticate('jwt', { session: false }),classController.getAllClassByID);
 router.post("/createNewClass", passport.authenticate('jwt', { session: false }),classController.createNewClass);
-router.get("/allTeachers", passport.authenticate('jwt', { session: false }),classController.getAllTeachers);
-router.get("/allStudents", passport.authenticate('jwt', { session: false }), admin, classController.getAllStudents);
+router.get("/teachers/all", passport.authenticate('jwt', { session: false }),classController.getAllTeachers);
+router.get("/students/all", passport.authenticate('jwt', { session: false }), classController.getAllStudents);
 router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.deleteClass);
-router.post("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.updateClass);
-
-
-// router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
-
-// router.put("/password", passport.authenticate('jwt', { session: false }), userController.changeUserPassword);
-
-// router.get("/info", passport.authenticate('jwt', { session: false }), userController.getUserInfo);
-
-// router.post("/all", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
-
-// router.post("/detail/:id", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
-
-// router.delete("/user/find/:id", passport.authenticate('jwt', { session: false }), admin, userController.deleteUser);
-
-// router.post("/block/:id", passport.authenticate('jwt', { session: false }), admin, userController.blockUser);
-
-// router.post("/ban/:id", passport.authenticate('jwt', { session: false }), admin, userController.banUser);
+router.put("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.updateClass);
 
 module.exports = router;

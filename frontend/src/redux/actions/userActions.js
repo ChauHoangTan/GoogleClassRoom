@@ -58,7 +58,6 @@ const getAllUsersAction = () => async (dispatch) => {
   try {
     dispatch({ type: userConstants.GET_ALL_USERS_REQUEST })
     const response = await userApi.getAllUsersService()
-    console.log(response)
     dispatch({ type: userConstants.GET_ALL_USERS_SUCCESS, payload: response })
   } catch (error) {
     ErrorsAction(error, dispatch, userConstants.GET_ALL_USERS_FAIL)
@@ -72,7 +71,7 @@ const deleteUserAction = (id) => async (dispatch) => {
     dispatch({ type: userConstants.DELETE_USER_REQUEST })
     await userApi.deleteUserService(id )
     dispatch({ type: userConstants.DELETE_USER_SUCCESS })
-    toast.success('Favorite Movies Deleted')
+    toast.success('User Was Deleted Successfully')
   } catch (error) {
     ErrorsAction(error, dispatch, userConstants.DELETE_USER_FAIL)
   }

@@ -18,7 +18,7 @@ const getAllClassByID = async (req, res) => {
         // Check user authentication and permissions
         const user = await User.findById(req.user.id);
         if (!user) {
-            return res.status(401).json({ success: false, message: 'User not authenticated' });
+            return res.status(401).json({ message: 'User not authenticated' });
         }
 
         // Find classes where the user's ID is in either teacherClassList or studentClassList
@@ -91,8 +91,6 @@ const createNewClass = async (req, res) => {
             teachers: teachersObjectIds,
         });
 
-        console.log("Hello", classId, className)
-
         if (newClass && newClass._id) {
             // Get the ID of the newly created class
             const newClassId = newClass._id;
@@ -113,7 +111,6 @@ const createNewClass = async (req, res) => {
     
         return res.status(201).json({ success: true, data: newClass });
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -122,22 +119,18 @@ const getAllTeachers = async (req, res) => {
     const { classId } = req.body;
 
     try {
-        const curClass = await Class.findById(classId);
-        if (!curClass) {
-            return res.status(404).json({ success: false, message: 'Can not find Class by ID of Class' });
+        const teacherList = await Class.findOne({ classId })
+        .populate({
+            path: 'teachers',
+            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned teachers' 
+        })
+        .exec();
+
+        if (!teacherList) {
+            return res.status(404).json({ success: false, message: 'No class found' });
         }
 
-        // List Teachers ID
-        const teacherIds = curClass.teachers;
-
-        if (teacherIds.length === 0) {
-            return res.status(200).json({ success: true, message: 'No teachers found for this class' });
-        }
-
-        // Get info teachers
-        const teachers = await User.find({ _id: { $in: teacherIds } });
-
-        return res.status(200).json({ success: true, data: teachers })
+        return res.status(200).json({teachers: teacherList.teachers });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -147,22 +140,18 @@ const getAllStudents = async (req, res) => {
     const { classId } = req.body;
 
     try {
-        const curClass = await Class.findById(classId);
-        if (!curClass) {
-            return res.status(404).json({ success: false, message: 'Can not find Class by ID of Class' });
+        const studentList = await Class.findOne({ classId })
+        .populate({
+            path: 'students',
+            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students' 
+        })
+        .exec();
+
+        if (!studentList) {
+            return res.status(404).json({ message: 'No class found' });
         }
 
-        // List students ID
-        const studentIds = curClass.students;
-
-        if (studentIds.length === 0) {
-            return res.status(200).json({ success: true, message: 'No students found for this class' });
-        }
-
-        // Get info students
-        const students = await User.find({ _id: { $in: studentIds } });
-
-        return res.status(200).json({ success: true, data: students })
+        return res.status(200).json({students: studentList.students });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

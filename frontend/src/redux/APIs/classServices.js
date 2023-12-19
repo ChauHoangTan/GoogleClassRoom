@@ -15,6 +15,18 @@ const createNewClassService = async (info) => {
   return data
 }
 
+// get All students of Class
+const getAllStudentsService = async (id) => {
+    const { data } = await AxiosJWT.post('/class/students/all', id)
+    return data
+}
+
+// get All Teachers of Class
+const getAllTeachersService = async (id) => {
+    const { data } = await AxiosJWT.post('/class/students/all', id)
+    return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -31,7 +43,7 @@ const deleteClassService = async (id) => {
 
 // admin edit class
 const updateClassService = async(id, classData) => {
-  const { data } = await AxiosJWT.post(`/class/all/${id}`, classData)
+  const { data } = await AxiosJWT.put(`/class/all/${id}`, classData)
   return data
 }
 
@@ -40,5 +52,7 @@ export {
   deleteClassService,
   updateClassService,
   getAllMyClassesService,
-  createNewClassService
+  createNewClassService,
+  getAllStudentsService,
+  getAllTeachersService,
 }

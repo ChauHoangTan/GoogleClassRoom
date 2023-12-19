@@ -73,7 +73,7 @@ const PieUsersLoginMethods = () => {
         <Loader /> // Assuming Loader is a component
       ) : (
       loginMethods && (
-        <>
+        <Box sx={{ display: 'flex', flexWrap: 'nowrap' }}>
             <PieChart width={200} height={200}>
             <Pie
                 data={Object.entries(loginMethods).map(([method, count], index) => ({
@@ -94,7 +94,7 @@ const PieUsersLoginMethods = () => {
             </PieChart>
             <Stack gap={2} sx={{ flexGrow: 1, alignItems: 'center' }} >
                 <Typography variant="h6">Login Methods</Typography>
-                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
                 {loginMethods &&
                     Object.keys(loginMethods).map((method, i) => (
                     <Stack key={method} alignItems="center" spacing={1}>
@@ -106,7 +106,7 @@ const PieUsersLoginMethods = () => {
                     ))}
                 </Box>
             </Stack>
-        </>
+        </Box>
       )
       )}
     </Box>

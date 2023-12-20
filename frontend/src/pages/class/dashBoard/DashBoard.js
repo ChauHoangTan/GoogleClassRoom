@@ -5,6 +5,9 @@ import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
+import { useSelector } from 'react-redux'
+import Loader from '../../../components/notification/Loader'
+
 const HeadComponent = ({ name, title }) => {
   return (
     <Stack className='headComponent'>
@@ -104,14 +107,28 @@ const StreamItem = ({ list }) => {
 }
 
 function DashBoard() {
+  let { isLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
   return (
-    <Container className='dashBoard' maxWidth='lg'>
-      <Stack className='contentDashBoard' direction='column' spacing={3}>
-        <HeadComponent name={'2310-CLC-AWP-20KTPM2'} title={'Advanced Web Programming'}/>
-        <JoinComponent code={'p5uaipt'} link={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
-        <StreamItem list={list}/>
-      </Stack>
-    </Container>
+    <>
+      {
+        isLoading
+          ?
+          <Loader/>
+          :
+          <Container className='dashBoard' maxWidth='lg'>
+            <Stack className='contentDashBoard' direction='column' spacing={3}>
+              <HeadComponent name={'2310-CLC-AWP-20KTPM2'} title={classInfo?.className}/>
+              <JoinComponent code={classInfo?.classId} link={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
+              <StreamItem list={list}/>
+            </Stack>
+          </Container>
+      }
+    </>
   )
 }
 

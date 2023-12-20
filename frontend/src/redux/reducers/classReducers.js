@@ -18,6 +18,40 @@ export const adminGetAllMyClassesReducer = (state = { classes: [] }, action) => 
   }
 }
 
+// USER GET CLASS BY ID
+export const userGetClassByIDReducer = (state = { classes: [] }, action) => {
+  switch (action.type) {
+  case classConstants.GET_CLASS_BY_ID_REQUEST:
+    return { isLoading: true }
+  case classConstants.GET_CLASS_BY_ID_SUCCESS:
+    return { isLoading: false, classes: action.payload }
+  case classConstants.GET_CLASS_BY_ID_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case classConstants.GET_CLASS_BY_ID_RESET:
+    return {
+      classes: []
+    }
+  default:
+    return state
+  }
+}
+
+// USER JOIN CLASS BY CODE
+export const userJoinClassByCodeReducer = (state = {}, action ) => {
+  switch (action.type) {
+  case classConstants.JOIN_CLASS_BY_CODE_REQUEST:
+    return { isLoading: true }
+  case classConstants.JOIN_CLASS_BY_CODE_SUCCESS:
+    return { isLoading: false, isSuccess: true }
+  case classConstants.JOIN_CLASS_BY_CODE_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case classConstants.JOIN_CLASS_BY_CODE_RESET:
+    return {}
+  default:
+    return state
+  }
+}
+
 // USER CREATE NEW CLASS
 export const userCreateNewClassReducer = (state = {}, action ) => {
   switch (action.type) {

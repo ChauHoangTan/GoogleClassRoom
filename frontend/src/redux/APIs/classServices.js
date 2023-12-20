@@ -15,6 +15,18 @@ const createNewClassService = async (info) => {
   return data
 }
 
+// Get class by ID API
+const getClassByIDService = async (id) => {
+  const { data } = await AxiosJWT.get(`/class/getClassByID/${id}`)
+  return data
+}
+
+// Join class by code API
+const joinClassByCodeService = async (code) => {
+  const { data } = await AxiosJWT.post('/class/joinClassByCode/', code)
+  return data
+}
+
 // get All students of Class
 const getAllStudentsService = async (id) => {
     const { data } = await AxiosJWT.post('/class/students/all', id)
@@ -53,6 +65,8 @@ export {
   updateClassService,
   getAllMyClassesService,
   createNewClassService,
+  getClassByIDService,
+  joinClassByCodeService,
   getAllStudentsService,
   getAllTeachersService,
 }

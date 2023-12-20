@@ -12,6 +12,62 @@ const getAllClass = async (req, res) => {
     }
 }
 
+const getClassByID = async (req, res) => {
+    try {
+        // Get class by ID class
+        const curClass = await Class.findById(req.params.id);
+        if (!curClass) {
+            return res.status(401).json({ success: false, message: 'Class not found' });
+        }
+        return res.status(200).json({ data: curClass });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+const joinClassByCode = async (req, res) => {
+    const { code } = req.body;
+    const userId = req.user.id;
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(401).json({ message: 'User not authenticated' });
+      }
+      // Get class by ID class
+      const curClass = await Class.findOne({ classId: code });
+
+      if (!curClass) {
+        return res.status(400).json({ message: 'Class not found' });
+      }
+      // Check if code is not match
+      if (curClass?.classId !== code) {
+        return res.status(400).json({ message: 'Not match code class' });
+      }
+  
+      // Check if the user is already a teacher or student in the class
+      const isUserTeacher = curClass.teachers.includes(userId);
+      const isUserStudent = curClass.students.includes(userId);
+  
+      if (isUserTeacher || isUserStudent) {
+        return res.status(400).json({ message: 'User is already a member of this class' });
+      }
+  
+      // Add the user to the class as a student
+      curClass.students.push(userId);
+  
+      // Add the class to the user's studentClassList
+      user.studentClassList.push(curClass._id);
+  
+      // Save the changes to the class and the user
+      await curClass.save();
+      const updatedUser =  await user.save();
+  
+      return res.status(200).json({ message: 'Joined the class' });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  };
+  
 const getAllClassByID = async (req, res) => {
     try {
 
@@ -191,4 +247,6 @@ module.exports = {
     getAllStudents,
     deleteClass,
     updateClass,
+    getClassByID,
+    joinClassByCode
 }

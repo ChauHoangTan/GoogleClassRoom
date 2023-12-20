@@ -18,7 +18,6 @@ const getAllMyClassesAction = () => async (dispatch) => {
 // User create new Classes action
 const createNewClassActions = (classData) => async (dispatch) => {
   try {
-    console.log(classData)
     dispatch({ type: classConstants.CREATE_CLASS_REQUEST })
     const reponse = await classApi.createNewClassService(classData)
     dispatch({
@@ -77,7 +76,7 @@ const deleteClassAction = (id) => async (dispatch) => {
     dispatch({ type: classConstants.DELETE_CLASS_REQUEST })
     await classApi.deleteClassService(id )
     dispatch({ type: classConstants.DELETE_CLASS_SUCCESS })
-    toast.success('Favorite Movies Deleted')
+    toast.success('Class delete successfully')
   } catch (error) {
     ErrorsAction(error, dispatch, classConstants.DELETE_CLASS_FAIL)
   }
@@ -86,7 +85,6 @@ const deleteClassAction = (id) => async (dispatch) => {
 // admin update class action
 const updateClassAction = (id, classData) => async (dispatch) => {
   try {
-    console.log(classData)
     dispatch({ type: classConstants.UPDATE_CLASS_REQUEST })
     const reponse = await classApi.updateClassService(id, classData)
     dispatch({
@@ -98,12 +96,41 @@ const updateClassAction = (id, classData) => async (dispatch) => {
     ErrorsAction(error, dispatch, classConstants.UPDATE_CLASS_FAIL)
   }
 }
+
+const getAllStudentsAction = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: classConstants.GET_ALL_STUDENTS_REQUEST })
+        const reponse = await classApi.getAllStudentsService(id)
+        dispatch({ 
+            type: classConstants.GET_ALL_STUDENTS_SUCCESS,
+            payload: reponse
+        })
+    } catch (error) {
+        ErrorsAction(error, dispatch, classConstants.GET_ALL_STUDENTS_FAIL)
+    }
+
+} 
+const getAllTeachersAction = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: classConstants.GET_ALL_TEACHERS_REQUEST })
+        const reponse = await classApi.getAllTeachersService(id)
+        dispatch({ 
+            type: classConstants.GET_ALL_TEACHERS_SUCCESS,
+            payload: reponse
+        })
+    } catch (error) {
+        ErrorsAction(error, dispatch, classConstants.GET_ALL_TEACHERS_FAIL)
+    }
+
+} 
 export {
   getAllClassesAction,
   deleteClassAction,
   updateClassAction,
   getAllMyClassesAction,
   createNewClassActions,
+  getAllStudentsAction,
+  getAllTeachersAction,
   getClassByIDActions,
-  joinClassByCodeActions
+  joinClassByCodeActions,
 }

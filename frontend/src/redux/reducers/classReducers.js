@@ -68,6 +68,38 @@ export const userCreateNewClassReducer = (state = {}, action ) => {
   }
 }
 
+// USER GET ALL STUDENTS
+export const userGetAllStudentsReducer = (state = { students: [] }, action) => {
+    switch (action.type) {
+        case classConstants.GET_ALL_STUDENTS_REQUEST:
+            return { isLoading: true }
+        case classConstants.GET_ALL_STUDENTS_SUCCESS:
+            return { isLoading: false, students: action.payload }
+        case classConstants.GET_ALL_STUDENTS_FAIL:
+            return { isLoading: false, isError: action.payload }
+        case classConstants.GET_ALL_STUDENTS_RESET:
+            return {}
+        default:
+            return state;
+    }
+}
+
+// USER GET ALL TEACHERS
+export const userGetAllTeachersReducer = (state = { teacher: [] }, action) => {
+    switch (action.type) {
+        case classConstants.GET_ALL_TEACHERS_REQUEST:
+            return { isLoading: true }
+        case classConstants.GET_ALL_TEACHERS_SUCCESS:
+            return { isLoading: false, teachers: action.payload }
+        case classConstants.GET_ALL_TEACHERS_FAIL:
+            return { isLoading: false, isError: action.payload }
+        case classConstants.GET_ALL_TEACHERS_RESET:
+            return {}
+        default:
+            return state
+    }
+}
+
 // ADMIN GET ALL CLASS
 export const adminGetAllClassesReducer = (state = { classes: [] }, action) => {
   switch (action.type) {

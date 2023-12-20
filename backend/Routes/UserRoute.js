@@ -24,7 +24,7 @@ router.post("/block/:id", passport.authenticate('jwt', { session: false }), admi
 
 router.post("/ban/:id", passport.authenticate('jwt', { session: false }), admin, userController.banUser);
 
-router.post("/all/:id", passport.authenticate('jwt', { session: false }), admin, userController.updateUser);
+router.put("/all/:id", passport.authenticate('jwt', { session: false }), admin, userController.updateUser);
 
 router.get("/count-method-login", passport.authenticate('jwt', { session: false }), admin, userController.countUserMethodLogin);
 

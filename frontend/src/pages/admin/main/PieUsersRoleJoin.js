@@ -53,13 +53,6 @@ const PieUsersLoginMethods = () => {
             }
         }
         fetchData();
-        // try {
-        //     const result = countUsersByLoginMethods();
-        //     console.log(result)
-        //     setLoginMethods(result);
-        // } catch (error) {
-        //     setErr(error.response.data.message)
-        // }
     }
   }, []);
 
@@ -78,7 +71,7 @@ const PieUsersLoginMethods = () => {
         <Loader /> // Assuming Loader is a component
       ) : (
         loginMethods && (
-          <>
+          <Box sx={{ display: 'flex', flexWrap: 'nowrap' }}>
             <PieChart width={200} height={200}>
               <Pie
                 data={Object.entries(loginMethods).map(([method, count], index) => ({
@@ -111,7 +104,7 @@ const PieUsersLoginMethods = () => {
                   ))}
               </Box>
             </Stack>
-          </>
+          </Box>
         )
       )}
     </Box>

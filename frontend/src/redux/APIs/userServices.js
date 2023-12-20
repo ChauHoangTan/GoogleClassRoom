@@ -39,8 +39,7 @@ const deleteUserService = async (id) => {
 
 // admin update profile API call
 const updateUserService = async (id, user) => {
-  const { data } = await AxiosJWT.post(`/users/all/${id}`, user)
-  console.log(data)
+  const { data } = await AxiosJWT.put(`/users/all/${id}`, user)
   return data
 }
 

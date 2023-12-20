@@ -7,6 +7,11 @@ import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useSelector } from 'react-redux'
 import Loader from '../../../components/notification/Loader'
+import { getInvitationByUrlService } from '../../../redux/APIs/classServices'
+import toast from 'react-hot-toast'
+import { useState, useEffect } from 'react'
+import copy from 'clipboard-copy'
+import { useParams } from 'react-router'
 
 const HeadComponent = ({ name, title }) => {
   return (
@@ -24,16 +29,54 @@ const HeadComponent = ({ name, title }) => {
 }
 
 const ApproachJoin = ({ approach, code }) => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [islink, setIsLink] = useState('')
+  const { classId } = useParams()
+
+  useEffect(() => {
+    if (classId) {
+      const getUrlInviteClass = async () => {
+        try {
+          const res = await getInvitationByUrlService(classId)
+          setIsLoading(false)
+          setIsLink(res.url)
+        } catch (error) {
+          console.log(error.response.data.message)
+          setIsLoading(false)
+        }
+      }
+      getUrlInviteClass()
+    }
+  }, [isLoading])
+
+  const handleOnClickCopy = () => {
+    if (approach === 'link') {
+      setIsLoading(!isLoading)
+      copy(islink)
+        .then(() => {
+          toast.success('Copy success')
+        })
+        .catch((err) => {
+          toast.error('Can not copy because of', err)
+        })
+    }
+  }
+
   return (
     <Stack className='approachJoin component' spacing={1} mt={1}>
       <Typography variant='body-1' sx={{ paddingLeft:'5px' }}>By {approach}</Typography>
       <Stack direction='row' alignItems='center'>
         <Stack className='code' direction='row' alignItems='center'>
-          <Typography variant='body-1'>{code}</Typography>
+          <Typography variant='body-1'>{approach === 'link' ? islink : code}</Typography>
         </Stack>
-        <IconButton>
-          <ContentCopyOutlinedIcon/>
-        </IconButton>
+        {
+          isLoading ?
+            < Loader/>
+            :
+            <IconButton onClick={handleOnClickCopy}>
+              <ContentCopyOutlinedIcon/>
+            </IconButton>
+        }
       </Stack>
     </Stack>
   )

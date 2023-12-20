@@ -2,6 +2,10 @@ const Class = require("../Models/ClassModel");
 const User = require("../Models/UserModel");
 const GradeModel = require('../Models/GradeModel');
 const mongoose = require('mongoose');
+const { createInvitationToken } = require("../Middlewares/verifyToken");
+const { use } = require("passport");
+
+const {CLIENT_URL} = process.env
 
 const getAllClass = async (req, res) => {
     try {
@@ -239,6 +243,63 @@ const updateClass = async(req, res) => {
         return res.status(500).json({ message: error.message });
     }
 }
+
+// @route GET api/class/getInvitation
+const getInviteClass = async(req, res) => {
+    const { classId } = req.body;
+    
+    try {
+        const classExist = await Class.findById(classId);
+        // check if class exists
+        if(!classExist) {
+            return res.status(400).json({message: "Class not exists"});
+        }
+
+        const invitation_token = createInvitationToken(classId)
+
+        const url = `${CLIENT_URL}/class/invite/${invitation_token}`
+
+        return res.json({ message: "Get link invation class Success!", url: url })
+    } catch(error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+// @route POST api/class/invitation
+const inviteClass = async(req, res) => {
+    try {
+        const { id } = req.invitationId;
+        const classExist = await Class.findById(id);
+
+        if(!classExist) {
+            return res.status(400).json({message: "This class is not exists"});
+        }
+        const user = await User.findById(req.user.id)
+        if (!user) {
+            return res.status(401).json({message: "Please login or register an account to join the class"});
+        }
+        
+        if (user.teacherClassList && user.teacherClassList.some(classId => classId.equals(id))) {
+            return res.status(400).json({ message: "You are already a teacher in this class" });
+        }
+
+        if (user.studentClassList && user.studentClassList.some(classId => classId.equals(id))) {
+            return res.status(400).json({ message: "You are already a student in this class" });
+        }
+
+        classExist.students.push(user._id)
+        await classExist.save()
+
+        user.studentClassList.push(id);
+        // Save the updated user
+        const updatedUser = await user.save();
+
+        return res.status(200).json({ message: "You are joined the class!", classId: id })
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getAllClass,
     createNewClass,
@@ -248,5 +309,7 @@ module.exports = {
     deleteClass,
     updateClass,
     getClassByID,
-    joinClassByCode
+    joinClassByCode,
+    getInviteClass,
+    inviteClass
 }

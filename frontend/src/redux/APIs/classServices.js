@@ -27,16 +27,27 @@ const joinClassByCodeService = async (code) => {
   return data
 }
 
+// Invite url API
+const invitationByUrlService = async (invitation_token) => {
+  const { data } = await AxiosJWT.post('/class/invitation', invitation_token)
+  return data
+}
+
+// Get Invite url API
+const getInvitationByUrlService = async (classId) => {
+  const { data } = await AxiosJWT.post('/class/getInvitation', { classId: classId })
+  return data
+}
 // get All students of Class
 const getAllStudentsService = async (id) => {
-    const { data } = await AxiosJWT.post('/class/students/all', id)
-    return data
+  const { data } = await AxiosJWT.post('/class/students/all', id)
+  return data
 }
 
 // get All Teachers of Class
 const getAllTeachersService = async (id) => {
-    const { data } = await AxiosJWT.post('/class/students/all', id)
-    return data
+  const { data } = await AxiosJWT.post('/class/students/all', id)
+  return data
 }
 
 // *************** ADMIN APIs ***************
@@ -67,6 +78,8 @@ export {
   createNewClassService,
   getClassByIDService,
   joinClassByCodeService,
+  invitationByUrlService,
+  getInvitationByUrlService,
   getAllStudentsService,
-  getAllTeachersService,
+  getAllTeachersService
 }

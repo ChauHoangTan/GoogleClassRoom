@@ -196,6 +196,15 @@ const ModalNewClass = () => {
             label="Enter class name"
             variant="outlined"
             sx={{ mt:'20px', width:'100%' }}/>
+          <TextField {...register('codeClassName')}
+            error={!!errors.codeClassName}
+            helperText={errors.codeClassName?.message || ''}
+            required
+            name="codeClassName"
+            id="inputCodeClassName"
+            label="Enter code class name"
+            variant="outlined"
+            sx={{ mt:'20px', width:'100%' }}/>
           <TextField {...register('classId')}
             error={!!errors.classId}
             helperText={errors.classId?.message || ''}

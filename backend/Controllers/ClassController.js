@@ -7,6 +7,19 @@ const { use } = require("passport");
 
 const {CLIENT_URL} = process.env
 
+function getRandomImageLink(imageList) {
+    const randomIndex = Math.floor(Math.random() * imageList.length);
+    return imageList[randomIndex];
+}
+
+const backgroundImageList = [
+    "https://i.pinimg.com/564x/c4/38/d3/c438d3c8a4d818ba7bee1532027d9f0a.jpg",
+    "https://wallpapercave.com/wp/wp6827255.jpg",
+    "https://i.pinimg.com/564x/b9/6f/b8/b96fb88ddf3d59f90756ebe636457cef.jpg",
+    "https://i.pinimg.com/564x/6b/a9/47/6ba947a6c296e3b3afe87d03f0c29e3a.jpg",
+    "https://wallpapercave.com/wp/wp6827255.jpg"
+];
+
 const getAllClass = async (req, res) => {
     try {
         const classes = await Class.find({})
@@ -151,7 +164,7 @@ const deleteClass = async (req, res) => {
 }
 
 const createNewClass = async (req, res) => {
-    const { classId, className } = req.body;
+    const { classId, className, codeClassName } = req.body;
 
     try {
         // Validate input
@@ -177,7 +190,9 @@ const createNewClass = async (req, res) => {
         const newClass = await Class.create({
             classId,
             className,
+            codeClassName,
             teachers: teachersObjectIds,
+            background: getRandomImageLink(backgroundImageList)
         });
 
         if (newClass && newClass._id) {

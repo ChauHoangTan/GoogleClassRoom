@@ -6,7 +6,7 @@ const passportConfig = require("../Middlewares/passport");
 
 const router = express.Router();
 
-router.get("/allGradeCompositionByIdClass", passport.authenticate('jwt', { session: false }), gradeController.getGradeComposition);
+router.post("/allGradeCompositionByIdClass", passport.authenticate('jwt', { session: false }), gradeController.getGradeComposition);
 router.post("/create", passport.authenticate('jwt', { session: false }), gradeController.createNewGradeComposition);
 router.delete("/delete", passport.authenticate('jwt', { session: false }), gradeController.deleteGradeComposition);
 router.post("/update", passport.authenticate('jwt', { session: false }), gradeController.updateGradeComposition);

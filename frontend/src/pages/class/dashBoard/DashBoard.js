@@ -5,18 +5,20 @@ import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Loader from '../../../components/notification/Loader'
 import { getInvitationByUrlService } from '../../../redux/APIs/classServices'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import copy from 'clipboard-copy'
 import { useParams } from 'react-router'
+import { getAllGradeCompositionByClassIdAction } from '../../../redux/actions/gradeActions'
+import { mapOrder } from '../../../utils/SortOrderArray/mapOrder'
 
-const HeadComponent = ({ name, title }) => {
+const HeadComponent = ({ name, title, background }) => {
   return (
     <Stack className='headComponent'>
-      <img src='https://wallpapercave.com/wp/wp6827255.jpg'/>
+      <img src={background}/>
       <Stack>
         <Typography className='name' variant='h4'>{name}</Typography>
         <Typography className='title' variant='h6'>{title}</Typography>
@@ -53,6 +55,14 @@ const ApproachJoin = ({ approach, code }) => {
     if (approach === 'link') {
       setIsLoading(!isLoading)
       copy(islink)
+        .then(() => {
+          toast.success('Copy success')
+        })
+        .catch((err) => {
+          toast.error('Can not copy because of', err)
+        })
+    } else {
+      copy(code)
         .then(() => {
           toast.success('Copy success')
         })
@@ -136,13 +146,31 @@ const list = [
 ]
 
 const StreamItem = ({ list }) => {
-  const newList = list.slice().reverse()
+  const dispatch = useDispatch()
+  // useEffect
+  const { isLoading, isError, gradeCompositions } = useSelector(
+    (state) => state.userGetAllGradeCompositionByClassId
+  )
+  const classId = useParams()
+
+  useEffect(() => {
+    dispatch(getAllGradeCompositionByClassIdAction(classId))
+    if (isError) {
+      toast.error(isError)
+      dispatch({ type: 'GET_ALL_GRADE_COMPOSITION_RESET' })
+    }
+  }, [dispatch, isError])
+
+  const gradeCompositionList = gradeCompositions?.gradeCompositionList
+  const orderGradeComposition = gradeCompositions?.orderGradeComposition
+  const orderedGradeCompositionList = mapOrder(gradeCompositionList, orderGradeComposition, '_id')
+
   return (
     <Stack className='component'>
       <Typography variant='h6'>Stream</Typography>
-      {newList.map((item, index) => {
+      {orderedGradeCompositionList.map((item, index) => {
         return (
-          <NotificationItem key={index} title={item.title} composition={item.composition} time={item.time}/>
+          <NotificationItem key={index} title='Teacher posted a new assignment ' composition={item.name} time={item.time}/>
         )
       })}
     </Stack>
@@ -165,7 +193,7 @@ function DashBoard() {
           :
           <Container className='dashBoard' maxWidth='lg'>
             <Stack className='contentDashBoard' direction='column' spacing={3}>
-              <HeadComponent name={'2310-CLC-AWP-20KTPM2'} title={classInfo?.className}/>
+              <HeadComponent name={classInfo?.codeClassName} title={classInfo?.className} background={classInfo?.background}/>
               <JoinComponent code={classInfo?.classId} link={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
               <StreamItem list={list}/>
             </Stack>

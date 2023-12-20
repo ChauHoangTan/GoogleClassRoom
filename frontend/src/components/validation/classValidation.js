@@ -22,6 +22,11 @@ const createClassInfoValidation = yup.object().shape({
     .required('Class Id is required')
     .matches(/^[0-9]+$/, 'Only contain numbers'),
   //   .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits'),
+  codeClassName: yup
+    .string()
+    .trim()
+    .required('Code Class Name is required')
+    .matches(/^[A-Z0-9-]+$/, 'Only contain uppercase letters, numbers, and hyphen'),
   className: yup
     .string()
     .required('Class name is required')

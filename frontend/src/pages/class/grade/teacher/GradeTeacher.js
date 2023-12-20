@@ -20,7 +20,7 @@ import {
 import { SortableContext, defaultAnimateLayoutChanges, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { mapOrder } from '../../../../components/SortOrderArray/mapOrder'
+import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
 
 const columns = [

@@ -12,7 +12,7 @@ const CardClass = ({ data }) => {
   const className = data.className
   const tagline = data.tagline
   const author = data.teacherNames[0]
-  const background = 'https://i.pinimg.com/564x/c4/38/d3/c438d3c8a4d818ba7bee1532027d9f0a.jpg'
+  const background = data.background
   return (
     <Card className='card'>
       <Stack direction='column' className='cardHeader'>

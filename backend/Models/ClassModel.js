@@ -12,6 +12,12 @@ const ClassSchema = mongoose.Schema(
             type: String,
             required: [true, "Please add a class name"]
         },
+        codeClassName: {
+            type: String
+        },
+        background: {
+            type: String
+        },
         isPublicGrade: {
             type: Boolean,
             default: false,

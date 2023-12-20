@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import * as User from './reducers/userReducers'
 import * as Class from './reducers/classReducers'
+import * as Grade from './reducers/gradeReducers'
 
 import * as Auth from './reducers/authReducers'
 
@@ -27,6 +28,9 @@ const rootReducer = combineReducers({
   userCreateNewClass: Class.userCreateNewClassReducer,
   userGetClassByID: Class.userGetClassByIDReducer,
   userJoinClassByCode: Class.userJoinClassByCodeReducer,
+
+  // Grade reducer
+  userGetAllGradeCompositionByClassId: Grade.userGetAllGradeCompositionByClassIdReducer,
 
   isOpenMenu: moreIconReducer
 

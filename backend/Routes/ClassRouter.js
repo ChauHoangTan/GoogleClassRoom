@@ -18,6 +18,10 @@ router.get("/teachers/all", passport.authenticate('jwt', { session: false }),cla
 
 router.get("/students/all", passport.authenticate('jwt', { session: false }), classController.getAllStudents);
 
+router.get("/getClassByID/:id", passport.authenticate('jwt', { session: false }), isTeacherOrStudent, classController.getClassByID);
+
+router.post("/joinClassByCode/", passport.authenticate('jwt', { session: false }), classController.joinClassByCode);
+
 router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.deleteClass);
 
 router.put("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.updateClass);

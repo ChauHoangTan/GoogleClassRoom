@@ -76,7 +76,6 @@ const teacher = (req, res, next) => {
 
     if (isClassTeacher) {
         // If the user is the teacher of the class, allow the request to continue processing
-        console.log('Class ID:', classId);
         next();
     } else {
         // If not the teacher of the class, return an error or redirect as needed
@@ -95,7 +94,6 @@ const student = (req, res, next) => {
   
     if (isClassStudent) {
       // If the user is a student of the class, allow the request to continue processing
-      console.log('Class ID:', classId);
       next();
     } else {
       // If not a student of the class, return an error or redirect as needed
@@ -116,7 +114,6 @@ const isTeacherOrStudent = (req, res, next) => {
   
     // If the user is either a teacher or a student, allow the request to continue
     if (isClassTeacher || isClassStudent) {
-      console.log('Class ID:', classId);
       next();
     } else {
       // If not a teacher or a student, return an error or redirect as needed

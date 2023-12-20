@@ -5,8 +5,24 @@ const mongoose = require('mongoose');
 
 const getAllClass = async (req, res) => {
     try {
-        const classes = await Class.find({}).sort({ _id: -1 }); 
-        return res.status(200).json(classes)
+        const classes = await Class.find({})
+        .populate({
+            path: 'teachers',
+            select: 'image firstName lastName -_id', // Chọn các trường cần lấy từ User collection
+            options: { limit: 1 } // Chỉ lấy thông tin của giáo viên đầu tiên
+        })
+        .sort({ _id: -1 });
+
+    const modifiedClasses = classes.map(cls => ({
+        ...cls.toObject(),
+        createAt: cls.teachers.length > 0 ? {
+            avatar: cls.teachers[0].avatar,
+            firstName: cls.teachers[0].firstName,
+            lastName: cls.teachers[0].lastName
+        } : null
+    }));
+
+    return res.status(200).json(modifiedClasses);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -114,10 +130,17 @@ const getAllClassByID = async (req, res) => {
 // @route Delete /api/class/:id
 const deleteClass = async (req, res) => {
     try {
-        console.log(req.params.id)
-        // find Class in DB
-        await Class.findByIdAndDelete(req.params.id);
-        return res.json({ message: "Class deleted successfully" });
+        const ids = req.params.id.split(',');
+        // find Class in DB and delete
+        if(ids.length === 1) {
+            await Class.findByIdAndDelete(ids);
+            return res.json({ message: "Class deleted successfully" });
+
+        }
+        else {
+            await Class.deleteMany({ _id: { $in: ids } });
+            return res.json({ message: ids.length + " selected classes deleted successfully" });
+        }
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }

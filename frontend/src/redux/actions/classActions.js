@@ -98,31 +98,31 @@ const updateClassAction = (id, classData) => async (dispatch) => {
 }
 
 const getAllStudentsAction = (id) => async (dispatch) => {
-    try {
-        dispatch({ type: classConstants.GET_ALL_STUDENTS_REQUEST })
-        const reponse = await classApi.getAllStudentsService(id)
-        dispatch({ 
-            type: classConstants.GET_ALL_STUDENTS_SUCCESS,
-            payload: reponse
-        })
-    } catch (error) {
-        ErrorsAction(error, dispatch, classConstants.GET_ALL_STUDENTS_FAIL)
-    }
+  try {
+    dispatch({ type: classConstants.GET_ALL_STUDENTS_REQUEST })
+    const reponse = await classApi.getAllStudentsService(id)
+    dispatch({
+      type: classConstants.GET_ALL_STUDENTS_SUCCESS,
+      payload: reponse
+    })
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.GET_ALL_STUDENTS_FAIL)
+  }
 
-} 
+}
 const getAllTeachersAction = (id) => async (dispatch) => {
-    try {
-        dispatch({ type: classConstants.GET_ALL_TEACHERS_REQUEST })
-        const reponse = await classApi.getAllTeachersService(id)
-        dispatch({ 
-            type: classConstants.GET_ALL_TEACHERS_SUCCESS,
-            payload: reponse
-        })
-    } catch (error) {
-        ErrorsAction(error, dispatch, classConstants.GET_ALL_TEACHERS_FAIL)
-    }
+  try {
+    dispatch({ type: classConstants.GET_ALL_TEACHERS_REQUEST })
+    const reponse = await classApi.getAllTeachersService(id)
+    dispatch({
+      type: classConstants.GET_ALL_TEACHERS_SUCCESS,
+      payload: reponse
+    })
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.GET_ALL_TEACHERS_FAIL)
+  }
 
-} 
+}
 export {
   getAllClassesAction,
   deleteClassAction,
@@ -132,5 +132,5 @@ export {
   getAllStudentsAction,
   getAllTeachersAction,
   getClassByIDActions,
-  joinClassByCodeActions,
+  joinClassByCodeActions
 }

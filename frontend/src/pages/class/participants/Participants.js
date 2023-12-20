@@ -8,6 +8,12 @@ import { useState } from 'react'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import './style.scss'
+import { useParams } from 'react-router-dom'
+import { getAllTeachersAction, getAllStudentsAction } from '../../../redux/actions/classActions'
+import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
+import { useEffect } from 'react'
+import Loader from '../../../components/notification/Loader'
 
 const styleModal = {
   position: 'absolute',
@@ -29,125 +35,125 @@ const users = [
     fullName: 'User 1',
     isTeacher: false
   },
-  {
-    avatar: 'link-to-avatar-2.jpg',
-    id: '20127660',
-    fullName: 'User 2',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-3.jpg',
-    id: '20127660',
-    fullName: 'User 3',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-4.jpg',
-    id: '20127660',
-    fullName: 'User 4',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-5.jpg',
-    id: '20127660',
-    fullName: 'User 5',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-1.jpg',
-    id: '20127660',
-    fullName: 'User 1',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-2.jpg',
-    id: '20127660',
-    fullName: 'User 2',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-3.jpg',
-    id: '20127660',
-    fullName: 'User 3',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-4.jpg',
-    id: '20127660',
-    fullName: 'User 4',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-5.jpg',
-    id: '20127660',
-    fullName: 'User 5',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-1.jpg',
-    id: '20127660',
-    fullName: 'User 1',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-2.jpg',
-    id: '20127660',
-    fullName: 'User 2',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-3.jpg',
-    id: '20127660',
-    fullName: 'User 3',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-4.jpg',
-    id: '20127660',
-    fullName: 'User 4',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-5.jpg',
-    id: '20127660',
-    fullName: 'User 5',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-1.jpg',
-    id: '20127660',
-    fullName: 'User 1',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-2.jpg',
-    id: '20127660',
-    fullName: 'User 2',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-3.jpg',
-    id: '20127660',
-    fullName: 'User 3',
-    isTeacher: false
-  },
-  {
-    avatar: 'link-to-avatar-4.jpg',
-    id: '20127660',
-    fullName: 'User 4',
-    isTeacher: true
-  },
-  {
-    avatar: 'link-to-avatar-5.jpg',
-    id: '20127660',
-    fullName: 'User 5',
-    isTeacher: false
-  }
+  // {
+  //   avatar: 'link-to-avatar-2.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 2',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-3.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 3',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-4.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 4',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-5.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 5',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-1.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 1',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-2.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 2',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-3.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 3',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-4.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 4',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-5.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 5',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-1.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 1',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-2.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 2',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-3.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 3',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-4.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 4',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-5.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 5',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-1.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 1',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-2.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 2',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-3.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 3',
+  //   isTeacher: false
+  // },
+  // {
+  //   avatar: 'link-to-avatar-4.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 4',
+  //   isTeacher: true
+  // },
+  // {
+  //   avatar: 'link-to-avatar-5.jpg',
+  //   id: '20127660',
+  //   fullName: 'User 5',
+  //   isTeacher: false
+  // }
 ]
 
 const columns = [
-  { id: 'avatar', label: 'Avatar', minWidth: 170 },
-  { id: 'id', label: 'ID', minWidth: 170 },
+  { id: 'image', label: 'Avatar', minWidth: 170 },
+  { id: 'userId', label: 'ID', minWidth: 170 },
   { id: 'fullName', label: 'Full Name', minWidth: 170 },
   { id: 'isTeacher', label: 'Kick', minWidth: 170 }
 ]
@@ -203,6 +209,42 @@ const ApproachJoin = ({ code }) => {
 }
 
 export default function Participants() {
+  const { classId } = useParams()
+
+  const dispatch = useDispatch()
+
+  const { isLoading: teachersLoading, isError: teachersError, teachers, isSuccess: teachersSuccess } = useSelector(
+    (state) => state.userGetAllTeachers
+  )
+  const { isLoading: studentsLoading, isError: studentsError, students, isSuccess: studentsSuccess } = useSelector(
+    (state) => state.userGetAllStudents
+  )
+
+  // useEffect
+  useEffect(() => {
+    dispatch(getAllTeachersAction(classId))
+    dispatch(getAllStudentsAction(classId))
+
+    if (teachersSuccess) {
+      dispatch({ type: 'GET_ALL_TEACHERS_RESET' })
+    }
+
+    if (studentsSuccess) {
+      dispatch({ type: 'GET_ALL_STUDENTS_RESET' })
+    }
+
+    if (teachersError) {
+      toast.error(teachersError)
+      dispatch({ type: 'GET_ALL_TEACHERS_RESET' })
+    }
+
+    if (studentsError) {
+      toast.error(studentsError)
+      dispatch({ type: 'GET_ALL_STUDENTS_RESET' })
+    }
+
+  }, [dispatch, studentsError, teachersError])
+
   const [isOpenInviteTeacher, setIsOpenInviteTeacher] = useState(false)
   const [isOpenInviteStudent, setIsOpenInviteStudent] = useState(false)
 
@@ -233,7 +275,6 @@ export default function Participants() {
     setIsOpenInviteStudent(!isOpenInviteStudent)
   }
 
-  // console.log(inviteTeacher)
   return (
     <Box sx={{
       p: 2
@@ -270,7 +311,11 @@ export default function Participants() {
           </Box>
         </Box>
         <Box>
-          <ParticipantTable columns={columns} rows={users}/>
+          { teachersLoading ?
+            <Loader />
+            :
+            <ParticipantTable columns={columns} rows={teachers?.teachers} isTeacherTable={true}/>
+          }
         </Box>
       </Box>
       <Modal
@@ -334,7 +379,11 @@ export default function Participants() {
           </Box>
         </Box>
         <Box>
-          <ParticipantTable columns={columns} rows={users}/>
+          { studentsLoading ?
+            <Loader />
+            :
+            <ParticipantTable columns={columns} rows={students?.students} isTeacherTable={false}/>
+          }
         </Box>
 
         <Modal

@@ -223,7 +223,7 @@ const getAllTeachers = async (req, res) => {
     const { classId } = req.body;
 
     try {
-        const teacherList = await Class.findOne({ classId })
+        const teacherList = await Class.findById(classId)
         .populate({
             path: 'teachers',
             select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned teachers' 
@@ -244,7 +244,7 @@ const getAllStudents = async (req, res) => {
     const { classId } = req.body;
 
     try {
-        const studentList = await Class.findOne({ classId })
+        const studentList = await Class.findById(classId)
         .populate({
             path: 'students',
             select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students' 

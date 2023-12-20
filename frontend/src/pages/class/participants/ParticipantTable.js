@@ -13,9 +13,11 @@ import {
 import { Typography, IconButton, Avatar } from '@mui/material'
 
 
-export default function ParticipantTable ({ columns, rows }) {
+export default function ParticipantTable ({ columns, rows, isTeacherTable }) {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(2)
+
+  console.log('rows', rows)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -50,36 +52,33 @@ export default function ParticipantTable ({ columns, rows }) {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
-                      const value = row[column.id]
 
                       // Customized TableCell content based on column id
                       let cellContent
                       switch (column.id) {
-                      case 'avatar':
-                        cellContent = <Avatar src={value} alt={`Avatar of ${row.fullName}`} />
+                      case 'image':
+                        cellContent = <Avatar src={row.image} alt={`Avatar of ${row.fullName}`} />
                         break
-                      case 'id':
-                        cellContent = <Typography variant="subtitle1">{value}</Typography>
+                      case 'userId':
+                        cellContent = <Typography variant="subtitle1">{row.userId}</Typography>
                         break
                       case 'fullName':
-                        cellContent = <Typography variant="body1">{value}</Typography>
+                        cellContent = <Typography variant="body1">{row.firstName} {row.lastName}</Typography>
                         break
                       case 'isTeacher':
-                        cellContent = !row.isTeacher && (
+                        cellContent = !isTeacherTable && (
                           <IconButton>
                             <RemoveCircleOutlineIcon />
                           </IconButton>
                         )
                         break
                       default:
-                        cellContent = value
+                        cellContent = ''
                       }
 
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : cellContent}
+                          {cellContent}
                         </TableCell>
                       )
                     })}

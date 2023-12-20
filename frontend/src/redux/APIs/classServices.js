@@ -40,13 +40,13 @@ const getInvitationByUrlService = async (classId) => {
 }
 // get All students of Class
 const getAllStudentsService = async (id) => {
-  const { data } = await AxiosJWT.post('/class/students/all', id)
+  const { data } = await AxiosJWT.post('/class/students/all', { classId: id })
   return data
 }
 
 // get All Teachers of Class
 const getAllTeachersService = async (id) => {
-  const { data } = await AxiosJWT.post('/class/students/all', id)
+  const { data } = await AxiosJWT.post('/class/teachers/all', { classId: id })
   return data
 }
 

@@ -144,6 +144,12 @@ const createNewClass = async (req, res) => {
         const teachersIds = [user?._id]; 
         const teachersObjectIds = teachersIds.map(id =>new mongoose.Types.ObjectId(id));
 
+        const existingClass = await Class.findOne({ classId: classId });
+
+        if (existingClass) {
+            return res.status(400).json({ success: false, message: 'Please choose a different Code as this one already exists.' });
+        }
+
         // Create a new class
         const newClass = await Class.create({
             classId,

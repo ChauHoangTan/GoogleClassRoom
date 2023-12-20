@@ -27,6 +27,18 @@ const joinClassByCodeService = async (code) => {
   return data
 }
 
+// Invite url API
+const invitationByUrlService = async (invitation_token) => {
+  const { data } = await AxiosJWT.post('/class/invitation', invitation_token)
+  return data
+}
+
+// Get Invite url API
+const getInvitationByUrlService = async (classId) => {
+  const { data } = await AxiosJWT.post('/class/getInvitation', { classId: classId })
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -54,5 +66,7 @@ export {
   getAllMyClassesService,
   createNewClassService,
   getClassByIDService,
-  joinClassByCodeService
+  joinClassByCodeService,
+  invitationByUrlService,
+  getInvitationByUrlService
 }

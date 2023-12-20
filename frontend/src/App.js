@@ -22,6 +22,7 @@ import Users from './pages/admin/users/Users.js'
 import Classes from './pages/admin/classes/Classes.js'
 import DashBoard from './pages/class/dashBoard/DashBoard.js'
 import Main from './pages/admin/main/Main.js'
+import InvitationByUrl from './pages/class/invitation/invitationByUrl.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
@@ -36,6 +37,7 @@ function App () {
           <Route path='/login/activate' element={<ActivationEmail/>}/>
           <Route path='/user/:type' element={<ForgotPassword />} />
           <Route path='/user/reset/:activation_token' element={<ResetPassword />} />
+          <Route path='/class/invite/:invitation_token' element={<InvitationByUrl/>}/>
           <Route path='/' element={<Layout />}>
             <Route index element={<Landing />} />
             <Route path='/user/activate/:activation_token' element={<ActivationEmail/>}/>

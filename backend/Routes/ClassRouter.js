@@ -3,7 +3,7 @@ const classController = require("../Controllers/ClassController");
 // const { verifyEmail, admin } = require("../Middlewares/verifyToken");
 const passport = require("passport");
 const passportConfig = require("../Middlewares/passport");
-const { admin, teacher, student, isTeacherOrStudent } = require("../Middlewares/verifyToken");
+const { admin, teacher, student, isTeacherOrStudent, verifyInvitation } = require("../Middlewares/verifyToken");
 
 const router = express.Router();
 
@@ -16,7 +16,8 @@ router.get("/getClassByID/:id", passport.authenticate('jwt', { session: false })
 router.post("/joinClassByCode/", passport.authenticate('jwt', { session: false }), classController.joinClassByCode);
 router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.deleteClass);
 router.post("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.updateClass);
-
+router.post("/invitation", passport.authenticate('jwt', { session: false }), verifyInvitation, classController.inviteClass);
+router.post("/getInvitation", passport.authenticate('jwt', { session: false }), classController.getInviteClass);
 
 // router.put("/profile", passport.authenticate('jwt', { session: false }), userController.updateUserProfile);
 

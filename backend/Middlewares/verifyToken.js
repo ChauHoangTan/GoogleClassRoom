@@ -10,6 +10,10 @@ const createActivationToken = (email) => {
     return jwt.sign({email}, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '2m'})
 }
 
+const createInvitationToken = (id) => {
+    return jwt.sign({id}, process.env.INVITATION_TOKEN_SECRET, {expiresIn: '10m'})
+}
+
 const createAccessToken = (id) => {
     return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2d'})
 }
@@ -35,6 +39,23 @@ const verifyEmail = (req, res, next) => {
     }
 }
 
+const verifyInvitation = (req, res, next) => {
+    const token = req.body.invitation_token;
+    if(token) {
+        jwt.verify(token, process.env.INVITATION_TOKEN_SECRET, (err, id) => {
+            if(err){ 
+                if(err) {
+                    return res.status(400).json({ message: "The invitation is incorrect or has expired" });
+                }
+            };
+            req.invitationId = id;
+            next();
+        });
+    } else {
+        return res.status(400).json("This invitation is Invalid!");
+    }
+}
+
 const admin = (req, res, next) => {
     if(req.user && req.user.isAdmin) {
         next();
@@ -46,7 +67,7 @@ const admin = (req, res, next) => {
 // Middleware isTeacher
 const teacher = (req, res, next) => {
     // Get the value of id from the URL param
-    const classId = req.params.id;
+    const { classId } = req.body;
 
     // Check if classId is in the teacher's list of classes
     const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
@@ -112,5 +133,7 @@ module.exports = {
     admin,
     teacher,
     student,
-    isTeacherOrStudent
+    isTeacherOrStudent,
+    createInvitationToken,
+    verifyInvitation
 }

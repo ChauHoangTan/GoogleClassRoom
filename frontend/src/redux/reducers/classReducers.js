@@ -1,7 +1,7 @@
 import * as classConstants from '../constants/classConstants'
 
 // USER GET ALL THEIR CLASS
-export const adminGetAllMyClassesReducer = (state = { classes: [] }, action) => {
+export const userGetAllMyClassesReducer = (state = { classes: [] }, action) => {
   switch (action.type) {
   case classConstants.GET_ALL_MY_CLASSES_REQUEST:
     return { isLoading: true }

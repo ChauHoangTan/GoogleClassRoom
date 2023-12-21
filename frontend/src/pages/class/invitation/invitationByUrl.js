@@ -23,7 +23,7 @@ function InvitationByUrl() {
   const initialized = useRef(false)
   const navigate = useNavigate()
 
-  const { invitation_token } = useParams()
+  const { type, invitation_token } = useParams()
   const [err, setErr] = useState('')
   const [isValidUrl, setIsValidUrl] = useState(true)
   const [success, setSuccess] = useState('')
@@ -36,7 +36,10 @@ function InvitationByUrl() {
         initialized.current = true
         const inviteClass = async () => {
           try {
-            const res = await invitationStudentByUrlService({ invitation_token })
+            let res = ''
+            if (type === 'student') {
+              res = await invitationStudentByUrlService({ invitation_token })
+            }
             setSuccess(res.message)
             setIsValidUrl(true)
             setIsLoading(false)

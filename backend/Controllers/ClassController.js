@@ -301,7 +301,7 @@ const getInviteClassStudent = async(req, res) => {
 
         const invitation_token = createInvitationStudentToken(classId)
 
-        const url = `${CLIENT_URL}/class/invite/${invitation_token}`
+        const url = `${CLIENT_URL}/class/invite/student/${invitation_token}`
 
         return res.json({ message: "Get link invation class Success!", url: url })
     } catch(error) {

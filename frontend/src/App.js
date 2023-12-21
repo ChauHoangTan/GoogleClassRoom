@@ -37,7 +37,7 @@ function App () {
           <Route path='/login/activate' element={<ActivationEmail/>}/>
           <Route path='/user/:type' element={<ForgotPassword />} />
           <Route path='/user/reset/:activation_token' element={<ResetPassword />} />
-          <Route path='/class/invite/:invitation_token' element={<InvitationByUrl/>}/>
+          <Route path='/class/invite/:type/:invitation_token' element={<InvitationByUrl/>}/>
           <Route path='/' element={<Layout />}>
             <Route index element={<Landing />} />
             <Route path='/user/activate/:activation_token' element={<ActivationEmail/>}/>

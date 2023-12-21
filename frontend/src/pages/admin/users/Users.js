@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import UserTable from '../../../components/table/UserTable'
@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux'
 
 const Users = () => {
   const dispatch = useDispatch()
+
+  const [selectionModel, setSelectionModel] = useState([]);
 
   const { isLoading, isError, users } = useSelector(
     (state) => state.adminGetAllUsers
@@ -27,15 +29,24 @@ const Users = () => {
   }, [dispatch, isError, deleteError, isSuccess])
 
     // delete user handler
-    const deleteUserHandler = (id) => {
-        if (window.confirm('Are you sure you want to delete this user?' + id)) {
-            dispatch(deleteUserAction(id))
+    const deleteUserHandler = (user) => {
+        if (window.confirm('Are you sure you want to delete ?' + user.firstName)) {
+            dispatch(deleteUserAction(user._id))
         }
     }
 
+    const handleDeleteSelectedRows = () => {
+        const id = selectionModel.map((rowId) => rowId.toString()).join(',');
+        if (window.confirm(`Are you sure you want to delete ${selectionModel.length} users?` )) {
+            dispatch(deleteUserAction(id))
+        }
+        setSelectionModel([]);
+    };
+
   return (
-    <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} />
+    <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
   )
 }
 
 export default Users
+

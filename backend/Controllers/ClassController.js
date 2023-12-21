@@ -26,20 +26,10 @@ const getAllClass = async (req, res) => {
         .populate({
             path: 'teachers',
             select: 'image firstName lastName -_id', // Chọn các trường cần lấy từ User collection
-            options: { limit: 1 } // Chỉ lấy thông tin của giáo viên đầu tiên
         })
         .sort({ _id: -1 });
 
-    const modifiedClasses = classes.map(cls => ({
-        ...cls.toObject(),
-        createAt: cls.teachers.length > 0 ? {
-            avatar: cls.teachers[0].avatar,
-            firstName: cls.teachers[0].firstName,
-            lastName: cls.teachers[0].lastName
-        } : null
-    }));
-
-    return res.status(200).json(modifiedClasses);
+    return res.status(200).json(classes);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -231,7 +221,7 @@ const getAllTeachers = async (req, res) => {
         .exec();
 
         if (!teacherList) {
-            return res.status(404).json({ success: false, message: 'No class found' });
+            return res.status(404).json({ message: 'No class found' });
         }
 
         return res.status(200).json({teachers: teacherList.teachers });

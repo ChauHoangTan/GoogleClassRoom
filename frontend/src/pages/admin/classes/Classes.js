@@ -1,7 +1,7 @@
 import { useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
-import { deleteClassAction, deleteManyClassAction, getAllClassesAction, updateClassAction } from '../../../redux/actions/classActions'
+import { deleteClassAction, getAllClassesAction } from '../../../redux/actions/classActions'
 import ClassTable from '../../../components/table/ClassTable'
 
 
@@ -17,10 +17,18 @@ const Classes = () => {
     (state) => state.adminDeleteClass
   )
 
+  // useEffect
+  useEffect(() => {
+    dispatch(getAllClassesAction())
+    if (isError || deleteError) {
+      toast.error(isError || deleteError)
+      dispatch({ type: isError ? 'GET_ALL_CLASSES_RESET': 'DELETE_CLASS_RESET' })
+    }
+  }, [dispatch, isError, deleteError, deleteSuccess])
 
   // delete Class handler
-  const deleteClassHandler = (id) => {
-    if (window.confirm('Are you sure you want to delete this class?' + id)) {
+  const deleteClassHandler = (id, name) => {
+    if (window.confirm('Are you sure you want to delete this class?' + name)) {
       dispatch(deleteClassAction(id))
     }
   }
@@ -33,18 +41,8 @@ const Classes = () => {
     setSelectionModel([]);
 };
 
-
-  // useEffect
-  useEffect(() => {
-    dispatch(getAllClassesAction())
-    if (isError || deleteError) {
-      toast.error(isError || deleteError)
-      dispatch({ type: isError ? 'GET_ALL_CLASSES_RESET': 'DELETE_CLASS_RESET'})
-    }
-  }, [dispatch, isError, deleteError, deleteSuccess])
-
   return (
-    <ClassTable deleteHandler={deleteClassHandler} isLoading={isLoading} classes={classes} deleteSelectedHandler={handleDeleteSelectedRows} setSelectionModel={setSelectionModel} />
+    <ClassTable deleteHandler={deleteClassHandler} isLoading={isLoading} classes={classes} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
   )
 }
 

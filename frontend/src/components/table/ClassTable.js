@@ -8,14 +8,14 @@ import { Delete, Edit, Preview } from '@mui/icons-material'
 import ModalEditClass from '../Auth/Modal/ModalEditClass'
 import { useSelector } from 'react-redux'
 
-function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, setSelectionModel }) {
+function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, selectionModel, setSelectionModel }) {
   const [isOpen, setIsOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5)
   const [rowId, setRowId] = useState(null)
   const [classRow, setClassRow] = useState(null)
 
   const isOpenMenu = useSelector(state => state.isOpenMenu);
-
+console.log(classes)
   const handleOpen = () => {
     setIsOpen(!isOpen)
   }
@@ -108,7 +108,7 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
         <Grid
           container
           justifyContent="center"
-          style={{ padding: '40px' }}
+          sx={{ mt: 1, mb: 5, p: 5 }}
         >
           <ModalEditClass isOpen={isOpen} handleOpen={handleOpen} classRow={classRow} setClassRow={setClassRow} setIsOpen={setIsOpen} />
           <Grid item xs={12}>
@@ -122,13 +122,15 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
               <Typography
                 variant='h3'
                 component='h3'
-                sx={{ textAlign: 'center', mt: 3, mb: 3 }}
+                sx={{ textAlign: 'center', mb: 3 }}
               >
                 Manage Classes
               </Typography>
-              <Button variant="contained" color="primary" onClick={deleteSelectedHandler}>
-                    Delete selected rows
+              <Box sx={{ textAlign: 'right', mb: 2 }}>
+                <Button variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
+                Delete selected rows
                 </Button>
+            </Box>
               {
                 isLoading ? (
                   <Loader />

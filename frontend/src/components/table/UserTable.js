@@ -1,5 +1,5 @@
 import { useMemo, useState,  } from 'react'
-import { Avatar, Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Grid, IconButton, Tooltip, Typography, Button } from '@mui/material'
 import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import { Delete, Edit, Preview } from '@mui/icons-material'
@@ -8,18 +8,22 @@ import Loader from '../notification/Loader'
 import { useSelector } from 'react-redux'
 import ModalEditUser from '../Auth/Modal/ModalEditUser'
 
-function UserTable({ deleteHandler, isLoading, users }) {
+function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel }) {
 
     const [isOpen, setIsOpen] = useState(false)
     const [pageSize, setPageSize] = useState(5)
     const [rowId, setRowId] = useState(null)
     const [userRow, setUserRow] = useState(null)
+
+    const isOpenMenu = useSelector(state => state.isOpenMenu);
   
     const handleOpen = () => {
       setIsOpen(!isOpen)
     }
 
-    const isOpenMenu = useSelector(state => state.isOpenMenu);
+    const handleRowSelection = (newSelectionModel) => {
+        setSelectionModel(newSelectionModel);
+    };
 
     const columns = useMemo(
         () => [
@@ -34,7 +38,18 @@ function UserTable({ deleteHandler, isLoading, users }) {
           { field: 'firstName', headerName: 'First Name', width: 100 },
           { field: 'lastName', headerName: 'Last Name', width: 100 },
           { field: 'email', headerName: 'Email', width: 300 },
-          { field: 'phone', headerName: 'Phone', width: 150 },
+          { 
+            field: 'teacherClasses', 
+            headerName: 'Teacher Classes', 
+            width: 120,
+            valueGetter: (params) => params.row.teacherClassList.length 
+        },
+        { 
+            field: 'studentClasses', 
+            headerName: 'Student Classes', 
+            width: 115,
+            valueGetter: (params) => params.row.studentClassList.length 
+        },
           {
             field: 'isVerifiedEmail',
             headerName: 'Active',
@@ -64,16 +79,16 @@ function UserTable({ deleteHandler, isLoading, users }) {
           {
             field: 'createdAt',
             headerName: 'Created At',
-            width: 200,
+            width: 150,
             renderCell: (params) =>
               DateFormat(params.row.createdAt)
           },
-          { field: 'userId', headerName: 'studentId', width: 150 },
+          { field: 'userId', headerName: 'Student Id', width: 130 },
           {
             field: 'actions',
             headerName: 'Actions',
             type: 'actions',
-            width: 135,
+            width: 120,
             renderCell: (params) => (
               <Box>
                 {/* <Tooltip title="View room details">
@@ -90,7 +105,7 @@ function UserTable({ deleteHandler, isLoading, users }) {
                 </Tooltip>
                 <Tooltip title="Delete this room">
                   <IconButton
-                    onClick={() => deleteHandler(params.row._id)}
+                    onClick={() => deleteHandler(params.row)}
                   >
                     <Delete />
                   </IconButton>
@@ -124,6 +139,11 @@ function UserTable({ deleteHandler, isLoading, users }) {
               >
                 Manage Users
               </Typography>
+              <Box sx={{ textAlign: 'right', mb: 2 }}>
+                <Button variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
+                Delete selected rows
+                </Button>
+            </Box>
               {
                 isLoading ? (
                   <Loader />
@@ -158,9 +178,10 @@ function UserTable({ deleteHandler, isLoading, users }) {
                     disableRowSelectionOnClick
                     slots={{ toolbar: GridToolbar }}
                     columnVisibilityModel={{
-                        phone: !isOpenMenu,
-                        role: !isOpenMenu
+                        teacherClasses: !isOpenMenu,
+                        studentClasses: !isOpenMenu
                     }}
+                    onRowSelectionModelChange={handleRowSelection}
                   />
                 )
               }

@@ -1,4 +1,5 @@
 const { createAccessToken } = require("../Middlewares/verifyToken");
+const Class = require("../Models/ClassModel");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 
@@ -108,8 +109,44 @@ const getAllUser = async (req, res) => {
 // @route Delete /api/user/:id
 const deleteUser = async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id);
-            return res.json({ message: "User deleted successfully" });
+        try {
+            const ids = req.params.id.split(',');
+          
+            const users = await User.find({ _id: { $in: ids } });
+          
+            const classesToDelete = [];
+            const classesToUpdate = [];
+          
+            for (const user of users) {
+                console.log(user.teacherClassList[0]._id)
+              if (user.teacherClassList.length === 1) {
+                classesToDelete.push(user.teacherClassList[0]._id);
+              } else {
+                classesToUpdate.push({
+                  _id: user.teacherClassList[0]._id,
+                  $pull: { teachers: { $in: ids } },
+                });
+              }
+            }
+
+            console.log(classesToDelete)
+            console.log(classesToUpdate)
+
+          
+            await Promise.all([
+              ...classesToDelete.map((classId) => Class.findByIdAndDelete(classId)),
+              ...classesToUpdate.map((update) => Class.findByIdAndUpdate(update._id, update, { new: true })),
+            ]);
+          
+            await User.deleteMany({ _id: { $in: ids } });
+            
+            if(ids.length === 1) {
+                return res.json({ message: User.firstName + " was deleted successfully" }); 
+            }
+            return res.json({ message: `${ids.length} selected Users were deleted successfully` });
+          } catch (error) {
+            return res.status(400).json({ message: error.message });
+          }
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }

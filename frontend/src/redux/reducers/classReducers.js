@@ -100,6 +100,22 @@ export const userGetAllTeachersReducer = (state = { teacher: [] }, action) => {
   }
 }
 
+// USER SEND MAIL INVITATION
+export const userSendInvitationoByEmailReducer = (state = { }, action) => {
+  switch (action.type) {
+  case classConstants.SEND_INVITATION_BY_EMAIL_REQUEST:
+    return { isLoading: true }
+  case classConstants.SEND_INVITATION_BY_EMAIL_SUCCESS:
+    return { isLoading: false, isSuccess: true }
+  case classConstants.SEND_INVITATION_BY_EMAIL_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case classConstants.SEND_INVITATION_BY_EMAIL_RESET:
+    return {}
+  default:
+    return state
+  }
+}
+
 // ADMIN GET ALL CLASS
 export const adminGetAllClassesReducer = (state = { classes: [] }, action) => {
   switch (action.type) {

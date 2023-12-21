@@ -15,6 +15,8 @@ router.get("/info", passport.authenticate('jwt', { session: false }), userContro
 
 router.get("/all", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
 
+router.get("/email/all", passport.authenticate('jwt', { session: false }), userController.getAllEmailUser);
+
 
 // router.post("/detail/:id", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
 

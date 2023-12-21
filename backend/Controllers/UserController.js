@@ -93,6 +93,18 @@ const getUserInfo = async (req, res) => {
     }
 }
 
+// @des Get all emails of users
+// @route GET /api/users
+const getAllEmailUser = async (req, res) => {
+    try {
+        const users = await User.find({}).select('email');
+        const userEmails = users.map(user => user.email);
+        return res.status(200).json(userEmails)
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 //  ************** ADMIN CONTROLLERS **************
 // @des Get all users
 // @route GET /api/users
@@ -274,4 +286,5 @@ module.exports = {
     updateUser,
     countUserMethodLogin,
     countUseRoleJoin,
+    getAllEmailUser
 }

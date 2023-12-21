@@ -395,11 +395,16 @@ const inviteClassTeacher = async(req, res) => {
 // @route POST api/class/send-invitation
 const sendInvitateEmail = async(req, res) => {
     const { emails, role, classId } = req.body;
+    console.log('emails, role, classId', emails, role, classId)
     try {
         const classExist = await Class.findById(classId);
 
         if (!classExist) {
             return res.status(400).json({message: "This class is not exists"});
+        }
+
+        if (emails.length === 0) {
+            return res.status(400).json({message: "No information about email"});
         }
 
         emails.map(async (email) => {

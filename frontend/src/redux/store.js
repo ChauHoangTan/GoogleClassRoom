@@ -28,6 +28,7 @@ const rootReducer = combineReducers({
   userCreateNewClass: Class.userCreateNewClassReducer,
   userGetClassByID: Class.userGetClassByIDReducer,
   userJoinClassByCode: Class.userJoinClassByCodeReducer,
+  userSendInvitationByEmail: Class.userSendInvitationoByEmailReducer,
 
   // Grade reducer
   userGetAllGradeCompositionByClassId: Grade.userGetAllGradeCompositionByClassIdReducer,

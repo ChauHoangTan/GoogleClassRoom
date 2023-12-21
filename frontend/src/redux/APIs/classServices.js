@@ -28,14 +28,14 @@ const joinClassByCodeService = async (code) => {
 }
 
 // Invite url API
-const invitationByUrlService = async (invitation_token) => {
-  const { data } = await AxiosJWT.post('/class/invitation', invitation_token)
+const invitationStudentByUrlService = async (invitation_token) => {
+  const { data } = await AxiosJWT.post('/class/invitationStudent', invitation_token)
   return data
 }
 
 // Get Invite url API
-const getInvitationByUrlService = async (classId) => {
-  const { data } = await AxiosJWT.post('/class/getInvitation', { classId: classId })
+const getInvitationStudentByUrlService = async (classId) => {
+  const { data } = await AxiosJWT.post('/class/getInvitationStudent', { classId: classId })
   return data
 }
 // get All students of Class
@@ -78,8 +78,8 @@ export {
   createNewClassService,
   getClassByIDService,
   joinClassByCodeService,
-  invitationByUrlService,
-  getInvitationByUrlService,
+  invitationStudentByUrlService,
+  getInvitationStudentByUrlService,
   getAllStudentsService,
   getAllTeachersService
 }

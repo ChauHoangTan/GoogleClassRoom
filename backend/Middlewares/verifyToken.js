@@ -10,7 +10,7 @@ const createActivationToken = (email) => {
     return jwt.sign({email}, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '2m'})
 }
 
-const createInvitationToken = (id) => {
+const createInvitationStudentToken = (id) => {
     return jwt.sign({id}, process.env.INVITATION_TOKEN_SECRET, {expiresIn: '10m'})
 }
 
@@ -39,7 +39,7 @@ const verifyEmail = (req, res, next) => {
     }
 }
 
-const verifyInvitation = (req, res, next) => {
+const verifyInvitationStudent = (req, res, next) => {
     const token = req.body.invitation_token;
     if(token) {
         jwt.verify(token, process.env.INVITATION_TOKEN_SECRET, (err, id) => {
@@ -131,6 +131,6 @@ module.exports = {
     teacher,
     student,
     isTeacherOrStudent,
-    createInvitationToken,
-    verifyInvitation
+    createInvitationStudentToken,
+    verifyInvitationStudent
 }

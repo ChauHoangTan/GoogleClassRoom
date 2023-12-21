@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { invitationByUrlService } from '../../../redux/APIs/classServices'
+import { invitationStudentByUrlService } from '../../../redux/APIs/classServices'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Paper, ThemeProvider, Typography, createTheme } from '@mui/material'
 import ErrorIcon from './../../../assets/img/error.png'
@@ -36,7 +36,7 @@ function InvitationByUrl() {
         initialized.current = true
         const inviteClass = async () => {
           try {
-            const res = await invitationByUrlService({ invitation_token })
+            const res = await invitationStudentByUrlService({ invitation_token })
             setSuccess(res.message)
             setIsValidUrl(true)
             setIsLoading(false)

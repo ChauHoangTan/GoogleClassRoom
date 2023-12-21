@@ -2,7 +2,7 @@ const Class = require("../Models/ClassModel");
 const User = require("../Models/UserModel");
 const GradeModel = require('../Models/GradeModel');
 const mongoose = require('mongoose');
-const { createInvitationToken } = require("../Middlewares/verifyToken");
+const { createInvitationStudentToken } = require("../Middlewares/verifyToken");
 const { use } = require("passport");
 
 const {CLIENT_URL} = process.env
@@ -289,7 +289,7 @@ const updateClass = async(req, res) => {
 }
 
 // @route GET api/class/getInvitation
-const getInviteClass = async(req, res) => {
+const getInviteClassStudent = async(req, res) => {
     const { classId } = req.body;
     
     try {
@@ -299,7 +299,7 @@ const getInviteClass = async(req, res) => {
             return res.status(400).json({message: "Class not exists"});
         }
 
-        const invitation_token = createInvitationToken(classId)
+        const invitation_token = createInvitationStudentToken(classId)
 
         const url = `${CLIENT_URL}/class/invite/${invitation_token}`
 
@@ -310,7 +310,7 @@ const getInviteClass = async(req, res) => {
 };
 
 // @route POST api/class/invitation
-const inviteClass = async(req, res) => {
+const inviteClassStudent = async(req, res) => {
     try {
         const { id } = req.invitationId;
         const classExist = await Class.findById(id);
@@ -354,6 +354,6 @@ module.exports = {
     updateClass,
     getClassByID,
     joinClassByCode,
-    getInviteClass,
-    inviteClass
+    getInviteClassStudent,
+    inviteClassStudent
 }

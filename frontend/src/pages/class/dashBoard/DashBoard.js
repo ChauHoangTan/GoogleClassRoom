@@ -7,7 +7,7 @@ import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useSelector, useDispatch } from 'react-redux'
 import Loader from '../../../components/notification/Loader'
-import { getInvitationByUrlService } from '../../../redux/APIs/classServices'
+import { getInvitationStudentByUrlService } from '../../../redux/APIs/classServices'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import copy from 'clipboard-copy'
@@ -39,7 +39,7 @@ const ApproachJoin = ({ approach, code }) => {
     if (classId) {
       const getUrlInviteClass = async () => {
         try {
-          const res = await getInvitationByUrlService(classId)
+          const res = await getInvitationStudentByUrlService(classId)
           setIsLoading(false)
           setIsLink(res.url)
         } catch (error) {

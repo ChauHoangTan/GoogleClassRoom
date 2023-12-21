@@ -7,6 +7,8 @@ import { Empty, DateFormat } from '../notification/Empty'
 import { Delete, Edit, Preview } from '@mui/icons-material'
 import ModalEditClass from '../Auth/Modal/ModalEditClass'
 import { useSelector } from 'react-redux'
+import CustomNoRowsOverlay from './CustomNoRowsOverlay'
+
 
 function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, selectionModel, setSelectionModel }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -50,7 +52,7 @@ console.log(classes)
               return (
                 firstTeacher ? (
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar src={params.row.image} />
+                        <Avatar src={firstTeacher.image} />
                         <Typography sx={{ marginLeft: '8px' }}>{firstTeacher.firstName} {firstTeacher.lastName}</Typography>
                     </Box>
                 ) : (
@@ -108,7 +110,7 @@ console.log(classes)
         <Grid
           container
           justifyContent="center"
-          sx={{ mt: 1, mb: 5, p: 5 }}
+          sx={{ mt: 1, mb: 5, p: 5, height: '100%' }}
         >
           <ModalEditClass isOpen={isOpen} handleOpen={handleOpen} classRow={classRow} setClassRow={setClassRow} setIsOpen={setIsOpen} />
           <Grid item xs={12}>
@@ -159,11 +161,15 @@ console.log(classes)
                       '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
                         'mt': '1em',
                         'mb': '1em'
-                      }
+                      },
+                      height: '400px' 
                     }}
                     onCellEditCommit={(params) => setRowId(params.id)}
                     disableRowSelectionOnClick
-                    slots={{ toolbar: GridToolbar }}
+                    slots={{ 
+                        toolbar: GridToolbar,
+                        noRowsOverlay: CustomNoRowsOverlay,
+                     }}
                     columnVisibilityModel={{
                         userCreator: !isOpenMenu
                     }}

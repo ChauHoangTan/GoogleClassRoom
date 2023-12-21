@@ -111,35 +111,38 @@ const deleteUser = async (req, res) => {
     try {
         try {
             const ids = req.params.id.split(',');
-          
+
             const users = await User.find({ _id: { $in: ids } });
-          
-            const classesToDelete = [];
-            const classesToUpdate = [];
+            const teacherToProcess = [];
+            const studentToProcess = [];
           
             for (const user of users) {
-                console.log(user.teacherClassList[0]._id)
-              if (user.teacherClassList.length === 1) {
-                classesToDelete.push(user.teacherClassList[0]._id);
-              } else {
-                classesToUpdate.push({
-                  _id: user.teacherClassList[0]._id,
-                  $pull: { teachers: { $in: ids } },
-                });
-              }
+              teacherToProcess.push(...user.teacherClassList);
+              studentToProcess.push(...user.studentClassList);
             }
-
-            console.log(classesToDelete)
-            console.log(classesToUpdate)
-
+            
+            const teacherPromises = teacherToProcess.map(async (classId) => {
+              const classToHandle = await Class.findById(classId);
           
-            await Promise.all([
-              ...classesToDelete.map((classId) => Class.findByIdAndDelete(classId)),
-              ...classesToUpdate.map((update) => Class.findByIdAndUpdate(update._id, update, { new: true })),
-            ]);
+              if (classToHandle.teachers.length === 1) {
+                await Class.findByIdAndDelete(classId);
+              } else {
+                const updateClass = await Class.findByIdAndUpdate(classId, {  $pull: { teachers: { $in: ids } } }, { new: true });
+                if(updateClass.teachers.length === 0) {
+                    await Class.findByIdAndDelete(classId);
+                }
+            }
+            });
+
+            const studentPromises = studentToProcess.map(async (classId) => {
+                  await Class.findByIdAndUpdate(classId, {  $pull: { students: { $in: ids } } }, { new: true });
+              });
+          
+            await Promise.all(teacherPromises);
+            await Promise.all(studentPromises);
+
           
             await User.deleteMany({ _id: { $in: ids } });
-            
             if(ids.length === 1) {
                 return res.json({ message: User.firstName + " was deleted successfully" }); 
             }

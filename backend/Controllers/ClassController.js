@@ -4,7 +4,7 @@ const GradeModel = require('../Models/GradeModel');
 const mongoose = require('mongoose');
 const { createInvitationByUrlToken, createInvitationByEmailToken } = require("../Middlewares/verifyToken");
 const { use } = require("passport");
-const sendMail = require('./sendMail')
+const sendMail = require('./sendMail');
 
 const {CLIENT_URL} = process.env
 
@@ -139,16 +139,34 @@ const getAllClassByID = async (req, res) => {
 const deleteClass = async (req, res) => {
     try {
         const ids = req.params.id.split(',');
-        // find Class in DB and delete
-        if(ids.length === 1) {
-            await Class.findByIdAndDelete(ids);
-            return res.json({ message: "Class deleted successfully" });
 
+        const classes = await Class.find({ _id: { $in: ids } });
+        const teacherToProcess = [];
+        const studentToProcess = [];
+
+        for (const cls of classes) {
+            teacherToProcess.push(...cls.teachers);
+            studentToProcess.push(...cls.students);
         }
-        else {
-            await Class.deleteMany({ _id: { $in: ids } });
-            return res.json({ message: ids.length + " selected classes deleted successfully" });
+        
+        const teacherPromises = teacherToProcess.map(async (userId) => {
+            await User.findByIdAndUpdate(userId, { $pull: { teacherClassList: { $in: ids } } }, { new: true });
+        })
+
+        const studentPromises = studentToProcess.map(async (userId) => {
+            await User.findByIdAndUpdate(userId, { $pull: { studentClassList: { $in: ids } } }, { new: true });
+        })
+
+        await Promise.all(teacherPromises);
+        await Promise.all(studentPromises);
+
+        // find Class in DB and delete
+        await Class.deleteMany({ _id: { $in: ids } });
+
+        if(ids.length === 1) {
+            return res.json({ message: "Class deleted successfully" });
         }
+        return res.json({ message: ids.length + " selected classes deleted successfully" });
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }

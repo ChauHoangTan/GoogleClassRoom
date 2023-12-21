@@ -7,6 +7,7 @@ import { Empty, DateFormat } from '../notification/Empty'
 import Loader from '../notification/Loader'
 import { useSelector } from 'react-redux'
 import ModalEditUser from '../Auth/Modal/ModalEditUser'
+import CustomNoRowsOverlay from './CustomNoRowsOverlay'
 
 function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel }) {
 
@@ -121,7 +122,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         <Grid
           container
           justifyContent="center"
-            sx={{ padding: '40px'}}
+          sx={{ mt: 1, mb: 5, p: 5, height: '100%' }}
         >
           <ModalEditUser isOpen={isOpen} handleOpen={handleOpen} userRow={userRow} setUserRow={setUserRow} setIsOpen={setIsOpen} />
           <Grid item xs={12}>
@@ -176,7 +177,10 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                     }}
                     onCellEditCommit={(params) => setRowId(params.id)}
                     disableRowSelectionOnClick
-                    slots={{ toolbar: GridToolbar }}
+                    slots={{ 
+                        toolbar: GridToolbar,
+                        noRowsOverlay: CustomNoRowsOverlay,
+                     }}
                     columnVisibilityModel={{
                         teacherClasses: !isOpenMenu,
                         studentClasses: !isOpenMenu

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { invitationStudentByUrlService } from '../../../redux/APIs/classServices'
+import { invitationStudentByUrlService, invitationTeacherByUrlService } from '../../../redux/APIs/classServices'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Paper, ThemeProvider, Typography, createTheme } from '@mui/material'
 import ErrorIcon from './../../../assets/img/error.png'
@@ -39,6 +39,9 @@ function InvitationByUrl() {
             let res = ''
             if (type === 'student') {
               res = await invitationStudentByUrlService({ invitation_token })
+            }
+            if (type === 'teacher') {
+              res = await invitationTeacherByUrlService({ invitation_token })
             }
             setSuccess(res.message)
             setIsValidUrl(true)

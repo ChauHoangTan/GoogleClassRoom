@@ -10,8 +10,12 @@ const createActivationToken = (email) => {
     return jwt.sign({email}, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '2m'})
 }
 
-const createInvitationStudentToken = (id) => {
+const createInvitationByUrlToken = (id) => {
     return jwt.sign({id}, process.env.INVITATION_TOKEN_SECRET, {expiresIn: '10m'})
+}
+
+const createInvitationByEmailToken = (email, role, classId) => {
+    return jwt.sign({email, role, classId}, process.env.INVITATION_TOKEN_SECRET, {expiresIn: '10m'})
 }
 
 const createAccessToken = (id) => {
@@ -39,7 +43,7 @@ const verifyEmail = (req, res, next) => {
     }
 }
 
-const verifyInvitationStudent = (req, res, next) => {
+const verifyInvitationByUrl = (req, res, next) => {
     const token = req.body.invitation_token;
     if(token) {
         jwt.verify(token, process.env.INVITATION_TOKEN_SECRET, (err, id) => {
@@ -49,6 +53,24 @@ const verifyInvitationStudent = (req, res, next) => {
                 }
             };
             req.invitationId = id;
+            next();
+        });
+    } else {
+        return res.status(400).json("This invitation is Invalid!");
+    }
+}
+
+const verifyInvitationByEmail = (req, res, next) => {
+    const token = req.body.invitation_token;
+    if(token) {
+        jwt.verify(token, process.env.INVITATION_TOKEN_SECRET, (err, info) => {
+            if(err){ 
+                if(err) {
+                    return res.status(400).json({ message: "The invitation is incorrect or has expired" });
+                }
+            };
+            console.log('{ email, role, classId }', info)
+            req.infoInvitation = info;
             next();
         });
     } else {
@@ -131,6 +153,8 @@ module.exports = {
     teacher,
     student,
     isTeacherOrStudent,
-    createInvitationStudentToken,
-    verifyInvitationStudent
+    createInvitationByUrlToken,
+    verifyInvitationByUrl,
+    createInvitationByEmailToken,
+    verifyInvitationByEmail
 }

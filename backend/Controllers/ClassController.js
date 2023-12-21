@@ -2,8 +2,9 @@ const Class = require("../Models/ClassModel");
 const User = require("../Models/UserModel");
 const GradeModel = require('../Models/GradeModel');
 const mongoose = require('mongoose');
-const { createInvitationStudentToken } = require("../Middlewares/verifyToken");
+const { createInvitationByUrlToken, createInvitationByEmailToken } = require("../Middlewares/verifyToken");
 const { use } = require("passport");
+const sendMail = require('./sendMail')
 
 const {CLIENT_URL} = process.env
 
@@ -288,7 +289,7 @@ const updateClass = async(req, res) => {
     }
 }
 
-// @route GET api/class/getInvitation
+// @route GET api/class/getInvitationStudent
 const getInviteClassStudent = async(req, res) => {
     const { classId } = req.body;
     
@@ -299,7 +300,7 @@ const getInviteClassStudent = async(req, res) => {
             return res.status(400).json({message: "Class not exists"});
         }
 
-        const invitation_token = createInvitationStudentToken(classId)
+        const invitation_token = createInvitationByUrlToken(classId)
 
         const url = `${CLIENT_URL}/class/invite/student/${invitation_token}`
 
@@ -309,7 +310,7 @@ const getInviteClassStudent = async(req, res) => {
     }
 };
 
-// @route POST api/class/invitation
+// @route POST api/class/invitationStudent
 const inviteClassStudent = async(req, res) => {
     try {
         const { id } = req.invitationId;
@@ -344,6 +345,132 @@ const inviteClassStudent = async(req, res) => {
     }
 };
 
+// @route GET api/class/getInvitationTeacher
+const getInviteClassTeacher = async(req, res) => {
+    const { classId } = req.body;
+    
+    try {
+        const classExist = await Class.findById(classId);
+        // check if class exists
+        if(!classExist) {
+            return res.status(400).json({message: "Class not exists"});
+        }
+
+        const invitation_token = createInvitationByUrlToken(classId)
+
+        const url = `${CLIENT_URL}/class/invite/teacher/${invitation_token}`
+
+        return res.json({ message: "Get link invation class Success!", url: url })
+    } catch(error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+// @route POST api/class/invitationTeacher
+const inviteClassTeacher = async(req, res) => {
+    try {
+        const { id } = req.invitationId;
+        const classExist = await Class.findById(id);
+
+        if(!classExist) {
+            return res.status(400).json({message: "This class is not exists"});
+        }
+        const user = await User.findById(req.user.id)
+        if (!user) {
+            return res.status(401).json({message: "Please login or register an account to join the class"});
+        }
+        
+        if (user.teacherClassList && user.teacherClassList.some(classId => classId.equals(id))) {
+            return res.status(400).json({ message: "You are already a teacher in this class" });
+        }
+
+        if (user.studentClassList && user.studentClassList.some(classId => classId.equals(id))) {
+            return res.status(400).json({ message: "You are already a student in this class" });
+        }
+
+        classExist.teachers.push(user._id)
+        await classExist.save()
+
+        user.teacherClassList.push(id);
+        // Save the updated user
+        const updatedUser = await user.save();
+
+        return res.status(200).json({ message: "You are joined the class!", classId: id })
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+// desc send invitation
+// @route POST api/class/send-invitation
+const sendInvitateEmail = async(req, res) => {
+    const { emails, role, classId } = req.body;
+    try {
+        const classExist = await Class.findById(classId);
+
+        if (!classExist) {
+            return res.status(400).json({message: "This class is not exists"});
+        }
+
+        emails.map(async (email) => {
+            const invitation_token = createInvitationByEmailToken(email, role, classId)
+
+            const url = `${CLIENT_URL}/class/invite/email/${invitation_token}`
+            await sendMail(email, url, `Welcome to ${classExist?.className} class`)
+        });
+
+        return res.json({ message: "Send invite Success!" })
+    } catch(error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+// desc receive invitation
+// @route POST api/class/receive-invitation
+const receiveInvitateEmail = async(req, res) => {
+    try {
+        const { email, role, classId } = req.infoInvitation;
+        const id = classId
+        const classExist = await Class.findById(id);
+
+        if(!classExist) {
+            return res.status(400).json({message: "This class is not exists"});
+        }
+        const user = await User.findById(req.user.id)
+        if (!user) {
+            return res.status(401).json({message: "Please login or register an account to join the class"});
+        }
+        
+        if (user.email !== email) {
+            return res.status(400).json({message: "This invitation for another email address"});
+        }
+
+        if (user.teacherClassList && user.teacherClassList.some(classId => classId.equals(id))) {
+            return res.status(400).json({ message: "You are already a teacher in this class" });
+        }
+
+        if (user.studentClassList && user.studentClassList.some(classId => classId.equals(id))) {
+            return res.status(400).json({ message: "You are already a student in this class" });
+        }
+
+        if (role === 'teacher') {
+            classExist.teachers.push(user._id)
+            user.teacherClassList.push(id);
+        } else {
+            classExist.students.push(user._id)
+            user.studentClassList.push(id);
+        }
+        await classExist.save()
+
+        // Save the updated user
+        const updatedUser = await user.save();
+
+        return res.status(200).json({ message: "You are joined the class!", classId: id })
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getAllClass,
     createNewClass,
@@ -355,5 +482,9 @@ module.exports = {
     getClassByID,
     joinClassByCode,
     getInviteClassStudent,
-    inviteClassStudent
+    inviteClassStudent,
+    getInviteClassTeacher,
+    inviteClassTeacher,
+    sendInvitateEmail,
+    receiveInvitateEmail
 }

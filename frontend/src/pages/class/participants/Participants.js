@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import Loader from '../../../components/notification/Loader'
+import { getInvitationTeacherByUrlService } from '../../../redux/APIs/classServices'
+import copy from 'clipboard-copy'
 
 const styleModal = {
   position: 'absolute',
@@ -34,7 +36,7 @@ const users = [
     id: '20127660',
     fullName: 'User 1',
     isTeacher: false
-  },
+  }
   // {
   //   avatar: 'link-to-avatar-2.jpg',
   //   id: '20127660',
@@ -194,14 +196,52 @@ const ItemResultEmail = ({ email, name, avatar }) => {
 }
 
 const ApproachJoin = ({ code }) => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [islink, setIsLink] = useState('')
+  const { classId } = useParams()
+
+  useEffect(() => {
+    if (classId) {
+      const getUrlInviteClass = async () => {
+        try {
+          const res = await getInvitationTeacherByUrlService(classId)
+          setIsLoading(false)
+          setIsLink(res.url)
+        } catch (error) {
+          console.log(error.response.data.message)
+          setIsLoading(false)
+        }
+      }
+      getUrlInviteClass()
+    }
+  }, [isLoading])
+
+  const handleOnClickCopy = () => {
+    setIsLoading(!isLoading)
+    copy(islink)
+      .then(() => {
+        toast.success('Copy success')
+      })
+      .catch((err) => {
+        toast.error('Can not copy because of', err)
+      })
+  }
+
   return (
     <Stack className='approachJoin component' spacing={1} mt={1} mb={4}>
       <Stack direction='row' alignItems='center'>
         <Stack className='code' direction='row' alignItems='center'>
-          <Typography variant='body-1'>{code}</Typography>
+          <Typography variant='body-1'>{islink}</Typography>
         </Stack>
         <IconButton>
-          <ContentCopyOutlinedIcon/>
+          {
+            isLoading ?
+              < Loader/>
+              :
+              <IconButton onClick={handleOnClickCopy}>
+                <ContentCopyOutlinedIcon/>
+              </IconButton>
+          }
         </IconButton>
       </Stack>
     </Stack>

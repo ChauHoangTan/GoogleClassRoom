@@ -3,7 +3,7 @@ const classController = require("../Controllers/ClassController");
 // const { verifyEmail, admin } = require("../Middlewares/verifyToken");
 const passport = require("passport");
 const passportConfig = require("../Middlewares/passport");
-const { admin, teacher, student, isTeacherOrStudent, verifyInvitationStudent } = require("../Middlewares/verifyToken");
+const { admin, teacher, student, isTeacherOrStudent, verifyInvitationByUrl, verifyInvitationByEmail } = require("../Middlewares/verifyToken");
 
 
 const router = express.Router();
@@ -26,8 +26,16 @@ router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admi
 
 router.put("/all/:id", passport.authenticate('jwt', { session: false }), admin, classController.updateClass);
 
-router.post("/invitationStudent", passport.authenticate('jwt', { session: false }), verifyInvitationStudent, classController.inviteClassStudent);
+router.post("/invitationStudent", passport.authenticate('jwt', { session: false }), verifyInvitationByUrl, classController.inviteClassStudent);
 
 router.post("/getInvitationStudent", passport.authenticate('jwt', { session: false }), classController.getInviteClassStudent);
+
+router.post("/invitationTeacher", passport.authenticate('jwt', { session: false }), verifyInvitationByUrl, classController.inviteClassTeacher);
+
+router.post("/getInvitationTeacher", passport.authenticate('jwt', { session: false }), classController.getInviteClassTeacher);
+
+router.post("/send-invitation", classController.sendInvitateEmail);
+
+router.post("/receive-invitation", passport.authenticate('jwt', { session: false }), verifyInvitationByEmail, classController.receiveInvitateEmail);
 
 module.exports = router;

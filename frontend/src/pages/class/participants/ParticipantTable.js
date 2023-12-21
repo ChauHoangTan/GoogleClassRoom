@@ -17,7 +17,9 @@ export default function ParticipantTable ({ columns, rows, isTeacherTable }) {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(2)
 
-  console.log('rows', rows)
+  if (rows === undefined) {
+    rows = []
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

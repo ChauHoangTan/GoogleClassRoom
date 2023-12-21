@@ -9,13 +9,15 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import './style.scss'
 import { useParams } from 'react-router-dom'
-import { getAllTeachersAction, getAllStudentsAction } from '../../../redux/actions/classActions'
+import { getAllTeachersAction, getAllStudentsAction, sendInvitationByEmailAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import Loader from '../../../components/notification/Loader'
 import { getInvitationTeacherByUrlService } from '../../../redux/APIs/classServices'
 import copy from 'clipboard-copy'
+import Chip from '@mui/material/Chip'
+import { getAllEmailUsersService } from '../../../redux/APIs/userServices'
 
 const styleModal = {
   position: 'absolute',
@@ -161,26 +163,10 @@ const columns = [
 ]
 
 const Emails = [
-  {
-    label: 'chauhoangtan6937@gmail.com',
-    name: 'Chau Hoang Tan',
-    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
-  },
-  {
-    label: 'hualamchicuong@gmail.com',
-    name: 'Hua Lam Chi Cuong',
-    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
-  },
-  {
-    label: 'nguyendinhvan@gmail.com',
-    name: 'Nguyen Dinh Van',
-    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
-  },
-  {
-    label: 'letranphihung@gmail.com',
-    name: 'Le Tran Phi Hung',
-    avatar: 'https://top10binhphuoc.vn/wp-content/uploads/2022/10/avatar-cute-anime-13.jpg'
-  }
+  'chauhoangtan6937@gmail.com',
+  'hualamchicuong@gmail.com',
+  'nguyendinhvan@gmail.com',
+  'letranphihung@gmail.com'
 ]
 
 const ItemResultEmail = ({ email, name, avatar }) => {
@@ -249,6 +235,8 @@ const ApproachJoin = ({ code }) => {
 }
 
 export default function Participants() {
+  const [isEmails, setIsEmails] = useState([])
+
   const { classId } = useParams()
 
   const dispatch = useDispatch()
@@ -258,6 +246,9 @@ export default function Participants() {
   )
   const { isLoading: studentsLoading, isError: studentsError, students, isSuccess: studentsSuccess } = useSelector(
     (state) => state.userGetAllStudents
+  )
+  const { isLoading: sendEmailLoading, isError: sendEmailError, isSuccess: sendEmailSuccess } = useSelector(
+    (state) => state.userSendInvitationByEmail
   )
 
   // useEffect
@@ -273,6 +264,13 @@ export default function Participants() {
       dispatch({ type: 'GET_ALL_STUDENTS_RESET' })
     }
 
+    if (sendEmailSuccess) {
+      setIsOpenInviteTeacher(false)
+      setIsOpenInviteStudent(false)
+      toast.success('Send success!')
+      dispatch({ type: 'SEND_INVITATION_BY_EMAIL_RESET' })
+    }
+
     if (teachersError) {
       toast.error(teachersError)
       dispatch({ type: 'GET_ALL_TEACHERS_RESET' })
@@ -283,29 +281,28 @@ export default function Participants() {
       dispatch({ type: 'GET_ALL_STUDENTS_RESET' })
     }
 
-  }, [dispatch, studentsError, teachersError])
+    if (sendEmailError) {
+      toast.error(sendEmailError)
+      dispatch({ type: 'SEND_INVITATION_BY_EMAIL_RESET' })
+    }
+
+    const getEmailsUser = async () => {
+      try {
+        const res = await getAllEmailUsersService()
+        setIsEmails(res)
+      } catch (error) {
+        toast.error(error.message)
+      }
+    }
+    getEmailsUser()
+
+  }, [dispatch, teachersError, studentsError, sendEmailError, sendEmailSuccess])
 
   const [isOpenInviteTeacher, setIsOpenInviteTeacher] = useState(false)
   const [isOpenInviteStudent, setIsOpenInviteStudent] = useState(false)
 
-  const [inviteTeacher, setInviteTeacher] = useState('')
-  const [inviteStudent, setInviteStudent] = useState('')
-
-  const handleInputStudent = ( e ) => {
-    setInviteStudent( e.target.value )
-  }
-  const handleInputTeacher = ( e ) => {
-    setInviteTeacher( e.target.value )
-  }
-  const handleInputTeacherWithAutoComplete = ( newValue ) => {
-    if (newValue !== null) {
-      if (newValue.label !== null) {
-        setInviteTeacher(newValue.label)
-      }
-    } else {
-      setInviteTeacher('')
-    }
-  }
+  const [valueEmailTeacherList, setValueEmailTeacherList] = useState([])
+  const [valueEmailStudentList, setValueEmailStudentList] = useState([])
 
   const handleOpenInviteTeacher = () => {
     setIsOpenInviteTeacher(!isOpenInviteTeacher)
@@ -313,6 +310,33 @@ export default function Participants() {
 
   const handleOpenInviteStudent = () => {
     setIsOpenInviteStudent(!isOpenInviteStudent)
+  }
+
+  function areEmailsValid(emailList) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    for (const email of emailList) {
+      if (!emailRegex.test(email)) {
+        toast.error(`This email: ${email} are invalid`)
+        return false
+      }
+    }
+    return true
+  }
+
+  const handleOnClickSendMail = ( role ) => {
+    if (role === 'teacher') {
+      if (!areEmailsValid(valueEmailTeacherList))
+        return
+
+      dispatch(sendInvitationByEmailAction(valueEmailTeacherList, role, classId))
+    }
+    else {
+      if (!areEmailsValid(valueEmailStudentList))
+        return
+
+      dispatch(sendInvitationByEmailAction(valueEmailStudentList, role, classId))
+    }
   }
 
   return (
@@ -370,31 +394,40 @@ export default function Participants() {
             Invite teachers
           </Typography>
           <ApproachJoin approach='link' code={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
-          <Autocomplete
-            id="country-select-demo"
-            sx={{ width: '100%' }}
-            onChange={ (e, newValue) => handleInputTeacherWithAutoComplete( newValue ) }
-            options={Emails}
-            autoHighlight
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <Box component="li" {...props}>
-                <ItemResultEmail email={option.label} name={option.name} avatar={option.avatar}/>
-              </Box>
-            )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Choose a email"
-                value={inviteTeacher}
-                onChange={ (e) => handleInputTeacher(e) }
-                inputProps={{
-                  ...params.inputProps,
-                  autoComplete: 'new-password' // disable autocomplete and autofill
-                }}
-              />
-            )}
-          />
+
+          <Box>
+            <Typography pb={2}>
+              Send email invite
+            </Typography>
+
+            <Autocomplete
+              multiple
+              id="tags-filled"
+              options={isEmails}
+              value={valueEmailTeacherList}
+              onChange={(event, newValue) => setValueEmailTeacherList(newValue)}
+              freeSolo
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                ))
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Search or enter email"
+                  placeholder="Emails"
+                />
+              )}
+            />
+
+            <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
+              <Button variant='contained' color='error' onClick={handleOpenInviteTeacher}>Cancel</Button>
+              <Button variant='contained' onClick={() => handleOnClickSendMail('teacher')} disabled={sendEmailLoading}>{sendEmailLoading ? 'Sending' : 'Send'}</Button>
+            </Stack>
+          </Box>
         </Box>
       </Modal>
 
@@ -434,23 +467,39 @@ export default function Participants() {
           aria-describedby="modal-modal-description"
         >
           <Box sx={styleModal}>
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold' }}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" pb={2} sx={{ fontWeight:'bold' }}>
             Invite students
             </Typography>
-            <Autocomplete
-              value={inviteStudent}
-              onChange={(e) => handleInputStudent(e)}
-              autoHighlight
-              options={Emails}
-              getOptionLabel = {(option) => option.label}
-              renderOption={(props, option) => (
-                <ItemResultEmail email={ option.label } name={ option.name } avatar={ option.avatar }/>
-              )}
-              disablePortal
-              id="combo-box-demo"
-              sx={{ width: '100%' }}
-              renderInput={(params) => <TextField {...params} label="Input Email" />}
-            />
+            <Box>
+
+              <Autocomplete
+                multiple
+                id="tags-filled"
+                options={isEmails}
+                value={valueEmailStudentList}
+                onChange={(event, newValue) => setValueEmailStudentList(newValue)}
+                freeSolo
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                  // eslint-disable-next-line react/jsx-key
+                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Search or enter email"
+                    placeholder="Emails"
+                  />
+                )}
+              />
+
+              <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
+                <Button variant='contained' color='error' onClick={handleOpenInviteStudent}>Cancel</Button>
+                <Button variant='contained' onClick={() => handleOnClickSendMail('student')} disabled={sendEmailLoading}>{sendEmailLoading ? 'Sending' : 'Send'}</Button>
+              </Stack>
+            </Box>
           </Box>
         </Modal>
       </Box>

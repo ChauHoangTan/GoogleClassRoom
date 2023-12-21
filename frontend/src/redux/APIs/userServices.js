@@ -23,6 +23,12 @@ const getProfileService = async () => {
   return data
 }
 
+// admin get all users
+const getAllEmailUsersService = async () => {
+  const { data } = await AxiosJWT.get('/users/email/all')
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all users
@@ -61,5 +67,6 @@ export {
   deleteUserService,
   updateUserService,
   countUsersByLoginMethodsService,
-  countUsersByRoleJoinService
+  countUsersByRoleJoinService,
+  getAllEmailUsersService
 }

@@ -123,6 +123,20 @@ const getAllTeachersAction = (id) => async (dispatch) => {
   }
 
 }
+
+const sendInvitationByEmailAction = (emails, role, classId) => async (dispatch) => {
+  try {
+    dispatch({ type: classConstants.SEND_INVITATION_BY_EMAIL_REQUEST })
+    const reponse = await classApi.sendInvitationByEmailService(emails, role, classId)
+    dispatch({
+      type: classConstants.SEND_INVITATION_BY_EMAIL_SUCCESS,
+      payload: reponse
+    })
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.SEND_INVITATION_BY_EMAIL_FAIL)
+  }
+
+}
 export {
   getAllClassesAction,
   deleteClassAction,
@@ -132,5 +146,6 @@ export {
   getAllStudentsAction,
   getAllTeachersAction,
   getClassByIDActions,
-  joinClassByCodeActions
+  joinClassByCodeActions,
+  sendInvitationByEmailAction
 }

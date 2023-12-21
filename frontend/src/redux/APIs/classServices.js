@@ -39,6 +39,18 @@ const invitationTeacherByUrlService = async (invitation_token) => {
   return data
 }
 
+// Invite url API Teacher and Student by Email
+const invitationByEmailService = async (invitation_token) => {
+  const { data } = await AxiosJWT.post('/class/receive-invitation', invitation_token)
+  return data
+}
+
+// Invite url API Teacher and Student by Email
+const sendInvitationByEmailService = async (emails, role, classId) => {
+  const { data } = await AxiosJWT.post('/class/send-invitation', { emails, role, classId })
+  return data
+}
+
 // Get Invite url API Student
 const getInvitationStudentByUrlService = async (classId) => {
   const { data } = await AxiosJWT.post('/class/getInvitationStudent', { classId: classId })
@@ -96,5 +108,7 @@ export {
   getAllStudentsService,
   getAllTeachersService,
   invitationTeacherByUrlService,
-  getInvitationTeacherByUrlService
+  getInvitationTeacherByUrlService,
+  invitationByEmailService,
+  sendInvitationByEmailService
 }

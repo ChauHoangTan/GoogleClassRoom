@@ -5,7 +5,7 @@ import ParticipantTable from './ParticipantTable'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import UploadIcon from '@mui/icons-material/Upload'
 import { useState } from 'react'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import { CSVLink } from 'react-csv'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import './style.scss'
 import { useParams } from 'react-router-dom'
@@ -339,14 +339,20 @@ export default function Participants() {
     }
   }
 
+  const csvData = [
+    ['StudentId', 'FullName']
+  ]
+
   return (
     <Box sx={{
       p: 2
     }}>
       <Stack direction='row' justifyContent='end' spacing={3}>
-        <Button variant='contained' startIcon={<FileDownloadIcon />}>
-          Download Student List
-        </Button>
+        <CSVLink data={csvData} filename='participants.csv'>
+          <Button variant='contained' startIcon={<FileDownloadIcon />}>
+            Download Student List
+          </Button>
+        </CSVLink>
         <Button variant='contained' startIcon={<UploadIcon />}>
           Upload  Student List
         </Button>

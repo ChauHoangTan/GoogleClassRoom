@@ -24,7 +24,7 @@ export const userGetClassByIDReducer = (state = { classes: [] }, action) => {
   case classConstants.GET_CLASS_BY_ID_REQUEST:
     return { isLoading: true }
   case classConstants.GET_CLASS_BY_ID_SUCCESS:
-    return { isLoading: false, classes: action.payload }
+    return { isLoading: false, classes: action.payload, isSuccess: true }
   case classConstants.GET_CLASS_BY_ID_FAIL:
     return { isLoading: false, isError: action.payload }
   case classConstants.GET_CLASS_BY_ID_RESET:

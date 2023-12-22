@@ -75,6 +75,12 @@ const getAllTeachersService = async (id) => {
   return data
 }
 
+// get All students of type in Class
+const getAllTypeOfStudentsService = async (id) => {
+  const { data } = await AxiosJWT.post('/class/students/allTypeOfStudents', { classId: id })
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -95,6 +101,18 @@ const updateClassService = async(id, classData) => {
   return data
 }
 
+// admin upload student list
+const uploadStudentList = async(studentsListUpload, classId) => {
+  const { data } = await AxiosJWT.post('/class/students/upload', { studentsListUpload, classId })
+  return data
+}
+
+// admin upload student list
+const getStudentIdList = async(classId) => {
+  const { data } = await AxiosJWT.post('/class/students/getStudentIdList', { classId })
+  return data
+}
+
 export {
   getAllClassesService,
   deleteClassService,
@@ -110,5 +128,8 @@ export {
   invitationTeacherByUrlService,
   getInvitationTeacherByUrlService,
   invitationByEmailService,
-  sendInvitationByEmailService
+  sendInvitationByEmailService,
+  uploadStudentList,
+  getAllTypeOfStudentsService,
+  getStudentIdList
 }

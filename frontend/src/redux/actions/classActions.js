@@ -108,7 +108,6 @@ const getAllStudentsAction = (id) => async (dispatch) => {
   } catch (error) {
     ErrorsAction(error, dispatch, classConstants.GET_ALL_STUDENTS_FAIL)
   }
-
 }
 const getAllTeachersAction = (id) => async (dispatch) => {
   try {
@@ -135,8 +134,21 @@ const sendInvitationByEmailAction = (emails, role, classId) => async (dispatch) 
   } catch (error) {
     ErrorsAction(error, dispatch, classConstants.SEND_INVITATION_BY_EMAIL_FAIL)
   }
-
 }
+
+const getAllTypeOfStudentsAction = (classId) => async (dispatch) => {
+  try {
+    dispatch({ type: classConstants.GET_ALL_TYPE_STUDENTS_REQUEST })
+    const reponse = await classApi.getAllTypeOfStudentsService(classId)
+    dispatch({
+      type: classConstants.GET_ALL_TYPE_STUDENTS_SUCCESS,
+      payload: reponse
+    })
+  } catch (error) {
+    ErrorsAction(error, dispatch, classConstants.GET_ALL_TYPE_STUDENTS_FAIL)
+  }
+}
+
 export {
   getAllClassesAction,
   deleteClassAction,
@@ -147,5 +159,6 @@ export {
   getAllTeachersAction,
   getClassByIDActions,
   joinClassByCodeActions,
-  sendInvitationByEmailAction
+  sendInvitationByEmailAction,
+  getAllTypeOfStudentsAction
 }

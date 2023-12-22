@@ -67,6 +67,14 @@ export default function ParticipantTable ({ columns, rows, isTeacherTable }) {
                       case 'fullName':
                         cellContent = <Typography variant="body1">{row.firstName} {row.lastName}</Typography>
                         break
+                      case 'status':
+                        cellContent = <Typography variant="body1"
+                          fontStyle={'italic'}
+                          fontWeight={'bold'}
+                          color={row.status === 'mapped' ? 'green' : row.status === 'not exist' ? 'red' : row.status === 'not mapping' ? 'yellow' : 'black'}>
+                          {row.status.toUpperCase()}
+                        </Typography>
+                        break
                       case 'isTeacher':
                         cellContent = !isTeacherTable && (
                           <IconButton>

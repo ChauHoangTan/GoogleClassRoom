@@ -9,15 +9,19 @@ import { CSVLink } from 'react-csv'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import './style.scss'
 import { useParams } from 'react-router-dom'
-import { getAllTeachersAction, getAllStudentsAction, sendInvitationByEmailAction } from '../../../redux/actions/classActions'
+import { getAllTeachersAction, getAllTypeOfStudentsAction, sendInvitationByEmailAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import Loader from '../../../components/notification/Loader'
-import { getInvitationTeacherByUrlService } from '../../../redux/APIs/classServices'
+import { getInvitationTeacherByUrlService, uploadStudentList } from '../../../redux/APIs/classServices'
 import copy from 'clipboard-copy'
 import Chip from '@mui/material/Chip'
 import { getAllEmailUsersService } from '../../../redux/APIs/userServices'
+import { styled } from '@mui/material/styles'
+import Papa from 'papaparse'
+import axios from 'axios'
+import Axios from '../../../redux/APIs/Axios'
 
 const styleModal = {
   position: 'absolute',
@@ -162,6 +166,14 @@ const columns = [
   { id: 'isTeacher', label: 'Kick', minWidth: 170 }
 ]
 
+const columnsStudents = [
+  { id: 'image', label: 'Avatar', minWidth: 170 },
+  { id: 'userId', label: 'ID', minWidth: 170 },
+  { id: 'fullName', label: 'Full Name', minWidth: 170 },
+  { id: 'status', label: 'Status', minWidth: 170 },
+  { id: 'isTeacher', label: 'Kick', minWidth: 170 }
+]
+
 const Emails = [
   'chauhoangtan6937@gmail.com',
   'hualamchicuong@gmail.com',
@@ -245,7 +257,7 @@ export default function Participants() {
     (state) => state.userGetAllTeachers
   )
   const { isLoading: studentsLoading, isError: studentsError, students, isSuccess: studentsSuccess } = useSelector(
-    (state) => state.userGetAllStudents
+    (state) => state.userGetAllTypeOfStudents
   )
   const { isLoading: sendEmailLoading, isError: sendEmailError, isSuccess: sendEmailSuccess } = useSelector(
     (state) => state.userSendInvitationByEmail
@@ -254,8 +266,7 @@ export default function Participants() {
   // useEffect
   useEffect(() => {
     dispatch(getAllTeachersAction(classId))
-    dispatch(getAllStudentsAction(classId))
-
+    dispatch(getAllTypeOfStudentsAction(classId))
     if (teachersSuccess) {
       dispatch({ type: 'GET_ALL_TEACHERS_RESET' })
     }
@@ -343,6 +354,58 @@ export default function Participants() {
     ['StudentId', 'FullName']
   ]
 
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1
+  })
+
+  const readFileCSV = async (e) => {
+    const selectedFile = e.target.files[0]
+    const result = await read(selectedFile)
+    let studentsListUpload = []
+
+    result.data.map(data => {
+      studentsListUpload.push(handleConvertData(data))
+    })
+
+    uploadStudentList(studentsListUpload, classId)
+  }
+
+  const read = (file) => {
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        complete: (result) => {
+          resolve(result)
+        },
+        header: true // Nếu CSV có header (tên cột)
+      })
+    })
+  }
+
+  const handleConvertData = ({ StudentId, FullName }) => {
+    const fullName = splitFullName(FullName)
+    let data = {
+      userId: StudentId,
+      firstName: fullName.firstName,
+      lastName: fullName.lastName
+    }
+    return data
+  }
+
+  const splitFullName = (FullName) => {
+    const index = FullName.indexOf(' ')
+    let lastName = FullName.substring(0, index)
+    let firstName = FullName.substring(index+1)
+    return { lastName, firstName }
+  }
+
   return (
     <Box sx={{
       p: 2
@@ -353,8 +416,9 @@ export default function Participants() {
             Download Student List
           </Button>
         </CSVLink>
-        <Button variant='contained' startIcon={<UploadIcon />}>
+        <Button component="label" variant='contained' startIcon={<UploadIcon />}>
           Upload  Student List
+          <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
         </Button>
       </Stack>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -461,7 +525,7 @@ export default function Participants() {
           { studentsLoading ?
             <Loader />
             :
-            <ParticipantTable columns={columns} rows={students?.students} isTeacherTable={false}/>
+            <ParticipantTable columns={columnsStudents} rows={students?.students} isTeacherTable={false}/>
           }
         </Box>
 

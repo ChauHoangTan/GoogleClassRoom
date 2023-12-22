@@ -5,7 +5,8 @@ import UploadIcon from '@mui/icons-material/Upload'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import GradeTable from './GradeTable'
-import { useEffect, useState } from 'react'
+import { getStudentIdList } from '../../../../redux/APIs/classServices'
+import { useEffect, useRef, useState } from 'react'
 import {
   DndContext,
   // eslint-disable-next-line no-unused-vars
@@ -22,6 +23,8 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
+import { CSVLink } from 'react-csv'
+import { useParams } from 'react-router-dom'
 
 const columns = [
   { id: 'id', label: 'ID', minWidth: 170 },
@@ -338,6 +341,33 @@ export default function GradeTeacher () {
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }
 
+  const { classId } = useParams()
+
+  const [csvData, setCsvData] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { message, studentIdList } = await getStudentIdList(classId)
+        console.log(message, studentIdList)
+        let dataList = [
+          ['StudentId', 'Grade']
+        ]
+
+        studentIdList.forEach((data) => {
+          dataList.push([data, ''])
+        })
+
+        setCsvData(dataList)
+      } catch (error) {
+        console.error('Error fetching CSV data:', error)
+      }
+    }
+
+    fetchData()
+  }, [classId])
+
+
   return (
     <>
       <Box sx={{
@@ -346,13 +376,15 @@ export default function GradeTeacher () {
         justifyContent: 'flex-end'
       }}>
         <Button variant='contained' startIcon={<AddToPhotosIcon />} onClick={handleOpenCreateNewGradeComposition}>
-        Create new grade
+          Create new grade
         </Button>
-        <Button variant='contained' startIcon={<FileDownloadIcon />}>
-        Download Grade
-        </Button>
+        <CSVLink data={csvData} filename='grade.csv'>
+          <Button variant='contained' startIcon={<FileDownloadIcon />}>
+            Download Grade
+          </Button>
+        </CSVLink>
         <Button variant='contained' startIcon={<UploadIcon />}>
-        Upload Grade
+          Upload Grade
         </Button>
       </Box>
 

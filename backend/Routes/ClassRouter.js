@@ -38,4 +38,10 @@ router.post("/send-invitation", classController.sendInvitateEmail);
 
 router.post("/receive-invitation", passport.authenticate('jwt', { session: false }), verifyInvitationByEmail, classController.receiveInvitateEmail);
 
+router.post("/students/upload", passport.authenticate('jwt', { session: false }), classController.getStudentsListByUploadFile);
+
+router.post("/students/allTypeOfStudents", passport.authenticate('jwt', { session: false }), classController.getAllTypeOfStudents);
+
+router.post("/students/getStudentIdList", passport.authenticate('jwt', { session: false }), classController.getStudentIdListByUpload);
+
 module.exports = router;

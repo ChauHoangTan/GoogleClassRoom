@@ -40,10 +40,17 @@ const getClassByID = async (req, res) => {
     try {
         // Get class by ID class
         const curClass = await Class.findById(req.params.id);
+        let isTeacherOfThisClass = true;
+
         if (!curClass) {
-            return res.status(401).json({ success: false, message: 'Class not found' });
+            return res.status(404).json({ success: false, message: 'Class not found' });
         }
-        return res.status(200).json({ data: curClass });
+
+        else if (curClass.students.includes(req.user.id)) {
+            isTeacherOfThisClass = false;
+        }
+
+        return res.status(200).json({ data: {...curClass._doc, isTeacherOfThisClass} });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -483,6 +490,132 @@ const receiveInvitateEmail = async(req, res) => {
     }
 };
 
+const getStudentsListByUploadFile = async (req, res) => {
+    const { studentsListUpload, classId } = req.body;
+
+    try {
+        const classExist = await Class.findById(classId)
+        
+        if (!classExist) {
+            return res.status(404).json({ message: 'No class found' });
+        }
+
+        classExist.studentsListUpload = studentsListUpload;
+
+        await classExist.save()
+
+        return res.status(200).json({message: "Students list added!" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+const getAllTypeOfStudents = async (req, res) => {
+    const { classId } = req.body;
+    try {
+        const classExist = await Class.findById(classId)
+
+        const studentList = await Class.findById(classId)
+        .populate({
+            path: 'students',
+            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students' 
+        })
+        .exec();
+
+        if (!studentList || !classExist) {
+            return res.status(404).json({ message: 'No class found' });
+        }
+
+        // Xử lý
+        const studentsListUpload = classExist.studentsListUpload;
+
+        // Lọc ra danh sách sinh viên không chứa trong studentsListUpload.userId
+        const unmatchedStudents = studentList.students.filter((student) => {
+            return !studentsListUpload.some(
+            (uploadStudent) => uploadStudent.userId.toString() === student.userId.toString()
+            );
+        });
+    
+        // Tạo đối tượng JSON để trả về
+        const resultArray = unmatchedStudents.map((student) => {
+            return {
+            userId: student.userId,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            email: student.email,
+            phone: student.phone,
+            image: student.image,
+            dob: student.dob,
+            isVerifiedEmail: student.isVerifiedEmail,
+            isBanned: student.isBanned,
+            students: student.students,
+            status: 'not exist', // Vì đây là danh sách không chứa trong studentsListUpload
+            };
+        });
+
+        studentsListUpload.forEach((uploadStudent) => {
+            // Tìm sinh viên trong danh sách studentList
+            const matchingStudent = studentList.students.find(
+                (student) => student.userId.toString() === uploadStudent.userId.toString()
+            );
+
+            // Tạo đối tượng JSON mới để trả về
+            const resultObject = {
+                userId: uploadStudent.userId,
+                firstName: matchingStudent ? matchingStudent.firstName : '',
+                lastName: matchingStudent ? matchingStudent.lastName : '',
+                email: matchingStudent ? matchingStudent.email : '',
+                phone: matchingStudent ? matchingStudent.phone : '',
+                image: matchingStudent ? matchingStudent.image : '',
+                dob: matchingStudent ? matchingStudent.dob : '',
+                isVerifiedEmail: matchingStudent ? matchingStudent.isVerifiedEmail : '',
+                isBanned: matchingStudent ? matchingStudent.isBanned : '',
+                students: matchingStudent ? matchingStudent.students : '',
+            };
+
+            // Kiểm tra trạng thái và thêm vào resultObject
+            if (!uploadStudent.userId || matchingStudent === undefined) {
+                resultObject.status = 'not mapping';
+            } else if (matchingStudent) {
+                resultObject.status = 'mapped';
+            } else {
+                resultObject.status = 'not exist';
+            }
+
+            // Thêm vào mảng kết quả
+            resultArray.push(resultObject);
+        });
+
+
+
+        return res.status(200).json({ students: resultArray });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+const getStudentIdListByUpload = async (req, res) => {
+    const { classId } = req.body;
+
+    try {
+        const classExist = await Class.findById(classId)
+        
+        if (!classExist) {
+            return res.status(404).json({ message: 'No class found' });
+        }
+
+        let studentIdList = []
+
+        classExist.studentsListUpload.map((data) => {
+            studentIdList.push(data.userId)
+        })
+
+        return res.status(200).json({message: "Students list getted!", studentIdList });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getAllClass,
     createNewClass,
@@ -498,5 +631,8 @@ module.exports = {
     getInviteClassTeacher,
     inviteClassTeacher,
     sendInvitateEmail,
-    receiveInvitateEmail
+    receiveInvitateEmail,
+    getStudentsListByUploadFile,
+    getAllTypeOfStudents,
+    getStudentIdListByUpload
 }

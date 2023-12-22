@@ -27,7 +27,7 @@ import './style.scss'
 import { FiSettings } from 'react-icons/fi'
 import Notification from '../pages/notification/Notification.js'
 
-export default function ResponsiveAppBar () {
+export default function ResponsiveAppBar ({ socket }) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { mode, setMode } = useColorScheme('')
@@ -174,7 +174,7 @@ export default function ResponsiveAppBar () {
                       horizontal: 'right'
                     }}
                   >
-                    <Notification/>
+                    <Notification socket={socket}/>
                   </Popover>
                   <Menu
                     id='menu-appbar'

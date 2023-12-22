@@ -5,11 +5,13 @@ import { deleteClassAction, getAllClassesAction } from '../../../redux/actions/c
 import ClassTable from '../../../components/table/ClassTable'
 
 
-const Classes = () => {
+const Classes = ({ socket }) => {
   const dispatch = useDispatch()
 
   const [selectionModel, setSelectionModel] = useState([]);
-
+  const { userInfo } = useSelector(
+    state => state.userLogin
+  )
   const { isLoading, isError, classes } = useSelector(
     (state) => state.adminGetAllClasses
   )
@@ -27,9 +29,16 @@ const Classes = () => {
   }, [dispatch, isError, deleteError, deleteSuccess])
 
   // delete Class handler
-  const deleteClassHandler = (id, name) => {
-    if (window.confirm('Are you sure you want to delete this class?' + name)) {
-      dispatch(deleteClassAction(id))
+  const deleteClassHandler = (classItem) => {
+    console.log(classItem.teachers[0])
+    if (window.confirm('Are you sure you want to delete this class?' + classItem.className)) {
+        // socket.emit('sendNotification', {
+        //     userInfo,
+        //     receiverId: classItem.teachers[0]._id,
+        //     type: 1,
+        //   });
+        //   console.log(socket)
+      dispatch(deleteClassAction(classItem._id))
     }
   }
 

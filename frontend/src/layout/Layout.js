@@ -7,13 +7,13 @@ import Menu from './Menu'
 import { useSelector } from 'react-redux'
 
 
-function Layout() {
+function Layout({ socket }) {
 
   const isOpenMenu = useSelector(state => state.isOpenMenu)
 
   return (
     <div id='layout'>
-      <Header />
+      <Header socket={socket} />
 
       <Stack direction='row' id='menuAndOutlet'>
         <div className={`grid1 ${!isOpenMenu && 'hide'}`}>

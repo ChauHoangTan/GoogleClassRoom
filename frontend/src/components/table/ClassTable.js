@@ -94,7 +94,7 @@ console.log(classes)
                 </Tooltip>
                 <Tooltip title="Delete this room">
                   <IconButton
-                    onClick={() => deleteHandler(params.row._id)}
+                    onClick={() => deleteHandler(params.row)}
                   >
                     <Delete />
                   </IconButton>

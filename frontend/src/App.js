@@ -13,7 +13,7 @@ import ToastContainer from './components/notification/ToastContainer.js'
 import Password from './pages/password/Password.js'
 import Profile from './pages/profile/Profile.js'
 import { AdminProtectedRouter, ProtectedRouter } from './ProtectedRouter.js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LoginSuccess from './pages/auth/loginSuccess/LoginSuccess.js'
 import ActivationEmail from './pages/auth/activationEmail/ActivationEmail.js'
 import ForgotPassword from './pages/auth/ForgotPassword.js/ForgotPassword.js'
@@ -23,22 +23,44 @@ import Classes from './pages/admin/classes/Classes.js'
 import DashBoard from './pages/class/dashBoard/DashBoard.js'
 import Main from './pages/admin/main/Main.js'
 import InvitationByUrl from './pages/class/invitation/invitationByUrl.js'
+import { io } from 'socket.io-client';
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
+  const [socket, setSocket] = useState(null);
+  
+  useEffect(() => {
+    // Receive notifications from server
+    const connect = io('http://localhost:5000', {
+        withCredentials: true,
+        extraHeaders: {
+          'Access-Control-Allow-Origin': 'http://localhost:3000' // Đổi thành origin của bạn
+        }
+      });
+      console.log(connect)
+    //   connect.on('sendAll', (msg) => {
+    //     console.log(msg)
+    //   })
+
+    //   connect.on('getNotification', (data) => {
+    //     console.log(data)
+    //     });
+
+      setSocket(connect);
+  }, []);
   return (
     <>
       <ToastContainer />
       <BrowserRouter>
         <Routes>
-          <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe}/>}/>
-          <Route path='/login-success/:provider/:userId/:tokenLogin' element={<LoginSuccess />} />
+          <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe} socket={socket} />}/>
+          <Route path='/login-success/:provider/:userId/:tokenLogin' element={<LoginSuccess socket={socket} />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login/activate' element={<ActivationEmail/>}/>
           <Route path='/user/:type' element={<ForgotPassword />} />
           <Route path='/user/reset/:activation_token' element={<ResetPassword />} />
-          <Route path='/class/invite/:type/:invitation_token' element={<InvitationByUrl/>}/>
-          <Route path='/' element={<Layout />}>
+          <Route path='/class/invite/:type/:invitation_token' element={<InvitationByUrl socket={socket} />}/>
+          <Route path='/' element={<Layout socket={socket} />}>
             <Route index element={<Landing />} />
             <Route path='/user/activate/:activation_token' element={<ActivationEmail/>}/>
             <Route path='*' element={<NoPage />} />
@@ -50,7 +72,7 @@ function App () {
               <Route element={<AdminProtectedRouter />}>
                 <Route path='/dashboard' element={<Main />} />
                 <Route path='/users' element={<Users />} />
-                <Route path='/classes' element={<Classes />} />
+                <Route path='/classes' element={<Classes socket={socket} />} />
               </Route>
             </Route>
           </Route>

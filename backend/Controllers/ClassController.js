@@ -26,7 +26,7 @@ const getAllClass = async (req, res) => {
         const classes = await Class.find({})
         .populate({
             path: 'teachers',
-            select: 'image firstName lastName -_id', // Chọn các trường cần lấy từ User collection
+            select: 'image firstName lastName _id', // Chọn các trường cần lấy từ User collection
         })
         .sort({ _id: -1 });
 

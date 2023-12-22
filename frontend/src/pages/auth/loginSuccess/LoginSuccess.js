@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { Grid } from '@mui/material'
 import Swal from 'sweetalert2'
 
-function LoginSuccess() {
+function LoginSuccess({ socket }) {
   const { userId, tokenLogin, provider } = useParams()
   const initialized = useRef(false)
 
@@ -35,6 +35,7 @@ function LoginSuccess() {
   // useEffect
   useEffect(() => {
     if (isSuccess) {
+        socket?.emit('newUser', userInfo);
       toast.success(`Welcome back ${userInfo?.firstName}`)
     }
     if (isError) {

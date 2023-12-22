@@ -20,26 +20,28 @@ import { getClassByIDActions } from '../../redux/actions/classActions'
 
 function ClassDetails() {
   const dispatch = useDispatch()
-  // useEffect
-  const { isLoading: classLoading, isError: classError, classes } = useSelector(
+
+  const { isLoading: classLoading, isError: classError, classes, isSuccess } = useSelector(
     (state) => state.userGetClassByID
   )
 
   const { classId } = useParams()
-
+  // useEffect
   useEffect(() => {
     dispatch(getClassByIDActions(classId))
+
+    if (isSuccess) {
+      console.log('SUCCESS')
+    }
+
     if (classError) {
       toast.error(classError)
-      dispatch({ type: 'GET_ALL_MY_CLASSES_RESET' })
+      dispatch({ type: 'GET_CLASS_BY_ID_RESET' })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, classError])
 
   const [value, setValue] = useState('1')
-
-  const { userInfo } = useSelector(
-    state => state.userLogin
-  )
 
   const handleChange = (event, newValue) => {
     setValue( newValue )
@@ -57,10 +59,19 @@ function ClassDetails() {
 
           </TabList>
         </Box>
-        <TabPanel value="1"><DashBoard/></TabPanel>
-        <TabPanel value="2"><Participants /></TabPanel>
-        <TabPanel value="3">{!userInfo.isAdmin ? <GradeTeacher/> : <GradeStudent/>}</TabPanel>
-        <TabPanel value="4">{!userInfo.isAdmin ? <ReviewTeacher/> : <ReviewStudent/>}</TabPanel>
+        {
+          classLoading ?
+            <Loader/>
+            :
+            <>
+              <TabPanel value="1"><DashBoard/></TabPanel>
+              <TabPanel value="2"><Participants /></TabPanel>
+              <TabPanel value="3">{classes.data?.isTeacherOfThisClass ?
+                <GradeTeacher/> : <GradeStudent/>}</TabPanel>
+              <TabPanel value="4">{classes.data?.isTeacherOfThisClass ? <ReviewTeacher/> :
+                <ReviewStudent/>}</TabPanel>
+            </>
+        }
 
       </TabContext>
     </Box>

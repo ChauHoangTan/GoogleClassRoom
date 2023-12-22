@@ -40,10 +40,17 @@ const getClassByID = async (req, res) => {
     try {
         // Get class by ID class
         const curClass = await Class.findById(req.params.id);
+        let isTeacherOfThisClass = true;
+
         if (!curClass) {
-            return res.status(401).json({ success: false, message: 'Class not found' });
+            return res.status(404).json({ success: false, message: 'Class not found' });
         }
-        return res.status(200).json({ data: curClass });
+
+        else if (curClass.students.includes(req.user.id)) {
+            isTeacherOfThisClass = false;
+        }
+
+        return res.status(200).json({ data: {...curClass._doc, isTeacherOfThisClass} });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

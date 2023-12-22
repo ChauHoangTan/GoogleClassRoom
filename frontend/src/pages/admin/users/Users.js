@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 const Users = () => {
   const dispatch = useDispatch()
 
-  const [selectionModel, setSelectionModel] = useState([]);
+  const [selectionModel, setSelectionModel] = useState([])
 
   const { isLoading, isError, users } = useSelector(
     (state) => state.adminGetAllUsers
@@ -28,20 +28,20 @@ const Users = () => {
     }
   }, [dispatch, isError, deleteError, isSuccess])
 
-    // delete user handler
-    const deleteUserHandler = (user) => {
-        if (window.confirm('Are you sure you want to delete ?' + user.firstName)) {
-            dispatch(deleteUserAction(user._id))
-        }
+  // delete user handler
+  const deleteUserHandler = (user) => {
+    if (window.confirm('Are you sure you want to delete ?' + user.firstName)) {
+      dispatch(deleteUserAction(user._id))
     }
+  }
 
-    const handleDeleteSelectedRows = () => {
-        const id = selectionModel.map((rowId) => rowId.toString()).join(',');
-        if (window.confirm(`Are you sure you want to delete ${selectionModel.length} users?` )) {
-            dispatch(deleteUserAction(id))
-        }
-        setSelectionModel([]);
-    };
+  const handleDeleteSelectedRows = () => {
+    const id = selectionModel.map((rowId) => rowId.toString()).join(',')
+    if (window.confirm(`Are you sure you want to delete ${selectionModel.length} users?` )) {
+      dispatch(deleteUserAction(id))
+    }
+    setSelectionModel([])
+  }
 
   return (
     <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />

@@ -63,14 +63,14 @@ const Main = () => {
             justifyContent: 'center'
           }}
         >
-            {userLoading ? (
-                <Loader />
-            ) : (
-               <>
-                <Group sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
-                <Typography variant="h4">{users?.length}</Typography>
-               </>
-            )}
+          {userLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <Group sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
+              <Typography variant="h4">{users?.length}</Typography>
+            </>
+          )}
         </Box>
       </Paper>
       <Paper elevation={3} sx={{ p: 3 }}>
@@ -82,71 +82,71 @@ const Main = () => {
             justifyContent: 'center'
           }}
         >
-            {
-                classLoading ? (
-                    <Loader />
-                ) : (
-                    <>
-                        <MapsHomeWork sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
-                        <Typography variant="h4">{classes?.length}</Typography>
-                    </>
-                )
-            }
+          {
+            classLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <MapsHomeWork sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
+                <Typography variant="h4">{classes?.length}</Typography>
+              </>
+            )
+          }
         </Box>
       </Paper>
       <Paper elevation={3} sx={{ p: 2, gridColumn: 3, gridRow: '1/4' }}>
         <Box>
           <Typography>Recently added Users</Typography>
-            {userLoading ? (
-                <Loader />
-            ) : (
-                <List>
-                {users?.slice(0, 4).map((user, i) => (
-                  <Box key={user._id}>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar alt={user?.name} src={user?.image} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={user?.email}
-                        secondary={`Time Created: ${moment(user?.createdAt).format(
-                          'YYYY-MM-DD H:mm:ss'
-                        )}`}
-                      />
-                    </ListItem>
-                    {i !== 3 && <Divider variant="inset" />}
-                  </Box>
-                ))}
-              </List>
-            )}
+          {userLoading ? (
+            <Loader />
+          ) : (
+            <List>
+              {users?.slice(0, 4).map((user, i) => (
+                <Box key={user._id}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar alt={user?.name} src={user?.image} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={user?.email}
+                      secondary={`Time Created: ${moment(user?.createdAt).format(
+                        'YYYY-MM-DD H:mm:ss'
+                      )}`}
+                    />
+                  </ListItem>
+                  {i !== 3 && <Divider variant="inset" />}
+                </Box>
+              ))}
+            </List>
+          )}
         </Box>
         <Divider sx={{ mt: 3, mb: 3, opacity: 0.7 }} />
         <Box>
           <Typography>Recently added Classes</Typography>
-            {classLoading ? (
-                <Loader />
-            ) : (
-                <List>
-                {classes?.slice(0, 4).map((classItem, i) => (
-                  <Box key={classItem?._id}>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar
-                          alt={classItem?.className}
-                          src={classItem?.image}
-                          variant="rounded"
-                        />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={classItem?.className}
-                        secondary={`Added: ${moment(classItem?.createdAt).fromNow()}`}
+          {classLoading ? (
+            <Loader />
+          ) : (
+            <List>
+              {classes?.slice(0, 4).map((classItem, i) => (
+                <Box key={classItem?._id}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar
+                        alt={classItem?.className}
+                        src={classItem?.image}
+                        variant="rounded"
                       />
-                    </ListItem>
-                    {i !== 3 && <Divider variant="inset" />}
-                  </Box>
-                ))}
-              </List>
-            )}
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={classItem?.className}
+                      secondary={`Added: ${moment(classItem?.createdAt).fromNow()}`}
+                    />
+                  </ListItem>
+                  {i !== 3 && <Divider variant="inset" />}
+                </Box>
+              ))}
+            </List>
+          )}
         </Box>
       </Paper>
       <Paper elevation={3} sx={{ p: 2, gridColumn: '1/3' }}>

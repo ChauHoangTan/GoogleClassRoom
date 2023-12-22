@@ -413,7 +413,6 @@ const inviteClassTeacher = async(req, res) => {
 // @route POST api/class/send-invitation
 const sendInvitateEmail = async(req, res) => {
     const { emails, role, classId } = req.body;
-    console.log('emails, role, classId', emails, role, classId)
     try {
         const classExist = await Class.findById(classId);
 

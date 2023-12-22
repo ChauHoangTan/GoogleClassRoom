@@ -1,23 +1,23 @@
-import { Box, Stack, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
-import { PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { countUsersByRoleJoinService } from '../../../redux/APIs/userServices';
-import Loader from '../../../components/notification/Loader';
+import { Box, Stack, Typography } from '@mui/material'
+import { useEffect, useRef, useState } from 'react'
+import { PieChart, Pie, Cell, Tooltip } from 'recharts'
+import { countUsersByRoleJoinService } from '../../../redux/APIs/userServices'
+import Loader from '../../../components/notification/Loader'
 
-const COLORS = ['#00C49F', '#0088FE', '#FFBB28', '#FF8042', '#AF19FF', '#FF195B', '#ABABAB'];
+const COLORS = ['#00C49F', '#0088FE', '#FFBB28', '#FF8042', '#AF19FF', '#FF195B', '#ABABAB']
 
-const RADIAN = Math.PI / 180;
+const RADIAN = Math.PI / 180
 const renderCustomizedLabel = ({
   cx,
   cy,
   midAngle,
   innerRadius,
   outerRadius,
-  percent,
+  percent
 }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5
+  const x = cx + radius * Math.cos(-midAngle * RADIAN)
+  const y = cy + radius * Math.sin(-midAngle * RADIAN)
 
   return (
     <text
@@ -29,11 +29,11 @@ const renderCustomizedLabel = ({
     >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
-  );
-};
+  )
+}
 
 const PieUsersLoginMethods = () => {
-  const [loginMethods, setLoginMethods] = useState(null);
+  const [loginMethods, setLoginMethods] = useState(null)
   const initialized = useRef(false)
   const [err, setErr] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -41,20 +41,20 @@ const PieUsersLoginMethods = () => {
 
   useEffect(() => {
     if (!initialized.current) {
-        initialized.current = true
-        const fetchData = async () => {
-            try {
-                const result = await countUsersByRoleJoinService();
-                setLoginMethods(result);
-                setIsLoading(false)
-            } catch (error) {
-                setErr(error.response.data.message)
-                setIsLoading(false)
-            }
+      initialized.current = true
+      const fetchData = async () => {
+        try {
+          const result = await countUsersByRoleJoinService()
+          setLoginMethods(result)
+          setIsLoading(false)
+        } catch (error) {
+          setErr(error.response.data.message)
+          setIsLoading(false)
         }
-        fetchData();
+      }
+      fetchData()
     }
-  }, []);
+  }, [])
 
   return (
     <Box
@@ -76,7 +76,7 @@ const PieUsersLoginMethods = () => {
               <Pie
                 data={Object.entries(loginMethods).map(([method, count], index) => ({
                   name: method,
-                  qty: count,
+                  qty: count
                 }))}
                 labelLine={false}
                 label={renderCustomizedLabel} // Assuming renderCustomizedLabel is a function
@@ -108,8 +108,8 @@ const PieUsersLoginMethods = () => {
         )
       )}
     </Box>
-  );
-  
-};
+  )
 
-export default PieUsersLoginMethods;
+}
+
+export default PieUsersLoginMethods

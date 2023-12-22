@@ -35,7 +35,6 @@ function LoginSuccess({ socket }) {
   // useEffect
   useEffect(() => {
     if (isSuccess) {
-        socket?.emit('newUser', userInfo);
       toast.success(`Welcome back ${userInfo?.firstName}`)
     }
     if (isError) {

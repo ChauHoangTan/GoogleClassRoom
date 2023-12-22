@@ -40,4 +40,6 @@ router.post("/receive-invitation", passport.authenticate('jwt', { session: false
 
 router.post("/students/upload", passport.authenticate('jwt', { session: false }), classController.getStudentsListByUploadFile);
 
+router.post("/students/allTypeOfStudents", passport.authenticate('jwt', { session: false }), classController.getAllTypeOfStudents);
+
 module.exports = router;

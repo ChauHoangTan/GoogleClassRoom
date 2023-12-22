@@ -69,7 +69,6 @@ const verifyInvitationByEmail = (req, res, next) => {
                     return res.status(400).json({ message: "The invitation is incorrect or has expired" });
                 }
             };
-            console.log('{ email, role, classId }', info)
             req.infoInvitation = info;
             next();
         });
@@ -93,8 +92,6 @@ const teacher = (req, res, next) => {
 
     // Check if classId is in the teacher's list of classes
     const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
-    console.log('isClassTeacher', isClassTeacher)
-    console.log('req.user.teacherClassList', req.user.teacherClassList)
 
     if (isClassTeacher) {
         // If the user is the teacher of the class, allow the request to continue processing

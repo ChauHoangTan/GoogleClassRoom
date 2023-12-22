@@ -9,7 +9,7 @@ import { CSVLink } from 'react-csv'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import './style.scss'
 import { useParams } from 'react-router-dom'
-import { getAllTeachersAction, getAllStudentsAction, sendInvitationByEmailAction } from '../../../redux/actions/classActions'
+import { getAllTeachersAction, getAllTypeOfStudentsAction, sendInvitationByEmailAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
@@ -166,6 +166,14 @@ const columns = [
   { id: 'isTeacher', label: 'Kick', minWidth: 170 }
 ]
 
+const columnsStudents = [
+  { id: 'image', label: 'Avatar', minWidth: 170 },
+  { id: 'userId', label: 'ID', minWidth: 170 },
+  { id: 'fullName', label: 'Full Name', minWidth: 170 },
+  { id: 'status', label: 'Status', minWidth: 170 },
+  { id: 'isTeacher', label: 'Kick', minWidth: 170 }
+]
+
 const Emails = [
   'chauhoangtan6937@gmail.com',
   'hualamchicuong@gmail.com',
@@ -249,7 +257,7 @@ export default function Participants() {
     (state) => state.userGetAllTeachers
   )
   const { isLoading: studentsLoading, isError: studentsError, students, isSuccess: studentsSuccess } = useSelector(
-    (state) => state.userGetAllStudents
+    (state) => state.userGetAllTypeOfStudents
   )
   const { isLoading: sendEmailLoading, isError: sendEmailError, isSuccess: sendEmailSuccess } = useSelector(
     (state) => state.userSendInvitationByEmail
@@ -258,8 +266,7 @@ export default function Participants() {
   // useEffect
   useEffect(() => {
     dispatch(getAllTeachersAction(classId))
-    dispatch(getAllStudentsAction(classId))
-
+    dispatch(getAllTypeOfStudentsAction(classId))
     if (teachersSuccess) {
       dispatch({ type: 'GET_ALL_TEACHERS_RESET' })
     }
@@ -518,7 +525,7 @@ export default function Participants() {
           { studentsLoading ?
             <Loader />
             :
-            <ParticipantTable columns={columns} rows={students?.students} isTeacherTable={false}/>
+            <ParticipantTable columns={columnsStudents} rows={students?.students} isTeacherTable={false}/>
           }
         </Box>
 

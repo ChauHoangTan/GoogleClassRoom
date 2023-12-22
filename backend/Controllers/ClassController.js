@@ -413,7 +413,6 @@ const inviteClassTeacher = async(req, res) => {
 // @route POST api/class/send-invitation
 const sendInvitateEmail = async(req, res) => {
     const { emails, role, classId } = req.body;
-    console.log('emails, role, classId', emails, role, classId)
     try {
         const classExist = await Class.findById(classId);
 
@@ -504,6 +503,90 @@ const getStudentsListByUploadFile = async (req, res) => {
     }
 }
 
+const getAllTypeOfStudents = async (req, res) => {
+    const { classId } = req.body;
+    try {
+        const classExist = await Class.findById(classId)
+
+        const studentList = await Class.findById(classId)
+        .populate({
+            path: 'students',
+            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students' 
+        })
+        .exec();
+
+        if (!studentList || !classExist) {
+            return res.status(404).json({ message: 'No class found' });
+        }
+
+        // Xử lý
+        const studentsListUpload = classExist.studentsListUpload;
+
+        // Lọc ra danh sách sinh viên không chứa trong studentsListUpload.userId
+        const unmatchedStudents = studentList.students.filter((student) => {
+            return !studentsListUpload.some(
+            (uploadStudent) => uploadStudent.userId.toString() === student.userId.toString()
+            );
+        });
+    
+        // Tạo đối tượng JSON để trả về
+        const resultArray = unmatchedStudents.map((student) => {
+            return {
+            userId: student.userId,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            email: student.email,
+            phone: student.phone,
+            image: student.image,
+            dob: student.dob,
+            isVerifiedEmail: student.isVerifiedEmail,
+            isBanned: student.isBanned,
+            students: student.students,
+            status: 'not exist', // Vì đây là danh sách không chứa trong studentsListUpload
+            };
+        });
+
+        studentsListUpload.forEach((uploadStudent) => {
+            // Tìm sinh viên trong danh sách studentList
+            const matchingStudent = studentList.students.find(
+                (student) => student.userId.toString() === uploadStudent.userId.toString()
+            );
+
+            // Tạo đối tượng JSON mới để trả về
+            const resultObject = {
+                userId: uploadStudent.userId,
+                firstName: matchingStudent ? matchingStudent.firstName : '',
+                lastName: matchingStudent ? matchingStudent.lastName : '',
+                email: matchingStudent ? matchingStudent.email : '',
+                phone: matchingStudent ? matchingStudent.phone : '',
+                image: matchingStudent ? matchingStudent.image : '',
+                dob: matchingStudent ? matchingStudent.dob : '',
+                isVerifiedEmail: matchingStudent ? matchingStudent.isVerifiedEmail : '',
+                isBanned: matchingStudent ? matchingStudent.isBanned : '',
+                students: matchingStudent ? matchingStudent.students : '',
+            };
+
+            // Kiểm tra trạng thái và thêm vào resultObject
+            if (!uploadStudent.userId || matchingStudent === undefined) {
+                resultObject.status = 'not mapping';
+            } else if (matchingStudent) {
+                resultObject.status = 'mapped';
+            } else {
+                resultObject.status = 'not exist';
+            }
+
+            // Thêm vào mảng kết quả
+            resultArray.push(resultObject);
+        });
+
+
+
+        return res.status(200).json({ students: resultArray });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getAllClass,
     createNewClass,
@@ -520,5 +603,6 @@ module.exports = {
     inviteClassTeacher,
     sendInvitateEmail,
     receiveInvitateEmail,
-    getStudentsListByUploadFile
+    getStudentsListByUploadFile,
+    getAllTypeOfStudents
 }

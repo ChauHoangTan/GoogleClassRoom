@@ -84,6 +84,22 @@ export const userGetAllStudentsReducer = (state = { students: [] }, action) => {
   }
 }
 
+// USER GET ALL TYPE OF STUDENTS
+export const userGetAllTypeOfStudentsReducer = (state = { students: [] }, action) => {
+  switch (action.type) {
+  case classConstants.GET_ALL_TYPE_STUDENTS_REQUEST:
+    return { isLoading: true }
+  case classConstants.GET_ALL_TYPE_STUDENTS_SUCCESS:
+    return { isLoading: false, students: action.payload }
+  case classConstants.GET_ALL_TYPE_STUDENTS_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case classConstants.GET_ALL_TYPE_STUDENTS_RESET:
+    return {}
+  default:
+    return state
+  }
+}
+
 // USER GET ALL TEACHERS
 export const userGetAllTeachersReducer = (state = { teacher: [] }, action) => {
   switch (action.type) {

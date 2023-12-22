@@ -75,6 +75,12 @@ const getAllTeachersService = async (id) => {
   return data
 }
 
+// get All students of type in Class
+const getAllTypeOfStudentsService = async (id) => {
+  const { data } = await AxiosJWT.post('/class/students/allTypeOfStudents', { classId: id })
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -117,5 +123,6 @@ export {
   getInvitationTeacherByUrlService,
   invitationByEmailService,
   sendInvitationByEmailService,
-  uploadStudentList
+  uploadStudentList,
+  getAllTypeOfStudentsService
 }

@@ -14,10 +14,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import Loader from '../../../components/notification/Loader'
-import { getInvitationTeacherByUrlService } from '../../../redux/APIs/classServices'
+import { getInvitationTeacherByUrlService, uploadStudentList } from '../../../redux/APIs/classServices'
 import copy from 'clipboard-copy'
 import Chip from '@mui/material/Chip'
 import { getAllEmailUsersService } from '../../../redux/APIs/userServices'
+import { styled } from '@mui/material/styles'
+import Papa from 'papaparse'
+import axios from 'axios'
+import Axios from '../../../redux/APIs/Axios'
 
 const styleModal = {
   position: 'absolute',
@@ -343,6 +347,58 @@ export default function Participants() {
     ['StudentId', 'FullName']
   ]
 
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1
+  })
+
+  const readFileCSV = async (e) => {
+    const selectedFile = e.target.files[0]
+    const result = await read(selectedFile)
+    let dataConvert = []
+
+    result.data.map(data => {
+      dataConvert.push(handleConvertData(data))
+    })
+
+    uploadStudentList(classId)
+  }
+
+  const read = (file) => {
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        complete: (result) => {
+          resolve(result)
+        },
+        header: true // Nếu CSV có header (tên cột)
+      })
+    })
+  }
+
+  const handleConvertData = ({ StudentId, FullName }) => {
+    const fullName = splitFullName(FullName)
+    let data = {
+      userId: StudentId,
+      firstName: fullName.firstName,
+      lastName: fullName.lastName
+    }
+    return data
+  }
+
+  const splitFullName = (FullName) => {
+    const index = FullName.indexOf(' ')
+    let lastName = FullName.substring(0, index)
+    let firstName = FullName.substring(index+1)
+    return { lastName, firstName }
+  }
+
   return (
     <Box sx={{
       p: 2
@@ -353,8 +409,9 @@ export default function Participants() {
             Download Student List
           </Button>
         </CSVLink>
-        <Button variant='contained' startIcon={<UploadIcon />}>
+        <Button component="label" variant='contained' startIcon={<UploadIcon />}>
           Upload  Student List
+          <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
         </Button>
       </Stack>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>

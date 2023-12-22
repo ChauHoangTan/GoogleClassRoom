@@ -96,8 +96,8 @@ const updateClassService = async(id, classData) => {
 }
 
 // admin upload student list
-const uploadStudentList = async(classId) => {
-  const { data } = await AxiosJWT.post('/class/upload/', classId)
+const uploadStudentList = async(studentsListUpload, classId) => {
+  const { data } = await AxiosJWT.post('/class/students/upload', { studentsListUpload, classId })
   return data
 }
 

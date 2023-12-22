@@ -362,13 +362,13 @@ export default function Participants() {
   const readFileCSV = async (e) => {
     const selectedFile = e.target.files[0]
     const result = await read(selectedFile)
-    let dataConvert = []
+    let studentsListUpload = []
 
     result.data.map(data => {
-      dataConvert.push(handleConvertData(data))
+      studentsListUpload.push(handleConvertData(data))
     })
 
-    uploadStudentList(classId)
+    uploadStudentList(studentsListUpload, classId)
   }
 
   const read = (file) => {

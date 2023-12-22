@@ -9,14 +9,19 @@ const ClassRouter = require("./Routes/ClassRouter.js")
 const GradeRouter = require("./Routes/GradeRouter.js")
 var cookieParser = require('cookie-parser')
 const errorHandler  = require('./Middlewares/errorMiddleware.js');
+const socketServer = require("./socketServer.js")
 
 const app = express();
 app.use(express.json());
 // app.use(cors());
 app.use(cors({
-    origin: [process.env.CLIENT_URL, "https://accounts.google.com/"],
+    origin: [process.env.CLIENT_URL, "https://accounts.google.com/", "http://localhost:5000"],
     credentials: true
 }))
+
+// Socket.IO configuration
+const server = require("http").createServer(app);
+socketServer.registerSocketServer(server);
 
 app.set("trust proxy", 1);
 
@@ -41,6 +46,6 @@ app.use("/api/grade", GradeRouter);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running in http://localhost:${PORT}`);
 })

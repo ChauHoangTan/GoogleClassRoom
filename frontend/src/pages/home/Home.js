@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { createClassInfoValidation, joinClassByCodeFormInfoValidation } from '../../components/validation/classValidation'
+import { io } from 'socket.io-client'
 
 
 const styleModalJoin = {
@@ -224,6 +225,18 @@ const ModalNewClass = () => {
 }
 
 function Home() {
+    // useEffect(() => {
+    //     // Receive notifications from server
+    //     const socket = io('http://localhost:5000', {
+    //         withCredentials: true,
+    //         extraHeaders: {
+    //           'Access-Control-Allow-Origin': 'http://localhost:3000' // Đổi thành origin của bạn
+    //         }
+    //       });
+    //   console.log(socket)
+    
+    //   }, []);
+    
 
   return (
     <Stack id='home' direction='column'>

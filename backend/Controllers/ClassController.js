@@ -26,7 +26,7 @@ const getAllClass = async (req, res) => {
         const classes = await Class.find({})
         .populate({
             path: 'teachers',
-            select: 'image firstName lastName -_id', // Chọn các trường cần lấy từ User collection
+            select: 'image firstName lastName _id', // Chọn các trường cần lấy từ User collection
         })
         .sort({ _id: -1 });
 
@@ -484,6 +484,26 @@ const receiveInvitateEmail = async(req, res) => {
     }
 };
 
+const getStudentsListByUploadFile = async (req, res) => {
+    const { studentsListUpload, classId } = req.body;
+
+    try {
+        const classExist = await Class.findById(classId)
+        
+        if (!classExist) {
+            return res.status(404).json({ message: 'No class found' });
+        }
+
+        classExist.studentsListUpload = studentsListUpload;
+
+        await classExist.save()
+
+        return res.status(200).json({message: "Students list added!" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getAllClass,
     createNewClass,
@@ -499,5 +519,6 @@ module.exports = {
     getInviteClassTeacher,
     inviteClassTeacher,
     sendInvitateEmail,
-    receiveInvitateEmail
+    receiveInvitateEmail,
+    getStudentsListByUploadFile
 }

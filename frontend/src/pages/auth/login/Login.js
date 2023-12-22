@@ -38,7 +38,7 @@ import { FiLogIn } from 'react-icons/fi'
 //   }
 // })
 
-function Login ({ rememberMe, setRememberMe }) {
+function Login ({ rememberMe, setRememberMe, socket }) {
   const [showPassword, setShowPassword] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword(show => !show)
@@ -91,6 +91,7 @@ function Login ({ rememberMe, setRememberMe }) {
   // useEffect
   useEffect(() => {
     if (userInfo) {
+        socket?.emit('newUser', userInfo);
       navigate('/home')
     }
 
@@ -101,7 +102,7 @@ function Login ({ rememberMe, setRememberMe }) {
       toast.error(isError)
       dispatch({ type: 'USER_LOGIN_RESET' })
     }
-  }, [userInfo, isSuccess, isError, navigate, dispatch])
+  }, [userInfo, isSuccess, isError, navigate, dispatch, socket])
 
   const handleGoogleLogin = () => {
     // Handle when user click login by Google

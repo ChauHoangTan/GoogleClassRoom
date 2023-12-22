@@ -1,5 +1,18 @@
 const mongoose = require("mongoose");
 
+const studentsListUploadSchema = mongoose.Schema({
+    firstName: {
+      type: String
+    },
+    lastName: {
+      type: String
+    },
+    userId: {
+        type: String,
+        required: true,
+    },
+  });
+
 const ClassSchema = mongoose.Schema(
     {
         classId: {
@@ -37,6 +50,7 @@ const ClassSchema = mongoose.Schema(
             ref: 'User',
             default: []
         }],
+        studentsListUpload: [studentsListUploadSchema],
     },
     {
         timestamps: true,

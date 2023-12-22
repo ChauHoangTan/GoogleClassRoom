@@ -2,17 +2,19 @@ const socketIO = require("socket.io");
 const NotificationModel = require("./Models/NotificationModel.js");
 
 const registerSocketServer = (server) => {
-    const addNewUser = (userInfo, socketId) => {
-      !onlineUsers.some((user) => user._id === userInfo._id) &&
-        onlineUsers.push({ ...userInfo, socketId });
+    let onlineUsers = [];
+
+    const addNewUser = (userId, socketId) => {
+      !onlineUsers.some((user) => user.userId === userId) &&
+        onlineUsers.push({ userId, socketId });
     };
     
     const removeUser = (socketId) => {
       onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
     };
     
-    const getUser = (receiverId) => {
-      return onlineUsers.find((user) => user._id === receiverId);
+    const getUser = (userId) => {
+      return onlineUsers.find((user) => user.userId === userId);
     };
     const io = socketIO(server, {
         cors: {
@@ -21,41 +23,59 @@ const registerSocketServer = (server) => {
         }
       });
       
-      let onlineUsers = [];
 
       
     io.on("connection", (socket) => {
-    io.emit("sendAll","Hello all client!")
-  socket.on("newUser", (userInfo) => {
-    // console.log(userInfo)
-    addNewUser(userInfo, socket.id);
-  });
+        console.log(onlineUsers)
+        io.emit("sendAll","Hello all client!")
+        socket.on("newUser", (userId) => {
+            addNewUser(userId, socket.id);
+        });
+   
+        socket.on("initial_data", async (userId) => {
+            const notification = await NotificationModel.find({ userReceiverId: userId, read: false  })
+                .sort({ createdAt: -1 });
+            const receiver = getUser(userId);
+            if(receiver) {
+                io.to(receiver.socketId).emit("get_data", notification);
+            }
+        });
+        
+          socket.on("post_data", async (data) => {
+            const notification = new NotificationModel(data);
+            await notification.save();
+            const receiver = getUser(data.userReceiverId);
+            if(receiver) {
+                io.sockets.emit("change_data");
+            }
+          });
 
-  socket.on("sendNotification", ({ userInfo, receiverId, type }) => {
-      console.log(userInfo, receiverId)
-    const receiver = getUser(receiverId);
-    console.log(receiver)
-    io.to(receiver.socketId).emit("getNotification", {
-      userInfo,
-      type,
-    });
-  });
+          socket.on("check_select_notification", async (item) => {
+            const notification = await NotificationModel.findById(item._id);
+            notification.read = true;
+            await notification.save();
+            const receiver = getUser(item.userReceiverId);
+            if(receiver) {
+                io.to(receiver.socketId).emit("change_data");
+            }
+          })
 
-  socket.on("sendText", ({ senderName, receiverName, text }) => {
-    const receiver = getUser(receiverName);
-    io.to(receiver.socketId).emit("getText", {
-      senderName,
-      text,
-    });
-  });
-  console.log(onlineUsers)
+          socket.on("check_all_notifications", async () => {
+            const notifications = await NotificationModel.find({});
+        
+            notifications.forEach((notification) => {
+              notification.read = true;
+            });
+        
+            await NotificationModel.create(notifications)
+            
+            io.sockets.emit("change_data");
+          });
 
-  socket.on("disconnect", () => {
-    removeUser(socket.id);
-  });
-})
-
-
+        socket.on("disconnect", () => {
+            removeUser(socket.id);
+        });
+    })
 }
 
 module.exports = {

@@ -48,10 +48,10 @@ const PieUsersLoginMethods = () => {
         try {
           const result = await countUsersByLoginMethodsService()
           setLoginMethods(result)
-          setIsLoading(false);
+          setIsLoading(false)
         } catch (error) {
           setErr(error.response.data.message)
-          setIsLoading(false);
+          setIsLoading(false)
         }
       }
       fetchData()
@@ -66,48 +66,48 @@ const PieUsersLoginMethods = () => {
         justifyContent: 'start',
         flexWrap: 'wrap',
         ml: 3,
-        mr: 3,
+        mr: 3
       }}
     >
-        {isLoading ? (
+      {isLoading ? (
         <Loader /> // Assuming Loader is a component
       ) : (
-      loginMethods && (
-        <Box sx={{ display: 'flex', flexWrap: 'nowrap' }}>
+        loginMethods && (
+          <Box sx={{ display: 'flex', flexWrap: 'nowrap' }}>
             <PieChart width={200} height={200}>
-            <Pie
+              <Pie
                 data={Object.entries(loginMethods).map(([method, count], index) => ({
-                name: method,
-                qty: count
+                  name: method,
+                  qty: count
                 }))}
                 labelLine={false}
                 label={renderCustomizedLabel}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="qty"
-            >
+              >
                 {Object.keys(loginMethods).map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
-            </Pie>
-            <Tooltip />
+              </Pie>
+              <Tooltip />
             </PieChart>
             <Stack gap={2} sx={{ flexGrow: 1, alignItems: 'center' }} >
-                <Typography variant="h6">Login Methods</Typography>
-                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Typography variant="h6">Login Methods</Typography>
+              <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
                 {loginMethods &&
                     Object.keys(loginMethods).map((method, i) => (
-                    <Stack key={method} alignItems="center" spacing={1}>
+                      <Stack key={method} alignItems="center" spacing={1}>
                         <Box sx={{ width: 20, height: 20, background: COLORS[i] }} />
                         <Typography variant="body2" sx={{ opacity: 0.7 }}>
-                        {method}
+                          {method}
                         </Typography>
-                    </Stack>
+                      </Stack>
                     ))}
-                </Box>
+              </Box>
             </Stack>
-        </Box>
-      )
+          </Box>
+        )
       )}
     </Box>
   )

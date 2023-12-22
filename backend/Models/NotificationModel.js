@@ -2,22 +2,36 @@ const mongoose = require("mongoose");
 
 const NotificationSchema = mongoose.Schema(
     {
-        socketId: {
+        userSendId: {
+            type: String,
+            default: "",
+            trim: true,   
+        },
+        userReceiverId: {
+            type: String,
+            default: "",
+            trim: true,   
+        },
+        userName: {
             type: String,
             default: "",
         },
-        firstName: {
-            type: String,
-            required: true,
-        },
         content: {
             type: String,
-            required: true
+            default: "",
         },
         image: {
             type: String,
             default: "",
-        }
+        },
+        link: {
+            type: String,
+            default: "",
+        },
+        read: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

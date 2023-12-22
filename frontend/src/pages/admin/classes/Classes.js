@@ -1,17 +1,20 @@
-import { useEffect, useState} from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { deleteClassAction, getAllClassesAction } from '../../../redux/actions/classActions'
 import ClassTable from '../../../components/table/ClassTable'
+import { SocketContext } from '../../../Context/SocketProvider'
 
-
-const Classes = ({ socket }) => {
+const Classes = () => {
   const dispatch = useDispatch()
 
-  const [selectionModel, setSelectionModel] = useState([]);
+  const { socket } = useContext(SocketContext)
+
+  const [selectionModel, setSelectionModel] = useState([])
   const { userInfo } = useSelector(
     state => state.userLogin
   )
+
   const { isLoading, isError, classes } = useSelector(
     (state) => state.adminGetAllClasses
   )
@@ -30,25 +33,34 @@ const Classes = ({ socket }) => {
 
   // delete Class handler
   const deleteClassHandler = (classItem) => {
-    console.log(classItem.teachers[0])
-    if (window.confirm('Are you sure you want to delete this class?' + classItem.className)) {
-        // socket.emit('sendNotification', {
-        //     userInfo,
-        //     receiverId: classItem.teachers[0]._id,
-        //     type: 1,
-        //   });
-        //   console.log(socket)
+    if (window.confirm(`Are you sure you want to delete ${classItem.className} class`)) {
+      // socket.emit('sendNotification', {
+      //     userInfo,
+      //     receiverId: classItem.teachers[0]._id,
+      //     type: 1,
+      //   });
+      //   console.log(socket)
+      const data = {
+        userSendId: userInfo?._id,
+        userReceiverId: classItem.teachers[0]._id,
+        userName:  classItem.teachers[0].firstName,
+        image:  classItem.teachers[0].image,
+        content: `delete ${ classItem.className} class`
+      }
+      console.log(data)
+      socket?.emit('post_data', data)
+
       dispatch(deleteClassAction(classItem._id))
     }
   }
 
   const handleDeleteSelectedRows = () => {
-    const id = selectionModel.map((rowId) => rowId.toString()).join(',');
+    const id = selectionModel.map((rowId) => rowId.toString()).join(',')
     if (window.confirm(`Are you sure you want to delete ${selectionModel.length} class?` )) {
-        dispatch(deleteClassAction(id))
+      dispatch(deleteClassAction(id))
     }
-    setSelectionModel([]);
-};
+    setSelectionModel([])
+  }
 
   return (
     <ClassTable deleteHandler={deleteClassHandler} isLoading={isLoading} classes={classes} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />

@@ -91,7 +91,6 @@ function Login ({ rememberMe, setRememberMe, socket }) {
   // useEffect
   useEffect(() => {
     if (userInfo) {
-        socket?.emit('newUser', userInfo);
       navigate('/home')
     }
 

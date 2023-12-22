@@ -25,6 +25,7 @@ import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
 import { CSVLink } from 'react-csv'
 import { useParams } from 'react-router-dom'
+import { getAllGradeCompositionByClassIdService, createNewGradeComposition } from '../../../../redux/APIs/gradeServices'
 
 const columns = [
   { id: 'id', label: 'ID', minWidth: 170 },
@@ -145,7 +146,7 @@ const gradeCompositionList = [
 ]
 
 
-function CardGrade ({ id, title, composition, time, percent }) {
+function CardGrade ({ id, title, composition, time, percent, order }) {
   // Dnd-kit
   const {
     attributes,
@@ -194,7 +195,9 @@ function CardGrade ({ id, title, composition, time, percent }) {
         </Stack>
         <Stack direction={'row'} alignItems='center'>
           <Typography variant='h6' sx={{ fontStyle:'italic', mx: 5 }}>{percent}</Typography>
-
+          <Button variant='contained' startIcon={<UploadIcon />}>
+            Grade
+          </Button>
           <IconButton fontSize='small'><MoreVertOutlinedIcon/></IconButton>
         </Stack>
       </CardContent>
@@ -208,6 +211,10 @@ function GradeComposition () {
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
 
+  //
+  const [orderGradeComposition, setOrderGradeComposition] = useState([])
+  const [gradeCompositionList, setGradeCompositionList] = useState([])
+
   // Require mouse move 10px then active this event (Fix situation click call event not drag)
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
   // Require mouse move 10px then active this event (Fix situation click call event not drag)
@@ -220,13 +227,32 @@ function GradeComposition () {
   // Using mouse and touch for UX in mobile is the better
   const sensors = useSensors(mouseSensor, touchSensor)
 
+  const { classId } = useParams()
+
+  const [isFetch, setIsFetch] = useState(false)
+
   useEffect(() => {
-    SetorderedGradeCompostionState (mapOrder(gradeCompositionList, sortedIDGradeCompostion, 'id'))
+    SetorderedGradeCompostionState (mapOrder(gradeCompositionList, orderGradeComposition, '_id'))
+
+    const fetchData = async () => {
+      try {
+        const { orderGradeComposition, gradeCompositionList } = await getAllGradeCompositionByClassIdService(classId)
+        setOrderGradeComposition(orderGradeComposition)
+        setGradeCompositionList(gradeCompositionList)
+        setIsFetch(true)
+        console.log( orderGradeComposition, gradeCompositionList )
+      } catch (error) {
+        console.error('Error fetching composition:', error)
+      }
+    }
+
+    fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isFetch])
+
 
   const handleDragStart = (event) => {
-    setActiveDragItemID(event?.active?.id)
+    setActiveDragItemID(event?.active?._id)
     setActiveDragItemData(event?.active?.data?.current)
   }
 
@@ -236,11 +262,11 @@ function GradeComposition () {
     // Check if drag another position
     if (!over) return
 
-    if (active.id !== over.id) {
+    if (active._id !== over._id) {
       // Get old position
-      const oldIndex = orderedGradeCompostionState.findIndex(c => c.id === active.id)
+      const oldIndex = orderedGradeCompostionState.findIndex(c => c._id === active._id)
       // Get new position
-      const newIndex = orderedGradeCompostionState.findIndex(c => c.id === over.id)
+      const newIndex = orderedGradeCompostionState.findIndex(c => c._id === over._id)
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
     }
@@ -259,6 +285,31 @@ function GradeComposition () {
     })
   }
 
+  const convertTime = (time) => {
+    // Tạo đối tượng Date từ chuỗi ISO
+    const dateObject = new Date(time)
+
+    // Lấy thông tin ngày, tháng, năm, giờ, phút và giây
+    const year = dateObject.getFullYear()
+    const month = dateObject.getMonth() + 1 // Tháng bắt đầu từ 0, cần cộng thêm 1
+    const day = dateObject.getDate()
+    const hours = dateObject.getHours()
+    const minutes = dateObject.getMinutes()
+    const seconds = dateObject.getSeconds()
+
+    // Tạo chuỗi ngày tháng năm giờ phút giây
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+  }
+
+  const totalGrade = () => {
+    let sum = 0
+    gradeCompositionList.map((item) => {
+      sum += item.scale
+    })
+
+    return sum
+  }
+
   return (
     <Container sx={{
       borderRadius: 5,
@@ -271,26 +322,28 @@ function GradeComposition () {
       </Typography>
 
       <DndContext onDragOver={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
-        <SortableContext items={orderedGradeCompostionState?.map(c => c.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={orderedGradeCompostionState?.map(c => c._id)} strategy={verticalListSortingStrategy}>
           <Stack spacing={2} py={1}>
-            {orderedGradeCompostionState.map(({ id, title, composition, time, percent }) => (
+            {orderedGradeCompostionState.map(({ _id, name, scale, time }, index) => (
               <CardGrade
-                key={id}
-                id={id}
-                title={title}
-                composition={composition}
-                time={time}
-                percent={percent}
+                key={_id}
+                id={_id}
+                title={'Dev posted a new assignment'}
+                composition={name}
+                time={convertTime(time)}
+                percent={`${scale}%`}
+                order={index}
               />
             ))}
             <DragOverlay dropAnimation={customDropAnimation}>
               {!!(activeDragItemID) &&
                 <CardGrade
-                  id={activeDragItemData?.id}
+                  id={activeDragItemData?._id}
                   title={activeDragItemData?.title}
                   composition={activeDragItemData?.composition}
                   time={activeDragItemData?.time}
                   percent={activeDragItemData?.percent}
+                  order={orderedGradeCompostionState}
                 />
               }
             </DragOverlay>
@@ -307,7 +360,7 @@ function GradeComposition () {
       }}>
         <Typography variant='h6'>
           Total grade: <Typography variant='body-2'>
-            100%
+            {totalGrade()}%
           </Typography>
         </Typography>
       </Container>
@@ -341,6 +394,23 @@ export default function GradeTeacher () {
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }
 
+  const [gradeCompositionTitle, setGradeCompositionTitle] = useState('')
+  const handleOnChangeGradeCompositionTitle = (e) => {
+    setGradeCompositionTitle(e.target.value)
+  }
+  const [gradeCompositionPercent, setGradeCompositionPercent] = useState(0)
+  const handleOnChangeGradeCompositionPercent = (e) => {
+    setGradeCompositionPercent(e.target.value)
+  }
+  const handleCreateNewGradeComposition = async () => {
+    if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
+      // const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
+      // console.log(response)
+    }
+    setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
+  }
+
+  // handle for get studentid list, download grade
   const { classId } = useParams()
 
   const [csvData, setCsvData] = useState([])
@@ -349,7 +419,6 @@ export default function GradeTeacher () {
     const fetchData = async () => {
       try {
         const { message, studentIdList } = await getStudentIdList(classId)
-        console.log(message, studentIdList)
         let dataList = [
           ['StudentId', 'Grade']
         ]
@@ -383,9 +452,6 @@ export default function GradeTeacher () {
             Download Grade
           </Button>
         </CSVLink>
-        <Button variant='contained' startIcon={<UploadIcon />}>
-          Upload Grade
-        </Button>
       </Box>
 
       <GradeComposition />
@@ -414,9 +480,11 @@ export default function GradeTeacher () {
           </Typography>
 
           <Box py={2}>
-            <TextField id="outlined-basic" label="Grade composition title" variant="outlined" sx={{ width: '100%', pb: 2 }}/>
+            <TextField id="outlined-basic" label="Grade composition title" variant="outlined" sx={{ width: '100%', pb: 2 }}
+              value={gradeCompositionTitle} onChange={(e) => handleOnChangeGradeCompositionTitle(e)}/>
 
-            <TextField type='number' label="Percentage" variant="outlined" sx={{ width: '100%' }}/>
+            <TextField type='number' label="Percentage" variant="outlined" sx={{ width: '100%' }}
+              value={gradeCompositionPercent} onChange={(e) => handleOnChangeGradeCompositionPercent(e)}/>
 
             <FormControlLabel
               control={
@@ -429,7 +497,7 @@ export default function GradeTeacher () {
           </Box>
 
           <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button>
+            <Button onClick={() => handleCreateNewGradeComposition}>
               Create
             </Button>
 

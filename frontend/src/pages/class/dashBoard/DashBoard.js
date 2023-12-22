@@ -153,13 +153,13 @@ const StreamItem = ({ list }) => {
   )
   const classId = useParams()
 
-  useEffect(() => {
-    dispatch(getAllGradeCompositionByClassIdAction(classId))
-    if (isError) {
-      toast.error(isError)
-      dispatch({ type: 'GET_ALL_GRADE_COMPOSITION_RESET' })
-    }
-  }, [dispatch, isError])
+  // useEffect(() => {
+  //   dispatch(getAllGradeCompositionByClassIdAction(classId))
+  //   if (isError) {
+  //     toast.error(isError)
+  //     dispatch({ type: 'GET_ALL_GRADE_COMPOSITION_RESET' })
+  //   }
+  // }, [dispatch, isError])
 
   const gradeCompositionList = gradeCompositions?.gradeCompositionList
   const orderGradeComposition = gradeCompositions?.orderGradeComposition

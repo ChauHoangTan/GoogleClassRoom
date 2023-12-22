@@ -42,4 +42,6 @@ router.post("/students/upload", passport.authenticate('jwt', { session: false })
 
 router.post("/students/allTypeOfStudents", passport.authenticate('jwt', { session: false }), classController.getAllTypeOfStudents);
 
+router.post("/students/getStudentIdList", passport.authenticate('jwt', { session: false }), classController.getStudentIdListByUpload);
+
 module.exports = router;

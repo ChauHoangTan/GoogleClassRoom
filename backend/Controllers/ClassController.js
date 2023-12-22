@@ -587,6 +587,28 @@ const getAllTypeOfStudents = async (req, res) => {
     }
 }
 
+const getStudentIdListByUpload = async (req, res) => {
+    const { classId } = req.body;
+
+    try {
+        const classExist = await Class.findById(classId)
+        
+        if (!classExist) {
+            return res.status(404).json({ message: 'No class found' });
+        }
+
+        let studentIdList = []
+
+        classExist.studentsListUpload.map((data) => {
+            studentIdList.push(data.userId)
+        })
+
+        return res.status(200).json({message: "Students list getted!", studentIdList });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getAllClass,
     createNewClass,
@@ -604,5 +626,6 @@ module.exports = {
     sendInvitateEmail,
     receiveInvitateEmail,
     getStudentsListByUploadFile,
-    getAllTypeOfStudents
+    getAllTypeOfStudents,
+    getStudentIdListByUpload
 }

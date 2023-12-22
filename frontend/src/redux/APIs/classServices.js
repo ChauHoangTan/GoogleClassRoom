@@ -107,6 +107,12 @@ const uploadStudentList = async(studentsListUpload, classId) => {
   return data
 }
 
+// admin upload student list
+const getStudentIdList = async(classId) => {
+  const { data } = await AxiosJWT.post('/class/students/getStudentIdList', { classId })
+  return data
+}
+
 export {
   getAllClassesService,
   deleteClassService,
@@ -124,5 +130,6 @@ export {
   invitationByEmailService,
   sendInvitationByEmailService,
   uploadStudentList,
-  getAllTypeOfStudentsService
+  getAllTypeOfStudentsService,
+  getStudentIdList
 }

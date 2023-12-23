@@ -15,7 +15,13 @@ const createNewGradeComposition = async ( classId, name, scale ) => {
   return data
 }
 
+// Remove a grade composition
+const removeGradeComposition = async ( classId, gradeCompositionId ) => {
+  const { data } = await AxiosJWT.delete(`/grade/delete/${classId}/${gradeCompositionId}`)
+  return data
+}
 export {
   getAllGradeCompositionByClassIdService,
-  createNewGradeComposition
+  createNewGradeComposition,
+  removeGradeComposition
 }

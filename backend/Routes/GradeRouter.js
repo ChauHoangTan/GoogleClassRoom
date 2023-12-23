@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.post("/allGradeCompositionByIdClass", passport.authenticate('jwt', { session: false }), gradeController.getGradeComposition);
 router.post("/create", passport.authenticate('jwt', { session: false }), gradeController.createNewGradeComposition);
-router.delete("/delete", passport.authenticate('jwt', { session: false }), gradeController.deleteGradeComposition);
+router.delete("/delete/:classId/:gradeCompositionId", passport.authenticate('jwt', { session: false }), gradeController.deleteGradeComposition);
 router.post("/update", passport.authenticate('jwt', { session: false }), gradeController.updateGradeComposition);
 module.exports = router;

@@ -1,10 +1,11 @@
-import { Box, Button, Container, Typography, Card, CardContent, Divider, Stack, IconButton, Modal, TextField, Checkbox, FormControlLabel } from '@mui/material'
+import { Box, Button, Container, Typography, Card, CardContent, Divider, Stack, IconButton, Modal, TextField, Checkbox, FormControlLabel, Menu, MenuItem } from '@mui/material'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
 import UploadIcon from '@mui/icons-material/Upload'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import GradeTable from './GradeTable'
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { getStudentIdList } from '../../../../redux/APIs/classServices'
 import { useEffect, useRef, useState } from 'react'
 import {
@@ -25,7 +26,7 @@ import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
 import { CSVLink } from 'react-csv'
 import { useParams } from 'react-router-dom'
-import { getAllGradeCompositionByClassIdService, createNewGradeComposition } from '../../../../redux/APIs/gradeServices'
+import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition } from '../../../../redux/APIs/gradeServices'
 
 const columns = [
   { id: 'id', label: 'ID', minWidth: 170 },
@@ -145,8 +146,26 @@ const gradeCompositionList = [
   }
 ]
 
+function CardGrade ({ id, title, composition, time, percent, setOrderGradeComposition, setGradeCompositionList }) {
 
-function CardGrade ({ id, title, composition, time, percent, order }) {
+  const { classId } = useParams()
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleRemoveComposition = async () => {
+    const response = await removeGradeComposition( classId, id )
+    setOrderGradeComposition(response.data.orderGradeComposition)
+    setGradeCompositionList(response.data.gradeCompositionList)
+    console.log(response)
+  }
+
   // Dnd-kit
   const {
     attributes,
@@ -195,25 +214,45 @@ function CardGrade ({ id, title, composition, time, percent, order }) {
         </Stack>
         <Stack direction={'row'} alignItems='center'>
           <Typography variant='h6' sx={{ fontStyle:'italic', mx: 5 }}>{percent}</Typography>
-          <Button variant='contained' startIcon={<UploadIcon />}>
-            Grade
-          </Button>
-          <IconButton fontSize='small'><MoreVertOutlinedIcon/></IconButton>
+          <IconButton fontSize='small'
+            id="basic-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}><MoreVertOutlinedIcon/></IconButton>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button'
+            }}
+          >
+            <MenuItem onClick={() => {handleClose(); handleRemoveComposition() }}>
+              <Button variant='contained' color='error' startIcon={<RemoveCircleIcon />}>
+                Remove
+              </Button>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Button variant='contained' startIcon={<UploadIcon />}>
+                Upload
+              </Button>
+            </MenuItem>
+          </Menu>
+
         </Stack>
       </CardContent>
     </Card>
   )
 }
 
-function GradeComposition () {
-  const sortedIDGradeCompostion = [1, 2, 3, 4]
+function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList }) {
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
 
   //
-  const [orderGradeComposition, setOrderGradeComposition] = useState([])
-  const [gradeCompositionList, setGradeCompositionList] = useState([])
 
   // Require mouse move 10px then active this event (Fix situation click call event not drag)
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
@@ -227,28 +266,10 @@ function GradeComposition () {
   // Using mouse and touch for UX in mobile is the better
   const sensors = useSensors(mouseSensor, touchSensor)
 
-  const { classId } = useParams()
-
-  const [isFetch, setIsFetch] = useState(false)
-
   useEffect(() => {
     SetorderedGradeCompostionState (mapOrder(gradeCompositionList, orderGradeComposition, '_id'))
-
-    const fetchData = async () => {
-      try {
-        const { orderGradeComposition, gradeCompositionList } = await getAllGradeCompositionByClassIdService(classId)
-        setOrderGradeComposition(orderGradeComposition)
-        setGradeCompositionList(gradeCompositionList)
-        setIsFetch(true)
-        console.log( orderGradeComposition, gradeCompositionList )
-      } catch (error) {
-        console.error('Error fetching composition:', error)
-      }
-    }
-
-    fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetch])
+  }, [gradeCompositionList, orderGradeComposition])
 
 
   const handleDragStart = (event) => {
@@ -267,7 +288,7 @@ function GradeComposition () {
       const oldIndex = orderedGradeCompostionState.findIndex(c => c._id === active.id)
       // Get new position
       const newIndex = orderedGradeCompostionState.findIndex(c => c._id === over.id)
-      console.log('oldIndex newIndex', oldIndex,newIndex)
+      console.log('oldIndex newIndex', oldIndex, newIndex)
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
       console.log('After move', dndOrderedGradeCompostionState)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
@@ -326,7 +347,7 @@ function GradeComposition () {
       <DndContext onDragOver={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
         <SortableContext items={orderedGradeCompostionState?.map(c => c._id)} strategy={verticalListSortingStrategy}>
           <Stack spacing={2} py={1}>
-            {orderedGradeCompostionState.map(({ _id, name, scale, time }, index) => (
+            {orderedGradeCompostionState.map(({ _id, name, scale, time }) => (
               <CardGrade
                 key={_id}
                 id={_id}
@@ -334,7 +355,8 @@ function GradeComposition () {
                 composition={name}
                 time={convertTime(time)}
                 percent={`${scale}%`}
-                order={index}
+                setOrderGradeComposition={setOrderGradeComposition}
+                setGradeCompositionList={setGradeCompositionList}
               />
             ))}
             <DragOverlay dropAnimation={customDropAnimation}>
@@ -389,6 +411,30 @@ function StudentGrade () {
 }
 
 export default function GradeTeacher () {
+  const [orderGradeComposition, setOrderGradeComposition] = useState([])
+  const [gradeCompositionList, setGradeCompositionList] = useState([])
+
+  const { classId } = useParams()
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const response = await getAllGradeCompositionByClassIdService(classId)
+
+        if (response.orderGradeComposition.length != orderGradeComposition.length) {
+          setOrderGradeComposition(response.orderGradeComposition)
+          setGradeCompositionList(response.gradeCompositionList)
+          // console.log( orderGradeComposition, gradeCompositionList )
+        }
+      } catch (error) {
+        console.error('Error fetching composition:', error)
+      }
+    }
+
+    fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [isOpenCreateNewGradeComposition, setIsOpenCreateNewGradeComposition] = useState(false)
 
@@ -407,13 +453,14 @@ export default function GradeTeacher () {
   const handleCreateNewGradeComposition = async () => {
     if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
       const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
+      setGradeCompositionList(response.data.gradeCompositionList)
+      setOrderGradeComposition(response.data.orderGradeComposition)
       console.log(response)
     }
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }
 
   // handle for get studentid list, download grade
-  const { classId } = useParams()
 
   const [csvData, setCsvData] = useState([])
 
@@ -456,7 +503,8 @@ export default function GradeTeacher () {
         </CSVLink>
       </Box>
 
-      <GradeComposition />
+      <GradeComposition orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
+        gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList} />
       <StudentGrade />
 
       <Modal

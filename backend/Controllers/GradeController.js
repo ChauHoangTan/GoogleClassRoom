@@ -85,8 +85,8 @@ const updateGradeComposition = async (req, res) => {
 }
 
 const deleteGradeComposition = async (req, res) => {
-  const { classId, gradeCompositionId } = req.body;
-
+  const { classId, gradeCompositionId } = req.params;
+  console.log(classId, gradeCompositionId)
   try {
 
     const gradeModel = await Grade.findOne({ classId });

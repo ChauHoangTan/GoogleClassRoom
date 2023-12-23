@@ -159,7 +159,6 @@ const uploadGradeComposition = async (req, res) => {
       })
       gradeComposition.studentGradeList = gradeStudentList
     }
-    console.log(gradeStudentList)
 
     if (!gradeModel) {
       return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });

@@ -252,7 +252,7 @@ function GradeComposition () {
 
 
   const handleDragStart = (event) => {
-    setActiveDragItemID(event?.active?._id)
+    setActiveDragItemID(event?.active?.id)
     setActiveDragItemData(event?.active?.data?.current)
   }
 
@@ -262,12 +262,14 @@ function GradeComposition () {
     // Check if drag another position
     if (!over) return
 
-    if (active._id !== over._id) {
+    if (active.id !== over.id) {
       // Get old position
-      const oldIndex = orderedGradeCompostionState.findIndex(c => c._id === active._id)
+      const oldIndex = orderedGradeCompostionState.findIndex(c => c._id === active.id)
       // Get new position
-      const newIndex = orderedGradeCompostionState.findIndex(c => c._id === over._id)
+      const newIndex = orderedGradeCompostionState.findIndex(c => c._id === over.id)
+      console.log('oldIndex newIndex', oldIndex,newIndex)
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
+      console.log('After move', dndOrderedGradeCompostionState)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
     }
 
@@ -404,8 +406,8 @@ export default function GradeTeacher () {
   }
   const handleCreateNewGradeComposition = async () => {
     if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
-      // const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
-      // console.log(response)
+      const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
+      console.log(response)
     }
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }
@@ -497,7 +499,7 @@ export default function GradeTeacher () {
           </Box>
 
           <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button onClick={() => handleCreateNewGradeComposition}>
+            <Button onClick={handleCreateNewGradeComposition}>
               Create
             </Button>
 

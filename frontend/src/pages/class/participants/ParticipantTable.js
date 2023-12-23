@@ -65,7 +65,7 @@ export default function ParticipantTable ({ columns, rows, isTeacherTable }) {
                         cellContent = <Typography variant="subtitle1">{row.userId}</Typography>
                         break
                       case 'fullName':
-                        cellContent = <Typography variant="body1">{row.firstName} {row.lastName}</Typography>
+                        cellContent = <Typography variant="body1">{row.lastName} {row.firstName}</Typography>
                         break
                       case 'status':
                         cellContent = <Typography variant="body1"

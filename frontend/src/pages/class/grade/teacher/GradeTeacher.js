@@ -26,20 +26,9 @@ import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
 import { CSVLink } from 'react-csv'
 import { useParams } from 'react-router-dom'
-import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition } from '../../../../redux/APIs/gradeServices'
-
-const columns = [
-  { id: 'id', label: 'ID', minWidth: 170 },
-  { id: 'fullName', label: 'Full Name', minWidth: 170 },
-  { id: 'listGrade', label: 'List Grade', minWidth: 170, listGrade: [
-    { composition: 'Exercise 1', percent: '10%' },
-    { composition: 'Exercise 2', percent: '10%' },
-    { composition: 'Midterm', percent: '30%' },
-    { composition: 'Finalterm', percent: '50%' }
-    // Add more exercises if needed
-  ] },
-  { id: 'total', label: 'Total', minWidth: 170 }
-]
+import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition } from '../../../../redux/APIs/gradeServices'
+import { styled } from '@mui/material/styles'
+import Papa from 'papaparse'
 
 const rows = [
   { id: 1, fullName: 'John Doe', listGrade: [
@@ -146,7 +135,7 @@ const gradeCompositionList = [
   }
 ]
 
-function CardGrade ({ id, title, composition, time, percent, setOrderGradeComposition, setGradeCompositionList }) {
+function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows }) {
 
   const { classId } = useParams()
 
@@ -163,7 +152,44 @@ function CardGrade ({ id, title, composition, time, percent, setOrderGradeCompos
     const response = await removeGradeComposition( classId, id )
     setOrderGradeComposition(response.data.orderGradeComposition)
     setGradeCompositionList(response.data.gradeCompositionList)
-    console.log(response)
+  }
+
+  // const csvData = [
+  //   ['StudentId', 'FullName']
+  // ]
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1
+  })
+
+  const readFileCSV = async (e) => {
+    const selectedFile = e.target.files[0]
+    const result = await read(selectedFile)
+    let studentsListUpload = []
+    result.data.map((data) => {
+      studentsListUpload.push(data)
+    })
+    await uploadGradeComposition(classId, id, studentsListUpload)
+    setRows([])
+  }
+
+  const read = (file) => {
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        complete: (result) => {
+          resolve(result)
+        },
+        header: true // Nếu CSV có header (tên cột)
+      })
+    })
   }
 
   // Dnd-kit
@@ -234,10 +260,14 @@ function CardGrade ({ id, title, composition, time, percent, setOrderGradeCompos
                 Remove
               </Button>
             </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Button variant='contained' startIcon={<UploadIcon />}>
+            <MenuItem>
+              <Button component="label" variant='contained' startIcon={<UploadIcon />}>
                 Upload
+                <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => {readFileCSV(e); handleClose()}}/>
               </Button>
+            </MenuItem>
+            <MenuItem>
+              <FormControlLabel control={<Checkbox checked={isPublic} />} label="Public" />
             </MenuItem>
           </Menu>
 
@@ -247,7 +277,7 @@ function CardGrade ({ id, title, composition, time, percent, setOrderGradeCompos
   )
 }
 
-function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList }) {
+function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows }) {
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
@@ -347,7 +377,7 @@ function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gr
       <DndContext onDragOver={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
         <SortableContext items={orderedGradeCompostionState?.map(c => c._id)} strategy={verticalListSortingStrategy}>
           <Stack spacing={2} py={1}>
-            {orderedGradeCompostionState.map(({ _id, name, scale, time }) => (
+            {orderedGradeCompostionState.map(({ _id, name, scale, time, isPublic }) => (
               <CardGrade
                 key={_id}
                 id={_id}
@@ -355,8 +385,11 @@ function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gr
                 composition={name}
                 time={convertTime(time)}
                 percent={`${scale}%`}
+                isPublic={isPublic}
                 setOrderGradeComposition={setOrderGradeComposition}
                 setGradeCompositionList={setGradeCompositionList}
+                rows={rows}
+                setRows={setRows}
               />
             ))}
             <DragOverlay dropAnimation={customDropAnimation}>
@@ -393,7 +426,66 @@ function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gr
   )
 }
 
-function StudentGrade () {
+function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows }) {
+
+  let compositionList = []
+  gradeCompositionList.map((item) => {
+    compositionList.push({
+      composition: item.name,
+      percent: `${item.scale}%`
+    })
+  })
+  const columns = [
+    { id: 'id', label: 'ID', minWidth: 170 },
+    { id: 'fullName', label: 'Full Name', minWidth: 170 },
+    { id: 'listGrade', label: 'List Grade', minWidth: 170, listGrade: compositionList },
+    { id: 'total', label: 'Total', minWidth: 170 }
+  ]
+
+  // const rows = [
+  //   { id: 1, fullName: 'John Doe', listGrade: [
+  //     { composition: 'Exercise 1', percent: '10%', grade: '8' },
+  //     { composition: 'Exercise 2', percent: '10%', grade: '7' },
+  //     { composition: 'Midterm', percent: '30%', grade: '25' },
+  //     { composition: 'Finalterm', percent: '50%', grade: '40' }
+  //   ], total: '40'
+  //   },
+  // ]
+
+  const handleGetGradeCompositionByStudentId = async (studentId) => {
+    const response = await getAllGradeCompositionByStudentId(classId, studentId)
+    return response // Trả về giá trị của promise (thường là một đối tượng hoặc mảng)
+  }
+
+  let newRows = []
+
+  Promise.all(
+    studentList.map(async (item) => {
+      try {
+        const result = await handleGetGradeCompositionByStudentId(item.userId)
+        const listGrade = result.data
+
+        // Thêm đối tượng vào mảng rows khi promise hoàn tất
+        newRows.push({
+          id: item.userId,
+          fullName: `${item.lastName} ${item.firstName}`,
+          listGrade: listGrade
+        })
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    })
+  ).then(() => {
+    // Gọi khi tất cả promises hoàn tất
+    if (rows.length != newRows.length) {
+      setRows(newRows)
+    }
+  })
+    .catch((error) => {
+      console.error('Error:', error)
+    })
+
+
   return (
     <Container sx={{
       borderRadius: 5,
@@ -413,6 +505,9 @@ function StudentGrade () {
 export default function GradeTeacher () {
   const [orderGradeComposition, setOrderGradeComposition] = useState([])
   const [gradeCompositionList, setGradeCompositionList] = useState([])
+  const [studentList, setStudentList] = useState([])
+
+  const [rows, setRows] = useState([])
 
   const { classId } = useParams()
 
@@ -467,13 +562,14 @@ export default function GradeTeacher () {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { message, studentIdList } = await getStudentIdList(classId)
+        const { message, studentListByUpload } = await getStudentIdList(classId)
+        setStudentList(studentListByUpload)
         let dataList = [
           ['StudentId', 'Grade']
         ]
 
-        studentIdList.forEach((data) => {
-          dataList.push([data, ''])
+        studentListByUpload.forEach((data) => {
+          dataList.push([data.userId, ''])
         })
 
         setCsvData(dataList)
@@ -504,8 +600,10 @@ export default function GradeTeacher () {
       </Box>
 
       <GradeComposition orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
-        gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList} />
-      <StudentGrade />
+        gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList}
+        rows={rows} setRows={setRows}/>
+      <StudentGrade classId={classId} gradeCompositionList={gradeCompositionList} studentList={studentList}
+        rows={rows} setRows={setRows}/>
 
       <Modal
         open={isOpenCreateNewGradeComposition}

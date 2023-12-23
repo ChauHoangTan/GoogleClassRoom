@@ -604,13 +604,11 @@ const getStudentIdListByUpload = async (req, res) => {
             return res.status(404).json({ message: 'No class found' });
         }
 
-        let studentIdList = []
+        let studentListByUpload = []
 
-        classExist.studentsListUpload.map((data) => {
-            studentIdList.push(data.userId)
-        })
+        studentListByUpload = classExist.studentsListUpload
 
-        return res.status(200).json({message: "Students list getted!", studentIdList });
+        return res.status(200).json({message: "Students list getted!", studentListByUpload });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

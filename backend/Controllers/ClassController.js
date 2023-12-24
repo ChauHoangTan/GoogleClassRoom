@@ -562,8 +562,8 @@ const getAllTypeOfStudents = async (req, res) => {
             // Tạo đối tượng JSON mới để trả về
             const resultObject = {
                 userId: uploadStudent.userId,
-                firstName: matchingStudent ? matchingStudent.firstName : '',
-                lastName: matchingStudent ? matchingStudent.lastName : '',
+                firstName: uploadStudent.firstName,
+                lastName: uploadStudent.lastName,
                 email: matchingStudent ? matchingStudent.email : '',
                 phone: matchingStudent ? matchingStudent.phone : '',
                 image: matchingStudent ? matchingStudent.image : '',

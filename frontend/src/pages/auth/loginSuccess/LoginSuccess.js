@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { Grid } from '@mui/material'
 import Swal from 'sweetalert2'
 
-function LoginSuccess({ socket }) {
+function LoginSuccess() {
   const { userId, tokenLogin, provider } = useParams()
   const initialized = useRef(false)
 
@@ -34,6 +34,15 @@ function LoginSuccess({ socket }) {
 
   // useEffect
   useEffect(() => {
+    if (userInfo) {
+        if(userInfo?.isAdmin) {
+            console.log(userInfo)
+            navigate('/dashboard')
+        } else {
+            navigate('/home')
+        }
+    }
+
     if (isSuccess) {
       toast.success(`Welcome back ${userInfo?.firstName}`)
     }
@@ -60,7 +69,6 @@ function LoginSuccess({ socket }) {
       <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
         <Grid item>
           {isLoading && <Loader/>}
-          {isSuccess && <Navigate to={'/home'} replace={true} />}
         </Grid>
       </Grid>
     </div>

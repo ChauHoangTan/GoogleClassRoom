@@ -22,7 +22,7 @@ const styleModalEditUser = {
 
 const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) => {
   const dispatch = useDispatch()
-  const [isVerifiedEmail, setIsVerifiedEmail] = useState('')
+  const [isAdmin, setIsAdmin] = useState('')
   const [isBanned, setIsBanned] = useState('')
 
   const { isLoading: updateLoading, isError: editError, userInfo: editUserInfo, isSuccess: editSuccess } = useSelector(
@@ -44,10 +44,10 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
       setValue('lastName', userRow?.lastName)
       setValue('email', userRow?.email)
       setValue('userId', userRow?.userId)
-      setIsVerifiedEmail(userRow?.isVerifiedEmail ? 'active' : 'inactive')
+      setIsAdmin(userRow?.isAdmin ? 'admin' : 'not admin')
       setIsBanned(userRow?.isBanned ? 'banned' : 'unbanned')
     }
-  }, [userRow, setValue, setIsVerifiedEmail, setIsBanned])
+  }, [userRow, setValue, setIsAdmin, setIsBanned])
 
   useEffect(() => {
     if (editUserInfo) {
@@ -66,11 +66,14 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
   }, [editUserInfo, editSuccess, editError, dispatch, setIsOpen])
 
   const onSubmit = (data) => {
+    console.log({...data,
+        isAdmin: isAdmin === 'admin' ? true : false,
+        isBanned: isBanned === 'banned' ? true : false})
     dispatch(updateUserAction(
       userRow?._id,
       {
         ...data,
-        isVerifiedEmail: isVerifiedEmail === 'active' ? true : false,
+        isAdmin: isAdmin === 'admin' ? true : false,
         isBanned: isBanned === 'banned' ? true : false
       }
     ))
@@ -145,11 +148,11 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
             <Grid item xs={6}>
               <Select
                 variant="outlined"
-                value={isVerifiedEmail}
-                onChange={(e) => setIsVerifiedEmail(e.target.value)}
+                value={isAdmin}
+                onChange={(e) => setIsAdmin(e.target.value)}
                 sx={{ width: '100%' }}>
-                <MenuItem value="active" sx={{ py: '8px' }}>Active</MenuItem>
-                <MenuItem value="inactive" sx={{ py: '8px' }}>Inactive</MenuItem>
+                <MenuItem value="admin" sx={{ py: '8px' }}>Admin</MenuItem>
+                <MenuItem value="not admin" sx={{ py: '8px' }}>Not Admin</MenuItem>
               </Select>
             </Grid>
             <Grid item xs={6}>

@@ -38,7 +38,7 @@ import { FiLogIn } from 'react-icons/fi'
 //   }
 // })
 
-function Login ({ rememberMe, setRememberMe, socket }) {
+function Login ({ rememberMe, setRememberMe }) {
   const [showPassword, setShowPassword] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword(show => !show)
@@ -91,7 +91,11 @@ function Login ({ rememberMe, setRememberMe, socket }) {
   // useEffect
   useEffect(() => {
     if (userInfo) {
-      navigate('/home')
+        if(userInfo?.isAdmin) {
+            navigate('/dashboard')
+        } else {
+            navigate('/home')
+        }
     }
 
     if (isSuccess) {
@@ -101,7 +105,7 @@ function Login ({ rememberMe, setRememberMe, socket }) {
       toast.error(isError)
       dispatch({ type: 'USER_LOGIN_RESET' })
     }
-  }, [userInfo, isSuccess, isError, navigate, dispatch, socket])
+  }, [userInfo, isSuccess, isError, navigate, dispatch])
 
   const handleGoogleLogin = () => {
     // Handle when user click login by Google
@@ -114,12 +118,6 @@ function Login ({ rememberMe, setRememberMe, socket }) {
     window.open('http://localhost:5000/api/auth/facebook', '_self')
     // window.open('https://nexusedu.onrender.com/api/auth/facebook', '_self')
   }
-
-  const handleGithubLogin = () => {
-    // Handle when user click login by Facebook
-    // window.open('http://localhost:5000/api/auth/github', '_self')
-  }
-
 
   return (
     // <ThemeProvider theme={defaultTheme}>

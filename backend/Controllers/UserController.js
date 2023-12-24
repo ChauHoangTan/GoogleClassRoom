@@ -215,7 +215,7 @@ const blockUser = async (req, res) => {
 // @desc Update user profile
 // @route POST/api/users/all/:id
 const updateUser = async(req, res) => {
-    const { email, firstName, lastName, userId, isVerifiedEmail, isBanned } = req.body;
+    const { email, firstName, lastName, userId, isAdmin, isBanned } = req.body;
     try {
         // find user in DB  
         const user = await User.findById(req.params.id);
@@ -224,7 +224,7 @@ const updateUser = async(req, res) => {
             user.email = email || user.email;
             user.firstName = firstName || user.firstName;
             user.lastName = lastName || user.lastName;
-            user.isVerifiedEmail = isVerifiedEmail;
+            user.isAdmin = isAdmin;
             user.userId = userId || user.userId;
             user.isBanned = isBanned;
 

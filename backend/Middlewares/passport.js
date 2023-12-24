@@ -75,6 +75,9 @@ passport.use(new GoogleStrategy({
         });
 
         if (existUser) {
+            if(existUser.isBanned) {
+                return done("Banned", false);
+              }
             // login google before
             const updateUser = existUser?.authGoogleId === profile?.id  
                 // login google before
@@ -130,6 +133,10 @@ passport.use(new FacebookStrategy({
       });
 
       if (existUser) {
+        if(existUser.isBanned) {
+          return done("Banned", false);
+        }
+
           // login google before
           const updateUser =  existUser.authFacebookId === profile?.id  
             // login facebook before

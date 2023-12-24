@@ -24,6 +24,7 @@ import DashBoard from './pages/class/dashBoard/DashBoard.js'
 import Main from './pages/admin/main/Main.js'
 import InvitationByUrl from './pages/class/invitation/invitationByUrl.js'
 import SocketProvider from './Context/SocketProvider.js'
+import LoginFail from './pages/auth/loginFail/LoginFail.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
@@ -36,6 +37,7 @@ function App () {
           <Routes>
             <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
             <Route path='/login-success/:provider/:userId/:tokenLogin' element={<LoginSuccess />} />
+            <Route path='/login-fail/:provider/:error' element={<LoginFail/>} />
             <Route path='/register' element={<Register />} />
             <Route path='/login/activate' element={<ActivationEmail/>}/>
             <Route path='/user/:type' element={<ForgotPassword />} />

@@ -132,7 +132,8 @@ const loginUser = async (req, res) => {
                 image: req.user.image,
                 isAdmin: req.user.isAdmin,
                 isThirdPartyLogin: req.user.isThirdPartyLogin,
-                Authorization: accessToken 
+                Authorization: accessToken,
+                userId: req.user.userId
             });
         } else {
             return res.status(400).json({ message: req.error })
@@ -261,7 +262,8 @@ const loginSuccess = async (req, res) => {
             image: user.image,
             isAdmin: user.isAdmin,
             isThirdPartyLogin: user.isThirdPartyLogin,
-            Authorization: accessToken, 
+            userId: user.userId,
+            Authorization: accessToken,
         })
     } catch (error) {
         return res.status(500).json({ message: error.message });

@@ -111,6 +111,10 @@ const deleteGradeComposition = async (req, res) => {
 const getAllGradeCompositionByStudentId = async (req, res) => {
   const { classId, studentId } = req.body;
   try {
+    if (studentId === undefined || studentId === '') {
+      return res.status(404).json({ success: false, message: 'Please mapping your account to see grade!' });
+    }
+
     const gradeModel = await Grade.findOne({ classId });
     const gradeCompositionList = gradeModel.gradeCompositionList;
 
@@ -125,7 +129,11 @@ const getAllGradeCompositionByStudentId = async (req, res) => {
       }
       result.push({
         composition: data.name,
-        grade: studentGrade
+        grade: studentGrade,
+        scale: data.scale,
+        isPublic: data.isPublic,
+        time: data.time,
+        _id: data._id
       })
     })
     if (!gradeModel) {

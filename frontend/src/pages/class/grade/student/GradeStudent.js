@@ -1,7 +1,7 @@
 import { Container, Typography, Card, CardContent, Divider, Stack, IconButton, MenuItem, Menu, ListItemIcon, ListItemText, Box, TextField } from '@mui/material'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PreviewIcon from '@mui/icons-material/Preview'
 import * as React from 'react'
 import Button from '@mui/material/Button'
@@ -12,6 +12,10 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import CloseIcon from '@mui/icons-material/Close'
 import Slide from '@mui/material/Slide'
+import { getAllGradeCompositionByStudentId } from '../../../../redux/APIs/gradeServices'
+import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -159,7 +163,50 @@ function CardGrade ({ title, composition, time, percent }) {
   )
 }
 
+const convertTime = (time) => {
+  // Tạo đối tượng Date từ chuỗi ISO
+  const dateObject = new Date(time)
+
+  // Lấy thông tin ngày, tháng, năm, giờ, phút và giây
+  const year = dateObject.getFullYear()
+  const month = dateObject.getMonth() + 1 // Tháng bắt đầu từ 0, cần cộng thêm 1
+  const day = dateObject.getDate()
+  const hours = dateObject.getHours()
+  const minutes = dateObject.getMinutes()
+  const seconds = dateObject.getSeconds()
+
+  // Tạo chuỗi ngày tháng năm giờ phút giây
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+}
+
 function GradeComposition () {
+  const { classId } = useParams()
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
+  const [isGradeCompositionList, setIsGradeCompositionList] = useState([])
+
+  const totalGrade = isGradeCompositionList.reduce((acc, data) => {
+    const grade = data?.grade || 0
+    const scale = data?.scale || 1 // Assuming a default value of 1 if scale is not present or is 0
+    return acc + (grade / scale)
+  }, 0)
+
+  useEffect(() => {
+    // Get all grade compositon by userId
+    const fetchData = async () => {
+      try {
+        const result = await getAllGradeCompositionByStudentId(classId, userInfo.userId)
+        setIsGradeCompositionList(result.data)
+      } catch (error) {
+        toast.error(error.response.data.message)
+      }
+    }
+    fetchData()
+  }, [])
+
   return (
     <Container sx={{
       borderRadius: 5,
@@ -172,11 +219,16 @@ function GradeComposition () {
       </Typography>
 
       <Stack spacing={1} py={1}>
-        <CardGrade title='Dev posted a new assignment' composition='Finalterm' time='12:00' percent='20/50' />
-        <CardGrade title='Dev posted a new assignment' composition='Midterm' time='12:00' percent='25/30' />
-        <CardGrade title='Dev posted a new assignment' composition='Exercise 2' time='12:00' percent='5/10' />
-        <CardGrade title='Dev posted a new assignment' composition='Exercise 1' time='12:00' percent='10/10' />
-
+        {isGradeCompositionList.map((data, index) => (
+          data.isPublic &&
+          <CardGrade
+            key={index}
+            title='Teacher posted a new assignment'
+            composition={data?.composition}
+            time={convertTime(data?.time)}
+            percent={`${data?.grade} / ${data?.scale}`}
+          />
+        ))}
       </Stack>
 
       <Divider />
@@ -188,7 +240,7 @@ function GradeComposition () {
       }}>
         <Typography variant='h6'>
           Total grade: <Typography variant='body-2'>
-            100%
+            {totalGrade.toFixed(2)}
           </Typography>
         </Typography>
       </Container>

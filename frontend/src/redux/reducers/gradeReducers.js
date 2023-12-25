@@ -35,3 +35,21 @@ export const userGetAllReviewGradeCompositionByStudentIdReducer = (state = { rev
     return state
   }
 }
+
+// USER GET ALL REVIEW BY STUDENT ID
+export const userGetAllReviewGradeCompositionReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+  case gradeConstants.GET_ALL_REVIEW_REQUEST:
+    return { isLoading: true }
+  case gradeConstants.GET_ALL_REVIEW_SUCCESS:
+    return { isLoading: false, reviews: action.payload, isSuccess: true }
+  case gradeConstants.GET_ALL_REVIEW_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case gradeConstants.GET_ALL_REVIEW_RESET:
+    return {
+      reviews: []
+    }
+  default:
+    return state
+  }
+}

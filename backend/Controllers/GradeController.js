@@ -274,7 +274,7 @@ const createNewComment = async (req, res) => {
 };
 
 const updateReviewGrade = async (req, res) => {
-  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status } = req.body;
+  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status, teacher_Id } = req.body;
 
   try {
 
@@ -299,7 +299,7 @@ const updateReviewGrade = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' });
     }
 
-    ['expectGrade', 'oldGrade', 'explanation', 'explanationTeacher', 'reviewedGrade'].forEach(property => {
+    ['expectGrade', 'oldGrade', 'explanation', 'explanationTeacher', 'reviewedGrade', 'teacher_Id', 'status'].forEach(property => {
       if (req.body[property] !== null && req.body[property] !== undefined) {
         review[property] = req.body[property];
       }
@@ -400,7 +400,7 @@ const getAllReviewGradeCompositionByStudentId = async (req, res) => {
           const studentFirstName = student ? student.firstName : '';
           const studentLastName = student ? student.lastName : '';
 
-          const teacher = await User.findById(review.teacherId);
+          const teacher = await User.findById(review.teacher_Id);
           const teacherFirstName = teacher ? teacher.firstName : '';
           const teacherLastName = teacher ? teacher.lastName : '';
           const teacherId = teacher ? teacher.userId : '';
@@ -454,12 +454,34 @@ const getAllReviewGradeComposition = async (req, res) => {
     const allReviews = [];
 
     // Lặp qua mỗi GradeComposition
-    grade.gradeCompositionList.forEach(gradeComposition => {
+    for (const gradeComposition of grade.gradeCompositionList) {
       // Lặp qua mỗi Review trong reviewGradeList
-      gradeComposition.reviewGradeList.forEach(review => {
-        allReviews.push(review);
-      });
-    });
+      for (const review of gradeComposition.reviewGradeList) {
+        // Chỉ thêm Review của student có studentId cần tìm
+        const student = await User.findOne({ userId: review.studentId });
+        const studentFirstName = student ? student.firstName : '';
+        const studentLastName = student ? student.lastName : '';
+
+        const teacher = await User.findById(review.teacher_Id);
+        const teacherFirstName = teacher ? teacher.firstName : '';
+        const teacherLastName = teacher ? teacher.lastName : '';
+        const teacherId = teacher ? teacher.userId : '';
+
+        const composition = gradeComposition.name;
+        const scale = gradeComposition.scale;
+
+        allReviews.push({
+          ...review._doc,
+          composition,
+          scale,
+          studentFirstName,
+          studentLastName,
+          teacherFirstName,
+          teacherLastName,
+          teacherId,
+        });
+        }
+      }
 
     // Chia danh sách thành hai dựa vào thuộc tính status
     const pendingReviews = allReviews.filter(review => review.status === 'Pending');

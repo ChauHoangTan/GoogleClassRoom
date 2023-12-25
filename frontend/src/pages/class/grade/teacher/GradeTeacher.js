@@ -464,7 +464,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       try {
         const result = await handleGetGradeCompositionByStudentId(item.userId)
         const listGrade = result.data
-
+        console.log(listGrade)
         // Thêm đối tượng vào mảng rows khi promise hoàn tất
         newRows.push({
           id: item.userId,

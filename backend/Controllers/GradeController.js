@@ -110,6 +110,7 @@ const deleteGradeComposition = async (req, res) => {
 
 const getAllGradeCompositionByStudentId = async (req, res) => {
   const { classId, studentId } = req.body;
+  console.log(classId, studentId)
   try {
     if (studentId === undefined || studentId === '') {
       return res.status(404).json({ success: false, message: 'Please mapping your account to see grade!' });

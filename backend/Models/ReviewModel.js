@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 // Define ReviewModel Schema
 const ReviewModelSchema = new Schema({
   studentId: { type: String, required: true },
-  gradeId: { type: String, required: true },
+  gradeCompositionId: { type: String, required: true },
   expectGrade: { type: Number, required: true },
   explanation: { type: [String], default: [] },
   comment: { type: [CommentSchema], default: [] }

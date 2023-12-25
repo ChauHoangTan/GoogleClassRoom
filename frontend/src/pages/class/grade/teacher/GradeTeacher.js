@@ -5,7 +5,9 @@ import UploadIcon from '@mui/icons-material/Upload'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import GradeTable from './GradeTable'
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
+import EditIcon from '@mui/icons-material/Edit';
+import BeenhereIcon from '@mui/icons-material/Beenhere';
 import { getStudentIdList } from '../../../../redux/APIs/classServices'
 import { useEffect, useRef, useState } from 'react'
 import {
@@ -26,7 +28,7 @@ import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
 import { CSVLink } from 'react-csv'
 import { useParams } from 'react-router-dom'
-import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition } from '../../../../redux/APIs/gradeServices'
+import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition, editGradeComposition } from '../../../../redux/APIs/gradeServices'
 import { styled } from '@mui/material/styles'
 import Papa from 'papaparse'
 
@@ -426,7 +428,22 @@ function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gr
   )
 }
 
+const sumGradeComposition = (listGrade) => {
+  let sum = 0
+  listGrade.map((composition) => {
+    if (composition.grade === '') {
+      return ''
+    }
+    sum += composition.grade
+  })
+
+  return sum
+}
+
+
 function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows }) {
+
+  const [isEdit, setIsEdit] = useState(false)
 
   let compositionList = []
   gradeCompositionList.map((item) => {
@@ -464,12 +481,12 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       try {
         const result = await handleGetGradeCompositionByStudentId(item.userId)
         const listGrade = result.data
-        console.log(listGrade)
         // Thêm đối tượng vào mảng rows khi promise hoàn tất
         newRows.push({
           id: item.userId,
           fullName: `${item.lastName} ${item.firstName}`,
-          listGrade: listGrade
+          listGrade: listGrade,
+          total: sumGradeComposition(listGrade)
         })
       } catch (error) {
         console.error('Error:', error)
@@ -479,12 +496,65 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
     // Gọi khi tất cả promises hoàn tất
     if (rows.length != newRows.length) {
       setRows(newRows)
+    } else {
+      if (rows.length > 0 && newRows.length > 0) {
+        if (rows[0].listGrade.length != newRows[0].listGrade.length ) {
+          setRows(newRows)
+        }
+        // newRows.map((item, index) => {
+        //   if (item.total !== rows[index].total) {
+        //     setRows(newRows)
+        //   }
+        // })
+      }
+      console.log(rows)
     }
   })
     .catch((error) => {
       console.error('Error:', error)
     })
 
+  // useEffect(() => {
+  //   Promise.all(
+  //     studentList.map(async (item) => {
+  //       try {
+  //         const result = await handleGetGradeCompositionByStudentId(item.userId)
+  //         const listGrade = result.data
+  //         // Thêm đối tượng vào mảng rows khi promise hoàn tất
+  //         newRows.push({
+  //           id: item.userId,
+  //           fullName: `${item.lastName} ${item.firstName}`,
+  //           listGrade: listGrade,
+  //           total: sumGradeComposition(listGrade)
+  //         })
+  //       } catch (error) {
+  //         console.error('Error:', error)
+  //       }
+  //     })
+  //   ).then(() => {
+  //     // Gọi khi tất cả promises hoàn tất
+  //     if (rows.length != newRows.length) {
+  //       setRows(newRows)
+  //     } else {
+  //       if (rows.length > 0 && newRows.length > 0) {
+  //         if (rows[0].listGrade.length != newRows[0].listGrade.length ) {
+  //           setRows(newRows)
+  //         }
+  //       }
+  //     }
+  //   })
+  //     .catch((error) => {
+  //       console.error('Error:', error)
+  //     })
+  // }, [rows])
+
+  const changeState = () => {
+    setIsEdit(!isEdit)
+  }
+
+  const editGradeCompositionAPI = async () => {
+    await editGradeComposition(classId, rows)
+  }
 
   return (
     <Container sx={{
@@ -494,10 +564,20 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       my: 2
     }}>
       <Typography gutterBottom variant="h5" >
-        Grade
+          Grade
       </Typography>
-
-      <GradeTable rows={rows} columns={columns}/>
+      <Stack direction='row' justifyContent='end'>
+      {!isEdit ?
+        <Button variant='contained' startIcon={<EditIcon />} sx={{ fontSize:'13px', mb:'5px' }}
+          onClick={changeState}>
+            Edit
+        </Button> :
+        <Button variant='contained' color='primary' startIcon={<BeenhereIcon />} sx={{ fontSize:'13px', mb:'5px' }}
+          onClick={() => {changeState(); editGradeCompositionAPI() }}>
+          Save
+      </Button>}
+      </Stack>
+      <GradeTable columns={columns} rows={rows} setRows={setRows} isEdit={isEdit}/>
     </Container>
   )
 }
@@ -550,7 +630,6 @@ export default function GradeTeacher () {
       const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
       setGradeCompositionList(response.data.gradeCompositionList)
       setOrderGradeComposition(response.data.orderGradeComposition)
-      console.log(response)
     }
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }

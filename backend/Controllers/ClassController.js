@@ -491,7 +491,7 @@ const receiveInvitateEmail = async(req, res) => {
 };
 
 const getStudentsListByUploadFile = async (req, res) => {
-    const { studentsListUpload, classId } = req.body;
+    let { studentsListUpload, classId } = req.body;
 
     try {
         const classExist = await Class.findById(classId)
@@ -500,7 +500,9 @@ const getStudentsListByUploadFile = async (req, res) => {
             return res.status(404).json({ message: 'No class found' });
         }
 
+        studentList.sort((a,b) => a.userId - b.userId)
         classExist.studentsListUpload = studentsListUpload;
+        console.log(studentsListUpload)
 
         await classExist.save()
 
@@ -607,6 +609,7 @@ const getStudentIdListByUpload = async (req, res) => {
         let studentListByUpload = []
 
         studentListByUpload = classExist.studentsListUpload
+        studentListByUpload.sort((a, b) => a.userId - b.userId);
 
         return res.status(200).json({message: "Students list getted!", studentListByUpload });
     } catch (error) {

@@ -12,6 +12,7 @@ router.delete("/delete/:classId/:gradeCompositionId", passport.authenticate('jwt
 router.post("/update", passport.authenticate('jwt', { session: false }), gradeController.updateGradeComposition);
 router.post("/getGradeCompositionByStudentId", passport.authenticate('jwt', { session: false }), gradeController.getAllGradeCompositionByStudentId);
 router.post("/uploadGradeComposition", passport.authenticate('jwt', { session: false }), gradeController.uploadGradeComposition);
+router.post("/editGradeComposition", passport.authenticate('jwt', { session: false }), gradeController.editGradeComposition);
 router.post("/createNewReviewGrade", passport.authenticate('jwt', { session: false }), gradeController.createNewReviewGrade);
 router.post("/createNewComment", passport.authenticate('jwt', { session: false }), gradeController.createNewComment);
 router.post("/updateReviewGrade", passport.authenticate('jwt', { session: false }), gradeController.updateReviewGrade);

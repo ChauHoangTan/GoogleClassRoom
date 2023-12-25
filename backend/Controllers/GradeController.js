@@ -90,7 +90,6 @@ const updateGradeComposition = async (req, res) => {
 
 const deleteGradeComposition = async (req, res) => {
   const { classId, gradeCompositionId } = req.params;
-  console.log(classId, gradeCompositionId)
   try {
 
     const gradeModel = await Grade.findOne({ classId });
@@ -112,7 +111,6 @@ const deleteGradeComposition = async (req, res) => {
 
 const getAllGradeCompositionByStudentId = async (req, res) => {
   const { classId, studentId } = req.body;
-  console.log(classId, studentId)
   try {
     if (studentId === undefined || studentId === '') {
       return res.status(404).json({ success: false, message: 'Please mapping your account to see grade!' });
@@ -178,6 +176,53 @@ const uploadGradeComposition = async (req, res) => {
     await gradeModel.save()
 
     return res.status(201).json({ success: true, data: studentGradeList });
+  } catch (error) {
+      console.error(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+const editGradeComposition = async (req, res) => {
+  const { classId, listGradeComposition } = req.body;
+  try {
+
+    if (listGradeComposition == null) {
+      return res.status(404).json({ success: false, message: 'Can not find listGradeComposition' });
+    }
+
+    const gradeModel = await Grade.findOne({ classId });
+    console.log(listGradeComposition)
+
+    listGradeComposition.map((user) => {
+      user.listGrade.map( async (composition) => {
+        let compositionList = gradeModel.gradeCompositionList.find(item => item._id == composition._id)
+        let student = compositionList.studentGradeList.find(item => item.studentId == user.id)
+        if(student == null) {
+          const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema);
+          const newStudent = new GradeStudent({
+            studentId: user.id,
+            grade: composition.grade || 0
+          })
+
+          await Grade.findOneAndUpdate(
+            { _id: gradeModel._id, 'gradeCompositionList._id': composition._id },
+            { $push: { 'gradeCompositionList.$.studentGradeList': newStudent } },
+            { new: true }
+          );
+        }else{
+          student.grade = composition.grade
+        }
+        
+      })
+    })
+
+    if (!gradeModel) {
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+    }
+
+    await gradeModel.save()
+
+    return res.status(201).json({ success: true, message: 'Success' });
   } catch (error) {
       console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -466,6 +511,7 @@ module.exports = {
   updateGradeComposition,
   getAllGradeCompositionByStudentId,
   uploadGradeComposition,
+  editGradeComposition,
   createNewReviewGrade,
   createNewComment,
   updateReviewGrade,

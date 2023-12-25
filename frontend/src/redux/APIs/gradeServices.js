@@ -33,10 +33,17 @@ const uploadGradeComposition = async ( classId, compositionId, studentGradeList 
   const { data } = await AxiosJWT.post('/grade/uploadGradeComposition', { classId, compositionId, studentGradeList })
   return data
 }
+
+// upload grade composition
+const editGradeComposition = async ( classId, listGradeComposition ) => {
+  const { data } = await AxiosJWT.post('/grade/editGradeComposition', { classId, listGradeComposition })
+  return data
+}
 export {
   getAllGradeCompositionByClassIdService,
   createNewGradeComposition,
   removeGradeComposition,
   getAllGradeCompositionByStudentId,
-  uploadGradeComposition
+  uploadGradeComposition,
+  editGradeComposition
 }

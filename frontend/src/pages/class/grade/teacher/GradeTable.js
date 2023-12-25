@@ -6,9 +6,10 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function GradeTable ({ columns, rows }) {
+
+export default function GradeTable ({ columns, rows, setRows, isEdit }) {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(2)
 
@@ -21,14 +22,56 @@ export default function GradeTable ({ columns, rows }) {
     setPage(0)
   }
 
-  const rowTotal =
-    { id: 1000, listGrade: [
-      { composition: 'Exercise 1', percent: '10%', grade: '8' },
-      { composition: 'Exercise 2', percent: '10%', grade: '7' },
-      { composition: 'Midterm', percent: '30%', grade: '25' },
-      { composition: 'Finalterm', percent: '50%', grade: '40' }
-    ], total: '40' }
+  const handleChangeGrade = (e, indexRow, indexGrade) => {
+    const newGrade = e.target.value
+    let newTextFields = [...rows]
+    newTextFields[indexRow].listGrade[indexGrade].grade = newGrade
+    setRows(newTextFields)
+  }
 
+  const rowTotal =
+    { id: 1000, listGrade: rows[0]?.listGrade && rows[0].listGrade, total: '40' }
+
+  const averageComposition = (rows) => {
+    if (rows.length > 0) {
+      const amountComposition = rows[0].listGrade.length
+      let averageCompositionList = []
+      for (let i = 0; i < amountComposition; i++) {
+        let averageComposition = 0
+
+        for (let j = 0; j < rows.length; j++) {
+          averageComposition += parseFloat(rows[j].listGrade[i].grade)
+          if (averageComposition === '') {
+            averageComposition = ''
+            break
+          }
+        }
+        averageCompositionList.push(
+          averageComposition/rows.length
+        )
+      }
+
+      // cal average total
+      let averageComposition = 0
+      for (let j = 0; j < rows.length; j++) {
+        averageComposition += rows[j].total
+        if (averageComposition === '') {
+          averageComposition = ''
+          break
+        }
+      }
+      averageCompositionList.push(
+        averageComposition/rows.length
+      )
+
+      return averageCompositionList
+    }
+    else {
+      return []
+    }
+  }
+
+  let averages = averageComposition(rows)
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -55,7 +98,7 @@ export default function GradeTable ({ columns, rows }) {
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, indexRow) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
@@ -64,14 +107,16 @@ export default function GradeTable ({ columns, rows }) {
                       let cellContent
                       // Check if the column has listGrade
                       if (column.listGrade) {
-                        cellContent = value.map((col) => (
+                        cellContent = value.map((col, indexGrade) => (
                           <TableCell key={`${col.composition}`} align={col.align}>
                             <TextField
                               size="small"
-                              value={col.grade}
-                            >
-                              {/* {`${col.grade}`} */}
-                            </TextField>
+                              value={
+                                rows[indexRow].listGrade[indexGrade].grade
+                              }
+                              onChange={(e) => handleChangeGrade(e, indexRow, indexGrade)}
+                              disabled={!isEdit}
+                            />
                           </TableCell>
                         ))
                       } else {
@@ -102,10 +147,10 @@ export default function GradeTable ({ columns, rows }) {
                 // Customized TableCell content based on column id
                 let cellContent
                 // Check if the column has listGrade
-                if (column.listGrade) {
-                  cellContent = value.map((col) => (
+                if (column.listGrade && value) {
+                  cellContent = value.map((col, index) => (
                     <TableCell key={`${col.composition}`} align={col.align}>
-                      10
+                      {averages[index]}
                     </TableCell>
                   ))
                 } else {
@@ -114,7 +159,7 @@ export default function GradeTable ({ columns, rows }) {
                     cellContent = <Typography variant="subtitle1">Average Score</Typography>
                     break
                   case 'total':
-                    cellContent = <Typography variant="body1">100</Typography>
+                    cellContent = <Typography variant="body1">{averages.length > 0 && averages[averages.length - 1]}</Typography>
                     break
                   }
                   cellContent = <TableCell key={column.id} align={column.align}>{cellContent}</TableCell>

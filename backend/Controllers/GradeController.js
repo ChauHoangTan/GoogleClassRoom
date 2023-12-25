@@ -230,7 +230,7 @@ const editGradeComposition = async (req, res) => {
 }
 
 const createNewReviewGrade = async (req, res) => {
-  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, exlanation } = req.body;
+  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation } = req.body;
 
   try {
 
@@ -255,14 +255,14 @@ const createNewReviewGrade = async (req, res) => {
       studentId,
       expectGrade,
       oldGrade,
-      exlanation
+      explanation
     });
 
     gradeComposition.reviewGradeList.push(newReview);
     
     await grade.save();
 
-    return res.status(201).json({ success: true, data: grade });
+    return res.status(201).json({ success: true, message: 'Send request review success' });
   } catch (error) {
       console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -319,7 +319,7 @@ const createNewComment = async (req, res) => {
 };
 
 const updateReviewGrade = async (req, res) => {
-  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, exlanation, exlanationTeacher, reviewedGrade, status } = req.body;
+  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status } = req.body;
 
   try {
 
@@ -352,7 +352,7 @@ const updateReviewGrade = async (req, res) => {
 
     await grade.save();
 
-    return res.status(201).json({ success: true, data: review });
+    return res.status(201).json({ success: true, message: 'Request success' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -416,7 +416,7 @@ const deleteComment = async (req, res) => {
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, data: gradeModel });
+    return res.status(201).json({ success: true, message: 'Delete success' });
   } catch (error) {
       console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -436,15 +436,36 @@ const getAllReviewGradeCompositionByStudentId = async (req, res) => {
     const allReviews = [];
 
     // Lặp qua mỗi GradeComposition
-    grade.gradeCompositionList.forEach(gradeComposition => {
+    for (const gradeComposition of grade.gradeCompositionList) {
       // Lặp qua mỗi Review trong reviewGradeList
-      gradeComposition.reviewGradeList.forEach(review => {
+      for (const review of gradeComposition.reviewGradeList) {
         // Chỉ thêm Review của student có studentId cần tìm
         if (String(review.studentId) === String(studentId)) {
-          allReviews.push(review);
+          const student = await User.findOne({ userId: review.studentId });
+          const studentFirstName = student ? student.firstName : '';
+          const studentLastName = student ? student.lastName : '';
+
+          const teacher = await User.findById(review.teacherId);
+          const teacherFirstName = teacher ? teacher.firstName : '';
+          const teacherLastName = teacher ? teacher.lastName : '';
+          const teacherId = teacher ? teacher.userId : '';
+
+          const composition = gradeComposition.name;
+          const scale = gradeComposition.scale;
+
+          allReviews.push({
+            ...review._doc,
+            composition,
+            scale,
+            studentFirstName,
+            studentLastName,
+            teacherFirstName,
+            teacherLastName,
+            teacherId,
+          });
         }
-      });
-    });
+      }
+    }
 
     // Chia danh sách thành hai dựa vào thuộc tính status
     const pendingReviews = allReviews.filter(review => review.status === 'Pending');

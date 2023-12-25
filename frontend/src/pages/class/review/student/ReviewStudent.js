@@ -1,7 +1,7 @@
 import { Container, Typography, Card, CardContent, Stack, IconButton, MenuItem, Menu, ListItemIcon, ListItemText, Box, TextField } from '@mui/material'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PreviewIcon from '@mui/icons-material/Preview'
 import DeleteIcon from '@mui/icons-material/Delete'
 import * as React from 'react'
@@ -11,16 +11,105 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import CloseIcon from '@mui/icons-material/Close'
 import Slide from '@mui/material/Slide'
+import { updateReviewGrade, deleteReviewGrade } from '../../../../redux/APIs/gradeServices'
+import { useParams } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import toast from 'react-hot-toast'
+import { convertTime } from '../../../../utils/timeConvert/timeConvert'
+import { getAllReviewGradeCompositionByStudentIdAction } from '../../../../redux/actions/gradeActions'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-function CardGradeReview ({ title, composition, time, percent, status, expectedGrade }) {
+function CardGradeReview ({ data }) {
+
+  const title = 'Student need to review assignment: '
+  const composition = data?.composition
+  const time = convertTime(data?.time)
+  const percent = `${data?.oldGrade} / ${data?.scale}`
+  const status = data?.status
+  const expectedGrade = data?.expectGrade
+
   const [anchorEl, setAnchorEl] = useState(null)
   const [openDialog, setOpenDialog] = React.useState(false)
 
+  const [errorText, setErrorText] = useState('')
+  const [isExpectedGrade, setIsExpectedGrade] = useState(0)
+  const [isExplanation, setIsExplanation] = useState('')
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
+  const { classId } = useParams()
+
+  const dispatch = useDispatch()
+
+  const handleReviewRequest = async () => {
+    if (isExpectedGrade === 0 || isExplanation === '') {
+      toast.error('Please enter expected grade and comment')
+      return
+    }
+
+    handleCloseDialog()
+
+    const gradeCompositionId = data?.gradeCompositionId
+    const studentId = userInfo?.userId
+    const expectGrade = isExpectedGrade
+    const oldGrade = data?.grade
+    const explanation = isExplanation
+    try {
+      const result = await updateReviewGrade(classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation)
+
+      if (result.success) {
+        dispatch(getAllReviewGradeCompositionByStudentIdAction(classId, studentId))
+        toast.success(result.message)
+      }
+
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+
+  const handleInputChangeExpectedGrade = (event) => {
+    const inputValue = event.target.value
+    const parsedValue = Number(inputValue)
+
+    if (isNaN(parsedValue) || parsedValue < 0 || parsedValue > data?.scale) {
+      setErrorText(`Invalid input. Please enter a positive number less than or equal to ${data?.scale}.`)
+    } else {
+      setErrorText('')
+      setIsExpectedGrade(parsedValue)
+    }
+  }
+
+  const handleInputChangeExplanation = (event) => {
+    const inputValue = event.target.value
+    setIsExplanation(inputValue)
+  }
+
+  const handleClickDelete = async () => {
+    handleClose()
+    const gradeCompositionId = data?.gradeCompositionId
+    const userId = data?.studentId
+    try {
+      const result = await deleteReviewGrade(classId, gradeCompositionId, userId )
+
+      if (result.success) {
+        toast.success(result.message)
+      }
+
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+
+    const studentId = userInfo?.userId
+    dispatch(getAllReviewGradeCompositionByStudentIdAction(classId, studentId))
+  }
+
   const handleClickOpenDialog = () => {
+    handleClose()
     setOpenDialog(true)
   }
 
@@ -57,7 +146,7 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
             <Stack>
               <Typography>{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
               <Typography variant='body-2' sx={{ fontStyle:'italic', color:'rgba(21, 139, 50, 0.7)' }}>{time}</Typography>
-              <Typography sx={{ fontSize: 'small', fontStyle:'italic' }}>Status: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold', color: status === 'pending' ? 'rgba(226, 255, 0, 0.9)' : 'rgba(39, 245, 46, 0.8)', fontSize: 'small' }}>{status}</Typography></Typography>
+              <Typography sx={{ fontSize: 'small', fontStyle:'italic' }}>Status: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold', color: status === 'Pending' ? 'rgba(226, 255, 0, 0.9)' : 'rgba(39, 245, 46, 0.8)', fontSize: 'small' }}>{status}</Typography></Typography>
               <Typography sx={{ fontSize: 'small', fontStyle:'italic' }}>Expected grade: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold', fontSize: 'small' }}>{expectedGrade}</Typography></Typography>
             </Stack>
           </Stack>
@@ -82,7 +171,7 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
                 'aria-labelledby': 'basic-button'
               }}
             >
-              {status == 'pending' ?
+              {status == 'Pending' ?
                 <>
                   <MenuItem onClick={handleClickOpenDialog}>
                     <ListItemIcon>
@@ -90,7 +179,7 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
                     </ListItemIcon>
                     <ListItemText>Edit this review</ListItemText>
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={() => {handleClickDelete()}}>
                     <ListItemIcon>
                       <DeleteIcon fontSize="small" />
                     </ListItemIcon>
@@ -131,12 +220,12 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
                 Review
               </Typography>
               <Typography sx={{ flex: 1 }} variant="h6">{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
-              <Button autoFocus color="inherit" onClick={handleCloseDialog} disabled={status !== 'pending'}>
+              <Button autoFocus color="inherit" onClick={() => {handleReviewRequest()}} disabled={status !== 'Pending'}>
                 Review request
               </Button>
             </Toolbar>
           </AppBar>
-          {status !== 'pending' && <>
+          {status !== 'Pending' && <>
             <Container sx={{
               borderRadius: 5,
               p: 3,
@@ -149,10 +238,10 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography>
-                ID: 20127662
+                ID: {data?.teacherId}
                 </Typography>
                 <Typography>
-                Name: Nguyễn Đình Văn
+                Name: {data?.teacherFirstName} {data?.teacherLastName}
                 </Typography>
                 <Typography>
                 Grade compostion: {composition}
@@ -163,13 +252,15 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 0 }}>
                 <Typography variant="body1">Grade after reviewed:  </Typography>
-                <TextField size='small' sx={{ px: 2 }} disabled></TextField>
-                <Typography variant="body1"> / 100</Typography>
+                <TextField size='small' sx={{ px: 2 }} disabled defaultValue={data?.reviewedGrade}></TextField>
+                <Typography variant="body1"> / {data?.scale}</Typography>
               </Box>
               <TextField
                 id=""
                 label="Comment"
                 fullWidth
+                disabled
+                defaultValue={data?.explanationTeacher}
               />
             </ Container>
           </>}
@@ -185,10 +276,10 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography>
-                ID: 20127662
+                ID: {data?.studentId}
               </Typography>
               <Typography>
-                Name: Nguyễn Đình Văn
+                Name: {data?.studentFirstName} {data?.studentLastName}
               </Typography>
               <Typography>
                 Grade compostion: {composition}
@@ -199,13 +290,21 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 0 }}>
               <Typography variant="body1">Expeted grade:  </Typography>
-              <TextField size='small' sx={{ px: 2 }}></TextField>
-              <Typography variant="body1"> / 100</Typography>
+              <TextField  type='number' size='small' sx={{ px: 2 }} disabled={status !== 'Pending'}
+                onChange={handleInputChangeExpectedGrade}
+                error={Boolean(errorText)}
+                helperText={errorText}
+                defaultValue={data?.expectGrade}
+              ></TextField>
+              <Typography variant="body1"> / {data?.scale}</Typography>
             </Box>
             <TextField
               id=""
               label="Comment"
               fullWidth
+              disabled={status !== 'Pending'}
+              onChange={handleInputChangeExplanation}
+              defaultValue={data?.explanation}
             />
           </ Container>
         </Dialog>
@@ -214,7 +313,7 @@ function CardGradeReview ({ title, composition, time, percent, status, expectedG
   )
 }
 
-function GradeReviewPending () {
+function GradeReviewPending ({ reviewList }) {
   return (
     <Container sx={{
       borderRadius: 5,
@@ -227,17 +326,18 @@ function GradeReviewPending () {
       </Typography>
 
       <Stack spacing={1} py={1}>
-        <CardGradeReview title='Dev posted a new assignment' composition='Finalterm' time='12:00' percent='20/50' status='pending' expectedGrade='10' />
-        <CardGradeReview title='Dev posted a new assignment' composition='Midterm' time='12:00' percent='25/30' status='pending' expectedGrade='20' />
-        <CardGradeReview title='Dev posted a new assignment' composition='Exercise 2' time='12:00' percent='5/10' status='pending' expectedGrade='30' />
-        <CardGradeReview title='Dev posted a new assignment' composition='Exercise 1' time='12:00' percent='10/10' status='pending' expectedGrade='40' />
-
+        {reviewList && reviewList.map((data, index) => (
+          <CardGradeReview
+            key={index}
+            data={data}
+          />
+        ))}
       </Stack>
     </Container>
   )
 }
 
-function GradeReviewed () {
+function GradeReviewed ({ reviewList }) {
   return (
     <Container sx={{
       borderRadius: 5,
@@ -250,25 +350,46 @@ function GradeReviewed () {
       </Typography>
 
       <Stack spacing={1} py={1}>
-        <CardGradeReview title='Dev posted a new assignment' composition='Finalterm' time='12:00' percent='20/50' status='Reviewed' expectedGrade='10' />
-        <CardGradeReview title='Dev posted a new assignment' composition='Midterm' time='12:00' percent='25/30' status='Reviewed' expectedGrade='20' />
-        <CardGradeReview title='Dev posted a new assignment' composition='Exercise 2' time='12:00' percent='5/10' status='Reviewed' expectedGrade='30' />
-        <CardGradeReview title='Dev posted a new assignment' composition='Exercise 1' time='12:00' percent='10/10' status='Reviewed' expectedGrade='40' />
-
+        {reviewList && reviewList.map((data, index) => (
+          <CardGradeReview
+            key={index}
+            data={data}
+          />
+        ))}
       </Stack>
     </Container>
   )
 }
 
 export default function ReviewStudent () {
+  const dispatch = useDispatch()
+  const { isLoading, isError, reviews, isSuccess } = useSelector(
+    (state) => state.userGetAllReviewGradeCompositionByStudentId
+  )
+
+  const { classId } = useParams()
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
+  useEffect(() => {
+    const studentId = userInfo?.userId
+    dispatch(getAllReviewGradeCompositionByStudentIdAction(classId, studentId))
+
+    if (isError) {
+      toast.error(isError)
+      dispatch({ type: 'GET_ALL_REVIEW_BY_STUDENT_ID_RESET' })
+    }
+  }, [dispatch, isError])
 
   return (
     <>
       <Typography gutterBottom variant="h4" sx={{ my: 1, px: 3 }} >History</Typography>
 
-      <GradeReviewPending/>
+      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []}/>
 
-      <GradeReviewed/>
+      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []}/>
     </>
   )
 }

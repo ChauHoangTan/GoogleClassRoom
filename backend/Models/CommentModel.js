@@ -5,7 +5,11 @@ const { Schema } = mongoose;
 const CommentSchema = new Schema({
   userId: { type: String, required: true },
   content: { type: String, required: true },
-  time: { type: Date, default: Date.now }
+  time: { type: Date, default: Date.now },
+  firstName: { type: String },
+  lastName: { type: String },
+  image: { type: String, default: "" },
+  isTeacherComment: { type: Boolean, default: false }
 });
 
 // Create a model from the schema

@@ -21,7 +21,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-function CardGrade ({ title, composition, time, percent }) {
+function CardGrade ({ data }) {
+  const title= 'Teacher posted a new assignment'
+  const composition= data?.composition
+  const time= convertTime(data?.time)
+  const percent= `${data?.grade} / ${data?.scale}`
+
   const [anchorEl, setAnchorEl] = useState(null)
   const [openDialog, setOpenDialog] = React.useState(false)
 
@@ -223,10 +228,7 @@ function GradeComposition () {
           data.isPublic &&
           <CardGrade
             key={index}
-            title='Teacher posted a new assignment'
-            composition={data?.composition}
-            time={convertTime(data?.time)}
-            percent={`${data?.grade} / ${data?.scale}`}
+            data={data}
           />
         ))}
       </Stack>

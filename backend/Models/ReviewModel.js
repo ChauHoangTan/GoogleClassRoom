@@ -7,8 +7,16 @@ const ReviewModelSchema = new Schema({
   studentId: { type: String, required: true },
   gradeCompositionId: { type: String, required: true },
   expectGrade: { type: Number, required: true },
-  explanation: { type: [String], default: [] },
-  comment: { type: [CommentSchema], default: [] }
+  oldGrade: { type: Number, required: true },
+  reviewedGrade: { type: Number, required: true, default: 0 },
+  explanation: { type: String, default: '' },
+  explanationTeacher: { type: String, default: '' },
+  comment: { type: [CommentSchema], default: [] },
+  status: { type: String, default: 'Pending' },
+  time: { type: Date, default: Date.now }
+},
+{
+  timestamps: true,
 });
 
 // Create a model from the schema

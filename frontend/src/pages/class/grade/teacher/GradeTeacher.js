@@ -556,6 +556,35 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
     await editGradeComposition(classId, rows)
   }
 
+  const csvDataDownload = () => {
+    if (rows.length > 0) {
+      let label = ['StudentId', 'FullName']
+      rows[0].listGrade.map((item) => {
+        label.push(item.composition)
+      })
+      label.push('Total')
+      let data = []
+      data.push(label)
+
+      rows.map((user) => {
+        let concreteData = []
+        concreteData.push(user.id)
+        concreteData.push(user.fullName)
+        user.listGrade.map((composition) => {
+          concreteData.push(composition.grade)
+        })
+        concreteData.push(user.total)
+
+        data.push(concreteData)
+      })
+
+      return data
+    }
+    else {
+      return [[]]
+    }
+  }
+
   return (
     <Container sx={{
       borderRadius: 5,
@@ -566,7 +595,13 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       <Typography gutterBottom variant="h5" >
           Grade
       </Typography>
-      <Stack direction='row' justifyContent='end'>
+      <Stack direction='row' justifyContent='end' spacing={3} sx={{ mb:'5px' }}>
+        <CSVLink data={csvDataDownload()} filename='gradeBoard.csv'>
+          <Button variant='contained' startIcon={<FileDownloadIcon />} sx={{ fontSize:'13px', mb:'5px' }}
+            onClick={changeState}>
+              Export
+          </Button>
+        </CSVLink>
       {!isEdit ?
         <Button variant='contained' startIcon={<EditIcon />} sx={{ fontSize:'13px', mb:'5px' }}
           onClick={changeState}>

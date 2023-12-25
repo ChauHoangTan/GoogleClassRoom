@@ -25,7 +25,20 @@ const getAllReviewGradeCompositionByStudentIdAction = (classId, studentId ) => a
   }
 }
 
+
+// Get all review grade ROLE:Teacher
+const getAllReviewGradeCompositionAction = (classId ) => async (dispatch) => {
+  try {
+    dispatch({ type: gradeConstants.GET_ALL_REVIEW_REQUEST })
+    const response = await gradeApi.getAllReviewGradeComposition(classId)
+    dispatch({ type: gradeConstants.GET_ALL_REVIEW_SUCCESS, payload: response })
+  } catch (error) {
+    ErrorsAction(error, dispatch, gradeConstants.GET_ALL_REVIEW_FAIL)
+  }
+}
+
 export {
   getAllGradeCompositionByClassIdAction,
-  getAllReviewGradeCompositionByStudentIdAction
+  getAllReviewGradeCompositionByStudentIdAction,
+  getAllReviewGradeCompositionAction
 }

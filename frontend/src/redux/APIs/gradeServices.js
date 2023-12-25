@@ -45,7 +45,6 @@ const getAllReviewGradeCompositionByStudentId = async ( classId, studentId ) => 
 }
 
 const updateReviewGrade = async ( classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status, teacher_Id ) => {
-  console.log({ classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status, teacher_Id })
   const { data } = await AxiosJWT.post('/grade/updateReviewGrade', { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status, teacher_Id })
   return data
 }
@@ -60,6 +59,12 @@ const getAllReviewGradeComposition = async ( classId ) => {
   return data
 }
 
+// upload grade composition
+const editGradeComposition = async ( classId, listGradeComposition ) => {
+  const { data } = await AxiosJWT.post('/grade/editGradeComposition', { classId, listGradeComposition })
+  return data
+}
+
 export {
   getAllGradeCompositionByClassIdService,
   createNewGradeComposition,
@@ -70,5 +75,6 @@ export {
   getAllReviewGradeCompositionByStudentId,
   updateReviewGrade,
   deleteReviewGrade,
-  getAllReviewGradeComposition
+  getAllReviewGradeComposition,
+  editGradeComposition
 }

@@ -12,7 +12,7 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import CloseIcon from '@mui/icons-material/Close'
 import Slide from '@mui/material/Slide'
-import { getAllGradeCompositionByStudentId } from '../../../../redux/APIs/gradeServices'
+import { getAllGradeCompositionByStudentId, createNewReviewGrade } from '../../../../redux/APIs/gradeServices'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
@@ -45,6 +45,51 @@ function CardGrade ({ data }) {
   const handleClose = () => {
     setAnchorEl(null)
     handleClickOpenDialog()
+  }
+
+  const handleInputChangeExpectedGrade = (event) => {
+    const inputValue = event.target.value
+    const parsedValue = Number(inputValue)
+
+    if (isNaN(parsedValue) || parsedValue < 0 || parsedValue > data?.scale) {
+      setErrorText(`Invalid input. Please enter a positive number less than or equal to ${data?.scale}.`)
+    } else {
+      setErrorText('')
+      setIsExpectedGrade(parsedValue)
+    }
+  }
+
+  const handleInputChangeExplanation = (event) => {
+    const inputValue = event.target.value
+    setIsExplanation(inputValue)
+  }
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
+  const [errorText, setErrorText] = useState('')
+  const [isExpectedGrade, setIsExpectedGrade] = useState(0)
+  const [isExplanation, setIsExplanation] = useState('')
+
+  const { classId } = useParams()
+
+  const handleReviewRequest = async () => {
+    handleCloseDialog()
+
+    const gradeCompositionId = data?._id
+    const studentId = userInfo?.userId
+    const expectGrade = isExpectedGrade
+    const oldGrade = data?.grade
+    const explanation = isExplanation
+    try {
+      const result = await createNewReviewGrade(classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation)
+
+      if (result.success)
+        toast.success(result.message)
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
   }
 
   return (
@@ -123,8 +168,8 @@ function CardGrade ({ data }) {
               Review
             </Typography>
             <Typography sx={{ flex: 1 }} variant="h6">{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
-            <Button autoFocus color="inherit" onClick={handleCloseDialog}>
-            Review request
+            <Button autoFocus color="inherit" onClick={() => {handleReviewRequest()}}>
+              Review request
             </Button>
           </Toolbar>
         </AppBar>
@@ -140,10 +185,10 @@ function CardGrade ({ data }) {
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography>
-              ID: 20127662
+              ID: {userInfo?.userId}
             </Typography>
             <Typography>
-              Name: Nguyễn Đình Văn
+              Name: {userInfo?.firstName} {userInfo?.lastName}
             </Typography>
             <Typography>
               Grade compostion: {composition}
@@ -154,13 +199,18 @@ function CardGrade ({ data }) {
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 0 }}>
             <Typography variant="body1">Expeted grade:  </Typography>
-            <TextField size='small' sx={{ px: 2 }}></TextField>
-            <Typography variant="body1"> / 100</Typography>
+            <TextField type='number' size='small' sx={{ px: 2 }}
+              onChange={handleInputChangeExpectedGrade}
+              error={Boolean(errorText)}
+              helperText={errorText}>
+            </TextField>
+            <Typography variant="body1"> / {data?.scale}</Typography>
           </Box>
           <TextField
             id=""
             label="Comment"
             fullWidth
+            onChange={handleInputChangeExplanation}
           />
         </ Container>
       </Dialog>

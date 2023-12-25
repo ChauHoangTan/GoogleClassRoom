@@ -33,10 +33,35 @@ const uploadGradeComposition = async ( classId, compositionId, studentGradeList 
   const { data } = await AxiosJWT.post('/grade/uploadGradeComposition', { classId, compositionId, studentGradeList })
   return data
 }
+
+const createNewReviewGrade = async ( classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation ) => {
+  const { data } = await AxiosJWT.post('/grade/createNewReviewGrade', { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation })
+  return data
+}
+
+const getAllReviewGradeCompositionByStudentId = async ( classId, studentId ) => {
+  const { data } = await AxiosJWT.post('/grade/getAllReviewGradeCompositionByStudentId', { classId, studentId })
+  return data
+}
+
+const updateReviewGrade = async ( classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status ) => {
+  const { data } = await AxiosJWT.post('/grade/updateReviewGrade', { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status })
+  return data
+}
+
+const deleteReviewGrade = async ( classId, gradeCompositionId, userId ) => {
+  const { data } = await AxiosJWT.delete(`/grade/deleteReviewGrade/${classId}/${gradeCompositionId}/${userId}`)
+  return data
+}
+
 export {
   getAllGradeCompositionByClassIdService,
   createNewGradeComposition,
   removeGradeComposition,
   getAllGradeCompositionByStudentId,
-  uploadGradeComposition
+  uploadGradeComposition,
+  createNewReviewGrade,
+  getAllReviewGradeCompositionByStudentId,
+  updateReviewGrade,
+  deleteReviewGrade
 }

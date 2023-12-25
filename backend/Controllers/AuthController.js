@@ -129,6 +129,7 @@ const loginUser = async (req, res) => {
             return res.status(200).json({ 
                 _id: req.user._id,
                 firstName: req.user.firstName,
+                lastName: req.user.lastName,
                 image: req.user.image,
                 isAdmin: req.user.isAdmin,
                 isThirdPartyLogin: req.user.isThirdPartyLogin,
@@ -259,6 +260,7 @@ const loginSuccess = async (req, res) => {
         return res.status(200).json({ 
             _id: user._id,
             firstName: user.firstName,
+            lastName: user.lastName,
             image: user.image,
             isAdmin: user.isAdmin,
             isThirdPartyLogin: user.isThirdPartyLogin,

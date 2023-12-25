@@ -33,6 +33,7 @@ const rootReducer = combineReducers({
 
   // Grade reducer
   userGetAllGradeCompositionByClassId: Grade.userGetAllGradeCompositionByClassIdReducer,
+  userGetAllReviewGradeCompositionByStudentId: Grade.userGetAllReviewGradeCompositionByStudentIdReducer,
 
   isOpenMenu: moreIconReducer
 

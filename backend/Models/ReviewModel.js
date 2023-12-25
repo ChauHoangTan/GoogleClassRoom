@@ -13,7 +13,8 @@ const ReviewModelSchema = new Schema({
   explanationTeacher: { type: String, default: '' },
   comment: { type: [CommentSchema], default: [] },
   status: { type: String, default: 'Pending' },
-  time: { type: Date, default: Date.now }
+  time: { type: Date, default: Date.now },
+  teacher_Id: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 },
 {
   timestamps: true,

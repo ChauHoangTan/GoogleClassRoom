@@ -155,7 +155,7 @@ function Notification({ notifications, handleClick, handleClickAll }) {
         return <NotificationItem
                     key={index} 
                     avatar={item.image} 
-                    nameObj={item.nameObj} 
+                    nameObj={item.userName} 
                     noti={item.content} 
                     time={moment(item.createdAt).format(
                         'YYYY-MM-DD H:mm:ss'

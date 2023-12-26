@@ -80,7 +80,7 @@ const listCardClass = [
 const GridItemClass = ({ data }) => {
   const navigate = useNavigate()
   const handleNavigateToClassDetails = () => {
-    navigate(`/class/${data._id}`)
+    navigate(`/class/${data._id}/stream`)
   }
   return (
     <Grid item component='div' onClick={handleNavigateToClassDetails}>

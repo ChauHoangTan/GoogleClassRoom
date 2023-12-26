@@ -34,6 +34,15 @@ function LoginSuccess() {
 
   // useEffect
   useEffect(() => {
+    if (userInfo) {
+        if(userInfo?.isAdmin) {
+            console.log(userInfo)
+            navigate('/dashboard')
+        } else {
+            navigate('/home')
+        }
+    }
+
     if (isSuccess) {
       toast.success(`Welcome back ${userInfo?.firstName}`)
     }
@@ -60,7 +69,6 @@ function LoginSuccess() {
       <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
         <Grid item>
           {isLoading && <Loader/>}
-          {isSuccess && <Navigate to={'/home'} replace={true} />}
         </Grid>
       </Grid>
     </div>

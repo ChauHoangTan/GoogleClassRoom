@@ -13,9 +13,13 @@ import {
 import { Typography, IconButton, Avatar } from '@mui/material'
 
 
-export default function ParticipantTable ({ columns, rows }) {
+export default function ParticipantTable ({ columns, rows, isTeacherTable }) {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(2)
+
+  if (rows === undefined) {
+    rows = []
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -50,36 +54,41 @@ export default function ParticipantTable ({ columns, rows }) {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
-                      const value = row[column.id]
 
                       // Customized TableCell content based on column id
                       let cellContent
                       switch (column.id) {
-                      case 'avatar':
-                        cellContent = <Avatar src={value} alt={`Avatar of ${row.fullName}`} />
+                      case 'image':
+                        cellContent = <Avatar src={row.image} alt={`Avatar of ${row.fullName}`} />
                         break
-                      case 'id':
-                        cellContent = <Typography variant="subtitle1">{value}</Typography>
+                      case 'userId':
+                        cellContent = <Typography variant="subtitle1">{row.userId}</Typography>
                         break
                       case 'fullName':
-                        cellContent = <Typography variant="body1">{value}</Typography>
+                        cellContent = <Typography variant="body1">{row.lastName} {row.firstName}</Typography>
+                        break
+                      case 'status':
+                        cellContent = <Typography variant="body1"
+                          fontStyle={'italic'}
+                          fontWeight={'bold'}
+                          color={row.status === 'mapped' ? 'green' : row.status === 'not exist' ? 'red' : row.status === 'not mapping' ? 'yellow' : 'black'}>
+                          {row.status.toUpperCase()}
+                        </Typography>
                         break
                       case 'isTeacher':
-                        cellContent = !row.isTeacher && (
+                        cellContent = !isTeacherTable && (
                           <IconButton>
                             <RemoveCircleOutlineIcon />
                           </IconButton>
                         )
                         break
                       default:
-                        cellContent = value
+                        cellContent = ''
                       }
 
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : cellContent}
+                          {cellContent}
                         </TableCell>
                       )
                     })}
@@ -97,6 +106,12 @@ export default function ParticipantTable ({ columns, rows }) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
+            'mt': '1em',
+            'mb': '1em'
+          }
+        }}
       />
     </Paper>
   )

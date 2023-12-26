@@ -5,8 +5,8 @@ import { store } from '../store'
 import * as authActions from '../actions/authActions'
 
 const AxiosJWT = axios.create({
-//   baseURL: 'http://localhost:5000/api'
-  baseURL: 'https://nexusedu.onrender.com/api'
+  baseURL: 'http://localhost:5000/api'
+  // baseURL: 'https://nexusedu.onrender.com/api'
 })
 
 AxiosJWT.interceptors.request.use(

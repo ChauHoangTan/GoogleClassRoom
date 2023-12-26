@@ -10,12 +10,20 @@ const createActivationToken = (email) => {
     return jwt.sign({email}, process.env.ACTIVATION_TOKEN_SECRET, {expiresIn: '2m'})
 }
 
+const createInvitationByUrlToken = (id) => {
+    return jwt.sign({id}, process.env.INVITATION_TOKEN_SECRET, {expiresIn: '10m'})
+}
+
+const createInvitationByEmailToken = (email, role, classId) => {
+    return jwt.sign({email, role, classId}, process.env.INVITATION_TOKEN_SECRET, {expiresIn: '10m'})
+}
+
 const createAccessToken = (id) => {
-    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
+    return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '2d'})
 }
 
 const createRefreshToken = (id) => {
-    return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '2m'})
+    return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '2d'})
 }
 
 const verifyEmail = (req, res, next) => {
@@ -35,6 +43,40 @@ const verifyEmail = (req, res, next) => {
     }
 }
 
+const verifyInvitationByUrl = (req, res, next) => {
+    const token = req.body.invitation_token;
+    if(token) {
+        jwt.verify(token, process.env.INVITATION_TOKEN_SECRET, (err, id) => {
+            if(err){ 
+                if(err) {
+                    return res.status(400).json({ message: "The invitation is incorrect or has expired" });
+                }
+            };
+            req.invitationId = id;
+            next();
+        });
+    } else {
+        return res.status(400).json("This invitation is Invalid!");
+    }
+}
+
+const verifyInvitationByEmail = (req, res, next) => {
+    const token = req.body.invitation_token;
+    if(token) {
+        jwt.verify(token, process.env.INVITATION_TOKEN_SECRET, (err, info) => {
+            if(err){ 
+                if(err) {
+                    return res.status(400).json({ message: "The invitation is incorrect or has expired" });
+                }
+            };
+            req.infoInvitation = info;
+            next();
+        });
+    } else {
+        return res.status(400).json("This invitation is Invalid!");
+    }
+}
+
 const admin = (req, res, next) => {
     if(req.user && req.user.isAdmin) {
         next();
@@ -43,11 +85,73 @@ const admin = (req, res, next) => {
     }
 }
 
+// Middleware isTeacher
+const teacher = (req, res, next) => {
+    // Get the value of id from the URL param
+    const { classId } = req.body;
+
+    // Check if classId is in the teacher's list of classes
+    const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
+
+    if (isClassTeacher) {
+        // If the user is the teacher of the class, allow the request to continue processing
+        next();
+    } else {
+        // If not the teacher of the class, return an error or redirect as needed
+        next();
+        res.status(403).json({ error: 'Unauthorized. You are not the teacher of this class.' });
+    }
+};
+
+// Middleware isStudent
+const student = (req, res, next) => {
+    // Get the value of id from the URL param
+    const classId = req.params.id;
+  
+    // Check if classId is in the student's list of classes
+    const isClassStudent = req.user.studentClassList.some(id => id.equals(classId));
+  
+    if (isClassStudent) {
+      // If the user is a student of the class, allow the request to continue processing
+      next();
+    } else {
+      // If not a student of the class, return an error or redirect as needed
+      next();
+      res.status(403).json({ error: 'Unauthorized. You are not a student of this class.' });
+    }
+};
+
+// Middleware to combine teacher and student middleware
+const isTeacherOrStudent = (req, res, next) => {
+    const classId = req.params.id;
+  
+    // Check if the user is a teacher
+    const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
+  
+    // Check if the user is a student
+    const isClassStudent = req.user.studentClassList.some(id => id.equals(classId));
+  
+    // If the user is either a teacher or a student, allow the request to continue
+    if (isClassTeacher || isClassStudent) {
+      next();
+    } else {
+      // If not a teacher or a student, return an error or redirect as needed
+      res.status(403).json({ error: 'Unauthorized. You are not authorized for this class.' });
+    }
+};
+
 module.exports = {
     generateToken,
     verifyEmail,
     createAccessToken,
     createActivationToken,
     createRefreshToken,
-    admin
+    admin,
+    teacher,
+    student,
+    isTeacherOrStudent,
+    createInvitationByUrlToken,
+    verifyInvitationByUrl,
+    createInvitationByEmailToken,
+    verifyInvitationByEmail
 }

@@ -37,9 +37,15 @@ passport.use(new LocalStrategy({
         if (!user) {
             return done("Invalid email", false);
         }
+
         if(!user.isVerifiedEmail) {
-            return done("Account need to been verified", false);
+            return done("Your Account need to been verified", false);
         }
+
+        if(user.isBanned) {
+            return done("Your Account was banned", false);
+        }
+
         if((user.authFacebookId || user.authGoogleId) && !user.password) {
             return done("This email was login by google or facebook", false);
         }
@@ -69,6 +75,9 @@ passport.use(new GoogleStrategy({
         });
 
         if (existUser) {
+            if(existUser.isBanned) {
+                return done("Banned", false);
+              }
             // login google before
             const updateUser = existUser?.authGoogleId === profile?.id  
                 // login google before
@@ -124,6 +133,10 @@ passport.use(new FacebookStrategy({
       });
 
       if (existUser) {
+        if(existUser.isBanned) {
+          return done("Banned", false);
+        }
+
           // login google before
           const updateUser =  existUser.authFacebookId === profile?.id  
             // login facebook before

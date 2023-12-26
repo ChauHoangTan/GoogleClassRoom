@@ -13,14 +13,23 @@ router.put("/password", passport.authenticate('jwt', { session: false }), userCo
 
 router.get("/info", passport.authenticate('jwt', { session: false }), userController.getUserInfo);
 
-router.post("/all", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
+router.get("/all", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
+
+router.get("/email/all", passport.authenticate('jwt', { session: false }), userController.getAllEmailUser);
+
 
 // router.post("/detail/:id", passport.authenticate('jwt', { session: false }), admin, userController.getAllUser);
 
-router.delete("/user/find/:id", passport.authenticate('jwt', { session: false }), admin, userController.deleteUser);
+router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admin, userController.deleteUser);
 
 router.post("/block/:id", passport.authenticate('jwt', { session: false }), admin, userController.blockUser);
 
 router.post("/ban/:id", passport.authenticate('jwt', { session: false }), admin, userController.banUser);
+
+router.put("/all/:id", passport.authenticate('jwt', { session: false }), admin, userController.updateUser);
+
+router.get("/count-method-login", passport.authenticate('jwt', { session: false }), admin, userController.countUserMethodLogin);
+
+router.get("/count-role-join", passport.authenticate('jwt', { session: false }), admin, userController.countUseRoleJoin);
 
 module.exports = router;

@@ -129,10 +129,12 @@ const loginUser = async (req, res) => {
             return res.status(200).json({ 
                 _id: req.user._id,
                 firstName: req.user.firstName,
+                lastName: req.user.lastName,
                 image: req.user.image,
                 isAdmin: req.user.isAdmin,
                 isThirdPartyLogin: req.user.isThirdPartyLogin,
-                Authorization: accessToken 
+                Authorization: accessToken,
+                userId: req.user.userId
             });
         } else {
             return res.status(400).json({ message: req.error })
@@ -224,15 +226,29 @@ const loginSuccess = async (req, res) => {
         const accessToken = createAccessToken(user._id)
          // create refresh token
          const refreshToken = createRefreshToken(user._id)
-           // save refreshToken in database
-        await User.findByIdAndUpdate(
-            user._id, 
-            { 
-                refreshToken,
-                authGoogleToken: accessToken
-            }, 
-            { new: true }
-        )
+        // save refreshToken and update token by FB or Google in database
+        if(provider === "google" ) {
+            await User.findByIdAndUpdate(
+                user._id, 
+                { 
+                    refreshToken,
+                    authGoogleToken: accessToken
+                }, 
+                { new: true }
+            )
+        } 
+
+        if(provider === "facebook" ) {
+            await User.findByIdAndUpdate(
+                user._id, 
+                { 
+                    refreshToken,
+                    authFacebookToken: accessToken
+                }, 
+                { new: true }
+            )
+        } 
+            
 
         // save refreshToken in cookie
         res.cookie('refreshToken', refreshToken, {
@@ -244,10 +260,12 @@ const loginSuccess = async (req, res) => {
         return res.status(200).json({ 
             _id: user._id,
             firstName: user.firstName,
+            lastName: user.lastName,
             image: user.image,
             isAdmin: user.isAdmin,
             isThirdPartyLogin: user.isThirdPartyLogin,
-            Authorization: accessToken, 
+            userId: user.userId,
+            Authorization: accessToken,
         })
     } catch (error) {
         return res.status(500).json({ message: error.message });

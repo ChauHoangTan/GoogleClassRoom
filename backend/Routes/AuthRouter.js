@@ -20,22 +20,32 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback', (req, res, next) => {
     passport.authenticate('google', (err, user) => {
+        req.err = err;
         req.user = user;
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/google/${req.user?.authGoogleId}/${req.user?.authGoogleToken}`)
+    if(req.err && !req.user) {
+        res.redirect(`${process.env.CLIENT_URL}/login-fail/google/${req.err}`)
+    } else {
+        res.redirect(`${process.env.CLIENT_URL}/login-success/google/${req.user?.authGoogleId}/${req.user?.authGoogleToken}`)
+    }
 });
 
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email'], session: false }));
 
 router.get('/facebook/callback', (req, res, next) => {
     passport.authenticate('facebook', (err, user) => {
+        req.err = err;
         req.user = user;
         next();
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/facebook/${req.user?.authFacebookId}/${req.user?.authFacebookToken}`)
+    if(req.err && !req.user) {
+        res.redirect(`${process.env.CLIENT_URL}/login-fail/facebook/${req.err}`)
+    } else {
+        res.redirect(`${process.env.CLIENT_URL}/login-success/facebook/${req.user?.authFacebookId}/${req.user?.authFacebookToken}`)
+    }
 });
 
 router.get('/github',passport.authenticate('github', { scope: [ 'user:email' ], session: false }));

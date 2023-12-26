@@ -53,8 +53,50 @@ const updateProfileAction = user => async (dispatch) => {
   }
 }
 
+// admin get all users action
+const getAllUsersAction = () => async (dispatch) => {
+  try {
+    dispatch({ type: userConstants.GET_ALL_USERS_REQUEST })
+    const response = await userApi.getAllUsersService()
+    dispatch({ type: userConstants.GET_ALL_USERS_SUCCESS, payload: response })
+  } catch (error) {
+    ErrorsAction(error, dispatch, userConstants.GET_ALL_USERS_FAIL)
+  }
+}
+
+
+// admin delete user action
+const deleteUserAction = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: userConstants.DELETE_USER_REQUEST })
+    await userApi.deleteUserService(id )
+    dispatch({ type: userConstants.DELETE_USER_SUCCESS })
+    toast.success('User Was Deleted Successfully')
+  } catch (error) {
+    ErrorsAction(error, dispatch, userConstants.DELETE_USER_FAIL)
+  }
+}
+
+// update profile action
+const updateUserAction = (id, user) => async (dispatch) => {
+  try {
+    dispatch({ type: userConstants.UPDATE_USER_REQUEST })
+    const response = await userApi.updateUserService(id, user)
+    dispatch({
+      type: userConstants.UPDATE_USER_SUCCESS,
+      payload: response
+    })
+    toast.success('User Edit successfully')
+  } catch (error) {
+    ErrorsAction(error, dispatch, userConstants.UPDATE_USER_FAIL)
+  }
+}
+
 export {
   changePasswordAction,
   updateProfileAction,
-  getProfileAction
+  getProfileAction,
+  getAllUsersAction,
+  deleteUserAction,
+  updateUserAction
 }

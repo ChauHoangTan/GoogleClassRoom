@@ -91,7 +91,11 @@ function Login ({ rememberMe, setRememberMe }) {
   // useEffect
   useEffect(() => {
     if (userInfo) {
-      navigate('/home')
+        if(userInfo?.isAdmin) {
+            navigate('/dashboard')
+        } else {
+            navigate('/home')
+        }
     }
 
     if (isSuccess) {
@@ -105,21 +109,15 @@ function Login ({ rememberMe, setRememberMe }) {
 
   const handleGoogleLogin = () => {
     // Handle when user click login by Google
-    // window.open('http://localhost:5000/api/auth/google', '_self')
-    window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
+    window.open('http://localhost:5000/api/auth/google', '_self')
+    // window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
   }
 
   const handleFacebookLogin = () => {
     // Handle when user click login by Facebook
-    // window.open('http://localhost:5000/api/auth/facebook', '_self')
-    window.open('https://nexusedu.onrender.com/api/auth/facebook', '_self')
+    window.open('http://localhost:5000/api/auth/facebook', '_self')
+    // window.open('https://nexusedu.onrender.com/api/auth/facebook', '_self')
   }
-
-  const handleGithubLogin = () => {
-    // Handle when user click login by Facebook
-    // window.open('http://localhost:5000/api/auth/github', '_self')
-  }
-
 
   return (
     // <ThemeProvider theme={defaultTheme}>

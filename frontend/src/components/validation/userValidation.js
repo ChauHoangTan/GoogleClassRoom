@@ -81,7 +81,7 @@ const ProfileValidation = yup.object().shape({
     .string()
     .trim()
     .required('Phone number is required')
-    .matches(/^[0-9]+$/, 'Only contain numbers')
+    .matches(/^[0-9]*$/, 'Only contain numbers')
     .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits')
 })
 
@@ -108,11 +108,37 @@ const ResetPasswordValidation = yup.object().shape({
     .oneOf([yup.ref('newPassword'), null], 'Confirm password must match')
 })
 
+// admin edit user info validation
+const EditUserInfoValidation = yup.object().shape({
+  email: yup
+    .string()
+    .email()
+    .required('Email is required')
+    .trim(),
+  userId: yup
+    .string()
+    .trim()
+    .matches(/^[0-9]*$/, 'Only contain numbers'),
+  // .required('Phone number is required')
+  // .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits'),
+  firstName: yup
+    .string()
+    .required('First name is required')
+    .max(20, 'First name must be less than 20 characters')
+    .matches(/^[a-zA-ZÀ-ỹ ]*$/, 'First name must contain only letters'),
+  lastName: yup
+    .string()
+    .required('Last name is required')
+    .max(20, 'Last name must be less than 20 characters')
+    .matches(/^[a-zA-ZÀ-ỹ ]*$/, 'Last name must contain only letters')
+})
+
 export {
   LoginValidation,
   RegisterValidation,
   PasswordValidation,
   ProfileValidation,
   ForgotPasswordValidation,
-  ResetPasswordValidation
+  ResetPasswordValidation,
+  EditUserInfoValidation
 }

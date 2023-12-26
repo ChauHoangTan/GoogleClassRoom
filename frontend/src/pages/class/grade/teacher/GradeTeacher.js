@@ -1,10 +1,15 @@
-import { Box, Button, Container, Typography, Card, CardContent, Divider, Stack, IconButton, Modal, TextField, Checkbox, FormControlLabel } from '@mui/material'
+import { Box, Button, Container, Typography, Card, CardContent, Divider, Stack, IconButton, Modal, TextField, Checkbox, FormControlLabel, Menu, MenuItem } from '@mui/material'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import UploadIcon from '@mui/icons-material/Upload'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import GradeTable from './GradeTable'
-import { useEffect, useState } from 'react'
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
+import EditIcon from '@mui/icons-material/Edit';
+import BeenhereIcon from '@mui/icons-material/Beenhere';
+import { getStudentIdList } from '../../../../redux/APIs/classServices'
+import { useEffect, useRef, useState } from 'react'
 import {
   DndContext,
   // eslint-disable-next-line no-unused-vars
@@ -19,21 +24,13 @@ import {
 import { SortableContext, defaultAnimateLayoutChanges, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { mapOrder } from '../../../../components/SortOrderArray/mapOrder'
+import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
-
-const columns = [
-  { id: 'id', label: 'ID', minWidth: 170 },
-  { id: 'fullName', label: 'Full Name', minWidth: 170 },
-  { id: 'listGrade', label: 'List Grade', minWidth: 170, listGrade: [
-    { composition: 'Exercise 1', percent: '10%' },
-    { composition: 'Exercise 2', percent: '10%' },
-    { composition: 'Midterm', percent: '30%' },
-    { composition: 'Finalterm', percent: '50%' }
-    // Add more exercises if needed
-  ] },
-  { id: 'total', label: 'Total', minWidth: 170 }
-]
+import { CSVLink } from 'react-csv'
+import { useParams } from 'react-router-dom'
+import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition, editGradeComposition } from '../../../../redux/APIs/gradeServices'
+import { styled } from '@mui/material/styles'
+import Papa from 'papaparse'
 
 const rows = [
   { id: 1, fullName: 'John Doe', listGrade: [
@@ -140,8 +137,63 @@ const gradeCompositionList = [
   }
 ]
 
+function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows }) {
 
-function CardGrade ({ id, title, composition, time, percent }) {
+  const { classId } = useParams()
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleRemoveComposition = async () => {
+    const response = await removeGradeComposition( classId, id )
+    setOrderGradeComposition(response.data.orderGradeComposition)
+    setGradeCompositionList(response.data.gradeCompositionList)
+  }
+
+  // const csvData = [
+  //   ['StudentId', 'FullName']
+  // ]
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1
+  })
+
+  const readFileCSV = async (e) => {
+    const selectedFile = e.target.files[0]
+    const result = await read(selectedFile)
+    let studentsListUpload = []
+    result.data.map((data) => {
+      studentsListUpload.push(data)
+    })
+    await uploadGradeComposition(classId, id, studentsListUpload)
+    setRows([])
+  }
+
+  const read = (file) => {
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        complete: (result) => {
+          resolve(result)
+        },
+        header: true // Nếu CSV có header (tên cột)
+      })
+    })
+  }
+
   // Dnd-kit
   const {
     attributes,
@@ -190,19 +242,49 @@ function CardGrade ({ id, title, composition, time, percent }) {
         </Stack>
         <Stack direction={'row'} alignItems='center'>
           <Typography variant='h6' sx={{ fontStyle:'italic', mx: 5 }}>{percent}</Typography>
+          <IconButton fontSize='small'
+            id="basic-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}><MoreVertOutlinedIcon/></IconButton>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button'
+            }}
+          >
+            <MenuItem onClick={() => {handleClose(); handleRemoveComposition() }}>
+              <Button variant='contained' color='error' startIcon={<RemoveCircleIcon />}>
+                Remove
+              </Button>
+            </MenuItem>
+            <MenuItem>
+              <Button component="label" variant='contained' startIcon={<UploadIcon />}>
+                Upload
+                <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => {readFileCSV(e); handleClose()}}/>
+              </Button>
+            </MenuItem>
+            <MenuItem>
+              <FormControlLabel control={<Checkbox checked={isPublic} />} label="Public" />
+            </MenuItem>
+          </Menu>
 
-          <IconButton fontSize='small'><MoreVertOutlinedIcon/></IconButton>
         </Stack>
       </CardContent>
     </Card>
   )
 }
 
-function GradeComposition () {
-  const sortedIDGradeCompostion = [1, 2, 3, 4]
+function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows }) {
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
+
+  //
 
   // Require mouse move 10px then active this event (Fix situation click call event not drag)
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
@@ -217,9 +299,10 @@ function GradeComposition () {
   const sensors = useSensors(mouseSensor, touchSensor)
 
   useEffect(() => {
-    SetorderedGradeCompostionState (mapOrder(gradeCompositionList, sortedIDGradeCompostion, 'id'))
+    SetorderedGradeCompostionState (mapOrder(gradeCompositionList, orderGradeComposition, '_id'))
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [gradeCompositionList, orderGradeComposition])
+
 
   const handleDragStart = (event) => {
     setActiveDragItemID(event?.active?.id)
@@ -234,10 +317,12 @@ function GradeComposition () {
 
     if (active.id !== over.id) {
       // Get old position
-      const oldIndex = orderedGradeCompostionState.findIndex(c => c.id === active.id)
+      const oldIndex = orderedGradeCompostionState.findIndex(c => c._id === active.id)
       // Get new position
-      const newIndex = orderedGradeCompostionState.findIndex(c => c.id === over.id)
+      const newIndex = orderedGradeCompostionState.findIndex(c => c._id === over.id)
+      console.log('oldIndex newIndex', oldIndex, newIndex)
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
+      console.log('After move', dndOrderedGradeCompostionState)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
     }
 
@@ -255,6 +340,31 @@ function GradeComposition () {
     })
   }
 
+  const convertTime = (time) => {
+    // Tạo đối tượng Date từ chuỗi ISO
+    const dateObject = new Date(time)
+
+    // Lấy thông tin ngày, tháng, năm, giờ, phút và giây
+    const year = dateObject.getFullYear()
+    const month = dateObject.getMonth() + 1 // Tháng bắt đầu từ 0, cần cộng thêm 1
+    const day = dateObject.getDate()
+    const hours = dateObject.getHours()
+    const minutes = dateObject.getMinutes()
+    const seconds = dateObject.getSeconds()
+
+    // Tạo chuỗi ngày tháng năm giờ phút giây
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+  }
+
+  const totalGrade = () => {
+    let sum = 0
+    gradeCompositionList.map((item) => {
+      sum += item.scale
+    })
+
+    return sum
+  }
+
   return (
     <Container sx={{
       borderRadius: 5,
@@ -267,26 +377,32 @@ function GradeComposition () {
       </Typography>
 
       <DndContext onDragOver={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
-        <SortableContext items={orderedGradeCompostionState?.map(c => c.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={orderedGradeCompostionState?.map(c => c._id)} strategy={verticalListSortingStrategy}>
           <Stack spacing={2} py={1}>
-            {orderedGradeCompostionState.map(({ id, title, composition, time, percent }) => (
+            {orderedGradeCompostionState.map(({ _id, name, scale, time, isPublic }) => (
               <CardGrade
-                key={id}
-                id={id}
-                title={title}
-                composition={composition}
-                time={time}
-                percent={percent}
+                key={_id}
+                id={_id}
+                title={'Dev posted a new assignment'}
+                composition={name}
+                time={convertTime(time)}
+                percent={`${scale}%`}
+                isPublic={isPublic}
+                setOrderGradeComposition={setOrderGradeComposition}
+                setGradeCompositionList={setGradeCompositionList}
+                rows={rows}
+                setRows={setRows}
               />
             ))}
             <DragOverlay dropAnimation={customDropAnimation}>
               {!!(activeDragItemID) &&
                 <CardGrade
-                  id={activeDragItemData?.id}
+                  id={activeDragItemData?._id}
                   title={activeDragItemData?.title}
                   composition={activeDragItemData?.composition}
                   time={activeDragItemData?.time}
                   percent={activeDragItemData?.percent}
+                  order={orderedGradeCompostionState}
                 />
               }
             </DragOverlay>
@@ -303,7 +419,7 @@ function GradeComposition () {
       }}>
         <Typography variant='h6'>
           Total grade: <Typography variant='body-2'>
-            100%
+            {totalGrade()}%
           </Typography>
         </Typography>
       </Container>
@@ -312,7 +428,163 @@ function GradeComposition () {
   )
 }
 
-function StudentGrade () {
+const sumGradeComposition = (listGrade) => {
+  let sum = 0
+  listGrade.map((composition) => {
+    if (composition.grade === '') {
+      return ''
+    }
+    sum += composition.grade
+  })
+
+  return sum
+}
+
+
+function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows }) {
+
+  const [isEdit, setIsEdit] = useState(false)
+
+  let compositionList = []
+  gradeCompositionList.map((item) => {
+    compositionList.push({
+      composition: item.name,
+      percent: `${item.scale}%`
+    })
+  })
+  const columns = [
+    { id: 'id', label: 'ID', minWidth: 170 },
+    { id: 'fullName', label: 'Full Name', minWidth: 170 },
+    { id: 'listGrade', label: 'List Grade', minWidth: 170, listGrade: compositionList },
+    { id: 'total', label: 'Total', minWidth: 170 }
+  ]
+
+  // const rows = [
+  //   { id: 1, fullName: 'John Doe', listGrade: [
+  //     { composition: 'Exercise 1', percent: '10%', grade: '8' },
+  //     { composition: 'Exercise 2', percent: '10%', grade: '7' },
+  //     { composition: 'Midterm', percent: '30%', grade: '25' },
+  //     { composition: 'Finalterm', percent: '50%', grade: '40' }
+  //   ], total: '40'
+  //   },
+  // ]
+
+  const handleGetGradeCompositionByStudentId = async (studentId) => {
+    const response = await getAllGradeCompositionByStudentId(classId, studentId)
+    return response // Trả về giá trị của promise (thường là một đối tượng hoặc mảng)
+  }
+
+  let newRows = []
+
+  Promise.all(
+    studentList.map(async (item) => {
+      try {
+        const result = await handleGetGradeCompositionByStudentId(item.userId)
+        const listGrade = result.data
+        // Thêm đối tượng vào mảng rows khi promise hoàn tất
+        newRows.push({
+          id: item.userId,
+          fullName: `${item.lastName} ${item.firstName}`,
+          listGrade: listGrade,
+          total: sumGradeComposition(listGrade)
+        })
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    })
+  ).then(() => {
+    // Gọi khi tất cả promises hoàn tất
+    if (rows.length != newRows.length) {
+      setRows(newRows)
+    } else {
+      if (rows.length > 0 && newRows.length > 0) {
+        if (rows[0].listGrade.length != newRows[0].listGrade.length ) {
+          setRows(newRows)
+        }
+        // newRows.map((item, index) => {
+        //   if (item.total !== rows[index].total) {
+        //     setRows(newRows)
+        //   }
+        // })
+      }
+      console.log(rows)
+    }
+  })
+    .catch((error) => {
+      console.error('Error:', error)
+    })
+
+  // useEffect(() => {
+  //   Promise.all(
+  //     studentList.map(async (item) => {
+  //       try {
+  //         const result = await handleGetGradeCompositionByStudentId(item.userId)
+  //         const listGrade = result.data
+  //         // Thêm đối tượng vào mảng rows khi promise hoàn tất
+  //         newRows.push({
+  //           id: item.userId,
+  //           fullName: `${item.lastName} ${item.firstName}`,
+  //           listGrade: listGrade,
+  //           total: sumGradeComposition(listGrade)
+  //         })
+  //       } catch (error) {
+  //         console.error('Error:', error)
+  //       }
+  //     })
+  //   ).then(() => {
+  //     // Gọi khi tất cả promises hoàn tất
+  //     if (rows.length != newRows.length) {
+  //       setRows(newRows)
+  //     } else {
+  //       if (rows.length > 0 && newRows.length > 0) {
+  //         if (rows[0].listGrade.length != newRows[0].listGrade.length ) {
+  //           setRows(newRows)
+  //         }
+  //       }
+  //     }
+  //   })
+  //     .catch((error) => {
+  //       console.error('Error:', error)
+  //     })
+  // }, [rows])
+
+  const changeState = () => {
+    setIsEdit(!isEdit)
+  }
+
+  const editGradeCompositionAPI = async () => {
+    await editGradeComposition(classId, rows)
+  }
+
+  const csvDataDownload = () => {
+    if (rows.length > 0) {
+      let label = ['StudentId', 'FullName']
+      rows[0].listGrade.map((item) => {
+        label.push(item.composition)
+      })
+      label.push('Total')
+      let data = []
+      data.push(label)
+
+      rows.map((user) => {
+        let concreteData = []
+        concreteData.push(user.id)
+        concreteData.push(user.fullName)
+        user.listGrade.map((composition) => {
+          concreteData.push(composition.grade)
+        })
+        concreteData.push(user.total)
+
+        data.push(concreteData)
+      })
+
+      return data
+    }
+    else {
+      return [[]]
+    }
+  }
+
   return (
     <Container sx={{
       borderRadius: 5,
@@ -321,21 +593,108 @@ function StudentGrade () {
       my: 2
     }}>
       <Typography gutterBottom variant="h5" >
-        Grade
+          Grade
       </Typography>
-
-      <GradeTable rows={rows} columns={columns}/>
+      <Stack direction='row' justifyContent='end' spacing={3} sx={{ mb:'5px' }}>
+        <CSVLink data={csvDataDownload()} filename='gradeBoard.csv'>
+          <Button variant='contained' startIcon={<FileDownloadIcon />} sx={{ fontSize:'13px', mb:'5px' }}
+            onClick={changeState}>
+              Export
+          </Button>
+        </CSVLink>
+      {!isEdit ?
+        <Button variant='contained' startIcon={<EditIcon />} sx={{ fontSize:'13px', mb:'5px' }}
+          onClick={changeState}>
+            Edit
+        </Button> :
+        <Button variant='contained' color='primary' startIcon={<BeenhereIcon />} sx={{ fontSize:'13px', mb:'5px' }}
+          onClick={() => {changeState(); editGradeCompositionAPI() }}>
+          Save
+      </Button>}
+      </Stack>
+      <GradeTable columns={columns} rows={rows} setRows={setRows} isEdit={isEdit}/>
     </Container>
   )
 }
 
 export default function GradeTeacher () {
+  const [orderGradeComposition, setOrderGradeComposition] = useState([])
+  const [gradeCompositionList, setGradeCompositionList] = useState([])
+  const [studentList, setStudentList] = useState([])
+
+  const [rows, setRows] = useState([])
+
+  const { classId } = useParams()
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const response = await getAllGradeCompositionByClassIdService(classId)
+
+        if (response.orderGradeComposition.length != orderGradeComposition.length) {
+          setOrderGradeComposition(response.orderGradeComposition)
+          setGradeCompositionList(response.gradeCompositionList)
+          // console.log( orderGradeComposition, gradeCompositionList )
+        }
+      } catch (error) {
+        console.error('Error fetching composition:', error)
+      }
+    }
+
+    fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [isOpenCreateNewGradeComposition, setIsOpenCreateNewGradeComposition] = useState(false)
 
   const handleOpenCreateNewGradeComposition = () => {
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }
+
+  const [gradeCompositionTitle, setGradeCompositionTitle] = useState('')
+  const handleOnChangeGradeCompositionTitle = (e) => {
+    setGradeCompositionTitle(e.target.value)
+  }
+  const [gradeCompositionPercent, setGradeCompositionPercent] = useState(0)
+  const handleOnChangeGradeCompositionPercent = (e) => {
+    setGradeCompositionPercent(e.target.value)
+  }
+  const handleCreateNewGradeComposition = async () => {
+    if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
+      const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
+      setGradeCompositionList(response.data.gradeCompositionList)
+      setOrderGradeComposition(response.data.orderGradeComposition)
+    }
+    setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
+  }
+
+  // handle for get studentid list, download grade
+
+  const [csvData, setCsvData] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { message, studentListByUpload } = await getStudentIdList(classId)
+        setStudentList(studentListByUpload)
+        let dataList = [
+          ['StudentId', 'Grade']
+        ]
+
+        studentListByUpload.forEach((data) => {
+          dataList.push([data.userId, ''])
+        })
+
+        setCsvData(dataList)
+      } catch (error) {
+        console.error('Error fetching CSV data:', error)
+      }
+    }
+
+    fetchData()
+  }, [classId])
+
 
   return (
     <>
@@ -345,15 +704,20 @@ export default function GradeTeacher () {
         justifyContent: 'flex-end'
       }}>
         <Button variant='contained' startIcon={<AddToPhotosIcon />} onClick={handleOpenCreateNewGradeComposition}>
-        Create new grade
+          Create new grade
         </Button>
-        <Button variant='contained' startIcon={<FileDownloadIcon />}>
-        Download
-        </Button>
+        <CSVLink data={csvData} filename='grade.csv'>
+          <Button variant='contained' startIcon={<FileDownloadIcon />}>
+            Download Grade
+          </Button>
+        </CSVLink>
       </Box>
 
-      <GradeComposition />
-      <StudentGrade />
+      <GradeComposition orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
+        gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList}
+        rows={rows} setRows={setRows}/>
+      <StudentGrade classId={classId} gradeCompositionList={gradeCompositionList} studentList={studentList}
+        rows={rows} setRows={setRows}/>
 
       <Modal
         open={isOpenCreateNewGradeComposition}
@@ -378,9 +742,11 @@ export default function GradeTeacher () {
           </Typography>
 
           <Box py={2}>
-            <TextField id="outlined-basic" label="Grade composition title" variant="outlined" sx={{ width: '100%', pb: 2 }}/>
+            <TextField id="outlined-basic" label="Grade composition title" variant="outlined" sx={{ width: '100%', pb: 2 }}
+              value={gradeCompositionTitle} onChange={(e) => handleOnChangeGradeCompositionTitle(e)}/>
 
-            <TextField type='number' label="Percentage" variant="outlined" sx={{ width: '100%' }}/>
+            <TextField type='number' label="Percentage" variant="outlined" sx={{ width: '100%' }}
+              value={gradeCompositionPercent} onChange={(e) => handleOnChangeGradeCompositionPercent(e)}/>
 
             <FormControlLabel
               control={
@@ -393,7 +759,7 @@ export default function GradeTeacher () {
           </Box>
 
           <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button>
+            <Button onClick={handleCreateNewGradeComposition}>
               Create
             </Button>
 

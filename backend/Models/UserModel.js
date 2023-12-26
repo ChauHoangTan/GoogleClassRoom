@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema(
     {
-        studentId:  {
+        userId:  {
             type: String,
             trim: true,
             default: "",
@@ -79,7 +79,15 @@ const UserSchema = mongoose.Schema(
         activationEmailToken: {
             type: String,
             default: "",
-        }
+        },
+        teacherClassList: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Class',
+        }],
+        studentClassList: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Class',
+        }],
     },
     {
         timestamps: true,

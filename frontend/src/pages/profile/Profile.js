@@ -81,10 +81,10 @@ const EditProfile = () => {
   // useEffect
   useEffect(() => {
     if (!initialized.current) {
-        initialized.current = true
-          const fetchUserInfo = async () => {
-            dispatch(getProfileAction())
-        }
+      initialized.current = true
+      const fetchUserInfo = async () => {
+        dispatch(getProfileAction())
+      }
 
       fetchUserInfo()
     }
@@ -254,7 +254,7 @@ const EditProfile = () => {
                         components={['DatePicker']}
                       >
                         <DatePicker
-                            sx={{width: '100%' }}
+                          sx={{ width: '100%' }}
                           label='Date of birth'
                           value={date}
                           onChange={newValue =>

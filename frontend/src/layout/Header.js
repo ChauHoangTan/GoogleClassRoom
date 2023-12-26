@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -26,8 +26,11 @@ import Tooltip from '@mui/material/Tooltip'
 import './style.scss'
 import { FiSettings } from 'react-icons/fi'
 import Notification from '../pages/notification/Notification.js'
+import { SocketContext } from '../Context/SocketProvider.js'
 
 export default function ResponsiveAppBar () {
+     const { notifications, handleClick, handleClickAll } = useContext(SocketContext)
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { mode, setMode } = useColorScheme('')
@@ -157,7 +160,7 @@ export default function ResponsiveAppBar () {
                     />
                   </IconButton>
                   <IconButton color='inherit'>
-                    <Badge badgeContent={5} color='error'>
+                    <Badge badgeContent={notifications.length} color='error'>
                       <NotificationsIcon onClick={( e ) => handleClickAncorEl( e ) }/>
                     </Badge>
                   </IconButton>
@@ -174,7 +177,11 @@ export default function ResponsiveAppBar () {
                       horizontal: 'right'
                     }}
                   >
-                    <Notification/>
+                    <Notification
+                        notifications={notifications}
+                        handleClick={handleClick}
+                        handleClickAll={handleClickAll}
+                    />
                   </Popover>
                   <Menu
                     id='menu-appbar'

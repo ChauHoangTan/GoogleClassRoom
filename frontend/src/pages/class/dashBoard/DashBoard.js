@@ -5,10 +5,20 @@ import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
-const HeadComponent = ({ name, title }) => {
+import { useSelector, useDispatch } from 'react-redux'
+import Loader from '../../../components/notification/Loader'
+import { getInvitationStudentByUrlService } from '../../../redux/APIs/classServices'
+import toast from 'react-hot-toast'
+import { useState, useEffect } from 'react'
+import copy from 'clipboard-copy'
+import { useParams } from 'react-router'
+import { getAllGradeCompositionByClassIdAction } from '../../../redux/actions/gradeActions'
+import { mapOrder } from '../../../utils/SortOrderArray/mapOrder'
+
+const HeadComponent = ({ name, title, background }) => {
   return (
     <Stack className='headComponent'>
-      <img src='https://wallpapercave.com/wp/wp6827255.jpg'/>
+      <img src={background}/>
       <Stack>
         <Typography className='name' variant='h4'>{name}</Typography>
         <Typography className='title' variant='h6'>{title}</Typography>
@@ -21,16 +31,62 @@ const HeadComponent = ({ name, title }) => {
 }
 
 const ApproachJoin = ({ approach, code }) => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [islink, setIsLink] = useState('')
+  const { classId } = useParams()
+
+  useEffect(() => {
+    if (classId) {
+      const getUrlInviteClass = async () => {
+        try {
+          const res = await getInvitationStudentByUrlService(classId)
+          setIsLoading(false)
+          setIsLink(res.url)
+        } catch (error) {
+          console.log(error.response.data.message)
+          setIsLoading(false)
+        }
+      }
+      getUrlInviteClass()
+    }
+  }, [isLoading])
+
+  const handleOnClickCopy = () => {
+    if (approach === 'link') {
+      setIsLoading(!isLoading)
+      copy(islink)
+        .then(() => {
+          toast.success('Copy success')
+        })
+        .catch((err) => {
+          toast.error('Can not copy because of', err)
+        })
+    } else {
+      copy(code)
+        .then(() => {
+          toast.success('Copy success')
+        })
+        .catch((err) => {
+          toast.error('Can not copy because of', err)
+        })
+    }
+  }
+
   return (
     <Stack className='approachJoin component' spacing={1} mt={1}>
       <Typography variant='body-1' sx={{ paddingLeft:'5px' }}>By {approach}</Typography>
       <Stack direction='row' alignItems='center'>
         <Stack className='code' direction='row' alignItems='center'>
-          <Typography variant='body-1'>{code}</Typography>
+          <Typography variant='body-1'>{approach === 'link' ? islink : code}</Typography>
         </Stack>
-        <IconButton>
-          <ContentCopyOutlinedIcon/>
-        </IconButton>
+        {
+          isLoading ?
+            < Loader/>
+            :
+            <IconButton onClick={handleOnClickCopy}>
+              <ContentCopyOutlinedIcon/>
+            </IconButton>
+        }
       </Stack>
     </Stack>
   )
@@ -90,13 +146,31 @@ const list = [
 ]
 
 const StreamItem = ({ list }) => {
-  const newList = list.slice().reverse()
+  const dispatch = useDispatch()
+  // useEffect
+  const { isLoading, isError, gradeCompositions } = useSelector(
+    (state) => state.userGetAllGradeCompositionByClassId
+  )
+  const { classId } = useParams()
+
+  useEffect(() => {
+    dispatch(getAllGradeCompositionByClassIdAction(classId))
+    if (isError) {
+      toast.error(isError)
+      dispatch({ type: 'GET_ALL_GRADE_COMPOSITION_RESET' })
+    }
+  }, [dispatch, isError])
+
+  const gradeCompositionList = gradeCompositions?.gradeCompositionList
+  const orderGradeComposition = gradeCompositions?.orderGradeComposition
+  const orderedGradeCompositionList = mapOrder(gradeCompositionList, orderGradeComposition, '_id')
+
   return (
     <Stack className='component'>
       <Typography variant='h6'>Stream</Typography>
-      {newList.map((item, index) => {
+      {orderedGradeCompositionList.map((item, index) => {
         return (
-          <NotificationItem key={index} title={item.title} composition={item.composition} time={item.time}/>
+          <NotificationItem key={index} title='Teacher posted a new assignment ' composition={item.name} time={item.time}/>
         )
       })}
     </Stack>
@@ -104,14 +178,28 @@ const StreamItem = ({ list }) => {
 }
 
 function DashBoard() {
+  let { isLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
   return (
-    <Container className='dashBoard' maxWidth='lg'>
-      <Stack className='contentDashBoard' direction='column' spacing={3}>
-        <HeadComponent name={'2310-CLC-AWP-20KTPM2'} title={'Advanced Web Programming'}/>
-        <JoinComponent code={'p5uaipt'} link={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
-        <StreamItem list={list}/>
-      </Stack>
-    </Container>
+    <>
+      {
+        isLoading
+          ?
+          <Loader/>
+          :
+          <Container className='dashBoard' maxWidth='lg'>
+            <Stack className='contentDashBoard' direction='column' spacing={3}>
+              <HeadComponent name={classInfo?.codeClassName} title={classInfo?.className} background={classInfo?.background}/>
+              <JoinComponent code={classInfo?.classId} link={'https://classroom.google.com/c/NjQxNTkxMjEzNDU4?cjc=qulvh74'}/>
+              <StreamItem list={list}/>
+            </Stack>
+          </Container>
+      }
+    </>
   )
 }
 

@@ -23,8 +23,50 @@ const getProfileService = async () => {
   return data
 }
 
+// admin get all users
+const getAllEmailUsersService = async () => {
+  const { data } = await AxiosJWT.get('/users/email/all')
+  return data
+}
+
+// *************** ADMIN APIs ***************
+
+// admin get all users
+const getAllUsersService = async () => {
+  const { data } = await AxiosJWT.get('/users/all')
+  return data
+}
+
+// admin delete user
+const deleteUserService = async (id) => {
+  const { data } = await AxiosJWT.delete(`/users/all/${id}`)
+  return data
+}
+
+// admin update profile API call
+const updateUserService = async (id, user) => {
+  const { data } = await AxiosJWT.put(`/users/all/${id}`, user)
+  return data
+}
+
+const countUsersByLoginMethodsService = async () => {
+  const { data } = await AxiosJWT.get('/users/count-method-login')
+  return data
+}
+
+const countUsersByRoleJoinService = async () => {
+  const { data } = await AxiosJWT.get('/users/count-role-join')
+  return data
+}
+
 export {
   changePasswordService,
   updateProfileService,
-  getProfileService
+  getProfileService,
+  getAllUsersService,
+  deleteUserService,
+  updateUserService,
+  countUsersByLoginMethodsService,
+  countUsersByRoleJoinService,
+  getAllEmailUsersService
 }

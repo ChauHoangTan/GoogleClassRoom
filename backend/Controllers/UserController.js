@@ -1,4 +1,5 @@
 const { createAccessToken } = require("../Middlewares/verifyToken");
+const Class = require("../Models/ClassModel");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 
@@ -92,34 +93,75 @@ const getUserInfo = async (req, res) => {
     }
 }
 
+// @des Get all emails of users
+// @route GET /api/users
+const getAllEmailUser = async (req, res) => {
+    try {
+        const users = await User.find({}).select('email');
+        const userEmails = users.map(user => user.email);
+        return res.status(200).json(userEmails)
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 //  ************** ADMIN CONTROLLERS **************
 // @des Get all users
 // @route GET /api/users
 const getAllUser = async (req, res) => {
     try {
-        const users = await User.find({}).select('-password -refreshToken'); 
+        const users = await User.find({}).select('-password -refreshToken').sort({ _id: -1 }); 
         return res.status(200).json(users)
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
 
-// @des Delete all user
+// @des Delete user
 // @route Delete /api/user/:id
 const deleteUser = async (req, res) => {
     try {
-        // find user in DB
-        const user = await User.findById(req.params.id);
-        // if user exists delete user from DB
-        if(user) {
-            // else delete user from DB
-            await user.remove();
-            return res.json({ message: "User deleted successfully" });
-        }
-        // else send error message
-        else {
-            return res.status(400).json({ message: "User not found" });
-        }
+        try {
+            const ids = req.params.id.split(',');
+
+            const users = await User.find({ _id: { $in: ids } });
+            const teacherToProcess = [];
+            const studentToProcess = [];
+          
+            for (const user of users) {
+              teacherToProcess.push(...user.teacherClassList);
+              studentToProcess.push(...user.studentClassList);
+            }
+            
+            const teacherPromises = teacherToProcess.map(async (classId) => {
+              const classToHandle = await Class.findById(classId);
+          
+              if (classToHandle.teachers.length === 1) {
+                await Class.findByIdAndDelete(classId);
+              } else {
+                const updateClass = await Class.findByIdAndUpdate(classId, {  $pull: { teachers: { $in: ids } } }, { new: true });
+                if(updateClass.teachers.length === 0) {
+                    await Class.findByIdAndDelete(classId);
+                }
+            }
+            });
+
+            const studentPromises = studentToProcess.map(async (classId) => {
+                  await Class.findByIdAndUpdate(classId, {  $pull: { students: { $in: ids } } }, { new: true });
+              });
+          
+            await Promise.all(teacherPromises);
+            await Promise.all(studentPromises);
+
+          
+            await User.deleteMany({ _id: { $in: ids } });
+            if(ids.length === 1) {
+                return res.json({ message: User.firstName + " was deleted successfully" }); 
+            }
+            return res.json({ message: `${ids.length} selected Users were deleted successfully` });
+          } catch (error) {
+            return res.status(400).json({ message: error.message });
+          }
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
@@ -170,6 +212,72 @@ const blockUser = async (req, res) => {
     }
 }
 
+// @desc Update user profile
+// @route POST/api/users/all/:id
+const updateUser = async(req, res) => {
+    const { email, firstName, lastName, userId, isAdmin, isBanned } = req.body;
+    try {
+        // find user in DB  
+        const user = await User.findById(req.params.id);
+        // if users exists update user data and save it in DB
+        if(user) {
+            user.email = email || user.email;
+            user.firstName = firstName || user.firstName;
+            user.lastName = lastName || user.lastName;
+            user.isAdmin = isAdmin;
+            user.userId = userId || user.userId;
+            user.isBanned = isBanned;
+
+            await user.save();
+            return res.json( {message: "User was edit successfully" })
+        }
+        else {
+            res.status(400).json({message: "User not found"});
+        }
+    }  catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+}
+
+
+const countUserMethodLogin = async (req, res) => {
+    try {
+      const users = await User.find({});
+  
+      const counts = {
+        "Gmail": users.filter((user) => user.authGoogleId === '' && user.authFacebookId === '' && user.password !== undefined).length,
+        "Facebook": users.filter((user) => user.authFacebookId !== '' && user.authGoogleId === '' && user.password === undefined).length,
+        "Google": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === ''&& user.password === undefined).length,
+        "Google And Gmail": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId === '' && user.password !== undefined).length,
+        "Facebook And Gmail": users.filter((user) => user.authGoogleId === '' && user.authFacebookId !== '' && user?.password !== undefined).length,
+        "Facebook And Google": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password === undefined).length,
+        "All Methods": users.filter((user) => user.authGoogleId !== '' && user.authFacebookId !== '' && user.password !== undefined).length,
+      };
+  
+      return res.status(200).json(counts);
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+  };
+  
+
+const countUseRoleJoin = async (req, res) => {
+    try {
+        const users = await User.find({});
+
+        const counts = {
+            "User Basic": users.filter((user) => user.teacherClassList.length === 0 && user.studentClassList.length === 0).length,
+            "Student": users.filter((user) => user.teacherClassList.length === 0 && user.studentClassList.length !== 0).length,
+            "Teacher": users.filter((user) => user.teacherClassList.length !== 0 && user.studentClassList.length === 0).length,
+            "Student And Teacher": users.filter((user) => user.teacherClassList.length !== 0 && user.studentClassList.length !== 0).length,
+        };
+
+        return res.status(200).json(counts);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+};
+
 module.exports = {
     updateUserProfile,
     changeUserPassword,
@@ -178,4 +286,8 @@ module.exports = {
     getAllUser,
     banUser,
     blockUser,
+    updateUser,
+    countUserMethodLogin,
+    countUseRoleJoin,
+    getAllEmailUser
 }

@@ -12,38 +12,55 @@ import NoPage from './pages/noPage/NoPage.js'
 import ToastContainer from './components/notification/ToastContainer.js'
 import Password from './pages/password/Password.js'
 import Profile from './pages/profile/Profile.js'
-import { ProtectedRouter } from './ProtectedRouter.js'
-import { useState } from 'react'
+import { AdminProtectedRouter, ProtectedRouter } from './ProtectedRouter.js'
+import { useEffect, useState } from 'react'
 import LoginSuccess from './pages/auth/loginSuccess/LoginSuccess.js'
 import ActivationEmail from './pages/auth/activationEmail/ActivationEmail.js'
 import ForgotPassword from './pages/auth/ForgotPassword.js/ForgotPassword.js'
 import ResetPassword from './pages/auth/ResetPassword.js/ResetPassword.js'
+import Users from './pages/admin/users/Users.js'
+import Classes from './pages/admin/classes/Classes.js'
+import DashBoard from './pages/class/dashBoard/DashBoard.js'
+import Main from './pages/admin/main/Main.js'
+import InvitationByUrl from './pages/class/invitation/invitationByUrl.js'
+import SocketProvider from './Context/SocketProvider.js'
+import LoginFail from './pages/auth/loginFail/LoginFail.js'
 
 function App () {
   const [rememberMe, setRememberMe] = useState(false)
+
   return (
     <>
       <ToastContainer />
       <BrowserRouter>
-        <Routes>
-          <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe}/>}/>
-          <Route path='/login-success/:provider/:userId/:tokenLogin' element={<LoginSuccess />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/login/activate' element={<ActivationEmail/>}/>
-          <Route path='/user/:type' element={<ForgotPassword />} />
-          <Route path='/user/reset/:activation_token' element={<ResetPassword />} />
-          <Route path='/' element={<Layout />}>
-            <Route index element={<Landing />} />
-            <Route path='/user/activate/:activation_token' element={<ActivationEmail/>}/>
-            <Route path='*' element={<NoPage />} />
-            <Route element={<ProtectedRouter />}>
-              <Route path='password' element={<Password />} />
-              <Route path='profile' element={<Profile />} />
-              <Route path='home' element={<Home />} />
-              <Route path='/class/:classId' element={<ClassDetails/>}/>
+        <SocketProvider>
+          <Routes>
+            <Route path='/login'element={<Login rememberMe={rememberMe} setRememberMe={setRememberMe} />}/>
+            <Route path='/login-success/:provider/:userId/:tokenLogin' element={<LoginSuccess />} />
+            <Route path='/login-fail/:provider/:error' element={<LoginFail/>} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/login/activate' element={<ActivationEmail/>}/>
+            <Route path='/user/:type' element={<ForgotPassword />} />
+            <Route path='/user/reset/:activation_token' element={<ResetPassword />} />
+            <Route path='/class/invite/:type/:invitation_token' element={<InvitationByUrl/>}/>
+            <Route path='/' element={<Layout />}>
+              <Route index element={<Landing />} />
+              <Route path='/user/activate/:activation_token' element={<ActivationEmail/>}/>
+              <Route path='*' element={<NoPage />} />
+              <Route element={<ProtectedRouter />}>
+                <Route path='password' element={<Password />} />
+                <Route path='profile' element={<Profile />} />
+                <Route path='home' element={<Home />} />
+                <Route path='/class/:classId' element={<ClassDetails/>}/>
+                <Route element={<AdminProtectedRouter />}>
+                  <Route path='/dashboard' element={<Main />} />
+                  <Route path='/users' element={<Users />} />
+                  <Route path='/classes' element={<Classes />} />
+                </Route>
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </SocketProvider>
       </BrowserRouter>
     </>
   )

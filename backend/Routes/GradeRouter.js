@@ -20,5 +20,6 @@ router.delete("/deleteReviewGrade/:classId/:gradeCompositionId/:userId", passpor
 router.delete("/deleteComment/:classId/:gradeCompositionId/:userId/:commentId", passport.authenticate('jwt', { session: false }), gradeController.deleteComment);
 router.post("/getAllReviewGradeCompositionByStudentId", passport.authenticate('jwt', { session: false }), gradeController.getAllReviewGradeCompositionByStudentId);
 router.post("/getAllReviewGradeComposition", passport.authenticate('jwt', { session: false }), gradeController.getAllReviewGradeComposition);
+router.post("/getAllComment", passport.authenticate('jwt', { session: false }), gradeController.getAllComment);
 
 module.exports = router;

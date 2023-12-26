@@ -270,7 +270,7 @@ const createNewReviewGrade = async (req, res) => {
 };
 
 const createNewComment = async (req, res) => {
-  const { classId, gradeCompositionId, userId, content, isTeacherComment } = req.body;
+  const { classId, gradeCompositionId, studentId, content, isTeacherComment } = req.body;
 
   try {
 
@@ -288,7 +288,7 @@ const createNewComment = async (req, res) => {
     }
 
     const reviewGrade = gradeComposition.reviewGradeList.find(
-      (review) => String(review.studentId) === String(userId) 
+      (review) => String(review.studentId) === String(studentId) 
     )
 
     if (!reviewGrade) {
@@ -311,7 +311,7 @@ const createNewComment = async (req, res) => {
     
     await grade.save();
 
-    return res.status(201).json({ success: true, data: grade });
+    return res.status(201).json({ success: true, message: 'Your comment posted' });
   } catch (error) {
       console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -547,6 +547,38 @@ const getAllReviewGradeComposition = async (req, res) => {
   }
 }
 
+const getAllComment = async (req, res) => {
+  const { classId, gradeCompositionId, studentId } = req.body;
+  try {
+
+    const gradeModel = await Grade.findOne({ classId });
+    if (!gradeModel) {
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+    }
+
+    const gradeComposition = gradeModel.gradeCompositionList.find(
+      composition => String(composition._id) === String(gradeCompositionId)
+    );
+
+    if (!gradeComposition) {
+      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
+    }
+
+    const review = gradeComposition.reviewGradeList.find(
+      review => String(review.studentId) === String(studentId)
+    );
+
+    if (!review) {
+      return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' });
+    }
+
+    return res.status(201).json({ success: true, data: review.comment });
+  } catch (error) {
+      console.error(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   getGradeComposition,
   createNewGradeComposition,
@@ -561,5 +593,6 @@ module.exports = {
   deleteReviewGrade,
   deleteComment,
   getAllReviewGradeCompositionByStudentId,
-  getAllReviewGradeComposition
+  getAllReviewGradeComposition,
+  getAllComment
 }

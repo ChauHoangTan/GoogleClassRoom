@@ -37,8 +37,20 @@ const getAllReviewGradeCompositionAction = (classId ) => async (dispatch) => {
   }
 }
 
+// Get all commet
+const getAllCommentAction = (classId, gradeCompositionId, studentId ) => async (dispatch) => {
+  try {
+    dispatch({ type: gradeConstants.GET_ALL_COMMENT_REQUEST })
+    const response = await gradeApi.getAllComment(classId, gradeCompositionId, studentId)
+    dispatch({ type: gradeConstants.GET_ALL_COMMENT_SUCCESS, payload: response })
+  } catch (error) {
+    ErrorsAction(error, dispatch, gradeConstants.GET_ALL_COMMENT_FAIL)
+  }
+}
+
 export {
   getAllGradeCompositionByClassIdAction,
   getAllReviewGradeCompositionByStudentIdAction,
-  getAllReviewGradeCompositionAction
+  getAllReviewGradeCompositionAction,
+  getAllCommentAction
 }

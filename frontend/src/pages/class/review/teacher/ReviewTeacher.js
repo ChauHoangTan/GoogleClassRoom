@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import toast from 'react-hot-toast'
 import { getAllReviewGradeCompositionAction, getAllReviewGradeCompositionByStudentIdAction } from '../../../../redux/actions/gradeActions'
 import { updateReviewGrade } from '../../../../redux/APIs/gradeServices'
+import Comment from '../Comment'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -26,7 +27,7 @@ function CardGradeReview ({ data }) {
   const title = 'Student need to review assignment: '
   const composition = data?.composition
   const time = convertTime(data?.time)
-  const percent = `${data?.oldGrade} / ${data?.scale}`
+  const percent = `${data?.oldGrade}/${data?.scale}`
   const status = data?.status
   const expectedGrade = data?.expectGrade
 
@@ -46,6 +47,10 @@ function CardGradeReview ({ data }) {
   }, [])
 
   const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
+
+  const handleCloseAllDialog = async () => {
     setOpenDialog(false)
   }
 
@@ -182,7 +187,7 @@ function CardGradeReview ({ data }) {
                     <ListItemText>Delete review request</ListItemText>
                   </MenuItem>
                 </> :
-                <MenuItem onClick={handleClickOpenDialog}>
+                <MenuItem onClick={() => {handleClickOpenDialog(), handleClose()}}>
                   <ListItemIcon>
                     <PreviewIcon fontSize="small" />
                   </ListItemIcon>
@@ -207,7 +212,7 @@ function CardGradeReview ({ data }) {
               <IconButton
                 edge="start"
                 color="inherit"
-                onClick={() => {handleCloseDialog()}}
+                onClick={() => {handleCloseAllDialog()}}
                 aria-label="close"
               >
                 <CloseIcon />
@@ -338,6 +343,7 @@ function CardGradeReview ({ data }) {
             </Grid>
           </Grid>
 
+          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} />
         </Dialog>
       </React.Fragment>
     </>
@@ -349,7 +355,7 @@ function CardRelatedReview ({ data, close }) {
   const title = 'Student need to review assignment: '
   const composition = data?.composition
   const time = convertTime(data?.time)
-  const percent = `${data?.oldGrade} / ${data?.scale}`
+  const percent = `${data?.oldGrade}/${data?.scale}`
   const status = data?.status
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -361,6 +367,10 @@ function CardRelatedReview ({ data, close }) {
   }
 
   const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
+
+  const handleCloseAllDialog = async () => {
     setOpenDialog(false)
   }
 
@@ -493,7 +503,7 @@ function CardRelatedReview ({ data, close }) {
                     <ListItemText>Delete review request</ListItemText>
                   </MenuItem>
                 </> :
-                <MenuItem onClick={handleClickOpenDialog}>
+                <MenuItem onClick={() => {handleClickOpenDialog(), handleClose()}}>
                   <ListItemIcon>
                     <PreviewIcon fontSize="small" />
                   </ListItemIcon>
@@ -518,7 +528,7 @@ function CardRelatedReview ({ data, close }) {
               <IconButton
                 edge="start"
                 color="inherit"
-                onClick={() => {handleCloseDialog()}}
+                onClick={() => {handleCloseAllDialog()}}
                 aria-label="close"
               >
                 <CloseIcon />
@@ -649,6 +659,7 @@ function CardRelatedReview ({ data, close }) {
             </Grid>
           </Grid>
 
+          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} />
         </Dialog>
       </React.Fragment>
     </>

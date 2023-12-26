@@ -53,3 +53,21 @@ export const userGetAllReviewGradeCompositionReducer = (state = { reviews: [] },
     return state
   }
 }
+
+// USER GET ALL COMMENT
+export const userGetAllCommentReducer = (state = { comments: [] }, action) => {
+  switch (action.type) {
+  case gradeConstants.GET_ALL_COMMENT_REQUEST:
+    return { isLoading: true }
+  case gradeConstants.GET_ALL_COMMENT_SUCCESS:
+    return { isLoading: false, comments: action.payload, isSuccess: true }
+  case gradeConstants.GET_ALL_COMMENT_FAIL:
+    return { isLoading: false, isError: action.payload }
+  case gradeConstants.GET_ALL_COMMENT_RESET:
+    return {
+      comments: []
+    }
+  default:
+    return state
+  }
+}

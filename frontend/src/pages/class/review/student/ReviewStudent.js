@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import toast from 'react-hot-toast'
 import { convertTime } from '../../../../utils/timeConvert/timeConvert'
 import { getAllReviewGradeCompositionByStudentIdAction } from '../../../../redux/actions/gradeActions'
+import Comment from '../Comment'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -307,6 +308,9 @@ function CardGradeReview ({ data }) {
               defaultValue={data?.explanation}
             />
           </ Container>
+
+          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} />
+
         </Dialog>
       </React.Fragment>
     </>

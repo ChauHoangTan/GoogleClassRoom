@@ -65,6 +65,22 @@ const editGradeComposition = async ( classId, listGradeComposition ) => {
   return data
 }
 
+const createNewComment = async ( classId, gradeCompositionId, studentId, content, isTeacherComment ) => {
+  console.log('isTeacherComment',classId, gradeCompositionId, studentId, content, isTeacherComment)
+  const { data } = await AxiosJWT.post('/grade/createNewComment', { classId, gradeCompositionId, studentId, content, isTeacherComment })
+  return data
+}
+
+const deleteComment = async ( classId, gradeCompositionId, userId, commentId ) => {
+  const { data } = await AxiosJWT.delete(`/grade/deleteComment/${classId}/${gradeCompositionId}/${userId}/${commentId}`)
+  return data
+}
+
+const getAllComment = async ( classId, gradeCompositionId, studentId ) => {
+  const { data } = await AxiosJWT.post('/grade/getAllComment', { classId, gradeCompositionId, studentId })
+  return data
+}
+
 export {
   getAllGradeCompositionByClassIdService,
   createNewGradeComposition,
@@ -76,5 +92,8 @@ export {
   updateReviewGrade,
   deleteReviewGrade,
   getAllReviewGradeComposition,
-  editGradeComposition
+  editGradeComposition,
+  createNewComment,
+  deleteComment,
+  getAllComment
 }

@@ -597,8 +597,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       </Typography>
       <Stack direction='row' justifyContent='end' spacing={3} sx={{ mb:'5px' }}>
         <CSVLink data={csvDataDownload()} filename='gradeBoard.csv'>
-          <Button variant='contained' startIcon={<FileDownloadIcon />} sx={{ fontSize:'13px', mb:'5px' }}
-            onClick={changeState}>
+          <Button variant='contained' startIcon={<FileDownloadIcon />} sx={{ fontSize:'13px', mb:'5px' }}>
               Export
           </Button>
         </CSVLink>

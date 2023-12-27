@@ -306,6 +306,10 @@ const createNewComment = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Cannot find Review Grade Composition' });
     }
 
+    if (!req.user?.userId) {
+      return res.status(404).json({ success: false, message: 'Please mapping your account to comment' });
+    }
+
     const CommentModel = mongoose.model('Comment', Comment);
 
     console.log(req.user)

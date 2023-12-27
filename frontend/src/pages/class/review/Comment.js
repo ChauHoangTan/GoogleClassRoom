@@ -109,7 +109,7 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
               userReceiverId: teacher, // ID của giáo viên nhận thông báo
               userName: userInfo?.firstName + ' ' + userInfo?.lastName,
               image: userInfo?.image,
-              content: `Teacher send a message at request review ${composition}`,
+              content: `Student send a message at request review ${composition}`,
               link: `/class/${classId}/review/${reviewId}`
             }
             console.log('notificationData', notificationData)

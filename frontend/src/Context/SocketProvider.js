@@ -48,7 +48,7 @@ function SocketProvider({ children }) {
       const changeData = () => socket?.emit('initial_data', userInfo._id);
 
     const handleClick = (index) => {
-        navigate(notifications[index].link)
+        navigate(notifications[index].link, { replace: true })
         socket.emit('check_select_notification', notifications[index]);
       };
     

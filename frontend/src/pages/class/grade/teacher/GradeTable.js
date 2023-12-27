@@ -171,7 +171,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[1, 10, 20, 25, 50, 100]}
+        rowsPerPageOptions={[1, 2, 10, 20, 25, 50, 100]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}

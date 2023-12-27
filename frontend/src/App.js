@@ -51,7 +51,7 @@ function App () {
                 <Route path='password' element={<Password />} />
                 <Route path='profile' element={<Profile />} />
                 <Route path='home' element={<Home />} />
-                <Route path='/class/:classId/:tabName' element={<ClassDetails/>}/>
+                <Route path='/class/:classId/:tabName?/:reviewId?' element={<ClassDetails/>}/>
                 <Route element={<AdminProtectedRouter />}>
                   <Route path='/dashboard' element={<Main />} />
                   <Route path='/users' element={<Users />} />

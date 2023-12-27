@@ -500,7 +500,7 @@ const getStudentsListByUploadFile = async (req, res) => {
             return res.status(404).json({ message: 'No class found' });
         }
 
-        studentList.sort((a,b) => a.userId - b.userId)
+        // studentList.sort((a,b) => a.userId - b.userId)
         classExist.studentsListUpload = studentsListUpload;
         console.log(studentsListUpload)
 

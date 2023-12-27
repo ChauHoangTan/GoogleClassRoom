@@ -49,7 +49,7 @@ function InvitationByUrl() {
             setSuccess(res.message)
             setIsValidUrl(true)
             setIsLoading(false)
-            navigate(`/class/${res.classId}`)
+            navigate(`/class/${res.classId}/stream`)
             toast.success('You are joined the class')
           } catch (error) {
             if (error.response === undefined) {

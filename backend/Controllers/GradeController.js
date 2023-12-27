@@ -248,6 +248,7 @@ const createNewReviewGrade = async (req, res) => {
     }
 
     const ReviewModel = mongoose.model('Review', Review);
+    const student_Id = req.user._id
 
     const newReview = new ReviewModel({
       classId,
@@ -255,14 +256,15 @@ const createNewReviewGrade = async (req, res) => {
       studentId,
       expectGrade,
       oldGrade,
-      explanation
+      explanation,
+      student_Id
     });
 
     gradeComposition.reviewGradeList.push(newReview);
     
     await grade.save();
 
-    return res.status(201).json({ success: true, message: 'Send request review success' });
+    return res.status(201).json({ success: true, message: 'Send request review success', data: newReview});
   } catch (error) {
       console.error(error);
     return res.status(500).json({ success: false, message: error.message });

@@ -26,8 +26,14 @@ function ClassDetails() {
   )
 
   const { classId, tabName } = useParams()
+
+  const [value, setValue] = useState(tabName)
   // useEffect
   useEffect(() => {
+    if (!tabName) {
+      setValue('stream')
+    }
+
     dispatch(getClassByIDActions(classId))
 
     if (isSuccess) {
@@ -40,8 +46,6 @@ function ClassDetails() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, classError])
-
-  const [value, setValue] = useState(tabName)
 
   const handleChange = (event, newValue) => {
     setValue( newValue )

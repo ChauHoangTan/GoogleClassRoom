@@ -14,6 +14,7 @@ const ReviewModelSchema = new Schema({
   comment: { type: [CommentSchema], default: [] },
   status: { type: String, default: 'Pending' },
   time: { type: Date, default: Date.now },
+  student_Id: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   teacher_Id: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 },
 {

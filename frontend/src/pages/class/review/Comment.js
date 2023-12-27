@@ -131,7 +131,7 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
       <Container sx={{
         borderRadius: 5,
         p: 3,
-        border: '2px solid #A9A9A9',
+        // border: '2px solid #A9A9A9',
         my: 2
       }}>
         <Typography gutterBottom variant="h5" >

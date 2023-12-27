@@ -72,12 +72,26 @@ const ApproachJoin = ({ approach, code }) => {
     }
   }
 
+  function formatNumberWithDashes(number) {
+    if (!number)
+      return
+
+    const numberString = number.toString()
+    const parts = []
+
+    for (let i = numberString.length; i > 0; i -= 3) {
+      parts.unshift(numberString.slice(Math.max(0, i - 3), i))
+    }
+
+    return parts.join('-')
+  }
+
   return (
     <Stack className='approachJoin component' spacing={1} mt={1}>
       <Typography variant='body-1' sx={{ paddingLeft:'5px' }}>By {approach}</Typography>
       <Stack direction='row' alignItems='center'>
         <Stack className='code' direction='row' alignItems='center'>
-          <Typography variant='body-1'>{approach === 'link' ? islink : code}</Typography>
+          <Typography variant='body-1'>{approach === 'link' ? islink : formatNumberWithDashes(code)}</Typography>
         </Stack>
         {
           isLoading ?

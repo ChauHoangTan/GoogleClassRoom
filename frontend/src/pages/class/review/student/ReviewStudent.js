@@ -214,13 +214,20 @@ function CardGradeReview ({ data, isShowDetail }) {
                     </ListItemIcon>
                     <ListItemText>Delete review request</ListItemText>
                   </MenuItem>
-                ] :
-                <MenuItem onClick={handleClickOpenDialog}>
-                  <ListItemIcon>
-                    <PreviewIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Preview review request</ListItemText>
-                </MenuItem>
+                ] : [
+                  <MenuItem key="preview" onClick={handleClickOpenDialog}>
+                    <ListItemIcon>
+                      <PreviewIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Preview review request</ListItemText>
+                  </MenuItem>,
+                  <MenuItem key="delete" onClick={() => {handleClickDelete()}}>
+                    <ListItemIcon>
+                      <DeleteIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Delete review request</ListItemText>
+                  </MenuItem>
+                ]
               }
 
             </Menu>

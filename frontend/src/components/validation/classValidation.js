@@ -16,12 +16,6 @@ const editUserInfoValidation = yup.object().shape({
 
 // User create Class info validation
 const createClassInfoValidation = yup.object().shape({
-  classId: yup
-    .string()
-    .trim()
-    .required('Class Id is required')
-    .matches(/^[0-9]+$/, 'Only contain numbers'),
-  //   .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits'),
   codeClassName: yup
     .string()
     .trim()

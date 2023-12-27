@@ -53,7 +53,6 @@ const ModalJoin = () => {
   const handleOpen = () => {
     setIsOpen(!isOpen)
   }
-  console.log('isLoading, isError, message, isSuccess', isLoading, isError, message, isSuccess)
 
   const {
     register,
@@ -91,7 +90,10 @@ const ModalJoin = () => {
         <PinIcon sx={{ mr:'5px' }}/>Join</Button>
       <Modal
         open={isOpen}
-        onClose={handleOpen}
+        onClose={() => {
+          handleOpen()
+          reset()
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -113,7 +115,7 @@ const ModalJoin = () => {
             sx={{ mt:'20px', width:'100%' }}
           />
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
-            <Button variant='contained' color='error' onClick={handleOpen}>Cancel</Button>
+            <Button variant='contained' color='error' onClick={() => {handleOpen(); reset() }}>Cancel</Button>
             <Button variant='contained' type="submit">Join</Button>
           </Stack>
         </Box>
@@ -176,7 +178,10 @@ const ModalNewClass = () => {
         <LibraryAddIcon sx={{ mr:'5px' }}/>New class</Button>
       <Modal
         open={isOpen}
-        onClose={handleOpen}
+        onClose={() => {
+          handleOpen()
+          reset()
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -206,16 +211,8 @@ const ModalNewClass = () => {
             label="Enter code class name"
             variant="outlined"
             sx={{ mt:'20px', width:'100%' }}/>
-          <TextField {...register('classId')}
-            error={!!errors.classId}
-            helperText={errors.classId?.message || ''}
-            required
-            name="classId" id="inputTitle"
-            label="Enter class ID"
-            variant="outlined"
-            sx={{ mt:'20px', width:'100%' }}/>
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
-            <Button variant='contained' color='error' onClick={handleOpen}>Cancel</Button>
+            <Button variant='contained' color='error' onClick={() => {handleOpen(); reset() }}>Cancel</Button>
             <Button type="submit" variant='contained'>Create</Button>
           </Stack>
         </Box>

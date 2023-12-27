@@ -179,13 +179,21 @@ const deleteClass = async (req, res) => {
     }
 }
 
+function objectIdToShortString(objectId) {
+    const hexString = objectId.toHexString();
+    const shortString = hexString.slice(-9);
+    const shortNumber = parseInt(shortString, 16) % 1e9;
+  
+    return shortNumber;
+}  
+
 const createNewClass = async (req, res) => {
-    const { classId, className, codeClassName } = req.body;
+    const { className, codeClassName } = req.body;
 
     try {
         // Validate input
-        if (!classId || !className) {
-            return res.status(400).json({ success: false, message: 'Please provide classId and className' });
+        if (!className) {
+            return res.status(400).json({ success: false, message: 'Please provide className' });
         }
 
         // Check user authentication and permissions
@@ -196,12 +204,9 @@ const createNewClass = async (req, res) => {
         const teachersIds = [user?._id]; 
         const teachersObjectIds = teachersIds.map(id =>new mongoose.Types.ObjectId(id));
 
-        const existingClass = await Class.findOne({ classId: classId });
-
-        if (existingClass) {
-            return res.status(400).json({ success: false, message: 'Please choose a different Code as this one already exists.' });
-        }
-
+        const min = 100000000; // Số nhỏ nhất với 9 chữ số
+        const max = 999999999; // Số lớn nhất với 9 chữ số    
+        const classId = Math.floor(Math.random() * (max - min + 1)) + min
         // Create a new class
         const newClass = await Class.create({
             classId,
@@ -214,6 +219,12 @@ const createNewClass = async (req, res) => {
         if (newClass && newClass._id) {
             // Get the ID of the newly created class
             const newClassId = newClass._id;
+
+            const classId = objectIdToShortString(newClassId)
+            newClass.classId = classId
+            console.log(newClass.classId)
+            await newClass.save()
+
             // Check if isAdmin not assign a role teacher to account admin
             if(!user?.isAdmin) {
                 // Add new class ID to the teacherClassList of the user

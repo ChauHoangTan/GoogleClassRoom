@@ -353,7 +353,7 @@ function CardGradeReview ({ data, isShowDetail }) {
                   Related reviews
                 </Typography>
 
-                <Stack spacing={1} py={1}>
+                <Stack spacing={1} py={1} sx={{ maxHeight: '100%', overflowY: 'auto' }}>
                   {!isLoading ? reviews.data?.allReviews.map((data, index) => (
                     <CardRelatedReview key={index} data={data} close={handleCloseDialog} />
                   )): <></>}

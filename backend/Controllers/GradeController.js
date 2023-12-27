@@ -247,6 +247,15 @@ const createNewReviewGrade = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
     }
 
+    // Kiểm tra xem có review nào của studentId trong danh sách chưa
+    const hasReviewed = gradeComposition.reviewGradeList.some(
+      (review) => String(review.studentId) === String(studentId)
+    );
+
+    if (hasReviewed) {
+      return res.status(400).json({ success: false, message: 'Each grade can only be appealed once. If you want to review a gain please delete previous review' });
+    }
+
     const ReviewModel = mongoose.model('Review', Review);
     const student_Id = req.user._id
 

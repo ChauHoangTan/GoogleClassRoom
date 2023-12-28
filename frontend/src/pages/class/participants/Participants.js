@@ -421,14 +421,8 @@ export default function Participants() {
           <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
         </Button>
       </Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <SearchBar />
-      </Box>
       {/* Teacher table */}
       <Box pt={4}>
-        <Typography variant='body2'>
-          Search result: 3
-        </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant='h6'>
             Teacher
@@ -436,7 +430,7 @@ export default function Participants() {
 
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
             <Typography variant='body2'>
-              3 teacher
+              Invite teacher
             </Typography>
 
             <IconButton onClick={handleOpenInviteTeacher}>
@@ -503,9 +497,6 @@ export default function Participants() {
 
       {/* Student table */}
       <Box pt={4}>
-        <Typography variant='body2'>
-          Search result: 3
-        </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant='h6'>
             Student
@@ -513,7 +504,7 @@ export default function Participants() {
 
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
             <Typography variant='body2'>
-              3 student
+              Invite student
             </Typography>
 
             <IconButton onClick={handleOpenInviteStudent}>

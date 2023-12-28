@@ -442,6 +442,8 @@ function CardRelatedReview ({ data, close }) {
         dispatch(getAllReviewGradeCompositionAction(classId))
         toast.success(result.message)
 
+        console.log('data', data)
+
         const notificationData = {
           userSendId: userInfo?._id,
           userReceiverId: data?.student_Id, // ID của sinh viên nhận thông báo

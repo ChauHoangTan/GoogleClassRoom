@@ -776,6 +776,29 @@ const kickUserOutOfClass = async (req, res) => {
     }
 };
 
+const getRoleInClassByUserId = async (req, res) => {
+    const { classId } = req.body;
+    const userId = req.user.id;
+    try {
+        // Find the class in the ClassModel
+        const user = await User.findById(userId)
+        user.teacherClassList.map((item) => {
+            if( item.equals(classId)) {
+                return res.status(200).json({ success: true, message: 'Leave success', isTeacher: true });
+            }
+        })
+
+        user.studentClassList.map((item) => {
+            if( item.equals(classId)) {
+                return res.status(200).json({ success: true, message: 'Leave success', isTeacher: false });
+            }
+        })
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 
 module.exports = {
     getAllClass,
@@ -798,5 +821,6 @@ module.exports = {
     getAllTypeOfStudents,
     getStudentIdListByUpload,
     leaveThisClass,
+    getRoleInClassByUserId,
     kickUserOutOfClass
 }

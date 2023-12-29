@@ -23,25 +23,27 @@ function Layout({ socket }) {
   const [classTeachingList, setClassTeachingList] = useState([])
   const [classStudyingList, setClassStudyingList] = useState([])
 
+  const stateMenu = useSelector(state => state.changeStateMenu)
   useEffect(() => {
     const fetchDataClasses = async () => {
       const response = await getAllClassTeachAndStudyByID()
       setClassTeachingList(response.data.classTeaching)
       setClassStudyingList(response.data.classStudying)
-      console.log(response)
     }
 
     fetchDataClasses()
-  }, [])
+  }, [stateMenu])
 
   return (
     <div id='layout'>
       <Header socket={socket}/>
 
       <Stack direction='row' id='menuAndOutlet'>
-        <div className={`grid1 ${!isOpenMenu && 'hide'}`}>
-          <Menu classTeaching={classTeachingList} classStudying={classStudyingList}/>
-        </div>
+        { userInfo ?
+          <div className={`grid1 ${!isOpenMenu && 'hide'} ${userInfo?.isAdmin ? 'admin' : 'user'}`}>
+            <Menu classTeaching={classTeachingList} classStudying={classStudyingList}/>
+          </div> :
+          ''}
         <div className='grid2'>
           <Outlet />
           <Footer/>

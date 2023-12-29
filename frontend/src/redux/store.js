@@ -6,6 +6,7 @@ import * as Grade from './reducers/gradeReducers'
 import * as Auth from './reducers/authReducers'
 
 import { moreIconReducer } from './reducers/moreIconReducers'
+import { changeStateMenuReducer } from './reducers/menuReducers'
 
 const rootReducer = combineReducers({
   // User reducer
@@ -37,7 +38,8 @@ const rootReducer = combineReducers({
   userGetAllReviewGradeComposition: Grade.userGetAllReviewGradeCompositionReducer,
   userGetAllComment: Grade.userGetAllCommentReducer,
 
-  isOpenMenu: moreIconReducer
+  isOpenMenu: moreIconReducer,
+  changeStateMenu: changeStateMenuReducer
 
 })
 

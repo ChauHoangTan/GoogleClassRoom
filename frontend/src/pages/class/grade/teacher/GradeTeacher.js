@@ -388,8 +388,9 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
 
   useEffect(() => {
     SetorderedGradeCompostionState (mapOrder(gradeCompositionList, orderGradeComposition, '_id'))
+    setGradeCompositionList(mapOrder(gradeCompositionList, orderGradeComposition, '_id'))
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gradeCompositionList, orderGradeComposition])
+  }, [orderGradeComposition])
 
 
   const handleDragStart = (event) => {
@@ -416,6 +417,7 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
       console.log('After move', dndOrderedGradeCompostionState)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
+      setGradeCompositionList(dndOrderedGradeCompostionState)
       handleUpdateOrderGradeComposition(dndOrderedGradeCompostionState)
     }
 
@@ -727,6 +729,7 @@ export default function GradeTeacher () {
         if (response.orderGradeComposition.length != orderGradeComposition.length) {
           setOrderGradeComposition(response.orderGradeComposition)
           setGradeCompositionList(response.gradeCompositionList)
+          console.log(response.gradeCompositionList)
           // console.log( orderGradeComposition, gradeCompositionList )
         }
       } catch (error) {

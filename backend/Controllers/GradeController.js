@@ -117,9 +117,21 @@ const getAllGradeCompositionByStudentId = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Please mapping your account to see grade!' });
     }
 
-    const gradeModel = await Grade.findOne({ classId });
-    const gradeCompositionList = gradeModel.gradeCompositionList;
+    const mapOrder = (originalArray, orderArray, key) => {
+      if (!originalArray || !orderArray || !key) return []
+    
+      const clonedArray = [...originalArray]
+      const orderedArray = clonedArray.sort((a, b) => {
+        return orderArray.indexOf(a[key]) - orderArray.indexOf(b[key])
+      })
+    
+      return orderedArray
+    }
 
+    const gradeModel = await Grade.findOne({ classId });
+    const gradeCompositionListDB = gradeModel.gradeCompositionList;
+    const orderGradeCompositionListDB = gradeModel.orderGradeComposition;
+    const gradeCompositionList = mapOrder(gradeCompositionListDB, orderGradeCompositionListDB, '_id')
     let result = []
     gradeCompositionList.map((data) => {
       const foundStudentGrade = data.studentGradeList.find(item => item.studentId === studentId);

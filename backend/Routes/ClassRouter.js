@@ -46,4 +46,6 @@ router.post("/students/allTypeOfStudents", passport.authenticate('jwt', { sessio
 
 router.post("/students/getStudentIdList", passport.authenticate('jwt', { session: false }), classController.getStudentIdListByUpload);
 
+router.post("/leaveThisClass", passport.authenticate('jwt', { session: false }), classController.leaveThisClass);
+
 module.exports = router;

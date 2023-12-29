@@ -45,6 +45,7 @@ const GridItemClass = ({ data }) => {
 }
 
 function HomePageContent({ searchTerm }) {
+  const [filteredClasses, setFilteredClasses] = useState([])
   const dispatch = useDispatch()
   // useEffect
   const { isLoading: classLoading, isError: classError, classes } = useSelector(
@@ -57,27 +58,24 @@ function HomePageContent({ searchTerm }) {
       toast.error(classError)
       dispatch({ type: 'GET_ALL_MY_CLASSES_RESET' })
     }
+
   }, [dispatch, classError])
 
   useEffect(() => {
-    // Log classes whenever it changes
-    console.log(classes)
-  }, [classes])
+    if (!classLoading) {
+      const filtered = classes?.data?.filter((item) =>
+        searchTerm
+          ? item.className.toLowerCase().includes(searchTerm.toLowerCase())
+          : classes?.data
+      )
+      setFilteredClasses(filtered)
+    }
+  }, [classes, searchTerm])
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [filteredClasses, setFilteredClasses] = useState([])
   // Calculate the starting and ending index for the current page
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const endIndex = startIndex + ITEMS_PER_PAGE
-
-  useEffect(() => {
-    const filtered = classes?.data?.filter((item) =>
-      searchTerm
-        ? item.className.toLowerCase().includes(searchTerm.toLowerCase())
-        : classes?.data
-    )
-    setFilteredClasses(filtered)
-  }, [searchTerm])
 
   return (
     <>

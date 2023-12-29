@@ -1,4 +1,4 @@
-import { Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Grid, IconButton, Stack, Typography, Menu, MenuItem } from '@mui/material'
 import './style.scss'
 import Container from '@mui/material/Container'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
@@ -14,8 +14,49 @@ import copy from 'clipboard-copy'
 import { useParams } from 'react-router'
 import { getAllGradeCompositionByClassIdAction } from '../../../redux/actions/gradeActions'
 import { mapOrder } from '../../../utils/SortOrderArray/mapOrder'
+import EditIcon from '@mui/icons-material/Edit'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+import { leaveThisClass } from '../../../redux/APIs/classServices'
+import { useNavigate } from 'react-router-dom'
 
 const HeadComponent = ({ name, title, background }) => {
+  const [anchorEl, setAnchorEl] = useState(null)
+  const { classId } = useParams()
+  const navigate = useNavigate()
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleEditClass = () => {
+    // Handle logic for editing class
+    handleClose()
+  }
+
+  const handleLeaveClass = () => {
+
+    const fetchData = async () => {
+      try {
+        const result = await leaveThisClass(classId)
+        toast.success(result.message)
+        navigate('/home', { replace: true, state: { reload: true } })
+      } catch (error) {
+        toast.error(error.response.data.message)
+      }
+    }
+    fetchData()
+
+    handleClose()
+  }
+
+  const { isLoading: classLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
   return (
     <Stack className='headComponent'>
       <img src={background}/>
@@ -23,9 +64,27 @@ const HeadComponent = ({ name, title, background }) => {
         <Typography className='name' variant='h4'>{name}</Typography>
         <Typography className='title' variant='h6'>{title}</Typography>
       </Stack>
-      <IconButton>
+      <IconButton onClick={handleClick}>
         <InfoOutlinedIcon sx={{ transform:'scale(1.2)' }}/>
       </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {
+          classInfo?.data?.isTeacherOfThisClass &&
+            <MenuItem onClick={handleEditClass}>
+              <EditIcon fontSize="small" style={{ marginRight: '8px' }} />
+            Edit Class
+            </MenuItem>
+        }
+
+        <MenuItem onClick={() => {handleLeaveClass()}}>
+          <ExitToAppIcon fontSize="small" style={{ marginRight: '8px' }} />
+          Leave Class
+        </MenuItem>
+      </Menu>
     </Stack>
   )
 }

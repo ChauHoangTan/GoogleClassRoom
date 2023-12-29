@@ -121,13 +121,50 @@ import * as React from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { Typography, IconButton, Avatar, Paper } from '@mui/material'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import { kickUserOutOfClass } from '../../../redux/APIs/classServices'
+import { useParams } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { getAllTypeOfStudentsAction } from '../../../redux/actions/classActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 const VISIBLE_FIELDS = ['image', 'userId', 'fullName', 'status', 'isTeacher']
 
 export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
+  const [isUpdate, setIsUpdate] = React.useState(true)
   // Check if 'rows' is undefined or empty
   if (!rows || rows.length === 0) {
     return <Typography variant="body1">No data available</Typography>
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { classId } = useParams()
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const dispatch = useDispatch()
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  let { classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
+
+  const handleKickUser = (user) => {
+    console.log('user', user)
+
+    const fetchData = async () => {
+      try {
+        const userId = user.userId
+        const id = user._id
+        const result = await kickUserOutOfClass(classId, id, userId)
+        toast.success(result.message)
+        dispatch(getAllTypeOfStudentsAction(classId))
+      } catch (error) {
+        toast.error(error.response.data.message)
+      }
+    }
+    fetchData()
   }
 
   // Create dynamic columns based on the provided set of columns
@@ -188,7 +225,7 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
             field: 'isTeacher',
             headerName: column.label,
             renderCell: (params) => (
-              <IconButton>
+              <IconButton disabled={!classInfo.isTeacherOfThisClass} onClick={() => {handleKickUser(params.row)}}>
                 <RemoveCircleOutlineIcon />
               </IconButton>
             ),

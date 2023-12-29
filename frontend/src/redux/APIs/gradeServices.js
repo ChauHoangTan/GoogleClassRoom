@@ -21,6 +21,12 @@ const removeGradeComposition = async ( classId, gradeCompositionId ) => {
   return data
 }
 
+// Update a grade composition
+const updateGradeComposition = async ( classId, gradeCompositionId, name, scale, isPublic ) => {
+  const { data } = await AxiosJWT.post('/grade/update', { classId, gradeCompositionId, name, scale, isPublic } )
+  return data
+}
+
 // Get all grade composition by studentId
 const getAllGradeCompositionByStudentId = async ( classId, studentId ) => {
   const { data } = await AxiosJWT.post('/grade/getGradeCompositionByStudentId', { classId, studentId })
@@ -65,6 +71,12 @@ const editGradeComposition = async ( classId, listGradeComposition ) => {
   return data
 }
 
+// upload grade composition
+const updateOrderGradeComposition = async ( classId, listOrderGradeComposition ) => {
+  const { data } = await AxiosJWT.post('/grade/updateOrderGradeComposition', { classId, listOrderGradeComposition })
+  return data
+}
+
 const createNewComment = async ( classId, gradeCompositionId, studentId, content, isTeacherComment ) => {
   console.log('isTeacherComment',classId, gradeCompositionId, studentId, content, isTeacherComment)
   const { data } = await AxiosJWT.post('/grade/createNewComment', { classId, gradeCompositionId, studentId, content, isTeacherComment })
@@ -85,6 +97,7 @@ export {
   getAllGradeCompositionByClassIdService,
   createNewGradeComposition,
   removeGradeComposition,
+  updateGradeComposition,
   getAllGradeCompositionByStudentId,
   uploadGradeComposition,
   createNewReviewGrade,
@@ -93,6 +106,7 @@ export {
   deleteReviewGrade,
   getAllReviewGradeComposition,
   editGradeComposition,
+  updateOrderGradeComposition,
   createNewComment,
   deleteComment,
   getAllComment

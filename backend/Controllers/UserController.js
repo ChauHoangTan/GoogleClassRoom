@@ -13,7 +13,7 @@ const {CLIENT_URL} = process.env
 // @desc Update user profile
 // @route PUT/api/users/profile
 const updateUserProfile = async(req, res) => {
-    const { email, firstName, lastName, image, phone, dob } = req.body;
+    const { email, firstName, lastName, image, phone, dob, userId } = req.body;
     try {
         // find user in DB  
         const user = await User.findById(req.user.id);
@@ -24,6 +24,7 @@ const updateUserProfile = async(req, res) => {
             user.lastName = lastName || user.lastName;
             user.image = image || user.image;
             user.phone = phone || user.phone;
+            user.userId = userId || user.userId;
             user.dob = dob || user.dob;
 
             const updatedUser = await user.save();
@@ -37,6 +38,7 @@ const updateUserProfile = async(req, res) => {
                 phone: updatedUser.phone,
                 dob: updatedUser.dob,
                 isAdmin: updatedUser.isAdmin,
+                userId : updatedUser.userId,
                 Authorization: createAccessToken(updatedUser._id),
             })
         }

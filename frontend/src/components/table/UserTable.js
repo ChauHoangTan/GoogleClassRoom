@@ -122,7 +122,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     <Grid
       container
       justifyContent="center"
-      sx={{ mt: 1, mb: 5, p: 5, height: '100%' }}
+      sx={{ mt: 1, mb: 5, p: 4 }}
     >
       <ModalEditUser isOpen={isOpen} handleOpen={handleOpen} userRow={userRow} setUserRow={setUserRow} setIsOpen={setIsOpen} />
       <Grid item xs={12}>

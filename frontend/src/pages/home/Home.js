@@ -222,18 +222,7 @@ const ModalNewClass = () => {
 }
 
 function Home() {
-    // useEffect(() => {
-    //     // Receive notifications from server
-    //     const socket = io('http://localhost:5000', {
-    //         withCredentials: true,
-    //         extraHeaders: {
-    //           'Access-Control-Allow-Origin': 'http://localhost:3000' // Đổi thành origin của bạn
-    //         }
-    //       });
-    //   console.log(socket)
-    
-    //   }, []);
-    
+  const [searchTerm, setSearchTerm] = useState('')
 
   return (
     <Stack id='home' direction='column'>
@@ -242,13 +231,9 @@ function Home() {
           <ModalJoin/>
           <ModalNewClass/>
         </Stack>
-        <Stack direction='row' justifyContent='center'><SearchBar/></Stack>
-        <Typography mt={2} mb={5} sx={{ fontStyle:'italic' }}>Search results: 3</Typography>
-        <HomePageContent/>
+        <Stack direction='row' justifyContent='center'><SearchBar setSearchTerm={setSearchTerm}/></Stack>
+        <HomePageContent searchTerm={searchTerm}/>
       </div>
-      <Stack alignItems='center' className='pagination'>
-        <Pagination count={10} size='large' shape='rounded' variant="outlined" color="primary" />
-      </Stack>
     </Stack>
   )
 }

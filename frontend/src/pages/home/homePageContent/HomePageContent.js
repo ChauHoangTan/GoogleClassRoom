@@ -1,12 +1,13 @@
-import { Grid, Typography, Card, Stack, Avatar, IconButton } from '@mui/material'
+import { Grid, Typography, Card, Stack, Avatar, Pagination } from '@mui/material'
 import './style.scss'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { useNavigate } from 'react-router-dom'
 import { getAllMyClassesAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Loader from '../../../components/notification/Loader'
+
+const ITEMS_PER_PAGE = 4
 
 const CardClass = ({ data }) => {
   const className = data.className
@@ -17,7 +18,6 @@ const CardClass = ({ data }) => {
     <Card className='card'>
       <Stack direction='column' className='cardHeader'>
         <img src={background}/>
-        <IconButton><MoreVertIcon/></IconButton>
         <Avatar className='avatar'/>
       </Stack>
 
@@ -32,51 +32,6 @@ const CardClass = ({ data }) => {
   )
 }
 
-const listCardClass = [
-  {
-    className: 'Advanced Web Programming',
-    author: 'Khánh Nguyễn Huy',
-    tagline: '',
-    background:'https://wallpapercave.com/wp/wp6827255.jpg'
-  },
-  {
-    className: 'Advanced Web Programming',
-    author: 'Khánh Nguyễn Huy',
-    tagline: '',
-    background:'https://i.pinimg.com/564x/6b/a9/47/6ba947a6c296e3b3afe87d03f0c29e3a.jpg'
-  },
-  {
-    className: 'Advanced Web Programming',
-    author: 'Khánh Nguyễn Huy',
-    tagline: '',
-    background:'https://wallpapercave.com/wp/wp6827255.jpg'
-  },
-  {
-    className: 'Advanced Web Programming',
-    author: 'Khánh Nguyễn Huy',
-    tagline: '',
-    background:'https://i.pinimg.com/564x/6b/a9/47/6ba947a6c296e3b3afe87d03f0c29e3a.jpg'
-  },
-  {
-    className: 'Advanced Web Programming',
-    author: 'Khánh Nguyễn Huy',
-    tagline: '',
-    background:'https://i.pinimg.com/564x/b9/6f/b8/b96fb88ddf3d59f90756ebe636457cef.jpg'
-  },
-  {
-    className: 'Advanced Web Programming',
-    author: 'Khánh Nguyễn Huy',
-    tagline: '',
-    background:'https://wallpapercave.com/wp/wp6827255.jpg'
-  },
-  {
-    className: 'Advanced Web Programming',
-    author: 'Khánh Nguyễn Huy',
-    tagline: '',
-    background:'https://i.pinimg.com/564x/c4/38/d3/c438d3c8a4d818ba7bee1532027d9f0a.jpg'
-  }
-]
-
 const GridItemClass = ({ data }) => {
   const navigate = useNavigate()
   const handleNavigateToClassDetails = () => {
@@ -89,7 +44,7 @@ const GridItemClass = ({ data }) => {
   )
 }
 
-function HomePageContent() {
+function HomePageContent({ searchTerm }) {
   const dispatch = useDispatch()
   // useEffect
   const { isLoading: classLoading, isError: classError, classes } = useSelector(
@@ -109,25 +64,50 @@ function HomePageContent() {
     console.log(classes)
   }, [classes])
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const [filteredClasses, setFilteredClasses] = useState([])
+  // Calculate the starting and ending index for the current page
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+  const endIndex = startIndex + ITEMS_PER_PAGE
+
+  useEffect(() => {
+    const filtered = classes?.data?.filter((item) =>
+      searchTerm
+        ? item.className.toLowerCase().includes(searchTerm.toLowerCase())
+        : classes?.data
+    )
+    setFilteredClasses(filtered)
+  }, [searchTerm])
+
   return (
-    <Grid container spacing={2} mt={1} id='homePageContent'>
-      {classLoading ?
-        <Loader />
-        :
-        classes.data?.slice().map(( item, index ) => {
-          return (
-            <GridItemClass key={index}
-              data = {item}
-            />
-          )
-        })
-      }
-      {/* <GridItemClass
+    <>
+      <Typography mt={2} mb={5} sx={{ fontStyle:'italic' }}>Search results: {filteredClasses?.length}</Typography>
+      <Grid container spacing={2} mt={1} id='homePageContent'>
+        {classLoading ?
+          <Loader />
+          :
+          // Slice the classes array based on the current page
+          filteredClasses?.slice(startIndex, endIndex).map((item, index) => {
+            return <GridItemClass key={index} data={item} />
+          })
+        }
+        {/* <GridItemClass
         title='Advanced Web Programming'
         author='Khánh Nguyễn Huy'
         tagline=''
         background='https://wallpapercave.com/wp/wp6827255.jpg'/> */}
-    </Grid>
+      </Grid>
+      <Stack alignItems='center' className='pagination'>
+        <Pagination
+          size='large'
+          shape='rounded'
+          variant="outlined"
+          color="primary"
+          count={Math.ceil(filteredClasses?.length / ITEMS_PER_PAGE)}// Calculate the total number of pages
+          page={currentPage}
+          onChange={(event, value) => setCurrentPage(value)} />
+      </Stack>
+    </>
   )
 }
 

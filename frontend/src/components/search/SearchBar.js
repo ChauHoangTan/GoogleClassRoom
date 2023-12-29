@@ -3,10 +3,11 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import './style.scss'
 import { useState } from 'react'
 
-function SearchBar() {
+function SearchBar({ setSearchTerm }) {
   const [input, setInput] = useState( '' )
   const onChange = ( e ) => {
     setInput(e.target.value)
+    setSearchTerm(e.target.value)
   }
 
   const onSubmit = (e) => {

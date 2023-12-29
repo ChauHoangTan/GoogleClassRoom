@@ -93,6 +93,12 @@ const leaveThisClass = async (classId) => {
   return data
 }
 
+// Kick user out of class
+const kickUserOutOfClass = async (classId, id, userId) => {
+  const { data } = await AxiosJWT.post('/class/kickUserOutOfClass', { classId: classId, id: id, userId: userId })
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -145,5 +151,6 @@ export {
   uploadStudentList,
   getAllTypeOfStudentsService,
   getStudentIdList,
-  leaveThisClass
+  leaveThisClass,
+  kickUserOutOfClass
 }

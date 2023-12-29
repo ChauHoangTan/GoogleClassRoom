@@ -121,13 +121,57 @@ import * as React from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { Typography, IconButton, Avatar, Paper } from '@mui/material'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import { kickUserOutOfClass } from '../../../redux/APIs/classServices'
+import { useParams } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { getAllTypeOfStudentsAction, getAllTeachersAction } from '../../../redux/actions/classActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 const VISIBLE_FIELDS = ['image', 'userId', 'fullName', 'status', 'isTeacher']
 
 export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
+  const [isUpdate, setIsUpdate] = React.useState(true)
   // Check if 'rows' is undefined or empty
   if (!rows || rows.length === 0) {
     return <Typography variant="body1">No data available</Typography>
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { classId } = useParams()
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const dispatch = useDispatch()
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { userInfo } = useSelector(state => state.userLogin)
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  let { classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+  const isMainTeacher = classInfo.teachers[0] === userInfo._id
+
+
+  const handleKickUser = (user) => {
+
+    const fetchData = async () => {
+      try {
+        let userId = ''
+        if (!isTeacherTable) {
+          userId = user.userId
+        }
+        const id = user._id
+        const result = await kickUserOutOfClass(classId, id, userId)
+        toast.success(result.message)
+        dispatch(getAllTypeOfStudentsAction(classId))
+        dispatch(getAllTeachersAction(classId))
+      } catch (error) {
+        toast.error(error.response.data.message)
+      }
+    }
+    fetchData()
   }
 
   // Create dynamic columns based on the provided set of columns
@@ -158,7 +202,7 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
           valueGetter: (params) => `${params.row.lastName} ${params.row.firstName}`
         }
       case 'status':
-        return {
+        return !isTeacherTable && {
           field: 'status',
           headerName: column.label,
           renderCell: (params) => (
@@ -182,18 +226,16 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
           flex: 1 // Set a flexible width for the column
         }
       case 'isTeacher':
-        return isTeacherTable
-          ? null
-          : {
-            field: 'isTeacher',
-            headerName: column.label,
-            renderCell: (params) => (
-              <IconButton>
-                <RemoveCircleOutlineIcon />
-              </IconButton>
-            ),
-            flex: 1 // Set a flexible width for the column
-          }
+        return {
+          field: 'isTeacher',
+          headerName: column.label,
+          renderCell: (params) => (
+            <IconButton disabled={isTeacherTable ? isMainTeacher ? false: true : !classInfo.isTeacherOfThisClass} onClick={() => {handleKickUser(params.row)}}>
+              <RemoveCircleOutlineIcon />
+            </IconButton>
+          ),
+          flex: 1 // Set a flexible width for the column
+        }
       default:
         return null
       }

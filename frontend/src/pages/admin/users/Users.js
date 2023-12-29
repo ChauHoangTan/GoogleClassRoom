@@ -4,7 +4,13 @@ import toast from 'react-hot-toast'
 import UserTable from '../../../components/table/UserTable'
 import { deleteUserAction, getAllUsersAction } from '../../../redux/actions/userActions'
 import { useDispatch } from 'react-redux'
+import { styled } from '@mui/system';
 
+const StyledClassTable = styled('div')({
+    transform: 'scale(0.9)',
+    transformOrigin: 'top left',
+    width: 'calc(100% / 0.9)',
+  });
 
 const Users = () => {
   const dispatch = useDispatch()
@@ -44,7 +50,9 @@ const Users = () => {
   }
 
   return (
-    <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
+    <StyledClassTable>
+        <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
+    </StyledClassTable>
   )
 }
 

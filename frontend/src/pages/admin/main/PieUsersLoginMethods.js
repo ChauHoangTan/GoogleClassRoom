@@ -73,7 +73,7 @@ const PieUsersLoginMethods = () => {
         <Loader /> // Assuming Loader is a component
       ) : (
         loginMethods && (
-          <Box sx={{ display: 'flex', flexWrap: 'nowrap' }}>
+          <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
             <PieChart width={200} height={200}>
               <Pie
                 data={Object.entries(loginMethods).map(([method, count], index) => ({

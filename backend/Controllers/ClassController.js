@@ -556,7 +556,7 @@ const getAllTypeOfStudents = async (req, res) => {
         const studentList = await Class.findById(classId)
         .populate({
             path: 'students',
-            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students' 
+            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students _id' 
         })
         .exec();
 
@@ -587,6 +587,7 @@ const getAllTypeOfStudents = async (req, res) => {
             isVerifiedEmail: student.isVerifiedEmail,
             isBanned: student.isBanned,
             students: student.students,
+            _id: student._id,
             status: 'not exist', // Vì đây là danh sách không chứa trong studentsListUpload
             };
         });
@@ -609,6 +610,7 @@ const getAllTypeOfStudents = async (req, res) => {
                 isVerifiedEmail: matchingStudent ? matchingStudent.isVerifiedEmail : '',
                 isBanned: matchingStudent ? matchingStudent.isBanned : '',
                 students: matchingStudent ? matchingStudent.students : '',
+                _id: matchingStudent ? matchingStudent._id : uploadStudent._id,
             };
 
             // Kiểm tra trạng thái và thêm vào resultObject
@@ -675,9 +677,6 @@ const leaveThisClass = async (req, res) => {
 
         // Check if the user is the main teacher of the class
         const isMainTeacher = classData.teachers[0].equals(userId)
-        console.log('isMainTeacher', isMainTeacher)
-        console.log('classData.teachers[0]', classData.teachers[0])
-        console.log('userId', userId)
         if (isMainTeacher) {
             return res.status(403).json({ success: false, message: 'You are the main teacher of this class and cannot leave' });
         }
@@ -711,10 +710,74 @@ const leaveThisClass = async (req, res) => {
     }
 };
 
+const kickUserOutOfClass = async (req, res) => {
+    const { classId, id, userId } = req.body;
+    console.log(' classId, id, userId',  classId, id, userId)
+    try {
+        // Find the class in the ClassModel
+        const classData = await Class.findById(classId);
+
+        if (!classData) {
+            return res.status(404).json({ success: false, message: 'Class not found' });
+        }
+
+        // Check if the user is a teacher or student in the class
+        const isTeacher = classData.teachers.includes(id);
+        const isStudent = classData.students.includes(id);
+        const isInListUpload = classData.studentsListUpload.some(student => student._id.equals(id) || student.userId === userId);
+
+        console.log('',isTeacher,isStudent,  isInListUpload)
+        if (!isTeacher && !isStudent && !isInListUpload) {
+            return res.status(403).json({ success: false, message: 'User is not a member of this class' });
+        }
+
+        // Check if the user is the main teacher of the class
+        const isMainTeacher = classData.teachers[0].equals(id)
+        if (isMainTeacher) {
+            return res.status(403).json({ success: false, message: 'You are the main teacher of this class and cannot leave' });
+        }
+
+        // Update ClassModel: remove user from teachers or students list
+        if (isTeacher) {
+            classData.teachers.pull(id);
+        }
+
+        if (isStudent) {
+            classData.students.pull(id);
+        }
+
+        if (isInListUpload) {
+            // Check if mapping situation (Because have tow _id at student temp and user)
+            classData.studentsListUpload.pull({ userId: userId })
+            // classData.studentsListUpload.pull({ _id: id });
+            console.log('id, userId', id, userId)
+        }
+
+        await classData.save();
+
+        if (!isInListUpload || ((isStudent || isTeacher) && isInListUpload)) {
+            const user = await User.findById(id);
+
+            if (isTeacher) {
+                user.teacherClassList.pull(classId);
+            }
+
+            if (isStudent) {
+                user.studentClassList.pull(classId);
+            }
+
+            await user.save();
+        }
+
+        return res.status(200).json({ success: true, message: 'Kick success', class: classData  });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 const getRoleInClassByUserId = async (req, res) => {
     const { classId } = req.body;
     const userId = req.user.id;
-    // console.log(classId, userId)
     try {
         // Find the class in the ClassModel
         const user = await User.findById(userId)
@@ -757,5 +820,6 @@ module.exports = {
     getAllTypeOfStudents,
     getStudentIdListByUpload,
     leaveThisClass,
-    getRoleInClassByUserId
+    getRoleInClassByUserId,
+    kickUserOutOfClass
 }

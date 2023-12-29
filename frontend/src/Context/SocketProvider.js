@@ -50,6 +50,7 @@ function SocketProvider({ children }) {
     const handleClick = (index) => {
         navigate(notifications[index].link, { replace: true })
         socket.emit('check_select_notification', notifications[index]);
+        window.location.reload();
       };
     
       const handleClickAll = () => {

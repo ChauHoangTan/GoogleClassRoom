@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Avatar, Box, Button, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+
 import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import Loader from '../notification/Loader'
@@ -8,7 +9,6 @@ import { Delete, Edit, Preview } from '@mui/icons-material'
 import ModalEditClass from '../Auth/Modal/ModalEditClass'
 import { useSelector } from 'react-redux'
 import CustomNoRowsOverlay from './CustomNoRowsOverlay'
-
 
 function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, selectionModel, setSelectionModel }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -110,73 +110,72 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
     <Grid
       container
       justifyContent="center"
-      sx={{ mt: 1, mb: 5, p: 5, height: '100%' }}
+      sx={{ mt: 1, mb: 5, p: 4 }}
     >
       <ModalEditClass isOpen={isOpen} handleOpen={handleOpen} classRow={classRow} setClassRow={setClassRow} setIsOpen={setIsOpen} />
       <Grid item xs={12}>
         <Box
-          sx={{
+        sx={{
             width: '100%',
             minHeight: '400px',
             textAlign: 'center'
-          }}
+        }}
         >
-          <Typography
+        <Typography
             variant='h3'
             component='h3'
             sx={{ textAlign: 'center', mb: 3 }}
-          >
+        >
                 Manage Classes
-          </Typography>
-          <Box sx={{ textAlign: 'right', mb: 2 }}>
+        </Typography>
+        <Box sx={{ textAlign: 'right', mb: 2 }}>
             <Button variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
                 Delete selected rows
             </Button>
-          </Box>
-          {
+        </Box>
+        {
             isLoading ? (
-              <Loader />
+            <Loader />
             ) : (
-              <DataGrid
+            <DataGrid
                 rows={classes}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{
-                  pagination: {
+                pagination: {
                     paginationModel: { page: 0, pageSize: pageSize }
-                  }
+                }
                 }}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 pageSizeOptions={[5, 10, 20]}
                 checkboxSelection
                 getRowSpacing={(params) => ({
-                  top: params.isFirstVisible ? 0 : 1,
-                  bottom: params.isLastVisible ? 0 : 1
+                top: params.isFirstVisible ? 0 : 1,
+                bottom: params.isLastVisible ? 0 : 1
                 })}
                 sx={{
-                  [`& .${gridClasses.row}`]: {
+                [`& .${gridClasses.row}`]: {
                     bgcolor: (theme) =>
-                      theme.palette.mode === 'light' ? grey[200] : grey[900]
-                  },
-                  '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
+                    theme.palette.mode === 'light' ? grey[200] : grey[900]
+                },
+                '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
                     'mt': '1em',
                     'mb': '1em'
-                  },
-                  height: '400px'
+                }
                 }}
                 onCellEditCommit={(params) => setRowId(params.id)}
                 disableRowSelectionOnClick
                 slots={{
-                  toolbar: GridToolbar,
-                  noRowsOverlay: CustomNoRowsOverlay
+                toolbar: GridToolbar,
+                noRowsOverlay: CustomNoRowsOverlay
                 }}
                 columnVisibilityModel={{
-                  userCreator: !isOpenMenu
+                userCreator: !isOpenMenu
                 }}
                 onRowSelectionModelChange={handleRowSelection}
-              />
+            />
             )
-          }
+        }
         </Box>
       </Grid>
     </Grid>

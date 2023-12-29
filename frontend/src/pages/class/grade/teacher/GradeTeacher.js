@@ -179,8 +179,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
   }
   const handleEditGradeComposition = async () => {
     if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
-      const response = await updateGradeComposition(classId, id, gradeCompositionTitle, gradeCompositionPercent, isPublic)
-      console.log(response)
+      const response = await updateGradeComposition(classId, id, gradeCompositionTitle, gradeCompositionPercent, isPublicCheckBox)
       setGradeCompositionList(response.data.gradeCompositionList)
       setOrderGradeComposition(response.data.orderGradeComposition)
     }

@@ -20,7 +20,7 @@ import { getClassByIDActions } from '../../redux/actions/classActions'
 
 function ClassDetails() {
   const dispatch = useDispatch()
-    const navigate = useNavigate();
+  const navigate = useNavigate()
   const { isLoading: classLoading, isError: classError, classes, isSuccess } = useSelector(
     (state) => state.userGetClassByID
   )

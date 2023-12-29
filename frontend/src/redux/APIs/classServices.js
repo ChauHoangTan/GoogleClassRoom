@@ -9,6 +9,12 @@ const getAllMyClassesService = async () => {
   return data
 }
 
+// Get all class of user
+const getAllClassTeachAndStudyByID = async () => {
+  const { data } = await AxiosJWT.get('/class/allClass')
+  return data
+}
+
 // Create new class API
 const createNewClassService = async (info) => {
   const { data } = await AxiosJWT.post('/class/createNewClass', info)
@@ -115,6 +121,7 @@ const getStudentIdList = async(classId) => {
 
 export {
   getAllClassesService,
+  getAllClassTeachAndStudyByID,
   deleteClassService,
   updateClassService,
   getAllMyClassesService,

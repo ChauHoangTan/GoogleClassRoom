@@ -141,6 +141,31 @@ const getAllClassByID = async (req, res) => {
     }
 }
 
+const getAllClassTeachAndStudyByID = async (req, res) => {
+    try {
+
+        // Check user authentication and permissions
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        // Find classes where the user's ID is in either teacherClassList or studentClassList
+
+        const classTeaching = await Class.find({
+            _id: { $in: user.teacherClassList } 
+        })
+
+        const classStudying = await Class.find({
+            _id: { $in: user.studentClassList } 
+        })
+
+        return res.status(200).json({ success: true, data: { classTeaching, classStudying} });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 // @des Delete class
 // @route Delete /api/class/:id
 const deleteClass = async (req, res) => {
@@ -632,6 +657,7 @@ module.exports = {
     getAllClass,
     createNewClass,
     getAllClassByID,
+    getAllClassTeachAndStudyByID,
     getAllTeachers,
     getAllStudents,
     deleteClass,

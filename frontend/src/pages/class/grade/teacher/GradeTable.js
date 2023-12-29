@@ -188,3 +188,110 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
     </Paper>
   )
 }
+
+// import * as React from 'react'
+// import { DataGrid, GridToolbar } from '@mui/x-data-grid'
+// import { Typography, IconButton, Avatar, Paper } from '@mui/material'
+// import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+
+// const VISIBLE_FIELDS = ['image', 'userId', 'fullName', 'status', 'isTeacher']
+
+// export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
+//   // Check if 'rows' is undefined or empty
+//   if (!rows || rows.length === 0) {
+//     return <Typography variant="body1">No data available</Typography>
+//   }
+
+//   // Create dynamic columns based on the provided set of columns
+//   const columnsForDataGrid = columns
+//     .filter((column) => VISIBLE_FIELDS.includes(column.id))
+//     .map((column) => {
+//       switch (column.id) {
+//       case 'image':
+//         return {
+//           field: 'image',
+//           headerName: column.label,
+//           renderCell: (params) => <Avatar src={params.value} alt={`Avatar of ${params.row.fullName}`} />,
+//           flex: 1 // Set a flexible width for the column
+//         }
+//       case 'userId':
+//         return {
+//           field: 'userId',
+//           headerName: column.label,
+//           renderCell: (params) => <Typography variant="subtitle1">{params.value}</Typography>,
+//           flex: 1 // Set a flexible width for the column
+//         }
+//       case 'fullName':
+//         return {
+//           field: 'lastName',
+//           headerName: column.label,
+//           renderCell: (params) => <Typography variant="body1">{`${params.row.lastName} ${params.row.firstName}`}</Typography>,
+//           flex: 1, // Set a flexible width for the column
+//           valueGetter: (params) => `${params.row.lastName} ${params.row.firstName}`
+//         }
+//       case 'status':
+//         return {
+//           field: 'status',
+//           headerName: column.label,
+//           renderCell: (params) => (
+//             <Typography
+//               variant="body1"
+//               fontStyle={'italic'}
+//               fontWeight={'bold'}
+//               color={
+//                 params.row.status === 'mapped'
+//                   ? 'green'
+//                   : params.row.status === 'not exist'
+//                     ? 'red'
+//                     : params.row.status === 'not mapping'
+//                       ? 'yellow'
+//                       : 'black'
+//               }
+//             >
+//               {params.row.status.toUpperCase()}
+//             </Typography>
+//           ),
+//           flex: 1 // Set a flexible width for the column
+//         }
+//       case 'isTeacher':
+//         return isTeacherTable
+//           ? null
+//           : {
+//             field: 'isTeacher',
+//             headerName: column.label,
+//             renderCell: (params) => (
+//               <IconButton>
+//                 <RemoveCircleOutlineIcon />
+//               </IconButton>
+//             ),
+//             flex: 1 // Set a flexible width for the column
+//           }
+//       default:
+//         return null
+//       }
+//     })
+//     .filter((column) => column !== null)
+
+//   const data = {
+//     rows: rows.map((row, index) => ({ ...row, id: index })),
+//     columns: columnsForDataGrid
+//   }
+
+//   return (
+//     <Paper style={{ height: 'auto', width: '100%', overflow: 'hidden' }}>
+//       <DataGrid {...data} components={{ Toolbar: GridToolbar }} hideFooterRowCount
+//         sx={{
+//           '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
+//             'mt': '1em',
+//             'mb': '1em'
+//           },
+
+//           '.MuiDataGrid-selectedRowCount': {
+//             'visibility': 'hidden'
+//           }
+//         }}
+//         pageSizeOptions={[1, 2, 10, 20, 25, 50, 100]}
+//       />
+//     </Paper>
+//   )
+// }

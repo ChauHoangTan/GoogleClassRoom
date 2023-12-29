@@ -12,6 +12,8 @@ router.get("/all", passport.authenticate('jwt', { session: false }),classControl
 
 router.get("/allMyCourses", passport.authenticate('jwt', { session: false }),classController.getAllClassByID);
 
+router.get("/allClass", passport.authenticate('jwt', { session: false }),classController.getAllClassTeachAndStudyByID);
+
 router.post("/createNewClass", passport.authenticate('jwt', { session: false }),classController.createNewClass);
 
 router.post("/teachers/all", passport.authenticate('jwt', { session: false }),classController.getAllTeachers);

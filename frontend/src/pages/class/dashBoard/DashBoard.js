@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import { leaveThisClass } from '../../../redux/APIs/classServices'
 import { useNavigate } from 'react-router-dom'
+import { convertTime } from '../../../utils/timeConvert/timeConvert'
 
 const HeadComponent = ({ name, title, background }) => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -152,14 +153,9 @@ const ApproachJoin = ({ approach, code }) => {
         <Stack className='code' direction='row' alignItems='center'>
           <Typography variant='body-1'>{approach === 'link' ? islink : formatNumberWithDashes(code)}</Typography>
         </Stack>
-        {
-          isLoading ?
-            < Loader/>
-            :
-            <IconButton onClick={handleOnClickCopy}>
-              <ContentCopyOutlinedIcon/>
-            </IconButton>
-        }
+        <IconButton onClick={handleOnClickCopy}>
+          <ContentCopyOutlinedIcon/>
+        </IconButton>
       </Stack>
     </Stack>
   )
@@ -191,9 +187,8 @@ const NotificationItem = ({ title, composition, time }) => {
         </div>
         <Stack sx={{ flexGrow:'1' }}>
           <Typography>{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
-          <Typography variant='body-2' sx={{ fontStyle:'italic' }}>{time}</Typography>
+          <Typography variant='body-2' sx={{ fontStyle:'italic' }}>{convertTime(time)}</Typography>
         </Stack>
-        <IconButton><MoreVertOutlinedIcon/></IconButton>
       </Stack>
     </Container>
   )
@@ -241,11 +236,9 @@ const StreamItem = ({ list }) => {
   return (
     <Stack className='component'>
       <Typography variant='h6'>Stream</Typography>
-      {orderedGradeCompositionList.map((item, index) => {
-        return (
-          <NotificationItem key={index} title='Teacher posted a new assignment ' composition={item.name} time={item.time}/>
-        )
-      })}
+      {orderedGradeCompositionList.map((item, index) => (
+        item.isPublic && <NotificationItem key={index} title='Teacher posted a new assignment' composition={item.name} time={item.time} />
+      ))}
     </Stack>
   )
 }

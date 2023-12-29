@@ -1,5 +1,5 @@
 
-import { Box, Tab } from '@mui/material'
+import { Box, Container, Tab } from '@mui/material'
 import './style.scss'
 import { useState } from 'react'
 import TabContext from '@mui/lab/TabContext'
@@ -64,7 +64,9 @@ function ClassDetails() {
           </TabList>
         </Box>
         {classLoading ? (
-          <Loader />
+          <Container sx={{ height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Loader />
+          </Container>
         ) : (
           <>
             <TabPanel value="stream"><DashBoard /></TabPanel>

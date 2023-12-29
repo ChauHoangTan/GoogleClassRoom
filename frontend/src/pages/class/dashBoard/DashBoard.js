@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import { leaveThisClass } from '../../../redux/APIs/classServices'
 import { useNavigate } from 'react-router-dom'
+import { changStateAction } from '../../../redux/actions/menuActions'
 
 const HeadComponent = ({ name, title, background }) => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -37,12 +38,15 @@ const HeadComponent = ({ name, title, background }) => {
     handleClose()
   }
 
+  const dispatch = useDispatch()
+
   const handleLeaveClass = () => {
 
     const fetchData = async () => {
       try {
         const result = await leaveThisClass(classId)
         toast.success(result.message)
+        dispatch(changStateAction())
         navigate('/home', { replace: true, state: { reload: true } })
       } catch (error) {
         toast.error(error.response.data.message)

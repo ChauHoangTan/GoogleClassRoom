@@ -48,4 +48,6 @@ router.post("/students/getStudentIdList", passport.authenticate('jwt', { session
 
 router.post("/leaveThisClass", passport.authenticate('jwt', { session: false }), classController.leaveThisClass);
 
+router.post("/getRoleInClass", passport.authenticate('jwt', { session: false }), classController.getRoleInClassByUserId);
+
 module.exports = router;

@@ -125,6 +125,11 @@ const getStudentIdList = async(classId) => {
   return data
 }
 
+const getRoleInClassByUserId = async(classId) => {
+  const { data } = await AxiosJWT.post('/class/getRoleInClass', { classId })
+  return data
+}
+
 export {
   getAllClassesService,
   getAllClassTeachAndStudyByID,
@@ -145,5 +150,6 @@ export {
   uploadStudentList,
   getAllTypeOfStudentsService,
   getStudentIdList,
-  leaveThisClass
+  leaveThisClass,
+  getRoleInClassByUserId
 }

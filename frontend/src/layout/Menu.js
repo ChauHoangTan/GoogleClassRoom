@@ -1,5 +1,6 @@
 import { Avatar, Collapse, Divider, Stack, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home'
 import SchoolIcon from '@mui/icons-material/School'
 import Box from '@mui/material/Box'
@@ -11,7 +12,6 @@ import ListItemText from '@mui/material/ListItemText'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined'
-import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined'
 import {
   PeopleAlt,
   KingBed,
@@ -19,17 +19,17 @@ import {
 } from '@mui/icons-material'
 import './style.scss'
 import { Link, useNavigate } from 'react-router-dom'
-import theme from '../theme'
 import { useSelector } from 'react-redux'
+import { getRoleInClassByUserId } from '../redux/APIs/classServices';
 
 const ClassRegisterd = ({ avatar, name, classCode }) => {
-  
+
   return (
     <Stack direction='row' alignItems='center'>
       <Avatar src={avatar} sx={{ width:'30px', height:'30px' }}/>
       <Stack ml={2}>
         <Typography variant='body-1' sx={{ fontWeight:'bold', fontSize:'15px' }}>{classCode}</Typography>
-        <Typography variant='body-2' sx={{ fontSize:'13px'}}>{name}</Typography>
+        <Typography variant='body-2' sx={{ fontSize:'13px' }}>{name}</Typography>
       </Stack>
     </Stack>
   )
@@ -58,6 +58,39 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
     navigate(`/class/${classId}/stream`)
     window.location.reload()
   }
+
+  const isOpenMenu = useSelector(state => state.isOpenMenu)
+  let storePrevStateMenu = useRef(isOpenMenu)
+  useEffect (() => {
+    if (isOpenMenu != storePrevStateMenu) {
+      if (!isOpenMenu) {
+        setIsOpenTeaching(false)
+        setIsOpenMyCourses(false)
+      }
+      storePrevStateMenu = isOpenMenu
+    }
+  }, [isOpenMenu])
+
+  const location = useLocation()
+  useEffect (() => {
+    const urlInfo = location.pathname.split('/')
+    if ( urlInfo[1] === '') {
+      setIndexTab(-1)
+    } else if ( urlInfo[1] === 'home') {
+      setIndexTab(0)
+    } else {
+      const getRole = async () => {
+        const response = await getRoleInClassByUserId(urlInfo[2])
+        if ( response.isTeacher == true) {
+          setIndexTab(1)
+        } else {
+          setIndexTab(2)
+        }
+      }
+
+      getRole()
+    }
+  }, [location.pathname])
 
   return (
     userInfo?.isAdmin ? (

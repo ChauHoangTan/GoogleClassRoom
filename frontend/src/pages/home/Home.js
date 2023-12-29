@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { createClassInfoValidation, joinClassByCodeFormInfoValidation } from '../../components/validation/classValidation'
 import { io } from 'socket.io-client'
+import { changStateAction } from '../../redux/actions/menuActions'
 
 
 const styleModalJoin = {
@@ -74,6 +75,7 @@ const ModalJoin = () => {
     if (isSuccess) {
       dispatch({ type: 'JOIN_CLASS_BY_CODE_RESET' })
       dispatch(getAllMyClassesAction())
+      dispatch(changStateAction())
     }
     if (isError) {
       toast.error(isError)
@@ -161,6 +163,7 @@ const ModalNewClass = () => {
     if (isSuccess) {
       dispatch({ type: 'CREATE_CLASS_RESET' })
       dispatch(getAllMyClassesAction())
+      dispatch(changStateAction())
     }
     if (isError) {
       toast.error(isError)

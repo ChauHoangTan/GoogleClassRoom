@@ -194,6 +194,7 @@ const deleteClass = async (req, res) => {
 
         // find Class in DB and delete
         await Class.deleteMany({ _id: { $in: ids } });
+        await GradeModel.deleteMany({ classId: { $in: ids } });
 
         if(ids.length === 1) {
             return res.json({ message: "Class deleted successfully" });

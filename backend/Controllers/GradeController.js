@@ -81,7 +81,8 @@ const updateGradeComposition = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
     }
 
-    return res.status(201).json({ success: true, data: updatedGradeComposition });
+    const grade = await Grade.findOne({ classId });
+    return res.status(201).json({ success: true, data: grade });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -216,6 +217,26 @@ const editGradeComposition = async (req, res) => {
       })
     })
 
+    if (!gradeModel) {
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+    }
+
+    await gradeModel.save()
+
+    return res.status(201).json({ success: true, message: 'Success' });
+  } catch (error) {
+      console.error(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+const updateOrderGradeComposition = async (req, res) => {
+  const { classId, listOrderGradeComposition } = req.body;
+  try {
+
+    const gradeModel = await Grade.findOne({ classId });
+    gradeModel.orderGradeComposition = listOrderGradeComposition
+  
     if (!gradeModel) {
       return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
     }
@@ -602,6 +623,7 @@ module.exports = {
   getAllGradeCompositionByStudentId,
   uploadGradeComposition,
   editGradeComposition,
+  updateOrderGradeComposition,
   createNewReviewGrade,
   createNewComment,
   updateReviewGrade,

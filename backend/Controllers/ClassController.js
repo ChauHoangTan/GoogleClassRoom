@@ -141,6 +141,31 @@ const getAllClassByID = async (req, res) => {
     }
 }
 
+const getAllClassTeachAndStudyByID = async (req, res) => {
+    try {
+
+        // Check user authentication and permissions
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        // Find classes where the user's ID is in either teacherClassList or studentClassList
+
+        const classTeaching = await Class.find({
+            _id: { $in: user.teacherClassList } 
+        })
+
+        const classStudying = await Class.find({
+            _id: { $in: user.studentClassList } 
+        })
+
+        return res.status(200).json({ success: true, data: { classTeaching, classStudying} });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 // @des Delete class
 // @route Delete /api/class/:id
 const deleteClass = async (req, res) => {
@@ -628,10 +653,70 @@ const getStudentIdListByUpload = async (req, res) => {
     }
 }
 
+const leaveThisClass = async (req, res) => {
+    const { classId } = req.body;
+    const userId = req.user.id;
+
+    try {
+        // Find the class in the ClassModel
+        const classData = await Class.findById(classId);
+
+        if (!classData) {
+            return res.status(404).json({ success: false, message: 'Class not found' });
+        }
+
+        // Check if the user is a teacher or student in the class
+        const isTeacher = classData.teachers.includes(userId);
+        const isStudent = classData.students.includes(userId);
+
+        if (!isTeacher && !isStudent) {
+            return res.status(403).json({ success: false, message: 'User is not a member of this class' });
+        }
+
+        // Check if the user is the main teacher of the class
+        const isMainTeacher = classData.teachers[0].equals(userId)
+        console.log('isMainTeacher', isMainTeacher)
+        console.log('classData.teachers[0]', classData.teachers[0])
+        console.log('userId', userId)
+        if (isMainTeacher) {
+            return res.status(403).json({ success: false, message: 'You are the main teacher of this class and cannot leave' });
+        }
+
+        // Update ClassModel: remove user from teachers or students list
+        if (isTeacher) {
+            classData.teachers.pull(userId);
+        }
+
+        if (isStudent) {
+            classData.students.pull(userId);
+        }
+
+        await classData.save();
+
+        const user = await User.findById(userId);
+
+        if (isTeacher) {
+            user.teacherClassList.pull(classId);
+        }
+
+        if (isStudent) {
+            user.studentClassList.pull(classId);
+        }
+
+        await user.save();
+
+        return res.status(200).json({ success: true, message: 'Leave success', user: user, class: classData  });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
 module.exports = {
     getAllClass,
     createNewClass,
     getAllClassByID,
+    getAllClassTeachAndStudyByID,
     getAllTeachers,
     getAllStudents,
     deleteClass,
@@ -646,5 +731,6 @@ module.exports = {
     receiveInvitateEmail,
     getStudentsListByUploadFile,
     getAllTypeOfStudents,
-    getStudentIdListByUpload
+    getStudentIdListByUpload,
+    leaveThisClass
 }

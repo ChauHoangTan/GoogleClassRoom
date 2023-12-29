@@ -18,23 +18,24 @@ import {
   Dashboard
 } from '@mui/icons-material'
 import './style.scss'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import theme from '../theme'
 import { useSelector } from 'react-redux'
 
-const ClassRegisterd = ({ avatar, title, tagline }) => {
+const ClassRegisterd = ({ avatar, name, classCode }) => {
+  
   return (
     <Stack direction='row' alignItems='center'>
       <Avatar src={avatar} sx={{ width:'30px', height:'30px' }}/>
       <Stack ml={2}>
-        <Typography variant='body-1' sx={{ fontWeight:'bold' }}>{title}</Typography>
-        <Typography variant='body-1'>{tagline}</Typography>
+        <Typography variant='body-1' sx={{ fontWeight:'bold', fontSize:'15px' }}>{classCode}</Typography>
+        <Typography variant='body-2' sx={{ fontSize:'13px'}}>{name}</Typography>
       </Stack>
     </Stack>
   )
 }
 
-const Tabs = ({ indexTab, setIndexTab }) => {
+const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
   const { userInfo } = useSelector(
     (state) => state.userLogin
   )
@@ -50,6 +51,12 @@ const Tabs = ({ indexTab, setIndexTab }) => {
   const [isOpenMyCourses, setIsOpenMyCourses] = useState(false)
   const handleIsOpenMyCourses = () => {
     setIsOpenMyCourses(!isOpenMyCourses)
+  }
+
+  const navigate = useNavigate()
+  const handleNavigateToClassDetails = (classId) => {
+    navigate(`/class/${classId}/stream`)
+    window.location.reload()
   }
 
   return (
@@ -77,23 +84,7 @@ const Tabs = ({ indexTab, setIndexTab }) => {
                   >Dashboard</Typography>
                 </ListItemButton>
               </Link>
-
             </ListItem>
-            <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
-              onClick={() => handleOnclick(1)}>
-              <Link to='/notification' className='link' style={{
-                color: 'inherit', margin: '5px 0px'
-              }}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <NotificationsActiveOutlinedIcon />
-                  </ListItemIcon>
-                  <Typography variant='body-1' >Notification</Typography>
-                </ListItemButton>
-              </Link>
-
-            </ListItem>
-
           </List>
         </nav>
         <nav aria-label="secondary mailbox folders" className='containerPanel'>
@@ -155,27 +146,12 @@ const Tabs = ({ indexTab, setIndexTab }) => {
               </Link>
 
             </ListItem>
-            <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
-              onClick={() => handleOnclick(1)}>
-              <Link to='/notification' className='link' style={{
-                color: 'inherit', margin: '5px 0px'
-              }}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <NotificationsActiveOutlinedIcon />
-                  </ListItemIcon>
-                  <Typography variant='body-1' >Notification</Typography>
-                </ListItemButton>
-              </Link>
-
-            </ListItem>
-
           </List>
         </nav>
         <nav aria-label="secondary mailbox folders" className='containerPanel'>
           <List className='link'>
-            <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}
-              onClick={() => {handleOnclick(2); handleIsOpenTeaching() }}>
+            <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}
+              onClick={() => {handleOnclick(1); handleIsOpenTeaching() }}>
 
               <ListItemButton>
                 <ListItemIcon>
@@ -192,54 +168,22 @@ const Tabs = ({ indexTab, setIndexTab }) => {
               <Divider/>
               <List>
                 <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
+                  {
+                    classTeaching.map(( specificClass ) => {
+                      return (
+                        <>
+                          <ListItemButton key={specificClass._id}
+                            onClick={() => handleNavigateToClassDetails(specificClass._id)}>
+                            <ClassRegisterd avatar={specificClass.background}
+                              name={specificClass.className}
+                              classCode={specificClass.codeClassName}
+                              classId={specificClass._id}/>
+                          </ListItemButton>
+                          <Divider/>
+                        </>
+                      )
+                    })
+                  }
                 </Stack>
               </List>
             </Collapse>
@@ -247,8 +191,8 @@ const Tabs = ({ indexTab, setIndexTab }) => {
         </nav>
         <nav aria-label="third mailbox folders" className='containerPanel'>
           <List className='link'>
-            <ListItem disablePadding className={`panel ${indexTab === 3 && 'highlight'}`}
-              onClick={() => {handleOnclick(3); handleIsOpenMyCourses() }}>
+            <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}
+              onClick={() => {handleOnclick(2); handleIsOpenMyCourses() }}>
 
               <ListItemButton>
                 <ListItemIcon>
@@ -265,92 +209,44 @@ const Tabs = ({ indexTab, setIndexTab }) => {
               <Divider/>
               <List>
                 <Stack spacing={2} pl={1} sx={{ height:'100%' }}>
-                  <ListItemButton>
+                  {/* <ListItemButton>
                     <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
                       title='2310-CLC-AWP-20KTPM2'
                       tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
-                  <ListItemButton>
-                    <ClassRegisterd avatar='https://i.pinimg.com/564x/45/9f/e6/459fe627958e37805d5444e8544480f7.jpg'
-                      title='2310-CLC-AWP-20KTPM2'
-                      tagline='Advanced Web Programming'/>
-                  </ListItemButton>
-                  <Divider/>
+                  </ListItemButton> */}
+                  {
+                    classStudying.map(( specificClass ) => {
+                      return (
+                        <>
+                          <ListItemButton key={specificClass._id}
+                            onClick={() => handleNavigateToClassDetails(specificClass._id)}>
+                            <ClassRegisterd avatar={specificClass.background}
+                              name={specificClass.className}
+                              classCode={specificClass.codeClassName}
+                              classId={specificClass._id}/>
+                          </ListItemButton>
+                          <Divider/>
+                        </>
+                      )
+                    })
+                  }
                 </Stack>
 
               </List>
             </Collapse>
           </List>
         </nav>
-        {/* <nav aria-label="third mailbox folders" className='containerPanel'>
-                        <List>
-                            <ListItem disablePadding className={`panel ${indexTab === 5 && 'highlight'}`}
-                                onClick={() => handleOnclick(5)}>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <SystemUpdateAltIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Archived class" />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding className={`panel ${indexTab === 6 && 'highlight'}`}
-                                onClick={() => handleOnclick(6)}>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <SettingsIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Setting" />
-                                </ListItemButton>
-                            </ListItem>
-                        </List>
-                    </nav> */}
       </Box>
     )
   )
 }
 
-function Menu() {
+function Menu({ classTeaching, classStudying }) {
   const [indexTab, setIndexTab] = useState(0)
 
   return (
-    <Tabs indexTab={indexTab} setIndexTab={setIndexTab}/>
+    <Tabs indexTab={indexTab} setIndexTab={setIndexTab}
+      classTeaching={classTeaching} classStudying={classStudying}/>
   )
 }
 

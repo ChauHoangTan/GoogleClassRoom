@@ -129,7 +129,7 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
                 Manage Classes
         </Typography>
         <Box sx={{ textAlign: 'right', mb: 2 }}>
-            <Button variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
+            <Button startIcon={<Delete/>} variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
                 Delete selected rows
             </Button>
         </Box>

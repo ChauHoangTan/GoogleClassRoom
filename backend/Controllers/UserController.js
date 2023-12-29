@@ -280,6 +280,27 @@ const countUseRoleJoin = async (req, res) => {
     }
 };
 
+const getStudentsListByUploadFile = async (req, res) => {
+    let { studentsListUpload } = req.body;
+
+    console.log(studentsListUpload)
+
+    try {
+        for(student of studentsListUpload) {
+            await User.findOneAndUpdate(
+                { email: student.Email },
+                {userId: student["Student Id"] },
+                {new: true}
+            )
+        }
+     
+        return res.status(200).json({message: "Student List is added Student Ids!" });
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     updateUserProfile,
     changeUserPassword,
@@ -291,5 +312,6 @@ module.exports = {
     updateUser,
     countUserMethodLogin,
     countUseRoleJoin,
-    getAllEmailUser
+    getAllEmailUser,
+    getStudentsListByUploadFile,
 }

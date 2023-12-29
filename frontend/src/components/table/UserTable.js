@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Avatar, Box, Grid, IconButton, Tooltip, Typography, Button } from '@mui/material'
 import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
@@ -8,15 +8,51 @@ import Loader from '../notification/Loader'
 import { useSelector } from 'react-redux'
 import ModalEditUser from '../Auth/Modal/ModalEditUser'
 import CustomNoRowsOverlay from './CustomNoRowsOverlay'
+import UploadIcon from '@mui/icons-material/Upload'
+import { styled } from '@mui/material/styles'
+import Papa from 'papaparse'
 
-function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel }) {
+function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel, isUploadLoading, adminUpdateStudentIds }) {
 
   const [isOpen, setIsOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5)
   const [rowId, setRowId] = useState(null)
   const [userRow, setUserRow] = useState(null)
-
   const isOpenMenu = useSelector(state => state.isOpenMenu)
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1
+  })
+
+  const readFileCSV = async (e) => {
+    const selectedFile = e.target.files[0]
+    const result = await read(selectedFile)
+    let studentsListUpload = []
+
+    result.data.map(data => {
+      studentsListUpload.push(data)
+    })
+    adminUpdateStudentIds(studentsListUpload)
+  }
+
+  const read = (file) => {
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        complete: (result) => {
+          resolve(result)
+        },
+        header: true // Nếu CSV có header (tên cột)
+      })
+    })
+  }
 
   const handleOpen = () => {
     setIsOpen(!isOpen)
@@ -141,12 +177,17 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                 Manage Users
           </Typography>
           <Box sx={{ textAlign: 'right', mb: 2 }}>
-            <Button variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
+            <Button component="label" variant='contained' startIcon={<UploadIcon />} disabled={ isLoading || isUploadLoading } >
+                Upload Student Ids
+                <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
+            </Button>
+
+            <Button startIcon={<Delete/>} sx={{ ml: 2 }} variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
                 Delete selected rows
             </Button>
           </Box>
           {
-            isLoading ? (
+            isLoading || isUploadLoading ? (
               <Loader />
             ) : (
               <DataGrid

@@ -18,6 +18,7 @@ const rootReducer = combineReducers({
   adminGetAllUsers: User.adminGetAllUsersReducer,
   adminDeleteUser: User.adminDeleteUserReducer,
   adminEditUser: User.adminEditUserReducer,
+  adminUpdateStudentIds: User.adminUpdateStudentIdsReducer,
 
   //Class reducer
   userGetAllStudents: Class.userGetAllStudentsReducer,

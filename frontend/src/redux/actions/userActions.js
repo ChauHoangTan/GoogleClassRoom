@@ -77,20 +77,36 @@ const deleteUserAction = (id) => async (dispatch) => {
   }
 }
 
-// update profile action
-const updateUserAction = (id, user) => async (dispatch) => {
+// ADMIN UPDATE STUDENT IDS REQUEST
+const adminUpdateStudentIdsAction = (studentsListUpload) => async (dispatch) => {
   try {
-    dispatch({ type: userConstants.UPDATE_USER_REQUEST })
-    const response = await userApi.updateUserService(id, user)
+    dispatch({ type: userConstants.UPDATE_STUDENT_IDS_REQUEST })
+    const response = await userApi.adminUploadStudentList(studentsListUpload)
     dispatch({
-      type: userConstants.UPDATE_USER_SUCCESS,
+      type: userConstants.UPDATE_STUDENT_IDS_SUCCESS,
       payload: response
     })
-    toast.success('User Edit successfully')
+    toast.success('Student List is added Student Ids!')
   } catch (error) {
-    ErrorsAction(error, dispatch, userConstants.UPDATE_USER_FAIL)
+    ErrorsAction(error, dispatch, userConstants.UPDATE_STUDENT_IDS_FAIL)
   }
 }
+
+// update profile action
+const updateUserAction = (id, user) => async (dispatch) => {
+    try {
+      dispatch({ type: userConstants.UPDATE_USER_REQUEST })
+      const response = await userApi.updateUserService(id, user)
+      dispatch({
+        type: userConstants.UPDATE_USER_SUCCESS,
+        payload: response
+      })
+      toast.success('User Edit successfully')
+    } catch (error) {
+      ErrorsAction(error, dispatch, userConstants.UPDATE_USER_FAIL)
+    }
+  }
+
 
 export {
   changePasswordAction,
@@ -98,5 +114,6 @@ export {
   getProfileAction,
   getAllUsersAction,
   deleteUserAction,
-  updateUserAction
+  updateUserAction,
+  adminUpdateStudentIdsAction,
 }

@@ -24,12 +24,15 @@ router.delete("/all/:id", passport.authenticate('jwt', { session: false }), admi
 
 router.post("/block/:id", passport.authenticate('jwt', { session: false }), admin, userController.blockUser);
 
-router.post("/ban/:id", passport.authenticate('jwt', { session: false }), admin, userController.banUser);
+router.post("/ban/:id", passport.authenticate
+('jwt', { session: false }), admin, userController.banUser);
 
 router.put("/all/:id", passport.authenticate('jwt', { session: false }), admin, userController.updateUser);
 
 router.get("/count-method-login", passport.authenticate('jwt', { session: false }), admin, userController.countUserMethodLogin);
 
 router.get("/count-role-join", passport.authenticate('jwt', { session: false }), admin, userController.countUseRoleJoin);
+
+router.post("/students/upload", passport.authenticate('jwt', { session: false }), userController.getStudentsListByUploadFile);
 
 module.exports = router;

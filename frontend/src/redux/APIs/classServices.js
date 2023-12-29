@@ -81,6 +81,12 @@ const getAllTypeOfStudentsService = async (id) => {
   return data
 }
 
+// Leave of class
+const leaveThisClass = async (classId) => {
+  const { data } = await AxiosJWT.post('/class/leaveThisClass', { classId: classId })
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -131,5 +137,6 @@ export {
   sendInvitationByEmailService,
   uploadStudentList,
   getAllTypeOfStudentsService,
-  getStudentIdList
+  getStudentIdList,
+  leaveThisClass
 }

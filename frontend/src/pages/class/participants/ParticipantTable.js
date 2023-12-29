@@ -124,7 +124,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { kickUserOutOfClass } from '../../../redux/APIs/classServices'
 import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { getAllTypeOfStudentsAction } from '../../../redux/actions/classActions'
+import { getAllTypeOfStudentsAction, getAllTeachersAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 
@@ -143,23 +143,30 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
   const dispatch = useDispatch()
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { userInfo } = useSelector(state => state.userLogin)
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   let { classes : classInfo } = useSelector(
     (state) => state.userGetClassByID
   )
 
   classInfo = classInfo?.data
+  const isMainTeacher = classInfo.teachers[0] === userInfo._id
 
 
   const handleKickUser = (user) => {
-    console.log('user', user)
 
     const fetchData = async () => {
       try {
-        const userId = user.userId
+        let userId = ''
+        if (!isTeacherTable) {
+          userId = user.userId
+        }
         const id = user._id
         const result = await kickUserOutOfClass(classId, id, userId)
         toast.success(result.message)
         dispatch(getAllTypeOfStudentsAction(classId))
+        dispatch(getAllTeachersAction(classId))
       } catch (error) {
         toast.error(error.response.data.message)
       }
@@ -195,7 +202,7 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
           valueGetter: (params) => `${params.row.lastName} ${params.row.firstName}`
         }
       case 'status':
-        return {
+        return !isTeacherTable && {
           field: 'status',
           headerName: column.label,
           renderCell: (params) => (
@@ -219,18 +226,16 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
           flex: 1 // Set a flexible width for the column
         }
       case 'isTeacher':
-        return isTeacherTable
-          ? null
-          : {
-            field: 'isTeacher',
-            headerName: column.label,
-            renderCell: (params) => (
-              <IconButton disabled={!classInfo.isTeacherOfThisClass} onClick={() => {handleKickUser(params.row)}}>
-                <RemoveCircleOutlineIcon />
-              </IconButton>
-            ),
-            flex: 1 // Set a flexible width for the column
-          }
+        return {
+          field: 'isTeacher',
+          headerName: column.label,
+          renderCell: (params) => (
+            <IconButton disabled={isTeacherTable ? isMainTeacher ? false: true : !classInfo.isTeacherOfThisClass} onClick={() => {handleKickUser(params.row)}}>
+              <RemoveCircleOutlineIcon />
+            </IconButton>
+          ),
+          flex: 1 // Set a flexible width for the column
+        }
       default:
         return null
       }

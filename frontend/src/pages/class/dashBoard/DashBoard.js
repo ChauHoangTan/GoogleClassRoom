@@ -1,4 +1,4 @@
-import { Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Grid, IconButton, Stack, Typography, Menu, MenuItem } from '@mui/material'
 import './style.scss'
 import Container from '@mui/material/Container'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
@@ -14,8 +14,54 @@ import copy from 'clipboard-copy'
 import { useParams } from 'react-router'
 import { getAllGradeCompositionByClassIdAction } from '../../../redux/actions/gradeActions'
 import { mapOrder } from '../../../utils/SortOrderArray/mapOrder'
+import EditIcon from '@mui/icons-material/Edit'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+import { leaveThisClass } from '../../../redux/APIs/classServices'
+import { useNavigate } from 'react-router-dom'
+import { changStateAction } from '../../../redux/actions/menuActions'
+import { convertTime } from '../../../utils/timeConvert/timeConvert'
 
 const HeadComponent = ({ name, title, background }) => {
+  const [anchorEl, setAnchorEl] = useState(null)
+  const { classId } = useParams()
+  const navigate = useNavigate()
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleEditClass = () => {
+    // Handle logic for editing class
+    handleClose()
+  }
+
+  const dispatch = useDispatch()
+
+  const handleLeaveClass = () => {
+
+    const fetchData = async () => {
+      try {
+        const result = await leaveThisClass(classId)
+        toast.success(result.message)
+        dispatch(changStateAction())
+        navigate('/home', { replace: true, state: { reload: true } })
+      } catch (error) {
+        toast.error(error.response.data.message)
+      }
+    }
+    fetchData()
+
+    handleClose()
+  }
+
+  const { isLoading: classLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
   return (
     <Stack className='headComponent'>
       <img src={background}/>
@@ -23,9 +69,27 @@ const HeadComponent = ({ name, title, background }) => {
         <Typography className='name' variant='h4'>{name}</Typography>
         <Typography className='title' variant='h6'>{title}</Typography>
       </Stack>
-      <IconButton>
+      <IconButton onClick={handleClick}>
         <InfoOutlinedIcon sx={{ transform:'scale(1.2)' }}/>
       </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {
+          classInfo?.data?.isTeacherOfThisClass &&
+            <MenuItem onClick={handleEditClass}>
+              <EditIcon fontSize="small" style={{ marginRight: '8px' }} />
+            Edit Class
+            </MenuItem>
+        }
+
+        <MenuItem onClick={() => {handleLeaveClass()}}>
+          <ExitToAppIcon fontSize="small" style={{ marginRight: '8px' }} />
+          Leave Class
+        </MenuItem>
+      </Menu>
     </Stack>
   )
 }
@@ -72,21 +136,30 @@ const ApproachJoin = ({ approach, code }) => {
     }
   }
 
+  function formatNumberWithDashes(number) {
+    if (!number)
+      return
+
+    const numberString = number.toString()
+    const parts = []
+
+    for (let i = numberString.length; i > 0; i -= 3) {
+      parts.unshift(numberString.slice(Math.max(0, i - 3), i))
+    }
+
+    return parts.join('-')
+  }
+
   return (
     <Stack className='approachJoin component' spacing={1} mt={1}>
       <Typography variant='body-1' sx={{ paddingLeft:'5px' }}>By {approach}</Typography>
       <Stack direction='row' alignItems='center'>
         <Stack className='code' direction='row' alignItems='center'>
-          <Typography variant='body-1'>{approach === 'link' ? islink : code}</Typography>
+          <Typography variant='body-1'>{approach === 'link' ? islink : formatNumberWithDashes(code)}</Typography>
         </Stack>
-        {
-          isLoading ?
-            < Loader/>
-            :
-            <IconButton onClick={handleOnClickCopy}>
-              <ContentCopyOutlinedIcon/>
-            </IconButton>
-        }
+        <IconButton onClick={handleOnClickCopy}>
+          <ContentCopyOutlinedIcon/>
+        </IconButton>
       </Stack>
     </Stack>
   )
@@ -118,9 +191,8 @@ const NotificationItem = ({ title, composition, time }) => {
         </div>
         <Stack sx={{ flexGrow:'1' }}>
           <Typography>{title}: <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{composition}</Typography></Typography>
-          <Typography variant='body-2' sx={{ fontStyle:'italic' }}>{time}</Typography>
+          <Typography variant='body-2' sx={{ fontStyle:'italic' }}>{convertTime(time)}</Typography>
         </Stack>
-        <IconButton><MoreVertOutlinedIcon/></IconButton>
       </Stack>
     </Container>
   )
@@ -168,11 +240,9 @@ const StreamItem = ({ list }) => {
   return (
     <Stack className='component'>
       <Typography variant='h6'>Stream</Typography>
-      {orderedGradeCompositionList.map((item, index) => {
-        return (
-          <NotificationItem key={index} title='Teacher posted a new assignment ' composition={item.name} time={item.time}/>
-        )
-      })}
+      {orderedGradeCompositionList.map((item, index) => (
+        item.isPublic && <NotificationItem key={index} title='Teacher posted a new assignment' composition={item.name} time={item.time} />
+      ))}
     </Stack>
   )
 }

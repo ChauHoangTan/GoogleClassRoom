@@ -9,6 +9,12 @@ const getAllMyClassesService = async () => {
   return data
 }
 
+// Get all class of user
+const getAllClassTeachAndStudyByID = async () => {
+  const { data } = await AxiosJWT.get('/class/allClass')
+  return data
+}
+
 // Create new class API
 const createNewClassService = async (info) => {
   const { data } = await AxiosJWT.post('/class/createNewClass', info)
@@ -81,6 +87,18 @@ const getAllTypeOfStudentsService = async (id) => {
   return data
 }
 
+// Leave of class
+const leaveThisClass = async (classId) => {
+  const { data } = await AxiosJWT.post('/class/leaveThisClass', { classId: classId })
+  return data
+}
+
+// Kick user out of class
+const kickUserOutOfClass = async (classId, id, userId) => {
+  const { data } = await AxiosJWT.post('/class/kickUserOutOfClass', { classId: classId, id: id, userId: userId })
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -101,7 +119,7 @@ const updateClassService = async(id, classData) => {
   return data
 }
 
-// admin upload student list
+// user upload student list
 const uploadStudentList = async(studentsListUpload, classId) => {
   const { data } = await AxiosJWT.post('/class/students/upload', { studentsListUpload, classId })
   return data
@@ -113,8 +131,14 @@ const getStudentIdList = async(classId) => {
   return data
 }
 
+const getRoleInClassByUserId = async(classId) => {
+  const { data } = await AxiosJWT.post('/class/getRoleInClass', { classId })
+  return data
+}
+
 export {
   getAllClassesService,
+  getAllClassTeachAndStudyByID,
   deleteClassService,
   updateClassService,
   getAllMyClassesService,
@@ -131,5 +155,8 @@ export {
   sendInvitationByEmailService,
   uploadStudentList,
   getAllTypeOfStudentsService,
-  getStudentIdList
+  getStudentIdList,
+  leaveThisClass,
+  getRoleInClassByUserId,
+  kickUserOutOfClass
 }

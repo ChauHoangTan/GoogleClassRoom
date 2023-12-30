@@ -43,7 +43,7 @@ body{
         
         .grid1{
             border-right: 2px solid rgb(199, 199, 199);
-            transition: width 0.5s ease;
+            transition: width 0.35s ease;
             display: flex;
             width: 300px;
             height: 87.5vh;
@@ -78,8 +78,15 @@ body{
             }
         }
     
-        .grid1.hide{
+        .grid1.hide.admin{
             width: 70px;
+        }
+        .grid1.hide.user{
+            width: 70px;
+        }
+
+        .grid1.hide:hover{
+            width: 300px;
         }
     
         .grid2{

@@ -1,7 +1,7 @@
 import { Container, Typography, Card, CardContent, Stack, IconButton, MenuItem, Menu, ListItemIcon, ListItemText, Box, TextField, Grid } from '@mui/material'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import PreviewIcon from '@mui/icons-material/Preview'
 import DeleteIcon from '@mui/icons-material/Delete'
 import * as React from 'react'
@@ -18,12 +18,13 @@ import toast from 'react-hot-toast'
 import { getAllReviewGradeCompositionAction, getAllReviewGradeCompositionByStudentIdAction } from '../../../../redux/actions/gradeActions'
 import { updateReviewGrade } from '../../../../redux/APIs/gradeServices'
 import Comment from '../Comment'
+import { SocketContext } from '../../../../Context/SocketProvider'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-function CardGradeReview ({ data }) {
+function CardGradeReview ({ data, isShowDetail }) {
   const title = 'Student need to review assignment: '
   const composition = data?.composition
   const time = convertTime(data?.time)
@@ -68,6 +69,8 @@ function CardGradeReview ({ data }) {
 
   const { classId } = useParams()
 
+  const { socket } = useContext(SocketContext)
+
   const { userInfo } = useSelector(
     (state) => state.userLogin
   )
@@ -98,6 +101,17 @@ function CardGradeReview ({ data }) {
       if (result.success) {
         dispatch(getAllReviewGradeCompositionAction(classId))
         toast.success(result.message)
+
+        const notificationData = {
+          userSendId: userInfo?._id,
+          userReceiverId: data?.student_Id, // ID của sinh viên nhận thông báo
+          userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+          image: userInfo?.image,
+          content: `Teacher return result review ${data?.composition}`,
+          link: `/class/${classId}/review/${data?._id}`
+        }
+        console.log('notificationData', notificationData)
+        socket?.emit('post_data', notificationData)
       }
 
     } catch (error) {
@@ -125,6 +139,13 @@ function CardGradeReview ({ data }) {
   const { isLoading, isError, reviews, isSuccess } = useSelector(
     (state) => state.userGetAllReviewGradeCompositionByStudentId
   )
+
+  useEffect(() => {
+    // Check if is have url to show review detail
+    if (isShowDetail) {
+      handleClickOpenDialog()
+    }
+  }, [])
 
   return (
     <>
@@ -173,20 +194,20 @@ function CardGradeReview ({ data }) {
               }}
             >
               {status === 'Pending' ?
-                <>
-                  <MenuItem onClick={handleClickOpenDialog}>
+                [
+                  <MenuItem key="review" onClick={handleClickOpenDialog}>
                     <ListItemIcon>
                       <PreviewIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Review this article</ListItemText>
-                  </MenuItem>
-                  <MenuItem disabled onClick={handleClose}>
+                  </MenuItem>,
+                  <MenuItem key="delete" disabled onClick={handleClose}>
                     <ListItemIcon>
                       <DeleteIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Delete review request</ListItemText>
                   </MenuItem>
-                </> :
+                ] :
                 <MenuItem onClick={() => {handleClickOpenDialog(), handleClose()}}>
                   <ListItemIcon>
                     <PreviewIcon fontSize="small" />
@@ -332,7 +353,7 @@ function CardGradeReview ({ data }) {
                   Related reviews
                 </Typography>
 
-                <Stack spacing={1} py={1}>
+                <Stack spacing={1} py={1} sx={{ maxHeight: '100%', overflowY: 'auto' }}>
                   {!isLoading ? reviews.data?.allReviews.map((data, index) => (
                     <CardRelatedReview key={index} data={data} close={handleCloseDialog} />
                   )): <></>}
@@ -343,7 +364,7 @@ function CardGradeReview ({ data }) {
             </Grid>
           </Grid>
 
-          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} />
+          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} student_Id={data?.student_Id} composition={data?.composition} reviewId={data?._id}/>
         </Dialog>
       </React.Fragment>
     </>
@@ -392,6 +413,8 @@ function CardRelatedReview ({ data, close }) {
     (state) => state.userLogin
   )
 
+  const { socket } = useContext(SocketContext)
+
   const dispatch = useDispatch()
 
   const handleReturnResult = async () => {
@@ -418,6 +441,19 @@ function CardRelatedReview ({ data, close }) {
       if (result.success) {
         dispatch(getAllReviewGradeCompositionAction(classId))
         toast.success(result.message)
+
+        console.log('data', data)
+
+        const notificationData = {
+          userSendId: userInfo?._id,
+          userReceiverId: data?.student_Id, // ID của sinh viên nhận thông báo
+          userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+          image: userInfo?.image,
+          content: `Teacher return result review ${data?.composition}`,
+          link: `/class/${classId}/review/${data?._id}`
+        }
+        console.log('notificationData', notificationData)
+        socket?.emit('post_data', notificationData)
       }
 
     } catch (error) {
@@ -488,21 +524,21 @@ function CardRelatedReview ({ data, close }) {
                 'aria-labelledby': 'basic-button'
               }}
             >
-              {status == 'Pending' ?
-                <>
-                  <MenuItem onClick={handleClickOpenDialog}>
+              {status === 'Pending' ?
+                [
+                  <MenuItem key="review" onClick={handleClickOpenDialog}>
                     <ListItemIcon>
                       <PreviewIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Review this article</ListItemText>
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
+                  </MenuItem>,
+                  <MenuItem key="delete" onClick={handleClose}>
                     <ListItemIcon>
                       <DeleteIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Delete review request</ListItemText>
                   </MenuItem>
-                </> :
+                ] :
                 <MenuItem onClick={() => {handleClickOpenDialog(), handleClose()}}>
                   <ListItemIcon>
                     <PreviewIcon fontSize="small" />
@@ -659,14 +695,14 @@ function CardRelatedReview ({ data, close }) {
             </Grid>
           </Grid>
 
-          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} />
+          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} student_Id={data?.student_Id} composition={data?.composition} reviewId={data?._id}/>
         </Dialog>
       </React.Fragment>
     </>
   )
 }
 
-function GradeReviewPending ({ reviewList }) {
+function GradeReviewPending ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
       borderRadius: 5,
@@ -679,18 +715,23 @@ function GradeReviewPending ({ reviewList }) {
       </Typography>
 
       <Stack spacing={1} py={1}>
-        {reviewList && reviewList.map((data, index) => (
-          <CardGradeReview
-            key={index}
-            data={data}
-          />
-        ))}
+        {reviewList &&
+          reviewList.map((data, index) => {
+            const isShowDetail = data._id === isShowReview
+            return (
+              <CardGradeReview
+                key={index}
+                data={data}
+                isShowDetail={isShowDetail}
+              />
+            )
+          })}
       </Stack>
     </Container>
   )
 }
 
-function GradeReviewed ({ reviewList }) {
+function GradeReviewed ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
       borderRadius: 5,
@@ -703,12 +744,17 @@ function GradeReviewed ({ reviewList }) {
       </Typography>
 
       <Stack spacing={1} py={1}>
-        {reviewList && reviewList.map((data, index) => (
-          <CardGradeReview
-            key={index}
-            data={data}
-          />
-        ))}
+        {reviewList &&
+          reviewList.map((data, index) => {
+            const isShowDetail = data._id === isShowReview
+            return (
+              <CardGradeReview
+                key={index}
+                data={data}
+                isShowDetail={isShowDetail}
+              />
+            )
+          })}
       </Stack>
     </Container>
   )
@@ -721,7 +767,7 @@ export default function ReviewStudent () {
     (state) => state.userGetAllReviewGradeComposition
   )
 
-  const { classId } = useParams()
+  const { classId, reviewId } = useParams()
 
   useEffect(() => {
     dispatch(getAllReviewGradeCompositionAction(classId))
@@ -735,9 +781,9 @@ export default function ReviewStudent () {
     <>
       <Typography gutterBottom variant="h4" sx={{ my: 1, px: 3 }} >History</Typography>
 
-      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []}/>
+      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []} isShowReview={reviewId}/>
 
-      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []}/>
+      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []} isShowReview={reviewId}/>
     </>
   )
 }

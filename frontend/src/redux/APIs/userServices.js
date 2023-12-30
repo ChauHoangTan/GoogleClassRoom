@@ -59,6 +59,14 @@ const countUsersByRoleJoinService = async () => {
   return data
 }
 
+// admin upload student list
+const adminUploadStudentList = async(studentsListUpload) => {
+    console.log(studentsListUpload)
+    const { data } = await AxiosJWT.post('/users/students/upload', { studentsListUpload })
+    return data
+  }
+
+
 export {
   changePasswordService,
   updateProfileService,
@@ -68,5 +76,6 @@ export {
   updateUserService,
   countUsersByLoginMethodsService,
   countUsersByRoleJoinService,
-  getAllEmailUsersService
+  getAllEmailUsersService,
+  adminUploadStudentList
 }

@@ -4,6 +4,13 @@ import toast from 'react-hot-toast'
 import { deleteClassAction, getAllClassesAction } from '../../../redux/actions/classActions'
 import ClassTable from '../../../components/table/ClassTable'
 import { SocketContext } from '../../../Context/SocketProvider'
+import { styled } from '@mui/system';
+
+const StyledClassTable = styled('div')({
+    transform: 'scale(0.9)',
+    transformOrigin: 'top left',
+    width: 'calc(100% / 0.9)',
+  });
 
 const Classes = () => {
   const dispatch = useDispatch()
@@ -63,7 +70,9 @@ const Classes = () => {
   }
 
   return (
-    <ClassTable deleteHandler={deleteClassHandler} isLoading={isLoading} classes={classes} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
+    <StyledClassTable>
+        <ClassTable deleteHandler={deleteClassHandler} isLoading={isLoading} classes={classes} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
+    </StyledClassTable>
   )
 }
 

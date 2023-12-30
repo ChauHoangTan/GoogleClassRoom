@@ -1,7 +1,7 @@
 import { Container, Typography, Card, CardContent, Divider, Stack, IconButton, MenuItem, Menu, ListItemIcon, ListItemText, Box, TextField } from '@mui/material'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import PreviewIcon from '@mui/icons-material/Preview'
 import * as React from 'react'
 import Button from '@mui/material/Button'
@@ -16,6 +16,7 @@ import { getAllGradeCompositionByStudentId, createNewReviewGrade } from '../../.
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
+import { SocketContext } from '../../../../Context/SocketProvider'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -74,6 +75,14 @@ function CardGrade ({ data }) {
 
   const { classId } = useParams()
 
+  let { isLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
+  const { socket } = useContext(SocketContext)
+
   const handleReviewRequest = async () => {
     handleCloseDialog()
 
@@ -84,9 +93,23 @@ function CardGrade ({ data }) {
     const explanation = isExplanation
     try {
       const result = await createNewReviewGrade(classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation)
-
-      if (result.success)
+      // Laays ID ow day
+      if (result.success) {
         toast.success(result.message)
+
+        classInfo.teachers.forEach((teacher) => {
+          const notificationData = {
+            userSendId: userInfo?._id,
+            userReceiverId: teacher, // ID của giáo viên nhận thông báo
+            userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+            image: userInfo?.image,
+            content: `Student request review ${data?.composition}`,
+            link: `/class/${classId}/review/${result.data?._id}`
+          }
+          console.log('notificationData', notificationData)
+          socket?.emit('post_data', notificationData)
+        })
+      }
     } catch (error) {
       toast.error(error.response.data.message)
     }

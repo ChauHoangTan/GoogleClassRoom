@@ -81,7 +81,8 @@ const updateGradeComposition = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
     }
 
-    return res.status(201).json({ success: true, data: updatedGradeComposition });
+    const grade = await Grade.findOne({ classId });
+    return res.status(201).json({ success: true, data: grade });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -116,9 +117,21 @@ const getAllGradeCompositionByStudentId = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Please mapping your account to see grade!' });
     }
 
-    const gradeModel = await Grade.findOne({ classId });
-    const gradeCompositionList = gradeModel.gradeCompositionList;
+    const mapOrder = (originalArray, orderArray, key) => {
+      if (!originalArray || !orderArray || !key) return []
+    
+      const clonedArray = [...originalArray]
+      const orderedArray = clonedArray.sort((a, b) => {
+        return orderArray.indexOf(a[key]) - orderArray.indexOf(b[key])
+      })
+    
+      return orderedArray
+    }
 
+    const gradeModel = await Grade.findOne({ classId });
+    const gradeCompositionListDB = gradeModel.gradeCompositionList;
+    const orderGradeCompositionListDB = gradeModel.orderGradeComposition;
+    const gradeCompositionList = mapOrder(gradeCompositionListDB, orderGradeCompositionListDB, '_id')
     let result = []
     gradeCompositionList.map((data) => {
       const foundStudentGrade = data.studentGradeList.find(item => item.studentId === studentId);
@@ -229,6 +242,26 @@ const editGradeComposition = async (req, res) => {
   }
 }
 
+const updateOrderGradeComposition = async (req, res) => {
+  const { classId, listOrderGradeComposition } = req.body;
+  try {
+
+    const gradeModel = await Grade.findOne({ classId });
+    gradeModel.orderGradeComposition = listOrderGradeComposition
+  
+    if (!gradeModel) {
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+    }
+
+    await gradeModel.save()
+
+    return res.status(201).json({ success: true, message: 'Success' });
+  } catch (error) {
+      console.error(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 const createNewReviewGrade = async (req, res) => {
   const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation } = req.body;
 
@@ -247,7 +280,17 @@ const createNewReviewGrade = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
     }
 
+    // Kiểm tra xem có review nào của studentId trong danh sách chưa
+    const hasReviewed = gradeComposition.reviewGradeList.some(
+      (review) => String(review.studentId) === String(studentId)
+    );
+
+    if (hasReviewed) {
+      return res.status(400).json({ success: false, message: 'Each grade can only be appealed once. If you want to review a gain please delete previous review' });
+    }
+
     const ReviewModel = mongoose.model('Review', Review);
+    const student_Id = req.user._id
 
     const newReview = new ReviewModel({
       classId,
@@ -255,14 +298,15 @@ const createNewReviewGrade = async (req, res) => {
       studentId,
       expectGrade,
       oldGrade,
-      explanation
+      explanation,
+      student_Id
     });
 
     gradeComposition.reviewGradeList.push(newReview);
     
     await grade.save();
 
-    return res.status(201).json({ success: true, message: 'Send request review success' });
+    return res.status(201).json({ success: true, message: 'Send request review success', data: newReview});
   } catch (error) {
       console.error(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -293,6 +337,10 @@ const createNewComment = async (req, res) => {
 
     if (!reviewGrade) {
       return res.status(404).json({ success: false, message: 'Cannot find Review Grade Composition' });
+    }
+
+    if (!req.user?.userId) {
+      return res.status(404).json({ success: false, message: 'Please mapping your account to comment' });
     }
 
     const CommentModel = mongoose.model('Comment', Comment);
@@ -587,6 +635,7 @@ module.exports = {
   getAllGradeCompositionByStudentId,
   uploadGradeComposition,
   editGradeComposition,
+  updateOrderGradeComposition,
   createNewReviewGrade,
   createNewComment,
   updateReviewGrade,

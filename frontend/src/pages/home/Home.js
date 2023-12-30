@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { createClassInfoValidation, joinClassByCodeFormInfoValidation } from '../../components/validation/classValidation'
 import { io } from 'socket.io-client'
+import { changStateAction } from '../../redux/actions/menuActions'
 
 
 const styleModalJoin = {
@@ -53,7 +54,6 @@ const ModalJoin = () => {
   const handleOpen = () => {
     setIsOpen(!isOpen)
   }
-  console.log('isLoading, isError, message, isSuccess', isLoading, isError, message, isSuccess)
 
   const {
     register,
@@ -75,6 +75,7 @@ const ModalJoin = () => {
     if (isSuccess) {
       dispatch({ type: 'JOIN_CLASS_BY_CODE_RESET' })
       dispatch(getAllMyClassesAction())
+      dispatch(changStateAction())
     }
     if (isError) {
       toast.error(isError)
@@ -91,7 +92,10 @@ const ModalJoin = () => {
         <PinIcon sx={{ mr:'5px' }}/>Join</Button>
       <Modal
         open={isOpen}
-        onClose={handleOpen}
+        onClose={() => {
+          handleOpen()
+          reset()
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -113,7 +117,7 @@ const ModalJoin = () => {
             sx={{ mt:'20px', width:'100%' }}
           />
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
-            <Button variant='contained' color='error' onClick={handleOpen}>Cancel</Button>
+            <Button variant='contained' color='error' onClick={() => {handleOpen(); reset() }}>Cancel</Button>
             <Button variant='contained' type="submit">Join</Button>
           </Stack>
         </Box>
@@ -159,6 +163,7 @@ const ModalNewClass = () => {
     if (isSuccess) {
       dispatch({ type: 'CREATE_CLASS_RESET' })
       dispatch(getAllMyClassesAction())
+      dispatch(changStateAction())
     }
     if (isError) {
       toast.error(isError)
@@ -176,7 +181,10 @@ const ModalNewClass = () => {
         <LibraryAddIcon sx={{ mr:'5px' }}/>New class</Button>
       <Modal
         open={isOpen}
-        onClose={handleOpen}
+        onClose={() => {
+          handleOpen()
+          reset()
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -206,16 +214,8 @@ const ModalNewClass = () => {
             label="Enter code class name"
             variant="outlined"
             sx={{ mt:'20px', width:'100%' }}/>
-          <TextField {...register('classId')}
-            error={!!errors.classId}
-            helperText={errors.classId?.message || ''}
-            required
-            name="classId" id="inputTitle"
-            label="Enter class ID"
-            variant="outlined"
-            sx={{ mt:'20px', width:'100%' }}/>
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
-            <Button variant='contained' color='error' onClick={handleOpen}>Cancel</Button>
+            <Button variant='contained' color='error' onClick={() => {handleOpen(); reset() }}>Cancel</Button>
             <Button type="submit" variant='contained'>Create</Button>
           </Stack>
         </Box>
@@ -225,18 +225,7 @@ const ModalNewClass = () => {
 }
 
 function Home() {
-    // useEffect(() => {
-    //     // Receive notifications from server
-    //     const socket = io('http://localhost:5000', {
-    //         withCredentials: true,
-    //         extraHeaders: {
-    //           'Access-Control-Allow-Origin': 'http://localhost:3000' // Đổi thành origin của bạn
-    //         }
-    //       });
-    //   console.log(socket)
-    
-    //   }, []);
-    
+  const [searchTerm, setSearchTerm] = useState('')
 
   return (
     <Stack id='home' direction='column'>
@@ -245,13 +234,9 @@ function Home() {
           <ModalJoin/>
           <ModalNewClass/>
         </Stack>
-        <Stack direction='row' justifyContent='center'><SearchBar/></Stack>
-        <Typography mt={2} mb={5} sx={{ fontStyle:'italic' }}>Search results: 3</Typography>
-        <HomePageContent/>
+        <Stack direction='row' justifyContent='center'><SearchBar setSearchTerm={setSearchTerm}/></Stack>
+        <HomePageContent searchTerm={searchTerm}/>
       </div>
-      <Stack alignItems='center' className='pagination'>
-        <Pagination count={10} size='large' shape='rounded' variant="outlined" color="primary" />
-      </Stack>
     </Stack>
   )
 }

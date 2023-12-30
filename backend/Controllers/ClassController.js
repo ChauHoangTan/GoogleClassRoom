@@ -141,6 +141,31 @@ const getAllClassByID = async (req, res) => {
     }
 }
 
+const getAllClassTeachAndStudyByID = async (req, res) => {
+    try {
+
+        // Check user authentication and permissions
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        // Find classes where the user's ID is in either teacherClassList or studentClassList
+
+        const classTeaching = await Class.find({
+            _id: { $in: user.teacherClassList } 
+        })
+
+        const classStudying = await Class.find({
+            _id: { $in: user.studentClassList } 
+        })
+
+        return res.status(200).json({ success: true, data: { classTeaching, classStudying} });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 // @des Delete class
 // @route Delete /api/class/:id
 const deleteClass = async (req, res) => {
@@ -169,6 +194,7 @@ const deleteClass = async (req, res) => {
 
         // find Class in DB and delete
         await Class.deleteMany({ _id: { $in: ids } });
+        await GradeModel.deleteMany({ classId: { $in: ids } });
 
         if(ids.length === 1) {
             return res.json({ message: "Class deleted successfully" });
@@ -179,13 +205,21 @@ const deleteClass = async (req, res) => {
     }
 }
 
+function objectIdToShortString(objectId) {
+    const hexString = objectId.toHexString();
+    const shortString = hexString.slice(-9);
+    const shortNumber = parseInt(shortString, 16) % 1e9;
+  
+    return shortNumber;
+}  
+
 const createNewClass = async (req, res) => {
-    const { classId, className, codeClassName } = req.body;
+    const { className, codeClassName } = req.body;
 
     try {
         // Validate input
-        if (!classId || !className) {
-            return res.status(400).json({ success: false, message: 'Please provide classId and className' });
+        if (!className) {
+            return res.status(400).json({ success: false, message: 'Please provide className' });
         }
 
         // Check user authentication and permissions
@@ -196,12 +230,9 @@ const createNewClass = async (req, res) => {
         const teachersIds = [user?._id]; 
         const teachersObjectIds = teachersIds.map(id =>new mongoose.Types.ObjectId(id));
 
-        const existingClass = await Class.findOne({ classId: classId });
-
-        if (existingClass) {
-            return res.status(400).json({ success: false, message: 'Please choose a different Code as this one already exists.' });
-        }
-
+        const min = 100000000; // Số nhỏ nhất với 9 chữ số
+        const max = 999999999; // Số lớn nhất với 9 chữ số    
+        const classId = Math.floor(Math.random() * (max - min + 1)) + min
         // Create a new class
         const newClass = await Class.create({
             classId,
@@ -214,6 +245,12 @@ const createNewClass = async (req, res) => {
         if (newClass && newClass._id) {
             // Get the ID of the newly created class
             const newClassId = newClass._id;
+
+            const classId = objectIdToShortString(newClassId)
+            newClass.classId = classId
+            console.log(newClass.classId)
+            await newClass.save()
+
             // Check if isAdmin not assign a role teacher to account admin
             if(!user?.isAdmin) {
                 // Add new class ID to the teacherClassList of the user
@@ -500,7 +537,7 @@ const getStudentsListByUploadFile = async (req, res) => {
             return res.status(404).json({ message: 'No class found' });
         }
 
-        studentList.sort((a,b) => a.userId - b.userId)
+        // studentList.sort((a,b) => a.userId - b.userId)
         classExist.studentsListUpload = studentsListUpload;
         console.log(studentsListUpload)
 
@@ -520,7 +557,7 @@ const getAllTypeOfStudents = async (req, res) => {
         const studentList = await Class.findById(classId)
         .populate({
             path: 'students',
-            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students' 
+            select: 'userId firstName lastName email phone image dob isVerifiedEmail isBanned students _id' 
         })
         .exec();
 
@@ -551,6 +588,7 @@ const getAllTypeOfStudents = async (req, res) => {
             isVerifiedEmail: student.isVerifiedEmail,
             isBanned: student.isBanned,
             students: student.students,
+            _id: student._id,
             status: 'not exist', // Vì đây là danh sách không chứa trong studentsListUpload
             };
         });
@@ -573,6 +611,7 @@ const getAllTypeOfStudents = async (req, res) => {
                 isVerifiedEmail: matchingStudent ? matchingStudent.isVerifiedEmail : '',
                 isBanned: matchingStudent ? matchingStudent.isBanned : '',
                 students: matchingStudent ? matchingStudent.students : '',
+                _id: matchingStudent ? matchingStudent._id : uploadStudent._id,
             };
 
             // Kiểm tra trạng thái và thêm vào resultObject
@@ -617,10 +656,155 @@ const getStudentIdListByUpload = async (req, res) => {
     }
 }
 
+const leaveThisClass = async (req, res) => {
+    const { classId } = req.body;
+    const userId = req.user.id;
+
+    try {
+        // Find the class in the ClassModel
+        const classData = await Class.findById(classId);
+
+        if (!classData) {
+            return res.status(404).json({ success: false, message: 'Class not found' });
+        }
+
+        // Check if the user is a teacher or student in the class
+        const isTeacher = classData.teachers.includes(userId);
+        const isStudent = classData.students.includes(userId);
+
+        if (!isTeacher && !isStudent) {
+            return res.status(403).json({ success: false, message: 'User is not a member of this class' });
+        }
+
+        // Check if the user is the main teacher of the class
+        const isMainTeacher = classData.teachers[0].equals(userId)
+        if (isMainTeacher) {
+            return res.status(403).json({ success: false, message: 'You are the main teacher of this class and cannot leave' });
+        }
+
+        // Update ClassModel: remove user from teachers or students list
+        if (isTeacher) {
+            classData.teachers.pull(userId);
+        }
+
+        if (isStudent) {
+            classData.students.pull(userId);
+        }
+
+        await classData.save();
+
+        const user = await User.findById(userId);
+
+        if (isTeacher) {
+            user.teacherClassList.pull(classId);
+        }
+
+        if (isStudent) {
+            user.studentClassList.pull(classId);
+        }
+
+        await user.save();
+
+        return res.status(200).json({ success: true, message: 'Leave success', user: user, class: classData  });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const kickUserOutOfClass = async (req, res) => {
+    const { classId, id, userId } = req.body;
+    console.log(' classId, id, userId',  classId, id, userId)
+    try {
+        // Find the class in the ClassModel
+        const classData = await Class.findById(classId);
+
+        if (!classData) {
+            return res.status(404).json({ success: false, message: 'Class not found' });
+        }
+
+        // Check if the user is a teacher or student in the class
+        const isTeacher = classData.teachers.includes(id);
+        const isStudent = classData.students.includes(id);
+        const isInListUpload = classData.studentsListUpload.some(student => student._id.equals(id) || student.userId === userId);
+
+        console.log('',isTeacher,isStudent,  isInListUpload)
+        if (!isTeacher && !isStudent && !isInListUpload) {
+            return res.status(403).json({ success: false, message: 'User is not a member of this class' });
+        }
+
+        // Check if the user is the main teacher of the class
+        const isMainTeacher = classData.teachers[0].equals(id)
+        if (isMainTeacher) {
+            return res.status(403).json({ success: false, message: 'You are the main teacher of this class and cannot leave' });
+        }
+
+        // Update ClassModel: remove user from teachers or students list
+        if (isTeacher) {
+            classData.teachers.pull(id);
+        }
+
+        if (isStudent) {
+            classData.students.pull(id);
+        }
+
+        if (isInListUpload) {
+            // Check if mapping situation (Because have tow _id at student temp and user)
+            classData.studentsListUpload.pull({ userId: userId })
+            // classData.studentsListUpload.pull({ _id: id });
+            console.log('id, userId', id, userId)
+        }
+
+        await classData.save();
+
+        if (!isInListUpload || ((isStudent || isTeacher) && isInListUpload)) {
+            const user = await User.findById(id);
+
+            if (isTeacher) {
+                user.teacherClassList.pull(classId);
+            }
+
+            if (isStudent) {
+                user.studentClassList.pull(classId);
+            }
+
+            await user.save();
+        }
+
+        return res.status(200).json({ success: true, message: 'Kick success', class: classData  });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const getRoleInClassByUserId = async (req, res) => {
+    const { classId } = req.body;
+    const userId = req.user.id;
+    try {
+        // Find the class in the ClassModel
+        const user = await User.findById(userId)
+        user.teacherClassList.map((item) => {
+            if( item.equals(classId)) {
+                return res.status(200).json({ success: true, message: 'Leave success', isTeacher: true });
+            }
+        })
+
+        user.studentClassList.map((item) => {
+            if( item.equals(classId)) {
+                return res.status(200).json({ success: true, message: 'Leave success', isTeacher: false });
+            }
+        })
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
 module.exports = {
     getAllClass,
     createNewClass,
     getAllClassByID,
+    getAllClassTeachAndStudyByID,
     getAllTeachers,
     getAllStudents,
     deleteClass,
@@ -635,5 +819,8 @@ module.exports = {
     receiveInvitateEmail,
     getStudentsListByUploadFile,
     getAllTypeOfStudents,
-    getStudentIdListByUpload
+    getStudentIdListByUpload,
+    leaveThisClass,
+    getRoleInClassByUserId,
+    kickUserOutOfClass
 }

@@ -232,14 +232,9 @@ const ApproachJoin = ({ code }) => {
           <Typography variant='body-1'>{islink}</Typography>
         </Stack>
         <IconButton>
-          {
-            isLoading ?
-              < Loader/>
-              :
-              <IconButton onClick={handleOnClickCopy}>
-                <ContentCopyOutlinedIcon/>
-              </IconButton>
-          }
+          <IconButton onClick={handleOnClickCopy}>
+            <ContentCopyOutlinedIcon/>
+          </IconButton>
         </IconButton>
       </Stack>
     </Stack>
@@ -262,6 +257,12 @@ export default function Participants() {
   const { isLoading: sendEmailLoading, isError: sendEmailError, isSuccess: sendEmailSuccess } = useSelector(
     (state) => state.userSendInvitationByEmail
   )
+
+  let { classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
 
   // useEffect
   useEffect(() => {
@@ -316,10 +317,12 @@ export default function Participants() {
   const [valueEmailStudentList, setValueEmailStudentList] = useState([])
 
   const handleOpenInviteTeacher = () => {
+    setValueEmailTeacherList([])
     setIsOpenInviteTeacher(!isOpenInviteTeacher)
   }
 
   const handleOpenInviteStudent = () => {
+    setValueEmailStudentList([])
     setIsOpenInviteStudent(!isOpenInviteStudent)
   }
 
@@ -410,33 +413,30 @@ export default function Participants() {
     <Box sx={{
       p: 2
     }}>
-      <Stack direction='row' justifyContent='end' spacing={3}>
-        <CSVLink data={csvData} filename='participants.csv'>
-          <Button variant='contained' startIcon={<FileDownloadIcon />}>
+      {
+        classInfo.isTeacherOfThisClass &&
+        <Stack direction='row' justifyContent='end' spacing={3} disabled={!classInfo.isTeacherOfThisClass}>
+          <CSVLink data={csvData} filename='participants.csv'>
+            <Button variant='contained' startIcon={<FileDownloadIcon />}>
             Download Student List
-          </Button>
-        </CSVLink>
-        <Button component="label" variant='contained' startIcon={<UploadIcon />}>
+            </Button>
+          </CSVLink>
+          <Button component="label" variant='contained' startIcon={<UploadIcon />}>
           Upload  Student List
-          <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
-        </Button>
-      </Stack>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <SearchBar />
-      </Box>
+            <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
+          </Button>
+        </Stack>
+      }
       {/* Teacher table */}
       <Box pt={4}>
-        <Typography variant='body2'>
-          Search result: 3
-        </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant='h6'>
-            Teacher
+            Teachers
           </Typography>
 
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
             <Typography variant='body2'>
-              3 teacher
+              Invite teacher
             </Typography>
 
             <IconButton onClick={handleOpenInviteTeacher}>
@@ -503,17 +503,14 @@ export default function Participants() {
 
       {/* Student table */}
       <Box pt={4}>
-        <Typography variant='body2'>
-          Search result: 3
-        </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant='h6'>
-            Student
+            Students
           </Typography>
 
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
             <Typography variant='body2'>
-              3 student
+              Invite student
             </Typography>
 
             <IconButton onClick={handleOpenInviteStudent}>

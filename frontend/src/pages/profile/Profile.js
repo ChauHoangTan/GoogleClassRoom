@@ -69,7 +69,6 @@ const EditProfile = () => {
     if (imageUpdateUrl !== imageUrl) {
       await deleteImageService(imageUpdateUrl)
     }
-    console.log(data, data.data)
     dispatch(
       updateProfileAction({
         ...data,
@@ -96,6 +95,7 @@ const EditProfile = () => {
       setValue('lastName', userInfo?.lastName)
       setValue('email', userInfo?.email)
       setValue('phone', userInfo?.phone)
+      setValue('userId', userInfo?.userId)
       if (userInfo?.dob !== '') {
         setDate(dayjs(userInfo?.dob))
       }
@@ -103,10 +103,12 @@ const EditProfile = () => {
     }
 
     if (editUserInfo) {
+        console.log(editUserInfo)
       setValue('firstName', editUserInfo?.firstName)
       setValue('lastName', editUserInfo?.lastName)
       setValue('email', editUserInfo?.email)
       setValue('phone', editUserInfo?.phone)
+      setValue('userId', editUserInfo?.userId)
       if (editUserInfo?.dob !== '') {
         setDate(dayjs(editUserInfo?.dob))
       }
@@ -204,6 +206,15 @@ const EditProfile = () => {
                       disabled
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      {...register('userId')}
+                      id='userId'
+                      label='Student ID'
+                      name='userId'
+                    />
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       name='firstName'
@@ -239,7 +250,6 @@ const EditProfile = () => {
                       id='phone'
                       label='Phone'
                       name='phone'
-                      required
                       {...register('phone')}
                       error={!!errors.phone}
                       helperText={errors.phone?.message || ''}

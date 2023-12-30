@@ -28,7 +28,7 @@ import { mapOrder } from '../../../../utils/SortOrderArray/mapOrder'
 import { arrayMove } from '@dnd-kit/sortable'
 import { CSVLink } from 'react-csv'
 import { useParams } from 'react-router-dom'
-import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition, editGradeComposition } from '../../../../redux/APIs/gradeServices'
+import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition, editGradeComposition, updateOrderGradeComposition, updateGradeComposition } from '../../../../redux/APIs/gradeServices'
 import { styled } from '@mui/material/styles'
 import Papa from 'papaparse'
 
@@ -156,6 +156,37 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     setGradeCompositionList(response.data.gradeCompositionList)
   }
 
+  const [isOpenEditGradeComposition, setIsOpenEditGradeComposition] = useState(false)
+
+  const handleOpenEditGradeComposition = () => {
+    setIsOpenEditGradeComposition(!isOpenEditGradeComposition)
+    setGradeCompositionTitle(composition)
+    setGradeCompositionPercent(percent)
+    setIsPublicCheckBox(isPublic)
+  }
+
+  const [gradeCompositionTitle, setGradeCompositionTitle] = useState('')
+  const handleOnChangeGradeCompositionTitle = (e) => {
+    setGradeCompositionTitle(e.target.value)
+  }
+  const [gradeCompositionPercent, setGradeCompositionPercent] = useState(0)
+  const handleOnChangeGradeCompositionPercent = (e) => {
+    setGradeCompositionPercent(e.target.value)
+  }
+  const [isPublicCheckBox, setIsPublicCheckBox] = useState(0)
+  const handleOnChangeIsPublic = (e) => {
+    setIsPublicCheckBox(!isPublicCheckBox)
+  }
+  const handleEditGradeComposition = async () => {
+    if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
+      const response = await updateGradeComposition(classId, id, gradeCompositionTitle, gradeCompositionPercent, isPublicCheckBox)
+      setGradeCompositionList(response.data.gradeCompositionList)
+      setOrderGradeComposition(response.data.orderGradeComposition)
+    }
+    setIsOpenEditGradeComposition(!isOpenEditGradeComposition)
+  }
+
+
   // const csvData = [
   //   ['StudentId', 'FullName']
   // ]
@@ -241,7 +272,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
           </Stack>
         </Stack>
         <Stack direction={'row'} alignItems='center'>
-          <Typography variant='h6' sx={{ fontStyle:'italic', mx: 5 }}>{percent}</Typography>
+          <Typography variant='h6' sx={{ fontStyle:'italic', mx: 5 }}>{percent}%</Typography>
           <IconButton fontSize='small'
             id="basic-button"
             aria-controls={open ? 'basic-menu' : undefined}
@@ -258,28 +289,85 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
             }}
           >
             <MenuItem onClick={() => {handleClose(); handleRemoveComposition() }}>
-              <Button variant='contained' color='error' startIcon={<RemoveCircleIcon />}>
+              <Button variant='contained' color='error' startIcon={<RemoveCircleIcon />} sx={{ width: '100%' }}>
                 Remove
               </Button>
             </MenuItem>
             <MenuItem>
-              <Button component="label" variant='contained' startIcon={<UploadIcon />}>
+              <Button component="label" variant='contained' startIcon={<UploadIcon />} sx={{ width: '100%' }}>
                 Upload
                 <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => {readFileCSV(e); handleClose()}}/>
               </Button>
             </MenuItem>
             <MenuItem>
-              <FormControlLabel control={<Checkbox checked={isPublic} />} label="Public" />
+              {/* <FormControlLabel control={<Checkbox checked={isPublic} />} label="Public" /> */}
+              <Button component="label" variant='contained' startIcon={<EditIcon />} sx={{ width: '100%' }}
+                onClick={handleOpenEditGradeComposition}>
+                Edit
+              </Button>
             </MenuItem>
           </Menu>
 
+          <Modal
+            open={isOpenEditGradeComposition}
+            onClose={handleOpenEditGradeComposition}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              bgcolor: 'background.paper',
+              border: '2px solid #005B48',
+              boxShadow: 24,
+              p: 4,
+              borderRadius: '20px'
+            }}>
+              <Typography gutterBottom id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold' }}>
+                Update
+              </Typography>
+
+              <Box py={2}>
+                <TextField id="outlined-basic" label="Grade composition title" variant="outlined" sx={{ width: '100%', pb: 2 }}
+                  value={gradeCompositionTitle} onChange={(e) => handleOnChangeGradeCompositionTitle(e)}/>
+
+                <TextField type='number' label="Percentage" variant="outlined" sx={{ width: '100%' }}
+                  value={gradeCompositionPercent} onChange={(e) => handleOnChangeGradeCompositionPercent(e)}/>
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value={isPublicCheckBox}
+                      onClick={handleOnChangeIsPublic}
+                    />
+                  }
+                  label='Public grade'
+                />
+              </Box>
+
+              <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button onClick={handleEditGradeComposition}>
+                  Update
+                </Button>
+
+                <Button onClick={handleOpenEditGradeComposition} color='secondary'>
+                  Cancel
+                </Button>
+
+              </Container>
+
+            </Box>
+          </Modal>
         </Stack>
       </CardContent>
     </Card>
   )
 }
 
-function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows }) {
+function GradeComposition ({ classId, orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows }) {
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
@@ -300,13 +388,18 @@ function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gr
 
   useEffect(() => {
     SetorderedGradeCompostionState (mapOrder(gradeCompositionList, orderGradeComposition, '_id'))
+    setGradeCompositionList(mapOrder(gradeCompositionList, orderGradeComposition, '_id'))
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gradeCompositionList, orderGradeComposition])
+  }, [orderGradeComposition])
 
 
   const handleDragStart = (event) => {
     setActiveDragItemID(event?.active?.id)
     setActiveDragItemData(event?.active?.data?.current)
+  }
+
+  const handleUpdateOrderGradeComposition = async (listOrderGradeComposition) => {
+    await updateOrderGradeComposition(classId, listOrderGradeComposition)
   }
 
   const handleDragEnd = (event) => {
@@ -324,6 +417,8 @@ function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gr
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
       console.log('After move', dndOrderedGradeCompostionState)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
+      setGradeCompositionList(dndOrderedGradeCompostionState)
+      handleUpdateOrderGradeComposition(dndOrderedGradeCompostionState)
     }
 
     setActiveDragItemID(null)
@@ -386,7 +481,7 @@ function GradeComposition ({ orderGradeComposition, setOrderGradeComposition, gr
                 title={'Dev posted a new assignment'}
                 composition={name}
                 time={convertTime(time)}
-                percent={`${scale}%`}
+                percent={scale}
                 isPublic={isPublic}
                 setOrderGradeComposition={setOrderGradeComposition}
                 setGradeCompositionList={setGradeCompositionList}
@@ -595,22 +690,21 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       <Typography gutterBottom variant="h5" >
           Grade
       </Typography>
-      <Stack direction='row' justifyContent='end' spacing={3} sx={{ mb:'5px' }}>
+      <Stack direction='row' justifyContent='end' spacing={3} sx={{ mb:'5px', fontSize:'13px' }}>
         <CSVLink data={csvDataDownload()} filename='gradeBoard.csv'>
-          <Button variant='contained' startIcon={<FileDownloadIcon />} sx={{ fontSize:'13px', mb:'5px' }}
-            onClick={changeState}>
+          <Button variant='contained' startIcon={<FileDownloadIcon />}>
               Export
           </Button>
         </CSVLink>
-      {!isEdit ?
-        <Button variant='contained' startIcon={<EditIcon />} sx={{ fontSize:'13px', mb:'5px' }}
-          onClick={changeState}>
-            Edit
-        </Button> :
-        <Button variant='contained' color='primary' startIcon={<BeenhereIcon />} sx={{ fontSize:'13px', mb:'5px' }}
-          onClick={() => {changeState(); editGradeCompositionAPI() }}>
-          Save
-      </Button>}
+        {!isEdit ?
+          <Button variant='contained' startIcon={<EditIcon />}
+            onClick={changeState}>
+              Edit
+          </Button> :
+          <Button variant='contained' color='primary' startIcon={<BeenhereIcon />}
+            onClick={() => {changeState(); editGradeCompositionAPI() }}>
+            Save
+          </Button>}
       </Stack>
       <GradeTable columns={columns} rows={rows} setRows={setRows} isEdit={isEdit}/>
     </Container>
@@ -635,6 +729,7 @@ export default function GradeTeacher () {
         if (response.orderGradeComposition.length != orderGradeComposition.length) {
           setOrderGradeComposition(response.orderGradeComposition)
           setGradeCompositionList(response.gradeCompositionList)
+          console.log(response.gradeCompositionList)
           // console.log( orderGradeComposition, gradeCompositionList )
         }
       } catch (error) {
@@ -713,7 +808,7 @@ export default function GradeTeacher () {
         </CSVLink>
       </Box>
 
-      <GradeComposition orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
+      <GradeComposition classId={classId} orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
         gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList}
         rows={rows} setRows={setRows}/>
       <StudentGrade classId={classId} gradeCompositionList={gradeCompositionList} studentList={studentList}

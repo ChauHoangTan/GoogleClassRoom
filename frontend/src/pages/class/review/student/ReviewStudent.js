@@ -1,7 +1,7 @@
 import { Container, Typography, Card, CardContent, Stack, IconButton, MenuItem, Menu, ListItemIcon, ListItemText, Box, TextField } from '@mui/material'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import PreviewIcon from '@mui/icons-material/Preview'
 import DeleteIcon from '@mui/icons-material/Delete'
 import * as React from 'react'
@@ -18,12 +18,13 @@ import toast from 'react-hot-toast'
 import { convertTime } from '../../../../utils/timeConvert/timeConvert'
 import { getAllReviewGradeCompositionByStudentIdAction } from '../../../../redux/actions/gradeActions'
 import Comment from '../Comment'
+import { SocketContext } from '../../../../Context/SocketProvider'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-function CardGradeReview ({ data }) {
+function CardGradeReview ({ data, isShowDetail }) {
 
   const title = 'Student need to review assignment: '
   const composition = data?.composition
@@ -45,6 +46,14 @@ function CardGradeReview ({ data }) {
 
   const { classId } = useParams()
 
+  let { isLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
+  const { socket } = useContext(SocketContext)
+
   const dispatch = useDispatch()
 
   const handleReviewRequest = async () => {
@@ -62,10 +71,22 @@ function CardGradeReview ({ data }) {
     const explanation = isExplanation
     try {
       const result = await updateReviewGrade(classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation)
-
       if (result.success) {
         dispatch(getAllReviewGradeCompositionByStudentIdAction(classId, studentId))
         toast.success(result.message)
+
+        classInfo.teachers.forEach((teacher) => {
+          const notificationData = {
+            userSendId: userInfo?._id,
+            userReceiverId: teacher, // ID của giáo viên nhận thông báo
+            userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+            image: userInfo?.image,
+            content: `Student request review ${data?.composition}`,
+            link: `/class/${classId}/review/${data?._id}`
+          }
+          console.log('notificationData', notificationData)
+          socket?.emit('post_data', notificationData)
+        })
       }
 
     } catch (error) {
@@ -126,6 +147,13 @@ function CardGradeReview ({ data }) {
     setAnchorEl(null)
   }
 
+  useEffect(() => {
+    // Check if is have url to show review detail
+    if (isShowDetail) {
+      handleClickOpenDialog()
+    }
+  }, [])
+
   return (
     <>
       <Card
@@ -172,27 +200,34 @@ function CardGradeReview ({ data }) {
                 'aria-labelledby': 'basic-button'
               }}
             >
-              {status == 'Pending' ?
-                <>
-                  <MenuItem onClick={handleClickOpenDialog}>
+              {status === 'Pending' ?
+                [
+                  <MenuItem key="edit" onClick={handleClickOpenDialog}>
                     <ListItemIcon>
                       <PreviewIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Edit this review</ListItemText>
-                  </MenuItem>
-                  <MenuItem onClick={() => {handleClickDelete()}}>
+                  </MenuItem>,
+                  <MenuItem key="delete" onClick={() => {handleClickDelete()}}>
                     <ListItemIcon>
                       <DeleteIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText>Delete review request</ListItemText>
                   </MenuItem>
-                </> :
-                <MenuItem onClick={handleClickOpenDialog}>
-                  <ListItemIcon>
-                    <PreviewIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Preview review request</ListItemText>
-                </MenuItem>
+                ] : [
+                  <MenuItem key="preview" onClick={handleClickOpenDialog}>
+                    <ListItemIcon>
+                      <PreviewIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Preview review request</ListItemText>
+                  </MenuItem>,
+                  <MenuItem key="delete" onClick={() => {handleClickDelete()}}>
+                    <ListItemIcon>
+                      <DeleteIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Delete review request</ListItemText>
+                  </MenuItem>
+                ]
               }
 
             </Menu>
@@ -291,7 +326,7 @@ function CardGradeReview ({ data }) {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 0 }}>
               <Typography variant="body1">Expeted grade:  </Typography>
-              <TextField  type='number' size='small' sx={{ px: 2 }} disabled={status !== 'Pending'}
+              <TextField type='number' size='small' sx={{ px: 2 }} disabled={status !== 'Pending'}
                 onChange={handleInputChangeExpectedGrade}
                 error={Boolean(errorText)}
                 helperText={errorText}
@@ -309,7 +344,7 @@ function CardGradeReview ({ data }) {
             />
           </ Container>
 
-          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} />
+          <Comment classId={classId} gradeCompositionId={data?.gradeCompositionId} studentId={data?.studentId} student_Id={data?.student_Id} composition={composition} reviewId={data?._id}/>
 
         </Dialog>
       </React.Fragment>
@@ -317,7 +352,7 @@ function CardGradeReview ({ data }) {
   )
 }
 
-function GradeReviewPending ({ reviewList }) {
+function GradeReviewPending ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
       borderRadius: 5,
@@ -330,18 +365,24 @@ function GradeReviewPending ({ reviewList }) {
       </Typography>
 
       <Stack spacing={1} py={1}>
-        {reviewList && reviewList.map((data, index) => (
-          <CardGradeReview
-            key={index}
-            data={data}
-          />
-        ))}
+        {reviewList &&
+          reviewList.map((data, index) => {
+            const isShowDetail = data._id === isShowReview
+
+            return (
+              <CardGradeReview
+                key={index}
+                data={data}
+                isShowDetail={isShowDetail}
+              />
+            )
+          })}
       </Stack>
     </Container>
   )
 }
 
-function GradeReviewed ({ reviewList }) {
+function GradeReviewed ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
       borderRadius: 5,
@@ -354,12 +395,18 @@ function GradeReviewed ({ reviewList }) {
       </Typography>
 
       <Stack spacing={1} py={1}>
-        {reviewList && reviewList.map((data, index) => (
-          <CardGradeReview
-            key={index}
-            data={data}
-          />
-        ))}
+        {reviewList &&
+          reviewList.map((data, index) => {
+            const isShowDetail = data._id === isShowReview
+
+            return (
+              <CardGradeReview
+                key={index}
+                data={data}
+                isShowDetail={isShowDetail}
+              />
+            )
+          })}
       </Stack>
     </Container>
   )
@@ -371,7 +418,7 @@ export default function ReviewStudent () {
     (state) => state.userGetAllReviewGradeCompositionByStudentId
   )
 
-  const { classId } = useParams()
+  const { classId, reviewId } = useParams()
 
   const { userInfo } = useSelector(
     (state) => state.userLogin
@@ -391,9 +438,9 @@ export default function ReviewStudent () {
     <>
       <Typography gutterBottom variant="h4" sx={{ my: 1, px: 3 }} >History</Typography>
 
-      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []}/>
+      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []} isShowReview={reviewId}/>
 
-      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []}/>
+      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []} isShowReview={reviewId}/>
     </>
   )
 }

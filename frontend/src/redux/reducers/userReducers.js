@@ -98,3 +98,19 @@ export const adminEditUserReducer = ( state = {}, action) => {
     return state
   }
 }
+
+// ADMIN UPDATE STUDENT IDS REQUEST
+export const adminUpdateStudentIdsReducer = ( state = {}, action) => {
+    switch (action.type) {
+    case userConstants.UPDATE_STUDENT_IDS_REQUEST:
+      return { isLoading: true }
+    case userConstants.UPDATE_STUDENT_IDS_SUCCESS:
+      return { isLoading: false, messageUpload: action.payload, isSuccess: true }
+    case userConstants.UPDATE_STUDENT_IDS_FAIL:
+      return { isLoading: false, isError: action.payload }
+    case userConstants.UPDATE_STUDENT_IDS_RESET:
+      return {}
+    default:
+      return state
+    }
+  }

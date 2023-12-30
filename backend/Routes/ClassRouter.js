@@ -12,6 +12,8 @@ router.get("/all", passport.authenticate('jwt', { session: false }),classControl
 
 router.get("/allMyCourses", passport.authenticate('jwt', { session: false }),classController.getAllClassByID);
 
+router.get("/allClass", passport.authenticate('jwt', { session: false }),classController.getAllClassTeachAndStudyByID);
+
 router.post("/createNewClass", passport.authenticate('jwt', { session: false }),classController.createNewClass);
 
 router.post("/teachers/all", passport.authenticate('jwt', { session: false }),classController.getAllTeachers);
@@ -43,5 +45,11 @@ router.post("/students/upload", passport.authenticate('jwt', { session: false })
 router.post("/students/allTypeOfStudents", passport.authenticate('jwt', { session: false }), classController.getAllTypeOfStudents);
 
 router.post("/students/getStudentIdList", passport.authenticate('jwt', { session: false }), classController.getStudentIdListByUpload);
+
+router.post("/leaveThisClass", passport.authenticate('jwt', { session: false }), classController.leaveThisClass);
+
+router.post("/getRoleInClass", passport.authenticate('jwt', { session: false }), classController.getRoleInClassByUserId);
+
+router.post("/kickUserOutOfClass", passport.authenticate('jwt', { session: false }), classController.kickUserOutOfClass);
 
 module.exports = router;

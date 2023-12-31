@@ -99,6 +99,12 @@ const kickUserOutOfClass = async (classId, id, userId) => {
   return data
 }
 
+// User edit class detail
+const updateClassDetailService = async(classId, classData) => {
+  const { data } = await AxiosJWT.put('/class/updateClassDetail', { classId, ...classData })
+  return data
+}
+
 // *************** ADMIN APIs ***************
 
 // admin get all class
@@ -158,5 +164,6 @@ export {
   getStudentIdList,
   leaveThisClass,
   getRoleInClassByUserId,
-  kickUserOutOfClass
+  kickUserOutOfClass,
+  updateClassDetailService
 }

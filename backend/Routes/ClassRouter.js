@@ -52,4 +52,6 @@ router.post("/getRoleInClass", passport.authenticate('jwt', { session: false }),
 
 router.post("/kickUserOutOfClass", passport.authenticate('jwt', { session: false }), classController.kickUserOutOfClass);
 
+router.put("/updateClassDetail", passport.authenticate('jwt', { session: false }), classController.updateClassDetail);
+
 module.exports = router;

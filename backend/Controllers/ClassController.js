@@ -799,6 +799,39 @@ const getRoleInClassByUserId = async (req, res) => {
     }
 };
 
+const updateClassDetail = async (req, res) => {
+    console.log("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+    const { classId, className, codeClassName } = req.body;
+
+    try {
+        // Validate input
+        if (!className) {
+            return res.status(400).json({ success: false, message: 'Please provide className' });
+        }
+
+        // Check user authentication and permissions
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'User not authenticated' });
+        }
+
+        // find user in DB  
+        const existClass = await Class.findById(classId);
+        // if existClasss not exists in DB
+        if(!existClass) {
+            return res.status(401).json({ success: false, message: 'Class not found' });
+        }
+        existClass.codeClassName = codeClassName || existClass.codeClassName;
+        existClass.className = className || existClass.className;
+
+        await existClass.save();
+        
+        return res.status(201).json({ success: true, message: "Class was edit successfully" });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 
 module.exports = {
     getAllClass,
@@ -822,5 +855,6 @@ module.exports = {
     getStudentIdListByUpload,
     leaveThisClass,
     getRoleInClassByUserId,
-    kickUserOutOfClass
+    kickUserOutOfClass,
+    updateClassDetail
 }

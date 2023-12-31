@@ -527,10 +527,13 @@ const sumGradeComposition = (listGrade) => {
   let sum = 0
   listGrade.map((composition) => {
     if (composition.grade === '') {
-      return ''
+      sum += 0
+    } else {
+      sum += parseFloat(composition.grade)
     }
-    sum += composition.grade
+    console.log(sum)
   })
+
 
   return sum
 }

@@ -224,7 +224,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
           }
         }
         averageCompositionList.push(
-          averageComposition/rows.length
+          (averageComposition/rows.length).toFixed(2)
         )
       }
 
@@ -238,7 +238,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
         }
       }
       averageCompositionList.push(
-        averageComposition/rows.length
+        (averageComposition/rows.length).toFixed(2)
       )
 
       return averageCompositionList
@@ -279,14 +279,19 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
               field: `${columns[2].listGrade[index].composition}`,
               headerName: `${columns[2].listGrade[index].composition} (${columns[2].listGrade[index].percent})`,
               renderCell: (params) =>
-                <TextField
-                  size="small"
-                  value={
-                    rows[getIndexById(params.row.id) - 1].listGrade[index].grade
-                  }
-                  onChange={(e) => handleChangeGrade(e, getIndexById(params.row.id) - 1, index)}
-                  disabled={!isEdit}
-                />,
+                (
+                  (getIndexById(params.row.id) != null) ?
+                    (<TextField
+                      size="small"
+                      value={
+                        rows[getIndexById(params.row.id) - 1].listGrade[index].grade
+                      }
+                      onChange={(e) => handleChangeGrade(e, getIndexById(params.row.id) - 1, index)}
+                      disabled={!isEdit}
+                    />)
+                    :
+                    (<Typography variant="body1">{`${params.row.listGrade[index].grade}`}</Typography>)
+                ),
               flex: 1
             }
           })
@@ -316,25 +321,23 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
     .flat()
     .filter((column) => column !== null)
 
-  // const listAverage = averageComposition(rows)
+  const listAverage = averageComposition(rows)
 
   let rowsData = rows.map((row) => ({ ...row }))
   let columnsData = columnsForDataGrid
 
-  // if (rows.length > 0) {
-  //   let averageRow
-
-  //   averageRow.id = 'average'
-  //   averageRow.fullName = 'average'
-  //   rows[0].listGrade.map((item, index) => {
-  //     item.grade = listAverage[index]
-  //   })
-  //   averageRow.total = listAverage[listAverage.length - 1]
-
-  //   // rowsData.push(
-  //   //   averageRow
-  //   // )
-  // }
+  if (rows.length > 0) {
+    let averageRow = { ...rows[0] }
+    averageRow.id = 'Average'
+    averageRow.fullName = ''
+    averageRow.total = listAverage[listAverage.length - 1]
+    averageRow.listGrade.map((item, index) => {
+      item.grade = listAverage[index]
+    })
+    rowsData.push(
+      averageRow
+    )
+  }
 
 
   const getIndexById = (id) => {
@@ -353,7 +356,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
         }
       })
     }
-    return sum
+    return sum.toFixed(2)
   }
 
   return (

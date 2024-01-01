@@ -531,11 +531,10 @@ const sumGradeComposition = (listGrade) => {
     } else {
       sum += parseFloat(composition.grade)
     }
-    console.log(sum)
   })
 
 
-  return sum
+  return sum.toFixed(2)
 }
 
 
@@ -605,7 +604,6 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
         //   }
         // })
       }
-      console.log(rows)
     }
   })
     .catch((error) => {
@@ -732,7 +730,6 @@ export default function GradeTeacher () {
         if (response.orderGradeComposition.length != orderGradeComposition.length) {
           setOrderGradeComposition(response.orderGradeComposition)
           setGradeCompositionList(response.gradeCompositionList)
-          console.log(response.gradeCompositionList)
           // console.log( orderGradeComposition, gradeCompositionList )
         }
       } catch (error) {

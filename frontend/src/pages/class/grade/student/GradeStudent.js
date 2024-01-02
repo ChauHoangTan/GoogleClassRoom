@@ -45,7 +45,6 @@ function CardGrade ({ data }) {
   }
   const handleClose = () => {
     setAnchorEl(null)
-    handleClickOpenDialog()
   }
 
   const handleInputChangeExpectedGrade = (event) => {
@@ -160,7 +159,7 @@ function CardGrade ({ data }) {
                 'aria-labelledby': 'basic-button'
               }}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={() => {handleClose(), handleClickOpenDialog()}}>
                 <ListItemIcon>
                   <PreviewIcon fontSize="small" />
                 </ListItemIcon>

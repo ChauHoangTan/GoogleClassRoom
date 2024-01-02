@@ -31,7 +31,7 @@ function Layout({ socket }) {
       setClassStudyingList(response.data.classStudying)
     }
 
-    fetchDataClasses()
+    userInfo && fetchDataClasses()
   }, [stateMenu])
 
   return (

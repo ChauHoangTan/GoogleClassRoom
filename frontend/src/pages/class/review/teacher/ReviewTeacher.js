@@ -115,7 +115,7 @@ function CardGradeReview ({ data, isShowDetail }) {
       }
 
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data.message)
     }
   }
 
@@ -354,7 +354,7 @@ function CardGradeReview ({ data, isShowDetail }) {
                 </Typography>
 
                 <Stack spacing={1} py={1} sx={{ maxHeight: '100%', overflowY: 'auto' }}>
-                  {!isLoading ? reviews.data?.allReviews.map((data, index) => (
+                  {!isLoading ? reviews?.data?.allReviews.map((data, index) => (
                     <CardRelatedReview key={index} data={data} close={handleCloseDialog} />
                   )): <></>}
 
@@ -457,7 +457,7 @@ function CardRelatedReview ({ data, close }) {
       }
 
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data.message)
     }
   }
 
@@ -685,7 +685,7 @@ function CardRelatedReview ({ data, close }) {
                 </Typography>
 
                 <Stack spacing={1} py={1}>
-                  {!isLoading ? reviews.data?.allReviews.map((data, index) => (
+                  {!isLoading ? reviews?.data?.allReviews.map((data, index) => (
                     <CardRelatedReview key={index} data={data} close={handleCloseDialog} />
                   )): <></>}
 
@@ -775,15 +775,15 @@ export default function ReviewStudent () {
       toast.error(isError)
       dispatch({ type: 'GET_ALL_REVIEW_RESET' })
     }
-  }, [dispatch, isError])
+  }, [dispatch])
 
   return (
     <>
       <Typography gutterBottom variant="h4" sx={{ my: 1, px: 3 }} >History</Typography>
 
-      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []} isShowReview={reviewId}/>
+      <GradeReviewPending reviewList={!isLoading ? reviews?.data?.pendingReviews : []} isShowReview={reviewId}/>
 
-      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []} isShowReview={reviewId}/>
+      <GradeReviewed reviewList={!isLoading ? reviews?.data?.reviewedReviews : []} isShowReview={reviewId}/>
     </>
   )
 }

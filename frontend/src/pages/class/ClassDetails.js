@@ -41,8 +41,8 @@ function ClassDetails() {
     }
 
     if (classError) {
+      navigate('/home')
       toast.error(classError)
-      dispatch({ type: 'GET_CLASS_BY_ID_RESET' })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, classError])
@@ -72,14 +72,14 @@ function ClassDetails() {
             <TabPanel value="stream"><DashBoard /></TabPanel>
             <TabPanel value="people"><Participants /></TabPanel>
             <TabPanel value="grade">
-              {classes.data?.isTeacherOfThisClass ? (
+              {classes?.data?.isTeacherOfThisClass ? (
                 <GradeTeacher />
               ) : (
                 <GradeStudent />
               )}
             </TabPanel>
             <TabPanel value="review">
-              {classes.data?.isTeacherOfThisClass ? (
+              {classes?.data?.isTeacherOfThisClass ? (
                 <ReviewTeacher />
               ) : (
                 <ReviewStudent />

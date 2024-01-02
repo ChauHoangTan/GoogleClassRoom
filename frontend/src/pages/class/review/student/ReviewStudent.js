@@ -432,7 +432,7 @@ export default function ReviewStudent () {
       toast.error(isError)
       dispatch({ type: 'GET_ALL_REVIEW_BY_STUDENT_ID_RESET' })
     }
-  }, [dispatch, isError])
+  }, [dispatch])
 
   return (
     <>

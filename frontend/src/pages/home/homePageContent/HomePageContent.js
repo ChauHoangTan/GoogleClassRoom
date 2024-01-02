@@ -64,9 +64,9 @@ function HomePageContent({ searchTerm }) {
   useEffect(() => {
     if (!classLoading) {
       const filtered = classes?.data?.filter((item) =>
-        searchTerm
+        (searchTerm
           ? item.className.toLowerCase().includes(searchTerm.toLowerCase())
-          : classes?.data
+          : classes?.data) && item.isActive === true
       )
       setFilteredClasses(filtered)
     }

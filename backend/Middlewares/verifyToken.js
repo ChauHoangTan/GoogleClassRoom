@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const Class = require("../Models/ClassModel");
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -86,9 +87,21 @@ const admin = (req, res, next) => {
 }
 
 // Middleware isTeacher
-const teacher = (req, res, next) => {
+const teacher = async (req, res, next) => {
     // Get the value of id from the URL param
-    const { classId } = req.body;
+    const classId = req.params.id || req.body.classId || req.params.classId;
+
+    try {
+        const curClass = await Class.findById(classId);
+        if (!curClass) {
+            return res.status(404).json({ message: 'Not found class' });
+        }
+        if (!curClass.isActive) {
+            return res.status(404).json({ message: 'The current class is currently blocked, please try again later' });
+        }
+    } catch {
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
 
     // Check if classId is in the teacher's list of classes
     const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
@@ -98,15 +111,26 @@ const teacher = (req, res, next) => {
         next();
     } else {
         // If not the teacher of the class, return an error or redirect as needed
-        next();
-        res.status(403).json({ error: 'Unauthorized. You are not the teacher of this class.' });
+        return res.status(403).json({ message: 'Unauthorized. You are not the teacher of this class.' });
     }
 };
 
 // Middleware isStudent
-const student = (req, res, next) => {
+const student = async (req, res, next) => {
     // Get the value of id from the URL param
-    const classId = req.params.id;
+    const classId = req.params.id || req.body.classId || req.params.classId;
+
+    try {
+        const curClass = await Class.findById(classId);
+        if (!curClass) {
+            return res.status(404).json({ message: 'Not found class' });
+        }
+        if (!curClass.isActive) {
+            return res.status(404).json({ message: 'The current class is currently blocked, please try again later' });
+        }
+    } catch {
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
   
     // Check if classId is in the student's list of classes
     const isClassStudent = req.user.studentClassList.some(id => id.equals(classId));
@@ -116,15 +140,26 @@ const student = (req, res, next) => {
       next();
     } else {
       // If not a student of the class, return an error or redirect as needed
-      next();
-      res.status(403).json({ error: 'Unauthorized. You are not a student of this class.' });
+      return res.status(403).json({ message: 'Unauthorized. You are not a student of this class.' });
     }
 };
 
 // Middleware to combine teacher and student middleware
-const isTeacherOrStudent = (req, res, next) => {
-    const classId = req.params.id;
-  
+const isTeacherOrStudent = async (req, res, next) => {
+    const classId = req.params.id || req.body.classId || req.params.classId;
+
+    try {
+        const curClass = await Class.findById(classId);
+        if (!curClass) {
+            return res.status(400).json({ message: 'Not found class' });
+        }
+        if (!curClass.isActive) {
+            return res.status(400).json({ message: 'The current class is currently blocked, please try again later' });
+        }
+    } catch {
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+
     // Check if the user is a teacher
     const isClassTeacher = req.user.teacherClassList.some(id => id.equals(classId));
   
@@ -136,7 +171,7 @@ const isTeacherOrStudent = (req, res, next) => {
       next();
     } else {
       // If not a teacher or a student, return an error or redirect as needed
-      res.status(403).json({ error: 'Unauthorized. You are not authorized for this class.' });
+      return res.status(403).json({ message: 'Unauthorized. You are not authorized for this class.' });
     }
 };
 

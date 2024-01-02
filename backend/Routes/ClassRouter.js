@@ -34,24 +34,24 @@ router.post("/getInvitationStudent", passport.authenticate('jwt', { session: fal
 
 router.post("/invitationTeacher", passport.authenticate('jwt', { session: false }), verifyInvitationByUrl, classController.inviteClassTeacher);
 
-router.post("/getInvitationTeacher", passport.authenticate('jwt', { session: false }), classController.getInviteClassTeacher);
+router.post("/getInvitationTeacher", passport.authenticate('jwt', { session: false }), teacher, classController.getInviteClassTeacher);
 
-router.post("/send-invitation", classController.sendInvitateEmail);
+router.post("/send-invitation", teacher, classController.sendInvitateEmail);
 
 router.post("/receive-invitation", passport.authenticate('jwt', { session: false }), verifyInvitationByEmail, classController.receiveInvitateEmail);
 
-router.post("/students/upload", passport.authenticate('jwt', { session: false }), classController.getStudentsListByUploadFile);
+router.post("/students/upload", passport.authenticate('jwt', { session: false }), teacher, classController.getStudentsListByUploadFile);
 
-router.post("/students/allTypeOfStudents", passport.authenticate('jwt', { session: false }), classController.getAllTypeOfStudents);
+router.post("/students/allTypeOfStudents", passport.authenticate('jwt', { session: false }), isTeacherOrStudent, classController.getAllTypeOfStudents);
 
-router.post("/students/getStudentIdList", passport.authenticate('jwt', { session: false }), classController.getStudentIdListByUpload);
+router.post("/students/getStudentIdList", passport.authenticate('jwt', { session: false }), teacher, classController.getStudentIdListByUpload);
 
-router.post("/leaveThisClass", passport.authenticate('jwt', { session: false }), classController.leaveThisClass);
+router.post("/leaveThisClass", passport.authenticate('jwt', { session: false }), isTeacherOrStudent, classController.leaveThisClass);
 
 router.post("/getRoleInClass", passport.authenticate('jwt', { session: false }), classController.getRoleInClassByUserId);
 
-router.post("/kickUserOutOfClass", passport.authenticate('jwt', { session: false }), classController.kickUserOutOfClass);
+router.post("/kickUserOutOfClass", passport.authenticate('jwt', { session: false }), teacher, classController.kickUserOutOfClass);
 
-router.put("/updateClassDetail", passport.authenticate('jwt', { session: false }), classController.updateClassDetail);
+router.put("/updateClassDetail", passport.authenticate('jwt', { session: false }), teacher, classController.updateClassDetail);
 
 module.exports = router;

@@ -333,7 +333,7 @@ const StreamItem = ({ list }) => {
       toast.error(isError)
       dispatch({ type: 'GET_ALL_GRADE_COMPOSITION_RESET' })
     }
-  }, [dispatch, isError])
+  }, [dispatch])
 
   const gradeCompositionList = gradeCompositions?.gradeCompositionList
   const orderGradeComposition = gradeCompositions?.orderGradeComposition

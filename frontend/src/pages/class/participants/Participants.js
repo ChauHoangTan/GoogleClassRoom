@@ -308,7 +308,7 @@ export default function Participants() {
     }
     getEmailsUser()
 
-  }, [dispatch, teachersError, studentsError, sendEmailError, sendEmailSuccess])
+  }, [dispatch, sendEmailError, sendEmailSuccess])
 
   const [isOpenInviteTeacher, setIsOpenInviteTeacher] = useState(false)
   const [isOpenInviteStudent, setIsOpenInviteStudent] = useState(false)
@@ -414,8 +414,8 @@ export default function Participants() {
       p: 2
     }}>
       {
-        classInfo.isTeacherOfThisClass &&
-        <Stack direction='row' justifyContent='end' spacing={3} disabled={!classInfo.isTeacherOfThisClass}>
+        classInfo?.isTeacherOfThisClass &&
+        <Stack direction='row' justifyContent='end' spacing={3} disabled={!classInfo?.isTeacherOfThisClass}>
           <CSVLink data={csvData} filename='participants.csv'>
             <Button variant='contained' startIcon={<FileDownloadIcon />}>
             Download Student List

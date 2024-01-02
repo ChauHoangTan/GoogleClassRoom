@@ -153,11 +153,13 @@ const getAllClassTeachAndStudyByID = async (req, res) => {
         // Find classes where the user's ID is in either teacherClassList or studentClassList
 
         const classTeaching = await Class.find({
-            _id: { $in: user.teacherClassList } 
+            _id: { $in: user.teacherClassList },
+            isActive: true
         })
 
         const classStudying = await Class.find({
-            _id: { $in: user.studentClassList } 
+            _id: { $in: user.studentClassList },
+            isActive: true
         })
 
         return res.status(200).json({ success: true, data: { classTeaching, classStudying} });

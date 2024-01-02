@@ -378,7 +378,8 @@ export default function Participants() {
       studentsListUpload.push(handleConvertData(data))
     })
 
-    uploadStudentList(studentsListUpload, classId)
+    await uploadStudentList(studentsListUpload, classId)
+    dispatch(getAllTypeOfStudentsAction(classId))
   }
 
   const read = (file) => {

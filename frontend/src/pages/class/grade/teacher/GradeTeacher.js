@@ -9,7 +9,8 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 import EditIcon from '@mui/icons-material/Edit';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import { getStudentIdList } from '../../../../redux/APIs/classServices'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { useSelector } from 'react-redux'
 import {
   DndContext,
   // eslint-disable-next-line no-unused-vars
@@ -31,6 +32,7 @@ import { useParams } from 'react-router-dom'
 import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition, editGradeComposition, updateOrderGradeComposition, updateGradeComposition } from '../../../../redux/APIs/gradeServices'
 import { styled } from '@mui/material/styles'
 import Papa from 'papaparse'
+import { SocketContext } from '../../../../Context/SocketProvider'
 
 const rows = [
   { id: 1, fullName: 'John Doe', listGrade: [
@@ -173,10 +175,23 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
   const handleOnChangeGradeCompositionPercent = (e) => {
     setGradeCompositionPercent(e.target.value)
   }
-  const [isPublicCheckBox, setIsPublicCheckBox] = useState(0)
+  const [isPublicCheckBox, setIsPublicCheckBox] = useState(false)
   const handleOnChangeIsPublic = (e) => {
     setIsPublicCheckBox(!isPublicCheckBox)
   }
+
+  let { isLoading: classLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+  
+  const { socket } = useContext(SocketContext)
+
   const handleEditGradeComposition = async () => {
     if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
       const response = await updateGradeComposition(classId, id, gradeCompositionTitle, gradeCompositionPercent, isPublicCheckBox)
@@ -184,6 +199,21 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
       setOrderGradeComposition(response.data.orderGradeComposition)
     }
     setIsOpenEditGradeComposition(!isOpenEditGradeComposition)
+
+    if (isPublicCheckBox) {
+      classInfo.students.forEach((student) => {
+        const notificationData = {
+          userSendId: userInfo?._id,
+          userReceiverId: student, // ID của ọc sinh nhận thông báo
+          userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+          image: userInfo?.image,
+          content: `The teacher has publicly posted the new ${composition} grades`,
+          link: `/class/${classId}/grade`
+        }
+        console.log('notificationData', notificationData)
+        socket?.emit('post_data', notificationData)
+      })
+    }
   }
 
 
@@ -302,7 +332,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
             <MenuItem>
               {/* <FormControlLabel control={<Checkbox checked={isPublic} />} label="Public" /> */}
               <Button component="label" variant='contained' startIcon={<EditIcon />} sx={{ width: '100%' }}
-                onClick={handleOpenEditGradeComposition}>
+                onClick={() => {handleOpenEditGradeComposition(), handleClose()}}>
                 Edit
               </Button>
             </MenuItem>
@@ -340,7 +370,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
                 <FormControlLabel
                   control={
                     <Checkbox
-                      value={isPublicCheckBox}
+                      checked = {isPublicCheckBox}
                       onClick={handleOnChangeIsPublic}
                     />
                   }

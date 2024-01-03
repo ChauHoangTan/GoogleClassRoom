@@ -29,6 +29,7 @@ jobs:
     # Frontend Build and Test
     - name: Build and Test Frontend
       run: |
+        dir
         cd frontend
         npm ci
         npm install

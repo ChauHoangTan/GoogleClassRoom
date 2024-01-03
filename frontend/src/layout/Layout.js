@@ -6,7 +6,7 @@ import { Stack } from '@mui/material'
 import Menu from './Menu'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { getAllClassTeachAndStudyByID, getAllMyClassesService } from '../redux/APIs/classServices'
+import { getAllClassTeachAndStudyByID } from '../redux/APIs/classServices'
 
 function Layout({ socket }) {
   const { userInfo } = useSelector(
@@ -32,6 +32,7 @@ function Layout({ socket }) {
     }
 
     userInfo && fetchDataClasses()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stateMenu])
 
   return (

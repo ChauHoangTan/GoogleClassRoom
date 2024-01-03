@@ -36,9 +36,9 @@ const renderCustomizedLabel = ({
 const PieUsersLoginMethods = () => {
   const [loginMethods, setLoginMethods] = useState(null)
   const initialized = useRef(false)
+  // eslint-disable-next-line no-unused-vars
   const [err, setErr] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const [success, setSuccess] = useState('')
 
   useEffect(() => {
     // Gọi API để lấy dữ liệu đếm người dùng theo các phương thức login
@@ -76,6 +76,7 @@ const PieUsersLoginMethods = () => {
           <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
             <PieChart width={200} height={200}>
               <Pie
+                // eslint-disable-next-line no-unused-vars
                 data={Object.entries(loginMethods).map(([method, count], index) => ({
                   name: method,
                   qty: count

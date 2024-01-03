@@ -70,6 +70,7 @@ function HomePageContent({ searchTerm }) {
       )
       setFilteredClasses(filtered)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classes, searchTerm])
 
   const [currentPage, setCurrentPage] = useState(1)

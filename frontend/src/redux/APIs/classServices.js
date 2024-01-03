@@ -1,4 +1,3 @@
-import Axios from './Axios'
 import AxiosJWT from './AxiosJWT'
 
 // *************** USER APIs ***************

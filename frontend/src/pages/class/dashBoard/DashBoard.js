@@ -4,7 +4,6 @@ import Container from '@mui/material/Container'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useSelector, useDispatch } from 'react-redux'
 import Loader from '../../../components/notification/Loader'
 import { getInvitationStudentByUrlService } from '../../../redux/APIs/classServices'
@@ -159,6 +158,7 @@ const HeadComponent = ({ name, title, background }) => {
     handleClose()
   }
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading: classLoading, classes : classInfo } = useSelector(
     (state) => state.userGetClassByID
   )
@@ -209,12 +209,12 @@ const ApproachJoin = ({ approach, code }) => {
           setIsLoading(false)
           setIsLink(res.url)
         } catch (error) {
-          console.log(error.response.data.message)
           setIsLoading(false)
         }
       }
       getUrlInviteClass()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
   const handleOnClickCopy = () => {
@@ -319,9 +319,11 @@ const list = [
     time:'00:24' }
 ]
 
+// eslint-disable-next-line no-unused-vars
 const StreamItem = ({ list }) => {
   const dispatch = useDispatch()
   // useEffect
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, gradeCompositions } = useSelector(
     (state) => state.userGetAllGradeCompositionByClassId
   )
@@ -333,6 +335,7 @@ const StreamItem = ({ list }) => {
       toast.error(isError)
       dispatch({ type: 'GET_ALL_GRADE_COMPOSITION_RESET' })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
 
   const gradeCompositionList = gradeCompositions?.gradeCompositionList

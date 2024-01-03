@@ -4,7 +4,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "lint": "eslint ./ --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint \"./**/*.{js,jsx}\" --fix"
   },
   "dependencies": {
     "axios": "^1.6.1",
@@ -37,5 +39,9 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.23.3",
+    "eslint": "^8.56.0"
+  }
 }

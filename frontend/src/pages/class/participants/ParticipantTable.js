@@ -117,7 +117,6 @@
 //   )
 // }
 
-import * as React from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { Typography, IconButton, Avatar, Paper } from '@mui/material'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -126,12 +125,10 @@ import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { getAllTypeOfStudentsAction, getAllTeachersAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
 
 const VISIBLE_FIELDS = ['image', 'userId', 'fullName', 'status', 'isTeacher']
 
 export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
-  const [isUpdate, setIsUpdate] = React.useState(true)
   // Check if 'rows' is undefined or empty
   if (!rows || rows.length === 0) {
     return <Typography variant="body1">No data available</Typography>

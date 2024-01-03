@@ -25,6 +25,7 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
   const [isAdmin, setIsAdmin] = useState('')
   const [isBanned, setIsBanned] = useState('')
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading: updateLoading, isError: editError, userInfo: editUserInfo, isSuccess: editSuccess } = useSelector(
     state => state.adminEditUser
   )
@@ -63,12 +64,10 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
       setIsOpen(!isOpen)
       dispatch({ type: 'UPDATE_USER_RESET' })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editUserInfo, editSuccess, editError, dispatch, setIsOpen])
 
   const onSubmit = (data) => {
-    console.log({...data,
-        isAdmin: isAdmin === 'admin' ? true : false,
-        isBanned: isBanned === 'banned' ? true : false})
     dispatch(updateUserAction(
       userRow?._id,
       {

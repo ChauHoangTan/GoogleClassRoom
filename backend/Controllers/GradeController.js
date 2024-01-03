@@ -1,67 +1,67 @@
-const Grade = require("../Models/GradeModel");
-const User = require("../Models/UserModel");
-const GradeComposition = require("../Models/GradeCompositionModel");
-const Review = require("../Models/ReviewModel");
-const Comment = require("../Models/CommentModel")
-const mongoose = require('mongoose');
-const { student } = require("../Middlewares/verifyToken");
-const GradeStudentSchema = require("../Models/GradeStudentModel");
+const Grade = require('../Models/GradeModel')
+const User = require('../Models/UserModel')
+const GradeComposition = require('../Models/GradeCompositionModel')
+const Review = require('../Models/ReviewModel')
+const Comment = require('../Models/CommentModel')
+const mongoose = require('mongoose')
+// eslint-disable-next-line no-unused-vars
+const { student } = require('../Middlewares/verifyToken')
+const GradeStudentSchema = require('../Models/GradeStudentModel')
 
 const getGradeComposition = async (req, res) => {
-  const { classId } = req.body;
+  const { classId } = req.body
 
   try {
-      
-    const grade = await Grade.findOne({ classId });
+
+    const grade = await Grade.findOne({ classId })
     if (!grade) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
-    const { orderGradeComposition, gradeCompositionList } = grade;
+    const { orderGradeComposition, gradeCompositionList } = grade
 
     return res.status(200).json({
       success: true,
       orderGradeComposition,
-      gradeCompositionList,
-    });
+      gradeCompositionList
+    })
   } catch (error) {
-      res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message })
   }
 }
 
 const createNewGradeComposition = async (req, res) => {
-  const { classId, name, scale } = req.body;
+  const { classId, name, scale } = req.body
 
   try {
 
-    const grade = await Grade.findOne({ classId });
+    const grade = await Grade.findOne({ classId })
     if (!grade) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
-    const GradeCompositionModel = mongoose.model('GradeComposition', GradeComposition);
+    const GradeCompositionModel = mongoose.model('GradeComposition', GradeComposition)
 
     const newGradeComposition = new GradeCompositionModel({
       name,
-      scale, 
-    });
+      scale
+    })
 
     // await newGradeComposition.save();
 
-    grade.orderGradeComposition.push(newGradeComposition._id);
-    grade.gradeCompositionList.push(newGradeComposition);
-    
-    const updatedGradeModel = await grade.save();
+    grade.orderGradeComposition.push(newGradeComposition._id)
+    grade.gradeCompositionList.push(newGradeComposition)
 
-    return res.status(201).json({ success: true, data: grade });
+    await grade.save()
+
+    return res.status(201).json({ success: true, data: grade })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
-};
+}
 
 const updateGradeComposition = async (req, res) => {
-  const { classId, gradeCompositionId, name, scale, isPublic } = req.body;
+  const { classId, gradeCompositionId, name, scale, isPublic } = req.body
 
   try {
     // Sử dụng findOneAndUpdate để cập nhật phần tử trong mảng gradeCompositionList
@@ -71,74 +71,72 @@ const updateGradeComposition = async (req, res) => {
         $set: {
           'gradeCompositionList.$.name': name,
           'gradeCompositionList.$.scale': scale,
-          'gradeCompositionList.$.isPublic': isPublic,
-        },
+          'gradeCompositionList.$.isPublic': isPublic
+        }
       },
       { new: true } // Trả về đối tượng đã được cập nhật
-    );
+    )
 
     if (!updatedGradeComposition) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
-    const grade = await Grade.findOne({ classId });
-    return res.status(201).json({ success: true, data: grade });
+    const grade = await Grade.findOne({ classId })
+    return res.status(201).json({ success: true, data: grade })
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const deleteGradeComposition = async (req, res) => {
-  const { classId, gradeCompositionId } = req.params;
+  const { classId, gradeCompositionId } = req.params
   try {
 
-    const gradeModel = await Grade.findOne({ classId });
+    const gradeModel = await Grade.findOne({ classId })
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
-    gradeModel.gradeCompositionList.pull({_id: gradeCompositionId})
+    gradeModel.gradeCompositionList.pull({ _id: gradeCompositionId })
     gradeModel.orderGradeComposition.pull(gradeCompositionId)
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, data: gradeModel });
+    return res.status(201).json({ success: true, data: gradeModel })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const getAllGradeCompositionByStudentId = async (req, res) => {
-  const { classId, studentId } = req.body;
+  const { classId, studentId } = req.body
   try {
     if (studentId === undefined || studentId === '') {
-      return res.status(404).json({ success: false, message: 'Please mapping your account to see grade!' });
+      return res.status(404).json({ success: false, message: 'Please mapping your account to see grade!' })
     }
 
     const mapOrder = (originalArray, orderArray, key) => {
       if (!originalArray || !orderArray || !key) return []
-    
+
       const clonedArray = [...originalArray]
       const orderedArray = clonedArray.sort((a, b) => {
         return orderArray.indexOf(a[key]) - orderArray.indexOf(b[key])
       })
-    
+
       return orderedArray
     }
 
-    const gradeModel = await Grade.findOne({ classId });
-    const gradeCompositionListDB = gradeModel.gradeCompositionList;
-    const orderGradeCompositionListDB = gradeModel.orderGradeComposition;
+    const gradeModel = await Grade.findOne({ classId })
+    const gradeCompositionListDB = gradeModel.gradeCompositionList
+    const orderGradeCompositionListDB = gradeModel.orderGradeComposition
     const gradeCompositionList = mapOrder(gradeCompositionListDB, orderGradeCompositionListDB, '_id')
     let result = []
     gradeCompositionList.map((data) => {
-      const foundStudentGrade = data.studentGradeList.find(item => item.studentId === studentId);
+      const foundStudentGrade = data.studentGradeList.find(item => item.studentId === studentId)
       let studentGrade
-      if (foundStudentGrade === undefined){
+      if (foundStudentGrade === undefined) {
         studentGrade = 0
-      }else{
+      } else {
         studentGrade = foundStudentGrade.grade
       }
       result.push({
@@ -151,28 +149,27 @@ const getAllGradeCompositionByStudentId = async (req, res) => {
       })
     })
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, data: result });
+    return res.status(201).json({ success: true, data: result })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const uploadGradeComposition = async (req, res) => {
-  const { classId, compositionId, studentGradeList } = req.body;
+  const { classId, compositionId, studentGradeList } = req.body
   try {
 
-    const gradeModel = await Grade.findOne({ classId });
+    const gradeModel = await Grade.findOne({ classId })
     let gradeComposition = gradeModel.gradeCompositionList.find((item) => item._id == compositionId)
     let gradeStudentList = []
-    if(gradeComposition !== undefined){
+    if (gradeComposition !== undefined) {
       studentGradeList.map((data) => {
-        const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema);
+        const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema)
         const newGradeComposition = new GradeStudent({
           studentId: data.StudentId,
           grade: data.Grade
@@ -183,35 +180,33 @@ const uploadGradeComposition = async (req, res) => {
     }
 
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, data: studentGradeList });
+    return res.status(201).json({ success: true, data: studentGradeList })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const editGradeComposition = async (req, res) => {
-  const { classId, listGradeComposition } = req.body;
+  const { classId, listGradeComposition } = req.body
   try {
 
     if (listGradeComposition == null) {
-      return res.status(404).json({ success: false, message: 'Can not find listGradeComposition' });
+      return res.status(404).json({ success: false, message: 'Can not find listGradeComposition' })
     }
 
-    const gradeModel = await Grade.findOne({ classId });
-    console.log(listGradeComposition)
+    const gradeModel = await Grade.findOne({ classId })
 
     listGradeComposition.map((user) => {
       user.listGrade.map( async (composition) => {
         let compositionList = gradeModel.gradeCompositionList.find(item => item._id == composition._id)
         let student = compositionList.studentGradeList.find(item => item.studentId == user.id)
-        if(student == null) {
-          const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema);
+        if (student == null) {
+          const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema)
           const newStudent = new GradeStudent({
             studentId: user.id,
             grade: composition.grade || 0
@@ -221,75 +216,73 @@ const editGradeComposition = async (req, res) => {
             { _id: gradeModel._id, 'gradeCompositionList._id': composition._id },
             { $push: { 'gradeCompositionList.$.studentGradeList': newStudent } },
             { new: true }
-          );
-        }else{
+          )
+        } else {
           student.grade = composition.grade
         }
-        
+
       })
     })
 
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, message: 'Success' });
+    return res.status(201).json({ success: true, message: 'Success' })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const updateOrderGradeComposition = async (req, res) => {
-  const { classId, listOrderGradeComposition } = req.body;
+  const { classId, listOrderGradeComposition } = req.body
   try {
 
-    const gradeModel = await Grade.findOne({ classId });
+    const gradeModel = await Grade.findOne({ classId })
     gradeModel.orderGradeComposition = listOrderGradeComposition
-  
+
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, message: 'Success' });
+    return res.status(201).json({ success: true, message: 'Success' })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const createNewReviewGrade = async (req, res) => {
-  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation } = req.body;
+  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation } = req.body
 
   try {
 
-    const grade = await Grade.findOne({ classId });
+    const grade = await Grade.findOne({ classId })
     if (!grade) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     const gradeComposition = grade.gradeCompositionList.find(
       (composition) => String(composition._id) === String(gradeCompositionId)
-    );
+    )
 
     if (!gradeComposition) {
-      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' })
     }
 
     // Kiểm tra xem có review nào của studentId trong danh sách chưa
     const hasReviewed = gradeComposition.reviewGradeList.some(
       (review) => String(review.studentId) === String(studentId)
-    );
+    )
 
     if (hasReviewed) {
-      return res.status(400).json({ success: false, message: 'Each grade can only be appealed once. If you want to review a gain please delete previous review' });
+      return res.status(400).json({ success: false, message: 'Each grade can only be appealed once. If you want to review a gain please delete previous review' })
     }
 
-    const ReviewModel = mongoose.model('Review', Review);
+    const ReviewModel = mongoose.model('Review', Review)
     const student_Id = req.user._id
 
     const newReview = new ReviewModel({
@@ -300,52 +293,50 @@ const createNewReviewGrade = async (req, res) => {
       oldGrade,
       explanation,
       student_Id
-    });
+    })
 
-    gradeComposition.reviewGradeList.push(newReview);
-    
-    await grade.save();
+    gradeComposition.reviewGradeList.push(newReview)
 
-    return res.status(201).json({ success: true, message: 'Send request review success', data: newReview});
+    await grade.save()
+
+    return res.status(201).json({ success: true, message: 'Send request review success', data: newReview })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
-};
+}
 
 const createNewComment = async (req, res) => {
-  const { classId, gradeCompositionId, studentId, content, isTeacherComment } = req.body;
+  const { classId, gradeCompositionId, studentId, content, isTeacherComment } = req.body
 
   try {
 
-    const grade = await Grade.findOne({ classId });
+    const grade = await Grade.findOne({ classId })
     if (!grade) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     const gradeComposition = grade.gradeCompositionList.find(
       (composition) => String(composition._id) === String(gradeCompositionId)
-    );
+    )
 
     if (!gradeComposition) {
-      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' })
     }
 
     const reviewGrade = gradeComposition.reviewGradeList.find(
-      (review) => String(review.studentId) === String(studentId) 
+      (review) => String(review.studentId) === String(studentId)
     )
 
     if (!reviewGrade) {
-      return res.status(404).json({ success: false, message: 'Cannot find Review Grade Composition' });
+      return res.status(404).json({ success: false, message: 'Cannot find Review Grade Composition' })
     }
 
     if (!req.user?.userId) {
-      return res.status(404).json({ success: false, message: 'Please mapping your account to comment' });
+      return res.status(404).json({ success: false, message: 'Please mapping your account to comment' })
     }
 
-    const CommentModel = mongoose.model('Comment', Comment);
+    const CommentModel = mongoose.model('Comment', Comment)
 
-    console.log(req.user)
     const newComment= new CommentModel({
       userId: req.user.userId,
       content,
@@ -353,135 +344,135 @@ const createNewComment = async (req, res) => {
       lastName: req.user.lastName,
       isTeacherComment,
       image: req.user.image
-    });
+    })
 
-    reviewGrade.comment.push(newComment);
-    
-    await grade.save();
+    reviewGrade.comment.push(newComment)
 
-    return res.status(201).json({ success: true, message: 'Your comment posted' });
+    await grade.save()
+
+    return res.status(201).json({ success: true, message: 'Your comment posted' })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
-};
+}
 
 const updateReviewGrade = async (req, res) => {
-  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status, teacher_Id } = req.body;
+  // eslint-disable-next-line no-unused-vars
+  const { classId, gradeCompositionId, studentId, expectGrade, oldGrade, explanation, explanationTeacher, reviewedGrade, status, teacher_Id } = req.body
 
   try {
 
-    const grade = await Grade.findOne({ classId });
+    const grade = await Grade.findOne({ classId })
     if (!grade) {
-      return res.status(404).json({ success: false, message: 'Cannot find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Cannot find Grade by ID of Class' })
     }
 
     const gradeComposition = grade.gradeCompositionList.find(
       composition => String(composition._id) === String(gradeCompositionId)
-    );
+    )
 
     if (!gradeComposition) {
-      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' })
     }
+
+    const student = gradeComposition.studentGradeList.find(student => student.studentId === studentId)
+    student.grade = reviewedGrade
 
     const review = gradeComposition.reviewGradeList.find(
       review => String(review.studentId) === String(studentId)
-    );
+    )
 
     if (!review) {
-      return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' })
     }
 
     ['expectGrade', 'oldGrade', 'explanation', 'explanationTeacher', 'reviewedGrade', 'teacher_Id', 'status'].forEach(property => {
       if (req.body[property] !== null && req.body[property] !== undefined) {
-        review[property] = req.body[property];
+        review[property] = req.body[property]
       }
-    });
+    })
 
-    await grade.save();
+    await grade.save()
 
-    return res.status(201).json({ success: true, message: 'Request success' });
+    return res.status(201).json({ success: true, message: 'Request success' })
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const deleteReviewGrade = async (req, res) => {
-  const { classId, gradeCompositionId, userId } = req.params;
+  const { classId, gradeCompositionId, userId } = req.params
   try {
 
-    const gradeModel = await Grade.findOne({ classId });
+    const gradeModel = await Grade.findOne({ classId })
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     const gradeComposition = gradeModel.gradeCompositionList.find(
       composition => String(composition._id) === String(gradeCompositionId)
-    );
+    )
 
     if (!gradeComposition) {
-      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' })
     }
 
-    gradeComposition.reviewGradeList.pull({studentId: userId})
+    gradeComposition.reviewGradeList.pull({ studentId: userId })
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, message: 'Delete Success' });
+    return res.status(201).json({ success: true, message: 'Delete Success' })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const deleteComment = async (req, res) => {
-  const { classId, gradeCompositionId, userId, commentId } = req.params;
+  const { classId, gradeCompositionId, userId, commentId } = req.params
   try {
 
-    const gradeModel = await Grade.findOne({ classId });
+    const gradeModel = await Grade.findOne({ classId })
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     const gradeComposition = gradeModel.gradeCompositionList.find(
       composition => String(composition._id) === String(gradeCompositionId)
-    );
+    )
 
     if (!gradeComposition) {
-      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' })
     }
 
     const review = gradeComposition.reviewGradeList.find(
       review => String(review.studentId) === String(userId)
-    );
+    )
 
     if (!review) {
-      return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' })
     }
 
-    review.comment.pull({_id: commentId})
+    review.comment.pull({ _id: commentId })
 
     await gradeModel.save()
 
-    return res.status(201).json({ success: true, message: 'Delete success' });
+    return res.status(201).json({ success: true, message: 'Delete success' })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const getAllReviewGradeCompositionByStudentId = async (req, res) => {
-  const { classId, studentId } = req.body;
+  const { classId, studentId } = req.body
   try {
-    
-    const grade = await Grade.findOne({ classId });
+
+    const grade = await Grade.findOne({ classId })
 
     if (!grade) {
-      return res.status(404).json({ success: false, message: 'Cannot find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Cannot find Grade by ID of Class' })
     }
 
-    const allReviews = [];
+    const allReviews = []
 
     // Lặp qua mỗi GradeComposition
     for (const gradeComposition of grade.gradeCompositionList) {
@@ -489,17 +480,17 @@ const getAllReviewGradeCompositionByStudentId = async (req, res) => {
       for (const review of gradeComposition.reviewGradeList) {
         // Chỉ thêm Review của student có studentId cần tìm
         if (String(review.studentId) === String(studentId)) {
-          const student = await User.findOne({ userId: review.studentId });
-          const studentFirstName = student ? student.firstName : '';
-          const studentLastName = student ? student.lastName : '';
+          const student = await User.findOne({ userId: review.studentId })
+          const studentFirstName = student ? student.firstName : ''
+          const studentLastName = student ? student.lastName : ''
 
-          const teacher = await User.findById(review.teacher_Id);
-          const teacherFirstName = teacher ? teacher.firstName : '';
-          const teacherLastName = teacher ? teacher.lastName : '';
-          const teacherId = teacher ? teacher.userId : '';
+          const teacher = await User.findById(review.teacher_Id)
+          const teacherFirstName = teacher ? teacher.firstName : ''
+          const teacherLastName = teacher ? teacher.lastName : ''
+          const teacherId = teacher ? teacher.userId : ''
 
-          const composition = gradeComposition.name;
-          const scale = gradeComposition.scale;
+          const composition = gradeComposition.name
+          const scale = gradeComposition.scale
 
           allReviews.push({
             ...review._doc,
@@ -509,59 +500,58 @@ const getAllReviewGradeCompositionByStudentId = async (req, res) => {
             studentLastName,
             teacherFirstName,
             teacherLastName,
-            teacherId,
-          });
+            teacherId
+          })
         }
       }
     }
 
     // Chia danh sách thành hai dựa vào thuộc tính status
-    const pendingReviews = allReviews.filter(review => review.status === 'Pending');
-    const reviewedReviews = allReviews.filter(review => review.status === 'Reviewed');
+    const pendingReviews = allReviews.filter(review => review.status === 'Pending')
+    const reviewedReviews = allReviews.filter(review => review.status === 'Reviewed')
 
     return res.status(200).json({
       success: true,
       data: {
         allReviews,
         pendingReviews,
-        reviewedReviews,
-      },
-    });
-    
+        reviewedReviews
+      }
+    })
+
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const getAllReviewGradeComposition = async (req, res) => {
-  const { classId } = req.body;
+  const { classId } = req.body
   try {
-    
-    const grade = await Grade.findOne({ classId });
+
+    const grade = await Grade.findOne({ classId })
 
     if (!grade) {
-      return res.status(404).json({ success: false, message: 'Cannot find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Cannot find Grade by ID of Class' })
     }
 
-    const allReviews = [];
+    const allReviews = []
 
     // Lặp qua mỗi GradeComposition
     for (const gradeComposition of grade.gradeCompositionList) {
       // Lặp qua mỗi Review trong reviewGradeList
       for (const review of gradeComposition.reviewGradeList) {
         // Chỉ thêm Review của student có studentId cần tìm
-        const student = await User.findOne({ userId: review.studentId });
-        const studentFirstName = student ? student.firstName : '';
-        const studentLastName = student ? student.lastName : '';
+        const student = await User.findOne({ userId: review.studentId })
+        const studentFirstName = student ? student.firstName : ''
+        const studentLastName = student ? student.lastName : ''
 
-        const teacher = await User.findById(review.teacher_Id);
-        const teacherFirstName = teacher ? teacher.firstName : '';
-        const teacherLastName = teacher ? teacher.lastName : '';
-        const teacherId = teacher ? teacher.userId : '';
+        const teacher = await User.findById(review.teacher_Id)
+        const teacherFirstName = teacher ? teacher.firstName : ''
+        const teacherLastName = teacher ? teacher.lastName : ''
+        const teacherId = teacher ? teacher.userId : ''
 
-        const composition = gradeComposition.name;
-        const scale = gradeComposition.scale;
+        const composition = gradeComposition.name
+        const scale = gradeComposition.scale
 
         allReviews.push({
           ...review._doc,
@@ -571,59 +561,57 @@ const getAllReviewGradeComposition = async (req, res) => {
           studentLastName,
           teacherFirstName,
           teacherLastName,
-          teacherId,
-        });
-        }
+          teacherId
+        })
       }
+    }
 
     // Chia danh sách thành hai dựa vào thuộc tính status
-    const pendingReviews = allReviews.filter(review => review.status === 'Pending');
-    const reviewedReviews = allReviews.filter(review => review.status === 'Reviewed');
+    const pendingReviews = allReviews.filter(review => review.status === 'Pending')
+    const reviewedReviews = allReviews.filter(review => review.status === 'Reviewed')
 
     return res.status(200).json({
       success: true,
       data: {
         allReviews,
         pendingReviews,
-        reviewedReviews,
-      },
-    });
-    
+        reviewedReviews
+      }
+    })
+
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 
 const getAllComment = async (req, res) => {
-  const { classId, gradeCompositionId, studentId } = req.body;
+  const { classId, gradeCompositionId, studentId } = req.body
   try {
 
-    const gradeModel = await Grade.findOne({ classId });
+    const gradeModel = await Grade.findOne({ classId })
     if (!gradeModel) {
-      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' });
+      return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })
     }
 
     const gradeComposition = gradeModel.gradeCompositionList.find(
       composition => String(composition._id) === String(gradeCompositionId)
-    );
+    )
 
     if (!gradeComposition) {
-      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find GradeComposition by ID' })
     }
 
     const review = gradeComposition.reviewGradeList.find(
       review => String(review.studentId) === String(studentId)
-    );
+    )
 
     if (!review) {
-      return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' });
+      return res.status(404).json({ success: false, message: 'Cannot find Review by Student ID' })
     }
 
-    return res.status(201).json({ success: true, data: review.comment });
+    return res.status(201).json({ success: true, data: review.comment })
   } catch (error) {
-      console.error(error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message })
   }
 }
 

@@ -45,6 +45,7 @@ function CardGradeReview ({ data, isShowDetail }) {
   useEffect(() => {
     const studentId = data?.studentId
     dispatch(getAllReviewGradeCompositionByStudentIdAction(classId, studentId))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleCloseDialog = () => {
@@ -110,7 +111,6 @@ function CardGradeReview ({ data, isShowDetail }) {
           content: `Teacher return result review ${data?.composition}`,
           link: `/class/${classId}/review/${data?._id}`
         }
-        console.log('notificationData', notificationData)
         socket?.emit('post_data', notificationData)
       }
 
@@ -136,6 +136,7 @@ function CardGradeReview ({ data, isShowDetail }) {
     setIsExplanation(inputValue)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, reviews, isSuccess } = useSelector(
     (state) => state.userGetAllReviewGradeCompositionByStudentId
   )
@@ -145,6 +146,7 @@ function CardGradeReview ({ data, isShowDetail }) {
     if (isShowDetail) {
       handleClickOpenDialog()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -371,6 +373,7 @@ function CardGradeReview ({ data, isShowDetail }) {
   )
 }
 
+// eslint-disable-next-line no-unused-vars
 function CardRelatedReview ({ data, close }) {
 
   const title = 'Student need to review assignment: '
@@ -442,8 +445,6 @@ function CardRelatedReview ({ data, close }) {
         dispatch(getAllReviewGradeCompositionAction(classId))
         toast.success(result.message)
 
-        console.log('data', data)
-
         const notificationData = {
           userSendId: userInfo?._id,
           userReceiverId: data?.student_Id, // ID của sinh viên nhận thông báo
@@ -452,7 +453,6 @@ function CardRelatedReview ({ data, close }) {
           content: `Teacher return result review ${data?.composition}`,
           link: `/class/${classId}/review/${data?._id}`
         }
-        console.log('notificationData', notificationData)
         socket?.emit('post_data', notificationData)
       }
 
@@ -478,6 +478,7 @@ function CardRelatedReview ({ data, close }) {
     setIsExplanation(inputValue)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, reviews, isSuccess } = useSelector(
     (state) => state.userGetAllReviewGradeCompositionByStudentId
   )
@@ -763,6 +764,7 @@ function GradeReviewed ({ reviewList, isShowReview }) {
 export default function ReviewStudent () {
 
   const dispatch = useDispatch()
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, reviews, isSuccess } = useSelector(
     (state) => state.userGetAllReviewGradeComposition
   )
@@ -775,6 +777,7 @@ export default function ReviewStudent () {
       toast.error(isError)
       dispatch({ type: 'GET_ALL_REVIEW_RESET' })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
 
   return (

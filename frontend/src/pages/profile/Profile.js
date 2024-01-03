@@ -43,6 +43,7 @@ const EditProfile = () => {
   const dispatch = useDispatch()
   const initialized = useRef(false)
 
+  // eslint-disable-next-line no-unused-vars
   const { isError, isLoading, userInfo, isSuccess } = useSelector(
     state => state.userGetProfile
   )
@@ -87,6 +88,7 @@ const EditProfile = () => {
 
       fetchUserInfo()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -103,7 +105,6 @@ const EditProfile = () => {
     }
 
     if (editUserInfo) {
-        console.log(editUserInfo)
       setValue('firstName', editUserInfo?.firstName)
       setValue('lastName', editUserInfo?.lastName)
       setValue('email', editUserInfo?.email)

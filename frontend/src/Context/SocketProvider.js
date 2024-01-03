@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { io } from 'socket.io-client'
@@ -9,6 +9,7 @@ function SocketProvider({ children }) {
   const navigate = useNavigate()
   const [socket, setSocket] = useState(null)
   const [notifications, setNotifications] = useState([])
+  // eslint-disable-next-line no-unused-vars
   const [isNewNotification, setIsNewNotification] = useState(false)
   const { userInfo } = useSelector(
     state => state.userLogin
@@ -35,6 +36,7 @@ function SocketProvider({ children }) {
         socket?.off('change_data')
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, userInfo])
 
   const getData = (notifications) => {

@@ -6,8 +6,6 @@ import PreviewIcon from '@mui/icons-material/Preview'
 import * as React from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import ListItem from '@mui/material/ListItem'
-import List from '@mui/material/List'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import CloseIcon from '@mui/icons-material/Close'
@@ -74,6 +72,7 @@ function CardGrade ({ data }) {
 
   const { classId } = useParams()
 
+  // eslint-disable-next-line no-unused-vars
   let { isLoading, classes : classInfo } = useSelector(
     (state) => state.userGetClassByID
   )
@@ -105,7 +104,6 @@ function CardGrade ({ data }) {
             content: `Student request review ${data?.composition}`,
             link: `/class/${classId}/review/${result.data?._id}`
           }
-          console.log('notificationData', notificationData)
           socket?.emit('post_data', notificationData)
         })
       }
@@ -267,9 +265,27 @@ function GradeComposition () {
 
   const totalGrade = isGradeCompositionList.reduce((acc, data) => {
     const grade = data?.grade || 0
-    const scale = data?.scale || 1 // Assuming a default value of 1 if scale is not present or is 0
-    return acc + (grade / scale)
+    let add = 0
+
+    if (data?.isPublic) {
+      add = grade
+    }
+
+    return acc + add
   }, 0)
+
+  const totalScale = isGradeCompositionList.reduce((acc, data) => {
+    const scale = data?.scale || 1 // Giả sử giá trị mặc định là 1 nếu scale không tồn tại hoặc bằng 0
+    let add = 0
+
+    if (data?.isPublic) {
+      add = scale
+    }
+
+    return acc + add
+  }, 0)
+
+  const totalResult = (totalScale !== 0 ? totalGrade / totalScale : 0) * 100
 
   useEffect(() => {
     // Get all grade compositon by userId
@@ -282,6 +298,7 @@ function GradeComposition () {
       }
     }
     fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -314,7 +331,7 @@ function GradeComposition () {
       }}>
         <Typography variant='h6'>
           Total grade: <Typography variant='body-2'>
-            {totalGrade.toFixed(2)}
+            {totalResult.toFixed(2)}
           </Typography>
         </Typography>
       </Container>

@@ -4,13 +4,13 @@ import toast from 'react-hot-toast'
 import { deleteClassAction, getAllClassesAction } from '../../../redux/actions/classActions'
 import ClassTable from '../../../components/table/ClassTable'
 import { SocketContext } from '../../../Context/SocketProvider'
-import { styled } from '@mui/system';
+import { styled } from '@mui/system'
 
 const StyledClassTable = styled('div')({
-    transform: 'scale(0.9)',
-    transformOrigin: 'top left',
-    width: 'calc(100% / 0.9)',
-  });
+  transform: 'scale(0.9)',
+  transformOrigin: 'top left',
+  width: 'calc(100% / 0.9)'
+})
 
 const Classes = () => {
   const dispatch = useDispatch()
@@ -54,7 +54,6 @@ const Classes = () => {
         image:  classItem.teachers[0].image,
         content: `delete ${ classItem.className} class`
       }
-      console.log(data)
       socket?.emit('post_data', data)
 
       dispatch(deleteClassAction(classItem._id))
@@ -71,7 +70,7 @@ const Classes = () => {
 
   return (
     <StyledClassTable>
-        <ClassTable deleteHandler={deleteClassHandler} isLoading={isLoading} classes={classes} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
+      <ClassTable deleteHandler={deleteClassHandler} isLoading={isLoading} classes={classes} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} />
     </StyledClassTable>
   )
 }

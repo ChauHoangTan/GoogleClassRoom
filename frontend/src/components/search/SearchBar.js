@@ -1,4 +1,4 @@
-import { Box, Button, Input, Stack, TextField } from '@mui/material'
+import { Button, Stack, TextField } from '@mui/material'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import './style.scss'
 import { useState } from 'react'

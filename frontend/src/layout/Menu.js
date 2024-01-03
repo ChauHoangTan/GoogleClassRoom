@@ -1,6 +1,6 @@
 import { Avatar, Collapse, Divider, Stack, Typography } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom'
 import HomeIcon from '@mui/icons-material/Home'
 import SchoolIcon from '@mui/icons-material/School'
 import Box from '@mui/material/Box'
@@ -20,7 +20,7 @@ import {
 import './style.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { getRoleInClassByUserId } from '../redux/APIs/classServices';
+import { getRoleInClassByUserId } from '../redux/APIs/classServices'
 
 const ClassRegisterd = ({ avatar, name, classCode }) => {
 
@@ -67,6 +67,7 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
         setIsOpenTeaching(false)
         setIsOpenMyCourses(false)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       storePrevStateMenu = isOpenMenu
     }
   }, [isOpenMenu])
@@ -90,6 +91,7 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
 
       getRole()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
 
   return (

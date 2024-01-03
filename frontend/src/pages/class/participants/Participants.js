@@ -1,5 +1,4 @@
-import { Box, Typography, IconButton, Modal, TextField, InputAdornment, Stack, Autocomplete, Avatar, Button } from '@mui/material'
-import SearchBar from '../../../components/search/SearchBar'
+import { Box, Typography, IconButton, Modal, TextField, Stack, Autocomplete, Button } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ParticipantTable from './ParticipantTable'
 import FileDownloadIcon from '@mui/icons-material/FileDownload'
@@ -20,8 +19,6 @@ import Chip from '@mui/material/Chip'
 import { getAllEmailUsersService } from '../../../redux/APIs/userServices'
 import { styled } from '@mui/material/styles'
 import Papa from 'papaparse'
-import axios from 'axios'
-import Axios from '../../../redux/APIs/Axios'
 
 const styleModal = {
   position: 'absolute',
@@ -35,129 +32,6 @@ const styleModal = {
   p: 4,
   borderRadius: '20px'
 }
-
-const users = [
-  {
-    avatar: 'link-to-avatar-1.jpg',
-    id: '20127660',
-    fullName: 'User 1',
-    isTeacher: false
-  }
-  // {
-  //   avatar: 'link-to-avatar-2.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 2',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-3.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 3',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-4.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 4',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-5.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 5',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-1.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 1',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-2.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 2',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-3.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 3',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-4.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 4',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-5.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 5',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-1.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 1',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-2.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 2',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-3.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 3',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-4.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 4',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-5.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 5',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-1.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 1',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-2.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 2',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-3.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 3',
-  //   isTeacher: false
-  // },
-  // {
-  //   avatar: 'link-to-avatar-4.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 4',
-  //   isTeacher: true
-  // },
-  // {
-  //   avatar: 'link-to-avatar-5.jpg',
-  //   id: '20127660',
-  //   fullName: 'User 5',
-  //   isTeacher: false
-  // }
-]
 
 const columns = [
   { id: 'image', label: 'Avatar', minWidth: 170 },
@@ -174,25 +48,7 @@ const columnsStudents = [
   { id: 'isTeacher', label: 'Kick', minWidth: 170 }
 ]
 
-const Emails = [
-  'chauhoangtan6937@gmail.com',
-  'hualamchicuong@gmail.com',
-  'nguyendinhvan@gmail.com',
-  'letranphihung@gmail.com'
-]
-
-const ItemResultEmail = ({ email, name, avatar }) => {
-  return (
-    <Stack direction='row' alignItems='center' mb={1}>
-      <Avatar src={avatar} sx={{ margin: '0px 5px' }}/>
-      <Stack>
-        <Typography variant='body-1' sx={{ fontWeight: 'bold' }}>{email}</Typography>
-        <Typography variant='body-2' sx={{ fontStyle:'italic' }}>{name}</Typography>
-      </Stack>
-    </Stack>
-  )
-}
-
+// eslint-disable-next-line no-unused-vars
 const ApproachJoin = ({ code }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [islink, setIsLink] = useState('')
@@ -206,12 +62,12 @@ const ApproachJoin = ({ code }) => {
           setIsLoading(false)
           setIsLink(res.url)
         } catch (error) {
-          console.log(error.response.data.message)
           setIsLoading(false)
         }
       }
       getUrlInviteClass()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
   const handleOnClickCopy = () => {
@@ -308,6 +164,7 @@ export default function Participants() {
     }
     getEmailsUser()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, sendEmailError, sendEmailSuccess])
 
   const [isOpenInviteTeacher, setIsOpenInviteTeacher] = useState(false)

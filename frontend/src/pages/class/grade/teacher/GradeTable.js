@@ -191,9 +191,9 @@
 //   )
 // }
 
-import { Typography, TablePagination, TextField } from '@mui/material'
+import { Typography, TextField } from '@mui/material'
 import Paper from '@mui/material/Paper'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 
 
@@ -250,6 +250,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
 
   useEffect(() => {
     setChangeState(!changeState)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows])
 
   const columnsForDataGrid = columns
@@ -270,13 +271,12 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
           flex: 1 // Set a flexible width for the column
         }
       case 'listGrade':
-        // eslint-disable-next-line no-case-declarations
         if ( rows.length > 0 ) {
           if (columns[2].listGrade.length > 0 ) {
             const listGradeColumns = Object.keys(rows[0].listGrade).map((key, index) => {
               return {
-                field: `${columns[2].listGrade[index].composition}`,
-                headerName: `${columns[2].listGrade[index].composition} (${columns[2].listGrade[index].percent})`,
+                field: `${columns[2].listGrade[index]?.composition}`,
+                headerName: `${columns[2].listGrade[index]?.composition} (${columns[2].listGrade[index]?.percent})`,
                 renderCell: (params) =>
                   (
                     (getIndexById(params.row.id) != null) ?
@@ -309,6 +309,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
         return {
           field: 'average',
           headerName: column.label,
+          // eslint-disable-next-line no-unused-vars
           renderCell: (params) => <Typography variant="body1"></Typography>,
           flex: 1 // Set a flexible width for the column
         }
@@ -341,7 +342,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
 
 
   const getIndexById = (id) => {
-    const index = rows.findIndex((row) => row.id === id);
+    const index = rows.findIndex((row) => row.id === id)
     return index !== -1 ? index + 1 : null // +1 để bắt đầu từ 1, hoặc return null nếu không tìm thấy
   }
 

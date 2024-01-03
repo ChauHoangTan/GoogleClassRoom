@@ -21,6 +21,7 @@ import { getClassByIDActions } from '../../redux/actions/classActions'
 function ClassDetails() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  // eslint-disable-next-line no-unused-vars
   const { isLoading: classLoading, isError: classError, classes, isSuccess } = useSelector(
     (state) => state.userGetClassByID
   )
@@ -35,10 +36,6 @@ function ClassDetails() {
     }
 
     dispatch(getClassByIDActions(classId))
-
-    if (isSuccess) {
-      console.log('SUCCESS')
-    }
 
     if (classError) {
       navigate('/home')
@@ -89,7 +86,7 @@ function ClassDetails() {
         )}
       </TabContext>
     </Box>
-  );
+  )
 }
 
 export default ClassDetails

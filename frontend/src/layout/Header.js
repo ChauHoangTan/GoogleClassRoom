@@ -29,7 +29,7 @@ import Notification from '../pages/notification/Notification.js'
 import { SocketContext } from '../Context/SocketProvider.js'
 
 export default function ResponsiveAppBar () {
-     const { notifications, handleClick, handleClickAll } = useContext(SocketContext)
+  const { notifications, handleClick, handleClickAll } = useContext(SocketContext)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -178,9 +178,9 @@ export default function ResponsiveAppBar () {
                     }}
                   >
                     <Notification
-                        notifications={notifications}
-                        handleClick={handleClick}
-                        handleClickAll={handleClickAll}
+                      notifications={notifications}
+                      handleClick={handleClick}
+                      handleClickAll={handleClickAll}
                     />
                   </Popover>
                   <Menu

@@ -4,8 +4,8 @@ import { Avatar, Box, Button, Grid, IconButton, Tooltip, Typography } from '@mui
 import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
 import Loader from '../notification/Loader'
-import { Empty, DateFormat } from '../notification/Empty'
-import { Delete, Edit, Preview } from '@mui/icons-material'
+import { DateFormat } from '../notification/Empty'
+import { Delete, Edit } from '@mui/icons-material'
 import ModalEditClass from '../Auth/Modal/ModalEditClass'
 import { useSelector } from 'react-redux'
 import CustomNoRowsOverlay from './CustomNoRowsOverlay'
@@ -17,7 +17,6 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
   const [classRow, setClassRow] = useState(null)
 
   const isOpenMenu = useSelector(state => state.isOpenMenu)
-  console.log(classes)
   const handleOpen = () => {
     setIsOpen(!isOpen)
   }
@@ -103,6 +102,7 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
         )
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [rowId]
   )
 
@@ -115,67 +115,67 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
       <ModalEditClass isOpen={isOpen} handleOpen={handleOpen} classRow={classRow} setClassRow={setClassRow} setIsOpen={setIsOpen} />
       <Grid item xs={12}>
         <Box
-        sx={{
+          sx={{
             width: '100%',
             minHeight: '400px',
             textAlign: 'center'
-        }}
+          }}
         >
-        <Typography
+          <Typography
             variant='h3'
             component='h3'
             sx={{ textAlign: 'center', mb: 3 }}
-        >
+          >
                 Manage Classes
-        </Typography>
-        <Box sx={{ textAlign: 'right', mb: 2 }}>
+          </Typography>
+          <Box sx={{ textAlign: 'right', mb: 2 }}>
             <Button startIcon={<Delete/>} variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
                 Delete selected rows
             </Button>
-        </Box>
-        {
+          </Box>
+          {
             isLoading ? (
-            <Loader />
+              <Loader />
             ) : (
-            <DataGrid
+              <DataGrid
                 rows={classes}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{
-                pagination: {
+                  pagination: {
                     paginationModel: { page: 0, pageSize: pageSize }
-                }
+                  }
                 }}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 pageSizeOptions={[5, 10, 20]}
                 checkboxSelection
                 getRowSpacing={(params) => ({
-                top: params.isFirstVisible ? 0 : 1,
-                bottom: params.isLastVisible ? 0 : 1
+                  top: params.isFirstVisible ? 0 : 1,
+                  bottom: params.isLastVisible ? 0 : 1
                 })}
                 sx={{
-                [`& .${gridClasses.row}`]: {
+                  [`& .${gridClasses.row}`]: {
                     bgcolor: (theme) =>
-                    theme.palette.mode === 'light' ? grey[200] : grey[900]
-                },
-                '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
+                      theme.palette.mode === 'light' ? grey[200] : grey[900]
+                  },
+                  '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
                     'mt': '1em',
                     'mb': '1em'
-                }
+                  }
                 }}
                 onCellEditCommit={(params) => setRowId(params.id)}
                 disableRowSelectionOnClick
                 slots={{
-                toolbar: GridToolbar,
-                noRowsOverlay: CustomNoRowsOverlay
+                  toolbar: GridToolbar,
+                  noRowsOverlay: CustomNoRowsOverlay
                 }}
                 columnVisibilityModel={{
-                userCreator: !isOpenMenu
+                  userCreator: !isOpenMenu
                 }}
                 onRowSelectionModelChange={handleRowSelection}
-            />
+              />
             )
-        }
+          }
         </Box>
       </Grid>
     </Grid>

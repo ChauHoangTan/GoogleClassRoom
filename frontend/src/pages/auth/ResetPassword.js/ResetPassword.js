@@ -58,17 +58,19 @@ const ResetPassword = () => {
       initialized.current = true
       const activateEmail = async () => {
         try {
+          // eslint-disable-next-line no-unused-vars
           const res = await checkResetPasswordUrlService(activation_token)
           setErr('')
           setIsValidUrl(true)
         } catch (error) {
           setErr(error.response.data.message)
         }
-        setIsLoading(false);
+        setIsLoading(false)
       }
       activateEmail()
 
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -106,162 +108,162 @@ const ResetPassword = () => {
 
   return (
     <>
-    {isLoading ? (
-    <Grid
-        container
-        sx={{
+      {isLoading ? (
+        <Grid
+          container
+          sx={{
             height: '100vh',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
-        }}
-        maxWidth='xs'
-    >
-        <Loader />
-    </Grid>
-    ) : (
+            alignItems: 'center'
+          }}
+          maxWidth='xs'
+        >
+          <Loader />
+        </Grid>
+      ) : (
         <ThemeProvider theme={defaultTheme}>
-        <Grid
+          <Grid
             container
             sx={{
-            height: '120vh',
-            backgroundImage:'url(https://source.unsplash.com/random?wallpapers)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: t =>
+              height: '120vh',
+              backgroundImage:'url(https://source.unsplash.com/random?wallpapers)',
+              backgroundRepeat: 'no-repeat',
+              backgroundColor: t =>
                 t.palette.mode === 'light'
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
+                  ? t.palette.grey[50]
+                  : t.palette.grey[900],
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             maxWidth='xs'
-        >
+          >
             <Container
-            maxWidth='sm'
-            margin={4}
-            component={Paper}
-            elevation={6}
+              maxWidth='sm'
+              margin={4}
+              component={Paper}
+              elevation={6}
             >
-            {isValidUrl ? (
+              {isValidUrl ? (
                 <Box
-                sx={{
+                  sx={{
                     marginTop: 4,
                     marginBottom: 4,
                     textAlign: 'center'
-                }}
+                  }}
                 >
-                <Typography
+                  <Typography
                     component='h1'
                     variant='h5'
                     sx={{
-                    fontSize: '40px',
-                    fontWeight: 'bold',
-                    color: 'primary.main'
+                      fontSize: '40px',
+                      fontWeight: 'bold',
+                      color: 'primary.main'
                     }}
-                >
+                  >
                             Reset Password
-                </Typography>
-                <Box
+                  </Typography>
+                  <Box
                     component='form'
                     noValidate
                     onSubmit={handleSubmit(onSubmit)}
                     sx={{ mt: 3 }}
-                >
+                  >
                     <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                      <Grid item xs={12}>
                         <TextField
-                        required
-                        fullWidth
-                        name="newPassword"
-                        label="New Password"
-                        type="password"
-                        id="newPassword"
-                        {...register('newPassword')}
-                        error={!!errors.newPassword}
-                        helperText={errors.newPassword?.message || ''}
+                          required
+                          fullWidth
+                          name="newPassword"
+                          label="New Password"
+                          type="password"
+                          id="newPassword"
+                          {...register('newPassword')}
+                          error={!!errors.newPassword}
+                          helperText={errors.newPassword?.message || ''}
                         />
-                    </Grid>
-                    <Grid item xs={12}>
+                      </Grid>
+                      <Grid item xs={12}>
                         <TextField
-                        required
-                        fullWidth
-                        name="confirmPassword"
-                        label="Confirm Password"
-                        type="password"
-                        id="confirmPassword"
-                        {...register('confirmPassword')}
-                        error={!!errors.confirmPassword}
-                        helperText={errors.confirmPassword?.message || ''}
+                          required
+                          fullWidth
+                          name="confirmPassword"
+                          label="Confirm Password"
+                          type="password"
+                          id="confirmPassword"
+                          {...register('confirmPassword')}
+                          error={!!errors.confirmPassword}
+                          helperText={errors.confirmPassword?.message || ''}
                         />
-                    </Grid>
+                      </Grid>
                     </Grid>
                     <Button
-                    type='submit'
-                    fullWidth
-                    disabled={isLoadingReset}
-                    variant='contained'
-                    sx={{ mt: 3, mb: 2, py: 1 }}
+                      type='submit'
+                      fullWidth
+                      disabled={isLoadingReset}
+                      variant='contained'
+                      sx={{ mt: 3, mb: 2, py: 1 }}
                     >
-                    {isLoadingReset ? 'Reset Password' : 'Reseting'}
+                      {isLoadingReset ? 'Reset Password' : 'Reseting'}
                     </Button>
+                  </Box>
                 </Box>
-                </Box>
-            ) : (
+              ) : (
                 <Dialog open={open} onClose={handleClose}>
-                <Box sx={{ padding: 2 }}>
+                  <Box sx={{ padding: 2 }}>
                     <DialogTitle sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <img src={ErrorIcon} alt="error-icon" style={{ width: '88px', height: '88px' }}/>
-                    <Typography
+                      <img src={ErrorIcon} alt="error-icon" style={{ width: '88px', height: '88px' }}/>
+                      <Typography
                         component='h1'
                         variant='h5'
                         sx={{
-                        fontWeight: 'bold',
-                        mt: '24px',
-                        color: '#545454',
-                        fontSize: '30px'
+                          fontWeight: 'bold',
+                          mt: '24px',
+                          color: '#545454',
+                          fontSize: '30px'
                         }}
-                    >
+                      >
                         Reset Password
-                    </Typography>
+                      </Typography>
                     </DialogTitle>
                     <DialogContent sx={{ textAlign: 'center' }}>
-                    <Typography
+                      <Typography
                         sx={{
-                        fontSize: '20px',
-                        fontWeight: '500'
+                          fontSize: '20px',
+                          fontWeight: '500'
                         }}
-                    >
+                      >
                         {err}
-                    </Typography>
-                    <Typography
+                      </Typography>
+                      <Typography
                         sx={{
-                        fontSize: '16px',
-                        mt: 1
+                          fontSize: '16px',
+                          mt: 1
                         }}
-                    >
+                      >
                         Please click the Forgot Password again
-                    </Typography>
+                      </Typography>
                     </DialogContent>
                     <DialogActions sx={{ justifyContent: 'center' }}>
-                    <Button
+                      <Button
                         onClick={handleClose}
                         variant="contained"
                         sx={{ py: 1, px: 2 }}
                         color="primary"
-                    >
+                      >
                         Back To Login
-                    </Button>
+                      </Button>
                     </DialogActions>
-                </Box>
+                  </Box>
                 </Dialog>
-            )}
+              )}
             </Container>
-        </Grid>
+          </Grid>
         </ThemeProvider>
-    )}
+      )}
     </>
   )
 }

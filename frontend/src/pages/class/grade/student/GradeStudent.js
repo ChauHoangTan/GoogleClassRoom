@@ -10,7 +10,7 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import CloseIcon from '@mui/icons-material/Close'
 import Slide from '@mui/material/Slide'
-import { getAllGradeCompositionByStudentId, createNewReviewGrade } from '../../../../redux/APIs/gradeServices'
+import { getAllGradeCompositionByStudentId, createNewReviewGrade, isMappedAccount } from '../../../../redux/APIs/gradeServices'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
@@ -291,8 +291,11 @@ function GradeComposition () {
     // Get all grade compositon by userId
     const fetchData = async () => {
       try {
-        const result = await getAllGradeCompositionByStudentId(classId, userInfo.userId)
-        setIsGradeCompositionList(result.data)
+        const res = await isMappedAccount(classId, userInfo.userId)
+        if (res?.success) {
+          const result = await getAllGradeCompositionByStudentId(classId, userInfo.userId)
+          setIsGradeCompositionList(result.data)
+        }
       } catch (error) {
         toast.error(error.response.data.message)
       }

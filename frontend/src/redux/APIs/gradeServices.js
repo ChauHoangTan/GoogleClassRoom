@@ -32,6 +32,12 @@ const getAllGradeCompositionByStudentId = async ( classId, studentId ) => {
   return data
 }
 
+// Check accout is mapped
+const isMappedAccount = async ( classId, studentId ) => {
+  const { data } = await AxiosJWT.post('/grade/isMappedAccount', { classId, studentId })
+  return data
+}
+
 // uploadGradeComposition
 // upload grade composition
 const uploadGradeComposition = async ( classId, compositionId, studentGradeList ) => {
@@ -107,5 +113,6 @@ export {
   updateOrderGradeComposition,
   createNewComment,
   deleteComment,
-  getAllComment
+  getAllComment,
+  isMappedAccount
 }

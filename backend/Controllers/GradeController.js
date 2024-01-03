@@ -1,4 +1,5 @@
 const Grade = require('../Models/GradeModel')
+const Class = require('../Models/ClassModel')
 const User = require('../Models/UserModel')
 const GradeComposition = require('../Models/GradeCompositionModel')
 const Review = require('../Models/ReviewModel')
@@ -615,6 +616,25 @@ const getAllComment = async (req, res) => {
   }
 }
 
+const isMappedAccount = async (req, res) => {
+  const { classId, studentId } = req.body
+  try {
+    if (studentId === undefined || studentId === '') {
+      return res.status(404).json({ success: false, message: 'Please mapping your account!' })
+    }
+
+    const classModel = await Class.findById(classId)
+    const isExistStudent = classModel.studentsListUpload.find(student => student.userId === studentId)
+    if (!isExistStudent) {
+      return res.status(400).json({ success: false, message: 'Because your account has not been mapped, you cannot view!' })
+    }
+
+    return res.status(200).json({ success: true, message: 'Account mapped!' })
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message })
+  }
+}
+
 module.exports = {
   getGradeComposition,
   createNewGradeComposition,
@@ -631,5 +651,6 @@ module.exports = {
   deleteComment,
   getAllReviewGradeCompositionByStudentId,
   getAllReviewGradeComposition,
-  getAllComment
+  getAllComment,
+  isMappedAccount
 }

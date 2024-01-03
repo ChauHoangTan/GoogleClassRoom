@@ -11,6 +11,7 @@ import BeenhereIcon from '@mui/icons-material/Beenhere';
 import { getStudentIdList } from '../../../../redux/APIs/classServices'
 import { useEffect, useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
+const isEqual = require('lodash/isEqual')
 import {
   DndContext,
   // eslint-disable-next-line no-unused-vars
@@ -620,19 +621,14 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       }
     })
   ).then(() => {
+
+    newRows.sort((a, b) => {
+      return a.id - b.id
+    })
     // Gọi khi tất cả promises hoàn tất
-    if (rows.length != newRows.length) {
-      setRows(newRows)
-    } else {
-      if (rows.length > 0 && newRows.length > 0) {
-        if (rows[0].listGrade.length != newRows[0].listGrade.length ) {
-          setRows(newRows)
-        }
-        // newRows.map((item, index) => {
-        //   if (item.total !== rows[index].total) {
-        //     setRows(newRows)
-        //   }
-        // })
+    if ( !isEdit ) {
+      if (!isEqual(rows, newRows)) {
+        setRows(newRows)
       }
     }
   })
@@ -640,6 +636,28 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       console.error('Error:', error)
     })
 
+  const obj1 = {
+    id: '20127261',
+    fullName: 'Chau Hoang Tan',
+    listGrade: [
+      {
+        composition: 'Ex2',
+        grade: 10
+      }
+    ]
+  }
+
+  const obj2 = {
+    id: '20127261',
+    fullName: 'Chau Hoang Tan',
+    listGrade: [
+      {
+        composition: 'Ex1',
+        grade: 10
+      }
+    ]
+  }
+  console.log(isEqual(obj1, obj2))
   // useEffect(() => {
   //   Promise.all(
   //     studentList.map(async (item) => {

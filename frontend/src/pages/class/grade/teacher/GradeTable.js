@@ -252,11 +252,6 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
     setChangeState(!changeState)
   }, [rows])
 
-  let averages = averageComposition(rows)
-
-  console.log(rows)
-  console.log(columns)
-
   const columnsForDataGrid = columns
     .map((column) => {
       switch (column.id) {

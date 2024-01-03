@@ -30,7 +30,6 @@ jobs:
     - name: Build and Test Frontend
       run: |
         dir
-        cd frontend
         npm ci
         npm install
         npm run build --if-present
@@ -41,7 +40,7 @@ jobs:
     # Backend Build and Test (replace 'backend' with the actual folder name)
     - name: Build and Test Backend
       run: |
-        cd backend
+        dir
         npm ci
         npm install
         npm run build --if-present

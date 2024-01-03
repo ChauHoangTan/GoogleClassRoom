@@ -1,7 +1,6 @@
 import * as gradeConstants from '../constants/gradeConstants'
 import * as gradeApi from '../APIs/gradeServices'
 import { ErrorsAction } from '../protection'
-import toast from 'react-hot-toast'
 
 // Get all grade compostion
 const getAllGradeCompositionByClassIdAction = (classId) => async (dispatch) => {

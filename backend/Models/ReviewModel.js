@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const CommentSchema = require('../Models/CommentModel')
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 // Define ReviewModel Schema
 const ReviewModelSchema = new Schema({
@@ -14,15 +14,15 @@ const ReviewModelSchema = new Schema({
   comment: { type: [CommentSchema], default: [] },
   status: { type: String, default: 'Pending' },
   time: { type: Date, default: Date.now },
-  student_Id: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  teacher_Id: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+  student_Id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  teacher_Id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 },
 {
-  timestamps: true,
-});
+  timestamps: true
+})
 
 // Create a model from the schema
 // const Review = mongoose.model('Review', ReviewModelSchema);
 
 // Export GradeModel for use elsewhere in the application
-module.exports = ReviewModelSchema;
+module.exports = ReviewModelSchema

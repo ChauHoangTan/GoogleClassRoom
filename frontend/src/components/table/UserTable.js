@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Avatar, Box, Grid, IconButton, Tooltip, Typography, Button } from '@mui/material'
 import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
-import { Delete, Edit, Preview } from '@mui/icons-material'
-import { Empty, DateFormat } from '../notification/Empty'
+import { Delete, Edit } from '@mui/icons-material'
+import { DateFormat } from '../notification/Empty'
 import Loader from '../notification/Loader'
 import { useSelector } from 'react-redux'
 import ModalEditUser from '../Auth/Modal/ModalEditUser'
@@ -151,6 +151,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         )
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [rowId]
   )
 
@@ -179,7 +180,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
           <Box sx={{ textAlign: 'right', mb: 2 }}>
             <Button component="label" variant='contained' startIcon={<UploadIcon />} disabled={ isLoading || isUploadLoading } >
                 Upload Student Ids
-                <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
+              <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
             </Button>
 
             <Button startIcon={<Delete/>} sx={{ ml: 2 }} variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>

@@ -1,7 +1,6 @@
 import * as authConstants from '../constants/authConstants'
 import * as authApi from '../APIs/authServices'
 import { ErrorsAction } from '../protection'
-import toast from 'react-hot-toast'
 
 // Login action
 const loginAction = (provider, datas) => async dispatch => {
@@ -32,7 +31,6 @@ const registerAction = datas => async dispatch => {
 }
 
 // Logout action
-// eslint-disable-next-line no-unused-vars
 const logoutAction = () => async dispatch => {
   await authApi.logoutService()
   dispatch({ type: authConstants.USER_LOGOUT })

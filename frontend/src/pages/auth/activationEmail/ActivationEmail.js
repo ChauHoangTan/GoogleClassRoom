@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { activationEmailService } from '../../../redux/APIs/authServices'
 import { useNavigate } from 'react-router-dom'
@@ -28,7 +28,7 @@ function ActivationEmail() {
   const [isValidUrl, setIsValidUrl] = useState(true)
   const [success, setSuccess] = useState('')
   const [open, setOpen] = useState(true)
-    const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (activation_token) {
@@ -56,96 +56,96 @@ function ActivationEmail() {
   }
   return (
     <>
-        {isLoading ? (
+      {isLoading ? (
         <Grid
-            container
-            sx={{
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-            maxWidth='xs'
-        >
-            <Loader />
-        </Grid>
-        ) : (
-        <ThemeProvider theme={defaultTheme}>
-        <Grid
-            container
-            sx={{
+          container
+          sx={{
             height: '100vh',
-            backgroundImage:'url(https://source.unsplash.com/random?wallpapers)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: t =>
-                t.palette.mode === 'light'
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
+          }}
+          maxWidth='xs'
+        >
+          <Loader />
+        </Grid>
+      ) : (
+        <ThemeProvider theme={defaultTheme}>
+          <Grid
+            container
+            sx={{
+              height: '100vh',
+              backgroundImage:'url(https://source.unsplash.com/random?wallpapers)',
+              backgroundRepeat: 'no-repeat',
+              backgroundColor: t =>
+                t.palette.mode === 'light'
+                  ? t.palette.grey[50]
+                  : t.palette.grey[900],
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
             maxWidth='xs'
-        >
+          >
             <Container
-            maxWidth='sm'
-            margin={4}
-            component={Paper}
-            elevation={6}
+              maxWidth='sm'
+              margin={4}
+              component={Paper}
+              elevation={6}
             >
-                <Dialog open={open} onClose={handleClose}>
+              <Dialog open={open} onClose={handleClose}>
                 <Box sx={{ padding: 2 }}>
-                <DialogTitle sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <DialogTitle sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img src={isValidUrl ? SuccessIcon : ErrorIcon} alt={isValidUrl ? 'success-icon' : 'error-icon'} style={{ width: '88px', height: '88px' }}/>
                     <Typography
-                    component='h1'
-                    variant='h5'
-                    sx={{
+                      component='h1'
+                      variant='h5'
+                      sx={{
                         fontWeight: 'bold',
                         mt: '24px',
                         color: '#545454',
                         fontSize: '30px'
-                    }}
+                      }}
                     >
                     Verify registered email address
                     </Typography>
-                </DialogTitle>
-                <DialogContent sx={{ textAlign: 'center' }}>
+                  </DialogTitle>
+                  <DialogContent sx={{ textAlign: 'center' }}>
                     <Typography
-                    sx={{
+                      sx={{
                         fontSize: '20px',
                         fontWeight: '500'
-                    }}
+                      }}
                     >
-                    {isValidUrl ? success : err}
+                      {isValidUrl ? success : err}
                     </Typography>
                     <Typography
-                    sx={{
+                      sx={{
                         fontSize: '16px',
                         mt: 1
-                    }}
+                      }}
                     >
                         Please log in to use your account
                     </Typography>
-                </DialogContent>
-                <DialogActions sx={{ justifyContent: 'center' }}>
+                  </DialogContent>
+                  <DialogActions sx={{ justifyContent: 'center' }}>
                     <Button
-                    onClick={handleClose}
-                    variant="contained"
-                    sx={{ py: 1, px: 2 }}
-                    color="primary"
+                      onClick={handleClose}
+                      variant="contained"
+                      sx={{ py: 1, px: 2 }}
+                      color="primary"
                     >
                     Back to Login
                     </Button>
-                </DialogActions>
+                  </DialogActions>
                 </Box>
-            </Dialog>
+              </Dialog>
             </Container>
-        </Grid>
+          </Grid>
         </ThemeProvider>
-        )}
+      )}
     </>
   )
 }

@@ -1,5 +1,4 @@
 import * as classConstants from '../constants/classConstants'
-import * as authConstants from '../constants/authConstants'
 import * as classApi from '../APIs/classServices'
 import { ErrorsAction } from '../protection'
 import toast from 'react-hot-toast'

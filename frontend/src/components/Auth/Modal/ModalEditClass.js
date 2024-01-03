@@ -24,6 +24,7 @@ const ModalEditClass = ({ isOpen, handleOpen, setClassRow, classRow, setIsOpen }
   const dispatch = useDispatch()
   const [isActive, setIsActive] = useState('')
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading: updateLoading, isError: editError, classInfo: editClassInfo, isSuccess: editSuccess } = useSelector(
     state => state.adminUpdateClass
   )
@@ -59,6 +60,7 @@ const ModalEditClass = ({ isOpen, handleOpen, setClassRow, classRow, setIsOpen }
       setIsOpen(!isOpen)
       dispatch({ type: 'UPDATE_CLASS_RESET' })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editClassInfo, editSuccess, editError, dispatch, setIsOpen])
 
   const onSubmit = (data) => {

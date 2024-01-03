@@ -45,6 +45,7 @@ function CardGradeReview ({ data, isShowDetail }) {
   useEffect(() => {
     const studentId = data?.studentId
     dispatch(getAllReviewGradeCompositionByStudentIdAction(classId, studentId))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleCloseDialog = () => {
@@ -110,12 +111,11 @@ function CardGradeReview ({ data, isShowDetail }) {
           content: `Teacher return result review ${data?.composition}`,
           link: `/class/${classId}/review/${data?._id}`
         }
-        console.log('notificationData', notificationData)
         socket?.emit('post_data', notificationData)
       }
 
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data.message)
     }
   }
 
@@ -136,6 +136,7 @@ function CardGradeReview ({ data, isShowDetail }) {
     setIsExplanation(inputValue)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, reviews, isSuccess } = useSelector(
     (state) => state.userGetAllReviewGradeCompositionByStudentId
   )
@@ -145,6 +146,7 @@ function CardGradeReview ({ data, isShowDetail }) {
     if (isShowDetail) {
       handleClickOpenDialog()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -354,7 +356,7 @@ function CardGradeReview ({ data, isShowDetail }) {
                 </Typography>
 
                 <Stack spacing={1} py={1} sx={{ maxHeight: '100%', overflowY: 'auto' }}>
-                  {!isLoading ? reviews.data?.allReviews.map((data, index) => (
+                  {!isLoading ? reviews?.data?.allReviews.map((data, index) => (
                     <CardRelatedReview key={index} data={data} close={handleCloseDialog} />
                   )): <></>}
 
@@ -371,6 +373,7 @@ function CardGradeReview ({ data, isShowDetail }) {
   )
 }
 
+// eslint-disable-next-line no-unused-vars
 function CardRelatedReview ({ data, close }) {
 
   const title = 'Student need to review assignment: '
@@ -442,8 +445,6 @@ function CardRelatedReview ({ data, close }) {
         dispatch(getAllReviewGradeCompositionAction(classId))
         toast.success(result.message)
 
-        console.log('data', data)
-
         const notificationData = {
           userSendId: userInfo?._id,
           userReceiverId: data?.student_Id, // ID của sinh viên nhận thông báo
@@ -452,12 +453,11 @@ function CardRelatedReview ({ data, close }) {
           content: `Teacher return result review ${data?.composition}`,
           link: `/class/${classId}/review/${data?._id}`
         }
-        console.log('notificationData', notificationData)
         socket?.emit('post_data', notificationData)
       }
 
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data.message)
     }
   }
 
@@ -478,6 +478,7 @@ function CardRelatedReview ({ data, close }) {
     setIsExplanation(inputValue)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, reviews, isSuccess } = useSelector(
     (state) => state.userGetAllReviewGradeCompositionByStudentId
   )
@@ -685,7 +686,7 @@ function CardRelatedReview ({ data, close }) {
                 </Typography>
 
                 <Stack spacing={1} py={1}>
-                  {!isLoading ? reviews.data?.allReviews.map((data, index) => (
+                  {!isLoading ? reviews?.data?.allReviews.map((data, index) => (
                     <CardRelatedReview key={index} data={data} close={handleCloseDialog} />
                   )): <></>}
 
@@ -763,6 +764,7 @@ function GradeReviewed ({ reviewList, isShowReview }) {
 export default function ReviewStudent () {
 
   const dispatch = useDispatch()
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, reviews, isSuccess } = useSelector(
     (state) => state.userGetAllReviewGradeComposition
   )
@@ -775,15 +777,16 @@ export default function ReviewStudent () {
       toast.error(isError)
       dispatch({ type: 'GET_ALL_REVIEW_RESET' })
     }
-  }, [dispatch, isError])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   return (
     <>
       <Typography gutterBottom variant="h4" sx={{ my: 1, px: 3 }} >History</Typography>
 
-      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []} isShowReview={reviewId}/>
+      <GradeReviewPending reviewList={!isLoading ? reviews?.data?.pendingReviews : []} isShowReview={reviewId}/>
 
-      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []} isShowReview={reviewId}/>
+      <GradeReviewed reviewList={!isLoading ? reviews?.data?.reviewedReviews : []} isShowReview={reviewId}/>
     </>
   )
 }

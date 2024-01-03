@@ -82,7 +82,7 @@ const ProfileValidation = yup.object().shape({
     .trim()
     .matches(/^[0-9]*$/, 'Only contain numbers')
     .matches(/^$|^[0-9]{8}$/, 'Phone number must be 10 to 11 digits'),
-    userId: yup
+  userId: yup
     .string()
     .trim()
     .matches(/^[0-9]*$/, 'Only contain numbers')

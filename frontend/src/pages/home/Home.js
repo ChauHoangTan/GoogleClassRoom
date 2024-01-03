@@ -1,11 +1,10 @@
 import './style.scss'
 import HomePageContent from './homePageContent/HomePageContent'
-import { Box, Button, Modal, Pagination, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Modal, Stack, TextField, Typography } from '@mui/material'
 import SearchBar from '../../components/search/SearchBar'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import PinIcon from '@mui/icons-material/Pin'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { createNewClassActions, getAllMyClassesAction, joinClassByCodeActions } from '../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
@@ -13,6 +12,7 @@ import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { createClassInfoValidation, joinClassByCodeFormInfoValidation } from '../../components/validation/classValidation'
+// eslint-disable-next-line no-unused-vars
 import { io } from 'socket.io-client'
 import { changStateAction } from '../../redux/actions/menuActions'
 
@@ -45,6 +45,7 @@ const styleModalNewClass = {
 
 const ModalJoin = () => {
   const dispatch = useDispatch()
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, message, isSuccess } = useSelector(
     (state) => state.userJoinClassByCode
   )
@@ -128,19 +129,15 @@ const ModalJoin = () => {
 
 const ModalNewClass = () => {
   const dispatch = useDispatch()
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, message, isSuccess } = useSelector(
     (state) => state.userCreateNewClass
   )
 
   const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
 
   const handleOpen = () => {
     setIsOpen(!isOpen)
-  }
-
-  const handleNavigate = () => {
-    navigate('/class/1')
   }
 
   const {

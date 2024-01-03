@@ -6,10 +6,12 @@ import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import GradeTable from './GradeTable'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
-import EditIcon from '@mui/icons-material/Edit';
-import BeenhereIcon from '@mui/icons-material/Beenhere';
+import EditIcon from '@mui/icons-material/Edit'
+import BeenhereIcon from '@mui/icons-material/Beenhere'
 import { getStudentIdList } from '../../../../redux/APIs/classServices'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { useSelector } from 'react-redux'
+const isEqual = require('lodash/isEqual')
 import {
   DndContext,
   // eslint-disable-next-line no-unused-vars
@@ -21,6 +23,7 @@ import {
   DragOverlay,
   defaultDropAnimationSideEffects
 } from '@dnd-kit/core'
+// eslint-disable-next-line no-unused-vars
 import { SortableContext, defaultAnimateLayoutChanges, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -31,114 +34,13 @@ import { useParams } from 'react-router-dom'
 import { getAllGradeCompositionByClassIdService, createNewGradeComposition, removeGradeComposition, getAllGradeCompositionByStudentId, uploadGradeComposition, editGradeComposition, updateOrderGradeComposition, updateGradeComposition } from '../../../../redux/APIs/gradeServices'
 import { styled } from '@mui/material/styles'
 import Papa from 'papaparse'
+import { SocketContext } from '../../../../Context/SocketProvider'
+import toast from 'react-hot-toast'
 
-const rows = [
-  { id: 1, fullName: 'John Doe', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '8' },
-    { composition: 'Exercise 2', percent: '10%', grade: '7' },
-    { composition: 'Midterm', percent: '30%', grade: '25' },
-    { composition: 'Finalterm', percent: '50%', grade: '40' }
-  ], total: '40'
-  },
-  { id: 2, fullName: 'Jane Smith', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '7' },
-    { composition: 'Exercise 2', percent: '10%', grade: '6' },
-    { composition: 'Midterm', percent: '30%', grade: '22' },
-    { composition: 'Finalterm', percent: '50%', grade: '45' }
-  ], total: '30'
-  },
-  { id: 3, fullName: 'Bob Johnson', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '5' },
-    { composition: 'Exercise 2', percent: '10%', grade: '8' },
-    { composition: 'Midterm', percent: '30%', grade: '28' },
-    { composition: 'Finalterm', percent: '50%', grade: '40' }
-  ], total: '30'
-  },
-  // Add more entries as needed
-  { id: 4, fullName: 'Alice Brown', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '9' },
-    { composition: 'Exercise 2', percent: '10%', grade: '7' },
-    { composition: 'Midterm', percent: '30%', grade: '24' },
-    { composition: 'Finalterm', percent: '50%', grade: '38' }
-  ], total: '30'
-  },
-  { id: 5, fullName: 'Charlie Davis', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '8' },
-    { composition: 'Exercise 2', percent: '10%', grade: '7' },
-    { composition: 'Midterm', percent: '30%', grade: '26' },
-    { composition: 'Finalterm', percent: '50%', grade: '42' }
-  ], total: '35'
-  },
-  { id: 6, fullName: 'Eva White', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '7' },
-    { composition: 'Exercise 2', percent: '10%', grade: '9' },
-    { composition: 'Midterm', percent: '30%', grade: '23' },
-    { composition: 'Finalterm', percent: '50%', grade: '39' }
-  ], total: '38'
-  },
-  { id: 7, fullName: 'David Black', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '6' },
-    { composition: 'Exercise 2', percent: '10%', grade: '8' },
-    { composition: 'Midterm', percent: '30%', grade: '25' },
-    { composition: 'Finalterm', percent: '50%', grade: '37' }
-  ], total: '30'
-  },
-  { id: 8, fullName: 'Grace Lee', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '5' },
-    { composition: 'Exercise 2', percent: '10%', grade: '9' },
-    { composition: 'Midterm', percent: '30%', grade: '27' },
-    { composition: 'Finalterm', percent: '50%', grade: '41' }
-  ], total: '31'
-  },
-  { id: 9, fullName: 'Frank Adams', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '8' },
-    { composition: 'Exercise 2', percent: '10%', grade: '6' },
-    { composition: 'Midterm', percent: '30%', grade: '22' },
-    { composition: 'Finalterm', percent: '50%', grade: '36' }
-  ], total: '31'
-  },
-  { id: 10, fullName: 'Helen Taylor', listGrade: [
-    { composition: 'Exercise 1', percent: '10%', grade: '7' },
-    { composition: 'Exercise 2', percent: '10%', grade: '9' },
-    { composition: 'Midterm', percent: '30%', grade: '24' },
-    { composition: 'Finalterm', percent: '50%', grade: '40' }
-  ], total: '40'
-  }
-]
-
-const gradeCompositionList = [
-  {
-    id: 1,
-    title: 'Dev posted a new assignment',
-    composition: 'Finalterm',
-    time: '12:00',
-    percent: '50%'
-  },
-  {
-    id: 2,
-    title: 'Dev posted a new assignment',
-    composition: 'Midterm',
-    time: '12:00',
-    percent: '30%'
-  },
-  {
-    id: 3,
-    title: 'Dev posted a new assignment',
-    composition: 'Exercise 2',
-    time: '12:00',
-    percent: '10%'
-  },
-  {
-    id: 4,
-    title: 'Dev posted a new assignment',
-    composition: 'Exercise 1',
-    time: '12:00',
-    percent: '10%'
-  }
-]
-
+// eslint-disable-next-line no-unused-vars
 function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows }) {
 
+  const [errorText, setErrorText] = useState('')
   const { classId } = useParams()
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -163,6 +65,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     setGradeCompositionTitle(composition)
     setGradeCompositionPercent(percent)
     setIsPublicCheckBox(isPublic)
+    setErrorText('')
   }
 
   const [gradeCompositionTitle, setGradeCompositionTitle] = useState('')
@@ -172,11 +75,29 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
   const [gradeCompositionPercent, setGradeCompositionPercent] = useState(0)
   const handleOnChangeGradeCompositionPercent = (e) => {
     setGradeCompositionPercent(e.target.value)
+    setErrorText('')
+    if (e.target.value < 0)
+      setErrorText('Scale can not less than zero!')
   }
-  const [isPublicCheckBox, setIsPublicCheckBox] = useState(0)
+  const [isPublicCheckBox, setIsPublicCheckBox] = useState(false)
+  // eslint-disable-next-line no-unused-vars
   const handleOnChangeIsPublic = (e) => {
     setIsPublicCheckBox(!isPublicCheckBox)
   }
+
+  // eslint-disable-next-line no-unused-vars
+  let { isLoading: classLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
+  const { socket } = useContext(SocketContext)
+
   const handleEditGradeComposition = async () => {
     if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
       const response = await updateGradeComposition(classId, id, gradeCompositionTitle, gradeCompositionPercent, isPublicCheckBox)
@@ -184,6 +105,20 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
       setOrderGradeComposition(response.data.orderGradeComposition)
     }
     setIsOpenEditGradeComposition(!isOpenEditGradeComposition)
+
+    if (isPublicCheckBox) {
+      classInfo.students.forEach((student) => {
+        const notificationData = {
+          userSendId: userInfo?._id,
+          userReceiverId: student, // ID của ọc sinh nhận thông báo
+          userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+          image: userInfo?.image,
+          content: `The teacher has publicly posted the new ${composition} grades`,
+          link: `/class/${classId}/grade`
+        }
+        socket?.emit('post_data', notificationData)
+      })
+    }
   }
 
 
@@ -302,7 +237,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
             <MenuItem>
               {/* <FormControlLabel control={<Checkbox checked={isPublic} />} label="Public" /> */}
               <Button component="label" variant='contained' startIcon={<EditIcon />} sx={{ width: '100%' }}
-                onClick={handleOpenEditGradeComposition}>
+                onClick={() => {handleOpenEditGradeComposition(), handleClose()}}>
                 Edit
               </Button>
             </MenuItem>
@@ -335,12 +270,15 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
                   value={gradeCompositionTitle} onChange={(e) => handleOnChangeGradeCompositionTitle(e)}/>
 
                 <TextField type='number' label="Percentage" variant="outlined" sx={{ width: '100%' }}
-                  value={gradeCompositionPercent} onChange={(e) => handleOnChangeGradeCompositionPercent(e)}/>
+                  value={gradeCompositionPercent}
+                  onChange={(e) => handleOnChangeGradeCompositionPercent(e)}
+                  error={Boolean(errorText)}
+                  helperText={errorText} />
 
                 <FormControlLabel
                   control={
                     <Checkbox
-                      value={isPublicCheckBox}
+                      checked = {isPublicCheckBox}
                       onClick={handleOnChangeIsPublic}
                     />
                   }
@@ -349,7 +287,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
               </Box>
 
               <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button onClick={handleEditGradeComposition}>
+                <Button onClick={handleEditGradeComposition} disabled={Boolean(errorText)}>
                   Update
                 </Button>
 
@@ -413,9 +351,7 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
       const oldIndex = orderedGradeCompostionState.findIndex(c => c._id === active.id)
       // Get new position
       const newIndex = orderedGradeCompostionState.findIndex(c => c._id === over.id)
-      console.log('oldIndex newIndex', oldIndex, newIndex)
       const dndOrderedGradeCompostionState = arrayMove(orderedGradeCompostionState, oldIndex, newIndex)
-      console.log('After move', dndOrderedGradeCompostionState)
       SetorderedGradeCompostionState(dndOrderedGradeCompostionState)
       setGradeCompositionList(dndOrderedGradeCompostionState)
       handleUpdateOrderGradeComposition(dndOrderedGradeCompostionState)
@@ -527,12 +463,14 @@ const sumGradeComposition = (listGrade) => {
   let sum = 0
   listGrade.map((composition) => {
     if (composition.grade === '') {
-      return ''
+      sum += 0
+    } else {
+      sum += parseFloat(composition.grade)
     }
-    sum += composition.grade
   })
 
-  return sum
+
+  return sum.toFixed(2)
 }
 
 
@@ -584,31 +522,46 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
           total: sumGradeComposition(listGrade)
         })
       } catch (error) {
-        console.error('Error:', error)
+        toast.error(error.message)
       }
     })
   ).then(() => {
+
+    newRows.sort((a, b) => {
+      return a.id - b.id
+    })
     // Gọi khi tất cả promises hoàn tất
-    if (rows.length != newRows.length) {
-      setRows(newRows)
-    } else {
-      if (rows.length > 0 && newRows.length > 0) {
-        if (rows[0].listGrade.length != newRows[0].listGrade.length ) {
-          setRows(newRows)
-        }
-        // newRows.map((item, index) => {
-        //   if (item.total !== rows[index].total) {
-        //     setRows(newRows)
-        //   }
-        // })
+    if ( !isEdit ) {
+      if (!isEqual(rows, newRows)) {
+        setRows(newRows)
       }
-      console.log(rows)
     }
   })
     .catch((error) => {
-      console.error('Error:', error)
+      toast.error(error.message)
     })
 
+  // const obj1 = {
+  //   id: '20127261',
+  //   fullName: 'Chau Hoang Tan',
+  //   listGrade: [
+  //     {
+  //       composition: 'Ex2',
+  //       grade: 10
+  //     }
+  //   ]
+  // }
+
+  // const obj2 = {
+  //   id: '20127261',
+  //   fullName: 'Chau Hoang Tan',
+  //   listGrade: [
+  //     {
+  //       composition: 'Ex1',
+  //       grade: 10
+  //     }
+  //   ]
+  // }
   // useEffect(() => {
   //   Promise.all(
   //     studentList.map(async (item) => {
@@ -729,11 +682,10 @@ export default function GradeTeacher () {
         if (response.orderGradeComposition.length != orderGradeComposition.length) {
           setOrderGradeComposition(response.orderGradeComposition)
           setGradeCompositionList(response.gradeCompositionList)
-          console.log(response.gradeCompositionList)
           // console.log( orderGradeComposition, gradeCompositionList )
         }
       } catch (error) {
-        console.error('Error fetching composition:', error)
+        toast.error(error.message)
       }
     }
 
@@ -771,6 +723,7 @@ export default function GradeTeacher () {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // eslint-disable-next-line no-unused-vars
         const { message, studentListByUpload } = await getStudentIdList(classId)
         setStudentList(studentListByUpload)
         let dataList = [
@@ -783,7 +736,7 @@ export default function GradeTeacher () {
 
         setCsvData(dataList)
       } catch (error) {
-        console.error('Error fetching CSV data:', error)
+        toast.error(error.message)
       }
     }
 

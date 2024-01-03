@@ -1,5 +1,4 @@
 import Axios from './Axios'
-import AxiosJWT from './AxiosJWT'
 
 // Register new user API
 const registerService = async (user) => {

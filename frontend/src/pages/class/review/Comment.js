@@ -1,4 +1,4 @@
-import { Box,
+import {
   Button,
   TextField,
   Typography,
@@ -7,7 +7,7 @@ import { Box,
   Grid,
   Avatar } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
-import { createNewComment, deleteComment, getAllComment } from '../../../redux/APIs/gradeServices'
+import { createNewComment } from '../../../redux/APIs/gradeServices'
 import { useState, useEffect, useContext } from 'react'
 import { getAllCommentAction } from '../../../redux/actions/gradeActions'
 import { useSelector, useDispatch } from 'react-redux'
@@ -46,6 +46,7 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
 
   const { socket } = useContext(SocketContext)
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, comments, isSuccess } = useSelector(
     (state) => state.userGetAllComment
   )
@@ -63,6 +64,7 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
       toast.error(isError)
       dispatch({ type: 'GET_ALL_COMMENT_RESET' })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isError])
 
   const handleInputContent = (event) => {
@@ -70,6 +72,7 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
     setIsContent(inputValue)
   }
 
+  // eslint-disable-next-line no-unused-vars
   let { isLoading: classLoading, classes : classInfo } = useSelector(
     (state) => state.userGetClassByID
   )
@@ -100,7 +103,6 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
             link: `/class/${classId}/review/${reviewId}`
           }
 
-          console.log('notificationData', notificationData)
           socket?.emit('post_data', notificationData)
         } else {
           classInfo.teachers.forEach((teacher) => {
@@ -112,9 +114,8 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
               content: `Student send a message at request review ${composition}`,
               link: `/class/${classId}/review/${reviewId}`
             }
-            console.log('notificationData', notificationData)
             socket?.emit('post_data', notificationData)
-          }) 
+          })
         }
       } catch (error) {
         toast.error(error.response.data.message)

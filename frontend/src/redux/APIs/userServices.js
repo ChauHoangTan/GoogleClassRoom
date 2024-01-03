@@ -1,4 +1,3 @@
-import Axios from './Axios'
 import AxiosJWT from './AxiosJWT'
 
 // Change password API
@@ -61,10 +60,9 @@ const countUsersByRoleJoinService = async () => {
 
 // admin upload student list
 const adminUploadStudentList = async(studentsListUpload) => {
-    console.log(studentsListUpload)
-    const { data } = await AxiosJWT.post('/users/students/upload', { studentsListUpload })
-    return data
-  }
+  const { data } = await AxiosJWT.post('/users/students/upload', { studentsListUpload })
+  return data
+}
 
 
 export {

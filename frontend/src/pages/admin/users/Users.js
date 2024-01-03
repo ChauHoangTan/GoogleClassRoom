@@ -4,13 +4,13 @@ import toast from 'react-hot-toast'
 import UserTable from '../../../components/table/UserTable'
 import { adminUpdateStudentIdsAction, deleteUserAction, getAllUsersAction } from '../../../redux/actions/userActions'
 import { useDispatch } from 'react-redux'
-import { styled } from '@mui/system';
+import { styled } from '@mui/system'
 
 const StyledClassTable = styled('div')({
-    transform: 'scale(0.9)',
-    transformOrigin: 'top left',
-    width: 'calc(100% / 0.9)',
-  });
+  transform: 'scale(0.9)',
+  transformOrigin: 'top left',
+  width: 'calc(100% / 0.9)'
+})
 
 const Users = () => {
   const dispatch = useDispatch()
@@ -23,19 +23,19 @@ const Users = () => {
   const { isLoading, isError, users } = useSelector(
     (state) => state.adminGetAllUsers
   )
-  
+
   const { isError: deleteError, isSuccess } = useSelector(
     (state) => state.adminDeleteUser
   )
-  const prevIsUploadSuccess = useRef(isSuccess);
+  const prevIsUploadSuccess = useRef(isSuccess)
   // useEffect
   useEffect(() => {
     if (!prevIsUploadSuccess.current || isSuccess) {
-        dispatch(getAllUsersAction());
-      }
-    
-      // Cập nhật giá trị trạng thái trước đó của isUploadSuccess
-      prevIsUploadSuccess.current = isUploadSuccess;
+      dispatch(getAllUsersAction())
+    }
+
+    // Cập nhật giá trị trạng thái trước đó của isUploadSuccess
+    prevIsUploadSuccess.current = isUploadSuccess
     if (isError || deleteError || isUploadError) {
       toast.error(isError || deleteError || isUploadError)
       dispatch({ type: isError ? 'GET_ALL_USERS_RESET' : deleteError ? 'DELETE_USER_RESET' : 'UPDATE_STUDENT_IDS_RESET' })
@@ -59,7 +59,7 @@ const Users = () => {
 
   return (
     <StyledClassTable>
-        <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} isUploadLoading={isUploadLoading} adminUpdateStudentIds={(adminUploadStudentList) => dispatch(adminUpdateStudentIdsAction(adminUploadStudentList))} />
+      <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} isUploadLoading={isUploadLoading} adminUpdateStudentIds={(adminUploadStudentList) => dispatch(adminUpdateStudentIdsAction(adminUploadStudentList))} />
     </StyledClassTable>
   )
 }

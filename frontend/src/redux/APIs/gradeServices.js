@@ -1,4 +1,3 @@
-import Axios from './Axios'
 import AxiosJWT from './AxiosJWT'
 
 // *************** USER APIs ***************
@@ -78,7 +77,6 @@ const updateOrderGradeComposition = async ( classId, listOrderGradeComposition )
 }
 
 const createNewComment = async ( classId, gradeCompositionId, studentId, content, isTeacherComment ) => {
-  console.log('isTeacherComment',classId, gradeCompositionId, studentId, content, isTeacherComment)
   const { data } = await AxiosJWT.post('/grade/createNewComment', { classId, gradeCompositionId, studentId, content, isTeacherComment })
   return data
 }

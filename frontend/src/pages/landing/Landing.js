@@ -4,8 +4,6 @@ import { useState } from 'react'
 import './style.scss'
 import { useNavigate } from 'react-router-dom'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import landing from '../../assets/img/landing.png'
-
 
 const theme = createTheme({
   palette: {

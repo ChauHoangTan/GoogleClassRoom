@@ -4,7 +4,6 @@ import Container from '@mui/material/Container'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { useSelector, useDispatch } from 'react-redux'
 import Loader from '../../../components/notification/Loader'
 import { getInvitationStudentByUrlService } from '../../../redux/APIs/classServices'
@@ -16,13 +15,113 @@ import { getAllGradeCompositionByClassIdAction } from '../../../redux/actions/gr
 import { mapOrder } from '../../../utils/SortOrderArray/mapOrder'
 import EditIcon from '@mui/icons-material/Edit'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
-import { leaveThisClass } from '../../../redux/APIs/classServices'
+import { leaveThisClass, updateClassDetailService } from '../../../redux/APIs/classServices'
 import { useNavigate } from 'react-router-dom'
 import { changStateAction } from '../../../redux/actions/menuActions'
 import { convertTime } from '../../../utils/timeConvert/timeConvert'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { createClassInfoValidation } from '../../../components/validation/classValidation'
+import { Box, Button, Modal, TextField } from '@mui/material'
+import { getClassByIDActions } from '../../../redux/actions/classActions'
+
+const styleModalEditClass = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  maxWidth: 600,
+  bgcolor: 'background.paper',
+  border: '2px solid #005B48',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: '20px'
+}
+
+const ModalEditClass = ({ isOpen, setIsOpen }) => {
+  const dispatch = useDispatch()
+
+  const handleOpen = () => {
+    setIsOpen(!isOpen)
+  }
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(createClassInfoValidation)
+  })
+
+  const { classId } = useParams()
+
+  // on submit
+  const onSubmit = (data) => {
+    handleOpen()
+    const fetchData = async () => {
+      try {
+        const result = await updateClassDetailService(classId, data)
+        toast.success(result.message)
+        dispatch(getClassByIDActions(classId))
+        dispatch(changStateAction())
+      } catch (error) {
+        toast.error(error.response)
+      }
+    }
+    fetchData()
+  }
+
+  return (
+    <>
+      <Modal
+        open={isOpen}
+        onClose={() => {
+          handleOpen()
+          reset()
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleModalEditClass}
+          onSubmit={handleSubmit(onSubmit)}
+          component="form"
+          noValidate
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold', color:'#005B48' }}>
+            Edit class
+          </Typography>
+          <TextField {...register('className')}
+            error={!!errors.className}
+            helperText={errors.className?.message || ''}
+            required
+            name="className"
+            id="inputName"
+            label="Enter class name"
+            variant="outlined"
+            sx={{ mt:'20px', width:'100%' }}/>
+          <TextField {...register('codeClassName')}
+            error={!!errors.codeClassName}
+            helperText={errors.codeClassName?.message || ''}
+            required
+            name="codeClassName"
+            id="inputCodeClassName"
+            label="Enter code class name"
+            variant="outlined"
+            sx={{ mt:'20px', width:'100%' }}/>
+          <Stack direction='row' justifyContent='end' mt={4} spacing={2}>
+            <Button variant='contained' color='error' onClick={() => {handleOpen(); reset() }}>Cancel</Button>
+            <Button type="submit" variant='contained'>Update</Button>
+          </Stack>
+        </Box>
+      </Modal>
+    </>
+  )
+}
 
 const HeadComponent = ({ name, title, background }) => {
   const [anchorEl, setAnchorEl] = useState(null)
+  const [isOpen, setIsOpen] = useState(false)
   const { classId } = useParams()
   const navigate = useNavigate()
 
@@ -37,6 +136,7 @@ const HeadComponent = ({ name, title, background }) => {
   const handleEditClass = () => {
     // Handle logic for editing class
     handleClose()
+    setIsOpen(true)
   }
 
   const dispatch = useDispatch()
@@ -58,6 +158,7 @@ const HeadComponent = ({ name, title, background }) => {
     handleClose()
   }
 
+  // eslint-disable-next-line no-unused-vars
   const { isLoading: classLoading, classes : classInfo } = useSelector(
     (state) => state.userGetClassByID
   )
@@ -90,6 +191,7 @@ const HeadComponent = ({ name, title, background }) => {
           Leave Class
         </MenuItem>
       </Menu>
+      <ModalEditClass isOpen={isOpen} setIsOpen={setIsOpen}/>
     </Stack>
   )
 }
@@ -107,12 +209,12 @@ const ApproachJoin = ({ approach, code }) => {
           setIsLoading(false)
           setIsLink(res.url)
         } catch (error) {
-          console.log(error.response.data.message)
           setIsLoading(false)
         }
       }
       getUrlInviteClass()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
   const handleOnClickCopy = () => {
@@ -217,9 +319,11 @@ const list = [
     time:'00:24' }
 ]
 
+// eslint-disable-next-line no-unused-vars
 const StreamItem = ({ list }) => {
   const dispatch = useDispatch()
   // useEffect
+  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, gradeCompositions } = useSelector(
     (state) => state.userGetAllGradeCompositionByClassId
   )
@@ -231,7 +335,8 @@ const StreamItem = ({ list }) => {
       toast.error(isError)
       dispatch({ type: 'GET_ALL_GRADE_COMPOSITION_RESET' })
     }
-  }, [dispatch, isError])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   const gradeCompositionList = gradeCompositions?.gradeCompositionList
   const orderGradeComposition = gradeCompositions?.orderGradeComposition

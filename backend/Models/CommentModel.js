@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose = require('mongoose')
+const { Schema } = mongoose
 
 // Define Comment Schema
 const CommentSchema = new Schema({
@@ -8,12 +8,12 @@ const CommentSchema = new Schema({
   time: { type: Date, default: Date.now },
   firstName: { type: String },
   lastName: { type: String },
-  image: { type: String, default: "" },
+  image: { type: String, default: '' },
   isTeacherComment: { type: Boolean, default: false }
-});
+})
 
 // Create a model from the schema
 // const Comment = mongoose.model('Comment', CommentSchema);
 
 // Export GradeModel for use elsewhere in the application
-module.exports = CommentSchema;
+module.exports = CommentSchema

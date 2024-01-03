@@ -21,6 +21,7 @@ import { getClassByIDActions } from '../../redux/actions/classActions'
 function ClassDetails() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  // eslint-disable-next-line no-unused-vars
   const { isLoading: classLoading, isError: classError, classes, isSuccess } = useSelector(
     (state) => state.userGetClassByID
   )
@@ -36,13 +37,9 @@ function ClassDetails() {
 
     dispatch(getClassByIDActions(classId))
 
-    if (isSuccess) {
-      console.log('SUCCESS')
-    }
-
     if (classError) {
+      navigate('/home')
       toast.error(classError)
-      dispatch({ type: 'GET_CLASS_BY_ID_RESET' })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, classError])
@@ -72,14 +69,14 @@ function ClassDetails() {
             <TabPanel value="stream"><DashBoard /></TabPanel>
             <TabPanel value="people"><Participants /></TabPanel>
             <TabPanel value="grade">
-              {classes.data?.isTeacherOfThisClass ? (
+              {classes?.data?.isTeacherOfThisClass ? (
                 <GradeTeacher />
               ) : (
                 <GradeStudent />
               )}
             </TabPanel>
             <TabPanel value="review">
-              {classes.data?.isTeacherOfThisClass ? (
+              {classes?.data?.isTeacherOfThisClass ? (
                 <ReviewTeacher />
               ) : (
                 <ReviewStudent />
@@ -89,7 +86,7 @@ function ClassDetails() {
         )}
       </TabContext>
     </Box>
-  );
+  )
 }
 
 export default ClassDetails

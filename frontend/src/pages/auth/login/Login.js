@@ -11,7 +11,6 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
-import GitHubIcon from '@mui/icons-material/GitHub'
 import IconButton from '@mui/material/IconButton'
 import { Container } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
@@ -91,11 +90,11 @@ function Login ({ rememberMe, setRememberMe }) {
   // useEffect
   useEffect(() => {
     if (userInfo) {
-        if(userInfo?.isAdmin) {
-            navigate('/dashboard')
-        } else {
-            navigate('/home')
-        }
+      if (userInfo?.isAdmin) {
+        navigate('/dashboard')
+      } else {
+        navigate('/home')
+      }
     }
 
     if (isSuccess) {
@@ -109,14 +108,14 @@ function Login ({ rememberMe, setRememberMe }) {
 
   const handleGoogleLogin = () => {
     // Handle when user click login by Google
-    window.open('http://localhost:5000/api/auth/google', '_self')
-    // window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
+    // window.open('http://localhost:5000/api/auth/google', '_self')
+    window.open('https://nexusedu.onrender.com/api/auth/google', '_self')
   }
 
   const handleFacebookLogin = () => {
     // Handle when user click login by Facebook
-    window.open('http://localhost:5000/api/auth/facebook', '_self')
-    // window.open('https://nexusedu.onrender.com/api/auth/facebook', '_self')
+    // window.open('http://localhost:5000/api/auth/facebook', '_self')
+    window.open('https://nexusedu.onrender.com/api/auth/facebook', '_self')
   }
 
   return (

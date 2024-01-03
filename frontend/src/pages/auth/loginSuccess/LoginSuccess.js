@@ -1,7 +1,7 @@
 import './style.scss'
 
 import { useEffect, useRef } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAction } from '../../../redux/actions/authActions'
 import Loader from '../../../components/notification/Loader'
@@ -15,7 +15,6 @@ function LoginSuccess() {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  // eslint-disable-next-line no-unused-vars
   const { isLoading, isError, userInfo, isSuccess } = useSelector(
     state => state.userLogin
   )
@@ -28,19 +27,18 @@ function LoginSuccess() {
       }
 
       fetchToken()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // useEffect
   useEffect(() => {
     if (userInfo) {
-        if(userInfo?.isAdmin) {
-            console.log(userInfo)
-            navigate('/dashboard')
-        } else {
-            navigate('/home')
-        }
+      if (userInfo?.isAdmin) {
+        navigate('/dashboard')
+      } else {
+        navigate('/home')
+      }
     }
 
     if (isSuccess) {

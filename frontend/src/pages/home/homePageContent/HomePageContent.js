@@ -64,12 +64,13 @@ function HomePageContent({ searchTerm }) {
   useEffect(() => {
     if (!classLoading) {
       const filtered = classes?.data?.filter((item) =>
-        searchTerm
+        (searchTerm
           ? item.className.toLowerCase().includes(searchTerm.toLowerCase())
-          : classes?.data
+          : classes?.data) && item.isActive === true
       )
       setFilteredClasses(filtered)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classes, searchTerm])
 
   const [currentPage, setCurrentPage] = useState(1)

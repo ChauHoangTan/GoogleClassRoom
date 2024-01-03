@@ -254,6 +254,9 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
 
   let averages = averageComposition(rows)
 
+  console.log(rows)
+  console.log(columns)
+
   const columnsForDataGrid = columns
     .map((column) => {
       switch (column.id) {
@@ -274,28 +277,30 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
       case 'listGrade':
         // eslint-disable-next-line no-case-declarations
         if ( rows.length > 0 ) {
-          const listGradeColumns = Object.keys(rows[0].listGrade).map((key, index) => {
-            return {
-              field: `${columns[2].listGrade[index].composition}`,
-              headerName: `${columns[2].listGrade[index].composition} (${columns[2].listGrade[index].percent})`,
-              renderCell: (params) =>
-                (
-                  (getIndexById(params.row.id) != null) ?
-                    (<TextField
-                      size="small"
-                      value={
-                        rows[getIndexById(params.row.id) - 1].listGrade[index].grade
-                      }
-                      onChange={(e) => handleChangeGrade(e, getIndexById(params.row.id) - 1, index)}
-                      disabled={!isEdit}
-                    />)
-                    :
-                    (<Typography variant="body1">{`${params.row.listGrade[index].grade}`}</Typography>)
-                ),
-              flex: 1
-            }
-          })
-          return listGradeColumns
+          if (columns[2].listGrade.length > 0 ) {
+            const listGradeColumns = Object.keys(rows[0].listGrade).map((key, index) => {
+              return {
+                field: `${columns[2].listGrade[index].composition}`,
+                headerName: `${columns[2].listGrade[index].composition} (${columns[2].listGrade[index].percent})`,
+                renderCell: (params) =>
+                  (
+                    (getIndexById(params.row.id) != null) ?
+                      (<TextField
+                        size="small"
+                        value={
+                          rows[getIndexById(params.row.id) - 1].listGrade[index].grade
+                        }
+                        onChange={(e) => handleChangeGrade(e, getIndexById(params.row.id) - 1, index)}
+                        disabled={!isEdit}
+                      />)
+                      :
+                      (<Typography variant="body1">{`${params.row.listGrade[index].grade}`}</Typography>)
+                  ),
+                flex: 1
+              }
+            })
+            return listGradeColumns
+          }
         }
         return null
       case 'total':
@@ -327,7 +332,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
   let columnsData = columnsForDataGrid
 
   if (rows.length > 0) {
-    let averageRow = { ...rows[0] }
+    let averageRow = JSON.parse(JSON.stringify(rows[0]))
     averageRow.id = 'Average'
     averageRow.fullName = ''
     averageRow.total = listAverage[listAverage.length - 1]

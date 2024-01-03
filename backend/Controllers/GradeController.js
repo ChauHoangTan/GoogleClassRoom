@@ -137,7 +137,7 @@ const getAllGradeCompositionByStudentId = async (req, res) => {
       const foundStudentGrade = data.studentGradeList.find(item => item.studentId === studentId);
       let studentGrade
       if (foundStudentGrade === undefined){
-        studentGrade = ''
+        studentGrade = 0
       }else{
         studentGrade = foundStudentGrade.grade
       }

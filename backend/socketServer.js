@@ -18,7 +18,7 @@ const registerSocketServer = (server) => {
   }
   const io = socketIO(server, {
     cors: {
-      origin: [process.env.CLIENT_URL, 'https://accounts.google.com/', 'http://localhost:5000'],
+      origin: [process.env.CLIENT_URL, 'https://accounts.google.com/', 'http://localhost:5000', 'https://nexusedu.onrender.com'],
       credentials: true
     }
   })

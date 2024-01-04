@@ -21,7 +21,8 @@ function SocketProvider({ children }) {
       withCredentials: true,
       extraHeaders: {
         // 'Access-Control-Allow-Origin': 'http://localhost:3000'
-        'Access-Control-Allow-Origin': 'https://google-class-room-five.vercel.app'
+        // 'Access-Control-Allow-Origin': 'https://google-class-room-five.vercel.app'
+        'Access-Control-Allow-Origin': 'https://nexusedu.vercel.app/'
       }
     }))
   }, [])

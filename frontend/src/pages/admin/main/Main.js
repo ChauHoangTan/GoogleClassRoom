@@ -117,9 +117,7 @@ const Main = () => {
                       </ListItemAvatar>
                       <ListItemText
                         primary={user?.email}
-                        secondary={`Time Created: ${moment(user?.createdAt).format(
-                          'YYYY-MM-DD H:mm:ss'
-                        )}`}
+                        secondary={`Time Created: ${moment(user?.createdAt?.createdAt).fromNow()}`}
                       />
                     </ListItem>
                     {i !== 3 && <Divider variant="inset" />}

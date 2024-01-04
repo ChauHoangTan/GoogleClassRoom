@@ -149,7 +149,7 @@ function Login ({ rememberMe, setRememberMe }) {
               color: 'white'
             }}
           >
-            Google Class Room
+            NexusEdu
           </Typography>
 
           <Typography

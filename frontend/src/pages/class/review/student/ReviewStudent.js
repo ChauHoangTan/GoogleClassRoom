@@ -160,8 +160,10 @@ function CardGradeReview ({ data, isShowDetail }) {
       <Card
         sx={{
           '&:hover': {
-            bgcolor: '#A9A9A9'
-          }
+            bgcolor: '#D3D3D3'
+          },
+          transition: 'background-color 0.4s',
+          py: 1
         }}
       >
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between',
@@ -264,7 +266,7 @@ function CardGradeReview ({ data, isShowDetail }) {
           </AppBar>
           {status !== 'Pending' && <>
             <Container sx={{
-              borderRadius: 5,
+              borderRadius: 2,
               p: 3,
               border: '2px solid #A9A9A9',
               my: 2
@@ -302,7 +304,7 @@ function CardGradeReview ({ data, isShowDetail }) {
             </ Container>
           </>}
           <Container sx={{
-            borderRadius: 5,
+            borderRadius: 2,
             p: 3,
             border: '2px solid #A9A9A9',
             my: 2
@@ -356,7 +358,7 @@ function CardGradeReview ({ data, isShowDetail }) {
 function GradeReviewPending ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
-      borderRadius: 5,
+      borderRadius: 2,
       p: 3,
       border: '2px solid #A9A9A9',
       my: 2
@@ -386,7 +388,7 @@ function GradeReviewPending ({ reviewList, isShowReview }) {
 function GradeReviewed ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
-      borderRadius: 5,
+      borderRadius: 2,
       p: 3,
       border: '2px solid #A9A9A9',
       my: 2

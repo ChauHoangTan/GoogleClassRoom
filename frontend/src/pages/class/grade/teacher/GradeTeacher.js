@@ -183,13 +183,17 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
   return (
     <Card
       ref={setNodeRef}
-      style={dndKitGradeCompositionStyles}
+      style={{
+        ...dndKitGradeCompositionStyles,
+        transition: 'background-color 0.4s' // Apply the transition here
+      }}
       {...attributes}
       {...listeners}
       sx={{
         '&:hover': {
-          bgcolor: '#A9A9A9'
-        }
+          backgroundColor: '#D3D3D3'
+        },
+        py: 1
       }}
     >
       <CardContent sx={{ display: 'flex', justifyContent: 'space-between',
@@ -398,7 +402,7 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
 
   return (
     <Container sx={{
-      borderRadius: 5,
+      borderRadius: 2,
       p: 3,
       border: '2px solid #A9A9A9',
       my: 2
@@ -635,7 +639,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
 
   return (
     <Container sx={{
-      borderRadius: 5,
+      borderRadius: 2,
       p: 3,
       border: '2px solid #A9A9A9',
       my: 2
@@ -707,11 +711,41 @@ export default function GradeTeacher () {
   const handleOnChangeGradeCompositionPercent = (e) => {
     setGradeCompositionPercent(e.target.value)
   }
+
+  const [isPublic, setIsPublic] = useState(false)
+
+  // eslint-disable-next-line no-unused-vars
+  let { isLoading: classLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
+  const { socket } = useContext(SocketContext)
+
   const handleCreateNewGradeComposition = async () => {
     if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
-      const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
+      const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent, isPublic)
       setGradeCompositionList(response.data.gradeCompositionList)
       setOrderGradeComposition(response.data.orderGradeComposition)
+
+      if ( isPublic ) {
+        classInfo.students.forEach((student) => {
+          const notificationData = {
+            userSendId: userInfo?._id,
+            userReceiverId: student, // ID của ọc sinh nhận thông báo
+            userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+            image: userInfo?.image,
+            content: `The teacher has publicly posted the new ${gradeCompositionTitle} grades`,
+            link: `/class/${classId}/grade`
+          }
+          socket?.emit('post_data', notificationData)
+        })
+      }
     }
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }
@@ -799,7 +833,8 @@ export default function GradeTeacher () {
             <FormControlLabel
               control={
                 <Checkbox
-                  value='isPublic'
+                  value={isPublic}
+                  onClick={ () => setIsPublic(!isPublic)}
                 />
               }
               label='Public grade'

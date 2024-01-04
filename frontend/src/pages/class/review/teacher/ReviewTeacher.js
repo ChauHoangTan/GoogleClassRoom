@@ -154,8 +154,10 @@ function CardGradeReview ({ data, isShowDetail }) {
       <Card
         sx={{
           '&:hover': {
-            bgcolor: '#A9A9A9'
-          }
+            bgcolor: '#D3D3D3'
+          },
+          transition: 'background-color 0.4s',
+          py: 1
         }}
       >
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between',
@@ -258,7 +260,7 @@ function CardGradeReview ({ data, isShowDetail }) {
               md={9}
             >
               <Container sx={{
-                borderRadius: 5,
+                borderRadius: 2,
                 border: '2px solid #A9A9A9',
                 p: 2,
                 mb: 2
@@ -304,7 +306,7 @@ function CardGradeReview ({ data, isShowDetail }) {
               </ Container>
 
               <Container sx={{
-                borderRadius: 5,
+                borderRadius: 2,
                 border: '2px solid #A9A9A9',
                 p: 2
               }}>
@@ -346,7 +348,7 @@ function CardGradeReview ({ data, isShowDetail }) {
               md={3}
             >
               <Container sx={{
-                borderRadius: 5,
+                borderRadius: 2,
                 border: '2px solid #A9A9A9',
                 p: 2,
                 ml: 2
@@ -488,8 +490,10 @@ function CardRelatedReview ({ data, close }) {
       <Card
         sx={{
           '&:hover': {
-            bgcolor: '#A9A9A9'
-          }
+            bgcolor: '#D3D3D3'
+          },
+          transition: 'background-color 0.4s',
+          py: 1
         }}
       >
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between',
@@ -588,7 +592,7 @@ function CardRelatedReview ({ data, close }) {
               md={9}
             >
               <Container sx={{
-                borderRadius: 5,
+                borderRadius: 2,
                 border: '2px solid #A9A9A9',
                 p: 2,
                 mb: 2
@@ -634,7 +638,7 @@ function CardRelatedReview ({ data, close }) {
               </ Container>
 
               <Container sx={{
-                borderRadius: 5,
+                borderRadius: 2,
                 border: '2px solid #A9A9A9',
                 p: 2
               }}>
@@ -676,7 +680,7 @@ function CardRelatedReview ({ data, close }) {
               md={3}
             >
               <Container sx={{
-                borderRadius: 5,
+                borderRadius: 2,
                 border: '2px solid #A9A9A9',
                 p: 2,
                 ml: 2
@@ -706,7 +710,7 @@ function CardRelatedReview ({ data, close }) {
 function GradeReviewPending ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
-      borderRadius: 5,
+      borderRadius: 2,
       p: 3,
       border: '2px solid #A9A9A9',
       my: 2
@@ -735,7 +739,7 @@ function GradeReviewPending ({ reviewList, isShowReview }) {
 function GradeReviewed ({ reviewList, isShowReview }) {
   return (
     <Container sx={{
-      borderRadius: 5,
+      borderRadius: 2,
       p: 3,
       border: '2px solid #A9A9A9',
       my: 2

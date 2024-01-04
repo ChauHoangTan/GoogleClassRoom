@@ -16,12 +16,12 @@ function SocketProvider({ children }) {
   )
 
   useEffect(() => {
-    // setSocket(io('http://localhost:5000', {
-    setSocket(io('https://nexusedu.onrender.com', {
+    setSocket(io('http://localhost:5000', {
+    // setSocket(io('https://nexusedu.onrender.com', {
       withCredentials: true,
       extraHeaders: {
-        // 'Access-Control-Allow-Origin': 'http://localhost:3000'
-        'Access-Control-Allow-Origin': 'https://google-class-room-five.vercel.app'
+        'Access-Control-Allow-Origin': 'http://localhost:3000'
+        // 'Access-Control-Allow-Origin': 'https://google-class-room-five.vercel.app'
       }
     }))
   }, [])

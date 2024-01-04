@@ -72,7 +72,7 @@ function ClassDetails() {
               {classes?.data?.isTeacherOfThisClass ? (
                 <GradeTeacher />
               ) : (
-                <GradeStudent />
+                classes?.data && <GradeStudent />
               )}
             </TabPanel>
             <TabPanel value="review">

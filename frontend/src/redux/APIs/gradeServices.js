@@ -9,8 +9,8 @@ const getAllGradeCompositionByClassIdService = async ( classId ) => {
 }
 
 // Create new grade composition
-const createNewGradeComposition = async ( classId, name, scale ) => {
-  const { data } = await AxiosJWT.post('/grade/create', { classId, name, scale })
+const createNewGradeComposition = async ( classId, name, scale, isPublic ) => {
+  const { data } = await AxiosJWT.post('/grade/create', { classId, name, scale, isPublic })
   return data
 }
 

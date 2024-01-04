@@ -707,11 +707,41 @@ export default function GradeTeacher () {
   const handleOnChangeGradeCompositionPercent = (e) => {
     setGradeCompositionPercent(e.target.value)
   }
+
+  const [isPublic, setIsPublic] = useState(false)
+
+  // eslint-disable-next-line no-unused-vars
+  let { isLoading: classLoading, classes : classInfo } = useSelector(
+    (state) => state.userGetClassByID
+  )
+
+  classInfo = classInfo?.data
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
+  const { socket } = useContext(SocketContext)
+
   const handleCreateNewGradeComposition = async () => {
     if (gradeCompositionTitle != '' && gradeCompositionPercent > 0) {
-      const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent)
+      const response = await createNewGradeComposition(classId, gradeCompositionTitle, gradeCompositionPercent, isPublic)
       setGradeCompositionList(response.data.gradeCompositionList)
       setOrderGradeComposition(response.data.orderGradeComposition)
+
+      if ( isPublic ) {
+        classInfo.students.forEach((student) => {
+          const notificationData = {
+            userSendId: userInfo?._id,
+            userReceiverId: student, // ID của ọc sinh nhận thông báo
+            userName: userInfo?.firstName + ' ' + userInfo?.lastName,
+            image: userInfo?.image,
+            content: `The teacher has publicly posted the new ${gradeCompositionTitle} grades`,
+            link: `/class/${classId}/grade`
+          }
+          socket?.emit('post_data', notificationData)
+        })
+      }
     }
     setIsOpenCreateNewGradeComposition(!isOpenCreateNewGradeComposition)
   }
@@ -799,7 +829,8 @@ export default function GradeTeacher () {
             <FormControlLabel
               control={
                 <Checkbox
-                  value='isPublic'
+                  value={isPublic}
+                  onClick={ () => setIsPublic(!isPublic)}
                 />
               }
               label='Public grade'

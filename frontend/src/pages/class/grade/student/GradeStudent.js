@@ -117,8 +117,10 @@ function CardGrade ({ data }) {
       <Card
         sx={{
           '&:hover': {
-            bgcolor: '#A9A9A9'
-          }
+            bgcolor: '#D3D3D3'
+          },
+          transition: 'background-color 0.4s',
+          py: 1
         }}
       >
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between',
@@ -194,7 +196,7 @@ function CardGrade ({ data }) {
           </Toolbar>
         </AppBar>
         <Container sx={{
-          borderRadius: 5,
+          borderRadius: 2,
           p: 3,
           border: '2px solid #A9A9A9',
           my: 2
@@ -306,7 +308,7 @@ function GradeComposition () {
 
   return (
     <Container sx={{
-      borderRadius: 5,
+      borderRadius: 2,
       p: 3,
       border: '2px solid #A9A9A9',
       my: 2

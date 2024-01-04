@@ -130,7 +130,7 @@ function Comment ({ classId, gradeCompositionId, studentId, student_Id, composit
   return (
     <>
       <Container sx={{
-        borderRadius: 5,
+        borderRadius: 2,
         p: 3,
         // border: '2px solid #A9A9A9',
         my: 2

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import './style.scss'
 
-import { Avatar, Stack, Typography } from '@mui/material'
+import { Avatar, Stack, Typography, Card, CardContent } from '@mui/material'
 import moment from 'moment'
+import { teal } from '@mui/material/colors'
 
 
 const NotificationItem = ({ avatar, nameObj, noti, time, onClick }) => {
@@ -25,15 +26,18 @@ const NotificationItem = ({ avatar, nameObj, noti, time, onClick }) => {
       sx={{
         cursor: 'pointer', /* Add a pointer cursor for hover indication */
         '&:hover': { /* Apply styles on hover */
-          backgroundColor: '#F5F5F5'
-        }
+          backgroundColor: '#A3A3A3',
+          color: '#FFFFFF'
+        },
+        transition: 'background-color 0.1s linear'
       }}
+      px={2}
     >
-      <Stack direction='row' alignItems='center' spacing={2} mt={1} pb={2} sx={{ borderBottom:'2px solid #DFE0DF' }}>
-        <Avatar src={avatar}/>
+      <Stack direction='row' alignItems='center' spacing={2} mt={1} pb={2} sx={{ borderBottom: '2px solid #DFE0DF' }}>
+        <Avatar src={avatar} />
         <Stack>
-          <Typography variant='body-1'><Typography variant='body-1' sx={{ fontWeight:'bold' }}>{nameObj} </Typography>{noti}</Typography>
-          <Typography variant='body-1' sx={{ fontStyle:'italic', opacity:'0.75' }}>{time}</Typography>
+          <Typography variant='body-1'><Typography variant='body-1' sx={{ fontWeight: 'bold' }}>{nameObj} </Typography>{noti}</Typography>
+          <Typography variant='body-1' sx={{ fontStyle: 'italic', opacity: '0.75' }}>{moment(time).fromNow()}</Typography>
         </Stack>
       </Stack>
     </Stack>
@@ -79,47 +83,65 @@ function Notification({ notifications, handleClick, handleClickAll }) {
 
 
   return (
-    <Stack p={2} sx={{ width:'400px', maxHeight:'90vh' }}>
-      <Typography variant='h6' sx={{ fontWeight:'bold' }}>Notification</Typography>
-      {notifications.length > 0 ? notifications.map((item, index) => {
-        return <NotificationItem
-          key={index}
-          avatar={item.image}
-          nameObj={item.userName}
-          noti={item.content}
-          time={moment(item.createdAt).format(
-            'YYYY-MM-DD H:mm:ss'
-          )}
-          onClick={() => handleClick(index) }
-        />
-      }
-
-      ) : (
-        <Typography variant="body-1" sx={{
-          // marginLeft: 10,
-          // color: 'red',
-          mt: 2,
-          textAlign: 'center'
-        }}
-        >
-            Empty
+    <Card>
+      {/* Header */}
+      <CardContent>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', py: '0!important', color: teal[400] }} px={2}>
+          Notifications
         </Typography>
-      )}
-      {notifications.length > 0 && (<Typography variant="body-1" sx={{
-        // marginLeft: 10,
-        color: 'red',
-        '&:hover': {
-          textDecoration: 'underline',
-          cursor: 'pointer'
-        },
-        mt: 2,
-        textAlign: 'center'
-      }}
-      onClick={handleClickAll}
-      >
-        See All
-      </Typography>)}
-    </Stack>
+      </CardContent>
+
+      {/* Body with scrolling */}
+      <CardContent sx={{ overflowY: 'auto', maxHeight: '60vh', padding: '0!important' }}>
+        <Stack sx={{ width: '400px' }}>
+          {notifications.length > 0 ? (
+            notifications.map((item, index) => (
+              <NotificationItem
+                key={index}
+                avatar={item.image}
+                nameObj={item.userName}
+                noti={item.content}
+                time={moment(item.createdAt).format('YYYY-MM-DD H:mm:ss')}
+                onClick={() => handleClick(index)}
+              />
+            ))
+          ) : (
+            <Typography
+              variant="body-1"
+              sx={{
+                p: 2,
+                textAlign: 'center',
+                color: '#FF0000'
+              }}
+            >
+              Empty
+            </Typography>
+          )}
+        </Stack>
+      </CardContent>
+      <CardContent sx={{ padding: '0!important' }}>
+        {notifications.length > 0 && (
+          <Typography
+            variant="body-1"
+            sx={{
+              '&:hover': {
+                textDecoration: 'underline',
+                cursor: 'pointer'
+              },
+              py: 1,
+              textAlign: 'center',
+              color: teal[300],
+              fontWeight: 'bold', // Corrected the typo in fontWeight
+              margin: 'auto', // Center the text horizontally
+              display: 'block' // Ensure block-level display for margin: 'auto' to work
+            }}
+            onClick={handleClickAll}
+          >
+            Clear All
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 

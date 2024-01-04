@@ -9,8 +9,8 @@ const getAllGradeCompositionByClassIdService = async ( classId ) => {
 }
 
 // Create new grade composition
-const createNewGradeComposition = async ( classId, name, scale ) => {
-  const { data } = await AxiosJWT.post('/grade/create', { classId, name, scale })
+const createNewGradeComposition = async ( classId, name, scale, isPublic ) => {
+  const { data } = await AxiosJWT.post('/grade/create', { classId, name, scale, isPublic })
   return data
 }
 
@@ -29,6 +29,12 @@ const updateGradeComposition = async ( classId, gradeCompositionId, name, scale,
 // Get all grade composition by studentId
 const getAllGradeCompositionByStudentId = async ( classId, studentId ) => {
   const { data } = await AxiosJWT.post('/grade/getGradeCompositionByStudentId', { classId, studentId })
+  return data
+}
+
+// Check accout is mapped
+const isMappedAccount = async ( classId, studentId ) => {
+  const { data } = await AxiosJWT.post('/grade/isMappedAccount', { classId, studentId })
   return data
 }
 
@@ -107,5 +113,6 @@ export {
   updateOrderGradeComposition,
   createNewComment,
   deleteComment,
-  getAllComment
+  getAllComment,
+  isMappedAccount
 }

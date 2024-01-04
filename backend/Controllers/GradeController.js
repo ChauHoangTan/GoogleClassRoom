@@ -1,4 +1,5 @@
 const Grade = require('../Models/GradeModel')
+const Class = require('../Models/ClassModel')
 const User = require('../Models/UserModel')
 const GradeComposition = require('../Models/GradeCompositionModel')
 const Review = require('../Models/ReviewModel')
@@ -31,7 +32,7 @@ const getGradeComposition = async (req, res) => {
 }
 
 const createNewGradeComposition = async (req, res) => {
-  const { classId, name, scale } = req.body
+  const { classId, name, scale, isPublic } = req.body
 
   try {
 
@@ -44,15 +45,32 @@ const createNewGradeComposition = async (req, res) => {
 
     const newGradeComposition = new GradeCompositionModel({
       name,
-      scale
+      scale,
+      isPublic
     })
-
-    // await newGradeComposition.save();
 
     grade.orderGradeComposition.push(newGradeComposition._id)
     grade.gradeCompositionList.push(newGradeComposition)
 
     await grade.save()
+
+    const dataClass = await Class.findById(classId)
+
+    dataClass.studentsListUpload.forEach(async (student) => {
+      const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema)
+      const newStudent = new GradeStudent({
+        studentId: student.userId,
+        grade: 0
+      })
+
+      await Grade.findOneAndUpdate(
+        { _id: grade._id, 'gradeCompositionList._id': newGradeComposition._id },
+        { $push: { 'gradeCompositionList.$.studentGradeList': newStudent } },
+        { new: true }
+      )
+    })
+
+    // await newGradeComposition.save();
 
     return res.status(201).json({ success: true, data: grade })
   } catch (error) {
@@ -222,6 +240,32 @@ const editGradeComposition = async (req, res) => {
         }
 
       })
+    })
+
+    const checkIfExisStudent = (studentId, listUpload) => {
+      let checkIsExis = false
+      listUpload.map((user) => {
+        if (user.userId === studentId) {
+          checkIsExis = true
+        }
+      })
+      return checkIsExis
+    }
+
+    const classData = await Class.findById(classId)
+    const studentListByUpload = classData.studentsListUpload
+
+    let compositionList = gradeModel.gradeCompositionList
+
+    compositionList.forEach((composition) => {
+      if (composition.studentGradeList) {
+        composition.studentGradeList = composition.studentGradeList.filter((student) => {
+          if (!checkIfExisStudent(student.studentId, studentListByUpload)) {
+            return false // Exclude this student from the filtered array
+          }
+          return true // Include this student in the filtered array
+        })
+      }
     })
 
     if (!gradeModel) {
@@ -615,6 +659,25 @@ const getAllComment = async (req, res) => {
   }
 }
 
+const isMappedAccount = async (req, res) => {
+  const { classId, studentId } = req.body
+  try {
+    if (studentId === undefined || studentId === '') {
+      return res.status(404).json({ success: false, message: 'Please mapping your account!' })
+    }
+
+    const classModel = await Class.findById(classId)
+    const isExistStudent = classModel.studentsListUpload.find(student => student.userId === studentId)
+    if (!isExistStudent) {
+      return res.status(400).json({ success: false, message: 'Because your account has not been mapped, you cannot view!' })
+    }
+
+    return res.status(200).json({ success: true, message: 'Account mapped!' })
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message })
+  }
+}
+
 module.exports = {
   getGradeComposition,
   createNewGradeComposition,
@@ -631,5 +694,6 @@ module.exports = {
   deleteComment,
   getAllReviewGradeCompositionByStudentId,
   getAllReviewGradeComposition,
-  getAllComment
+  getAllComment,
+  isMappedAccount
 }

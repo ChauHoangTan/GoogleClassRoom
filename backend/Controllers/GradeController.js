@@ -50,12 +50,28 @@ const createNewGradeComposition = async (req, res) => {
       isPublic
     })
 
-    // await newGradeComposition.save();
-
     grade.orderGradeComposition.push(newGradeComposition._id)
     grade.gradeCompositionList.push(newGradeComposition)
 
     await grade.save()
+
+    const dataClass = await Class.findById(classId)
+
+    dataClass.studentsListUpload.forEach(async (student) => {
+      const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema)
+      const newStudent = new GradeStudent({
+        studentId: student.userId,
+        grade: 0
+      })
+
+      await Grade.findOneAndUpdate(
+        { _id: grade._id, 'gradeCompositionList._id': newGradeComposition._id },
+        { $push: { 'gradeCompositionList.$.studentGradeList': newStudent } },
+        { new: true }
+      )
+    })
+
+    // await newGradeComposition.save();
 
     return res.status(201).json({ success: true, data: grade })
   } catch (error) {

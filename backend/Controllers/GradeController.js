@@ -4,7 +4,6 @@ const User = require('../Models/UserModel')
 const GradeComposition = require('../Models/GradeCompositionModel')
 const Review = require('../Models/ReviewModel')
 const Comment = require('../Models/CommentModel')
-const _ = require('lodash');
 const mongoose = require('mongoose')
 // eslint-disable-next-line no-unused-vars
 const { student } = require('../Middlewares/verifyToken')
@@ -46,7 +45,7 @@ const createNewGradeComposition = async (req, res) => {
 
     const newGradeComposition = new GradeCompositionModel({
       name,
-      scale, 
+      scale,
       isPublic
     })
 
@@ -246,7 +245,7 @@ const editGradeComposition = async (req, res) => {
     const checkIfExisStudent = (studentId, listUpload) => {
       let checkIsExis = false
       listUpload.map((user) => {
-        if (user.userId === studentId){
+        if (user.userId === studentId) {
           checkIsExis = true
         }
       })
@@ -256,19 +255,18 @@ const editGradeComposition = async (req, res) => {
     const classData = await Class.findById(classId)
     const studentListByUpload = classData.studentsListUpload
 
-    let compositionList = gradeModel.gradeCompositionList;
+    let compositionList = gradeModel.gradeCompositionList
 
     compositionList.forEach((composition) => {
       if (composition.studentGradeList) {
         composition.studentGradeList = composition.studentGradeList.filter((student) => {
           if (!checkIfExisStudent(student.studentId, studentListByUpload)) {
-            console.log('pull', student.studentId);
-            return false; // Exclude this student from the filtered array
+            return false // Exclude this student from the filtered array
           }
-          return true; // Include this student in the filtered array
-        });
+          return true // Include this student in the filtered array
+        })
       }
-    });
+    })
 
     if (!gradeModel) {
       return res.status(404).json({ success: false, message: 'Can not find Grade by ID of Class' })

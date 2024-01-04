@@ -60,8 +60,8 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
   }
 
   const handleNavClick = (url) => {
-    window.location.href = url; // Forces a complete page reload
-  };
+    window.location.href = url // Forces a complete page reload
+  }
 
   const isOpenMenu = useSelector(state => state.isOpenMenu)
   let storePrevStateMenu = useRef(isOpenMenu)
@@ -105,42 +105,42 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
           <List>
             <ListItem disablePadding className={`panel ${indexTab === 0 && 'highlight'}`}
               onClick={() => handleOnclick(0)}>
-                <ListItemButton onClick={() => handleNavClick('/dashboard')}>
+              <ListItemButton onClick={() => handleNavClick('/dashboard')}>
                 <ListItemIcon>
-                    <Dashboard />
+                  <Dashboard />
                 </ListItemIcon>
                 <Typography variant='body-1' color='inherit' sx={{ backgroundColor: (theme) => theme.palette.primary }}>
                     Dashboard
                 </Typography>
-            </ListItemButton>
+              </ListItemButton>
             </ListItem>
           </List>
         </nav>
         <nav aria-label="secondary mailbox folders" className='containerPanel'>
           <List className='link'>
             <ListItem disablePadding className={`panel ${indexTab === 1 && 'highlight'}`}onClick={() => handleOnclick(1)}>
-            <ListItemButton onClick={() => handleNavClick('/users')}>
-            <ListItemIcon>
-                <PeopleAlt/>
-            </ListItemIcon>
-            <Typography variant='body-1' color='inherit' sx={{ backgroundColor: (theme) => theme.palette.primary }}>
+              <ListItemButton onClick={() => handleNavClick('/users')}>
+                <ListItemIcon>
+                  <PeopleAlt/>
+                </ListItemIcon>
+                <Typography variant='body-1' color='inherit' sx={{ backgroundColor: (theme) => theme.palette.primary }}>
                 Users
-            </Typography>
-        </ListItemButton>
+                </Typography>
+              </ListItemButton>
             </ListItem>
           </List>
         </nav>
         <nav aria-label="third mailbox folders" className='containerPanel'>
           <List className='link'>
             <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}onClick={() => handleOnclick(2)}>
-            <ListItemButton onClick={() => handleNavClick('/classes')}>
-            <ListItemIcon>
-                <KingBed/>
-            </ListItemIcon>
-            <Typography variant='body-1' color='inherit' sx={{ backgroundColor: (theme) => theme.palette.primary }}>
+              <ListItemButton onClick={() => handleNavClick('/classes')}>
+                <ListItemIcon>
+                  <KingBed/>
+                </ListItemIcon>
+                <Typography variant='body-1' color='inherit' sx={{ backgroundColor: (theme) => theme.palette.primary }}>
                 Classes
-            </Typography>
-        </ListItemButton>
+                </Typography>
+              </ListItemButton>
             </ListItem>
           </List>
         </nav>

@@ -228,7 +228,7 @@ function Register() {
       >
         <Container sx={{ width: '100%' }}>
           <Typography component="h1" sx={{ fontFamily: 'FingerPaint', fontSize: '100px', color: 'white' }}>
-                            Google Class Room
+            NexusEdu
           </Typography>
 
           <Typography sx={{ fontFamily: 'FingerPaint', fontSize: '30px', color: 'white' }} marginTop={4}>

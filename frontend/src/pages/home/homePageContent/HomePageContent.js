@@ -80,7 +80,7 @@ function HomePageContent({ searchTerm }) {
 
   return (
     <>
-      <Typography mt={2} mb={5} sx={{ fontStyle:'italic' }}>Search results: {filteredClasses?.length}</Typography>
+      <Typography mt={2} mb={5} sx={{ fontStyle:'italic' }}>Search results: {filteredClasses?.length ? filteredClasses?.length : 0}</Typography>
       <Grid container spacing={2} mt={1} id='homePageContent'>
         {classLoading ?
           <Loader />

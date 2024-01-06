@@ -65,6 +65,8 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
 
   const isOpenMenu = useSelector(state => state.isOpenMenu)
   let storePrevStateMenu = useRef(isOpenMenu)
+
+
   useEffect (() => {
     if (isOpenMenu != storePrevStateMenu) {
       if (!isOpenMenu) {
@@ -78,23 +80,37 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
 
   const location = useLocation()
   useEffect (() => {
-    const urlInfo = location.pathname.split('/')
-    if ( urlInfo[1] === '') {
-      setIndexTab(-1)
-    } else if ( urlInfo[1] === 'home') {
-      setIndexTab(0)
-    } else {
-      const getRole = async () => {
-        const response = await getRoleInClassByUserId(urlInfo[2])
-        if ( response.isTeacher == true) {
-          setIndexTab(1)
-        } else {
-          setIndexTab(2)
-        }
+    if (userInfo?.isAdmin) {
+      const urlInfo = location.pathname.split('/')
+      if ( urlInfo[1] === '') {
+        setIndexTab(-1)
+      } else if ( urlInfo[1] === 'dashboard') {
+        setIndexTab(0)
+      } else if ( urlInfo[1] === 'users') {
+        setIndexTab(1)
+      } else {
+        setIndexTab(2)
       }
+    } else {
+      const urlInfo = location.pathname.split('/')
+      if ( urlInfo[1] === '') {
+        setIndexTab(-1)
+      } else if ( urlInfo[1] === 'home') {
+        setIndexTab(0)
+      } else {
+        const getRole = async () => {
+          const response = await getRoleInClassByUserId(urlInfo[2])
+          if ( response.isTeacher == true) {
+            setIndexTab(1)
+          } else {
+            setIndexTab(2)
+          }
+        }
 
-      getRole()
+        getRole()
+      }
     }
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
 

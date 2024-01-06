@@ -59,7 +59,7 @@ function HomePageContent({ searchTerm }) {
       dispatch({ type: 'GET_ALL_MY_CLASSES_RESET' })
     }
 
-  }, [dispatch, classError])
+  }, [dispatch])
 
   useEffect(() => {
     if (!classLoading) {

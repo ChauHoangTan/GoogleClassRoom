@@ -1,6 +1,10 @@
 import * as authConstants from '../constants/authConstants'
+import * as userConstants from '../constants/userConstants'
+import * as classConstants from '../constants/classConstants'
+
 import * as authApi from '../APIs/authServices'
 import { ErrorsAction } from '../protection'
+
 
 // Login action
 const loginAction = (provider, datas) => async dispatch => {
@@ -36,6 +40,24 @@ const logoutAction = () => async dispatch => {
   dispatch({ type: authConstants.USER_LOGOUT })
   dispatch({ type: authConstants.USER_REGISTER_RESET })
   dispatch({ type: authConstants.USER_LOGIN_RESET })
+  dispatch({ type: userConstants.USER_CHANGE_PASSWORD_RESET })
+  dispatch({ type: userConstants.USER_GET_PROFILE_RESET })
+  dispatch({ type: userConstants.USER_UPDATE_PROFILE_RESET })
+  dispatch({ type: userConstants.GET_ALL_USERS_RESET })
+  dispatch({ type: userConstants.DELETE_USER_RESET })
+  dispatch({ type: userConstants.UPDATE_USER_RESET })
+  dispatch({ type: userConstants.UPDATE_STUDENT_IDS_RESET })
+  dispatch({ type: classConstants.GET_ALL_CLASSES_RESET })
+  dispatch({ type: classConstants.DELETE_CLASS_RESET })
+  dispatch({ type: classConstants.UPDATE_CLASS_RESET })
+  dispatch({ type: classConstants.GET_ALL_MY_CLASSES_RESET })
+  dispatch({ type: classConstants.CREATE_CLASS_RESET })
+  dispatch({ type: classConstants.GET_CLASS_BY_ID_RESET })
+  dispatch({ type: classConstants.JOIN_CLASS_BY_CODE_RESET })
+  dispatch({ type: classConstants.GET_ALL_STUDENTS_RESET })
+  dispatch({ type: classConstants.GET_ALL_TEACHERS_RESET })
+  dispatch({ type: classConstants.SEND_INVITATION_BY_EMAIL_RESET })
+  dispatch({ type: classConstants.GET_ALL_TYPE_STUDENTS_RESET })
   localStorage.removeItem('userInfo')
 }
 

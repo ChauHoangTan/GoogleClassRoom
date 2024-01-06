@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Grid, MenuItem, Modal, Select, Stack, TextField, Typography, Button } from '@mui/material'
+import { Box, Grid, MenuItem, Modal, Select, Stack, TextField, Typography, Button, FormControl, InputLabel } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { getAllClassesAction, updateClassAction } from '../../../redux/actions/classActions'
@@ -113,14 +113,20 @@ const ModalEditClass = ({ isOpen, handleOpen, setClassRow, classRow, setIsOpen }
 
           <Grid container spacing={2} sx={{ mt: '20px' }}>
             <Grid item xs={6}>
-              <Select
-                variant="outlined"
-                value={isActive}
-                onChange={(e) => setIsActive(e.target.value)}
-                sx={{ width: '100%' }}>
-                <MenuItem value="active" sx={{ py: '8px' }}>Active</MenuItem>
-                <MenuItem value="inactive" sx={{ py: '8px' }}>Inactive</MenuItem>
-              </Select>
+              <FormControl fullWidth>
+                <InputLabel id="class-active">Class Active</InputLabel>
+                <Select
+                  labelId='class-active'
+                  id="active"
+                  variant="outlined"
+                  value={isActive}
+                  onChange={(e) => setIsActive(e.target.value)}
+                  label="Class Active"
+                >
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="inactive">Inactive</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>

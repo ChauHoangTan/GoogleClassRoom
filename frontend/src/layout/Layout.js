@@ -7,6 +7,7 @@ import Menu from './Menu'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { getAllClassTeachAndStudyByID } from '../redux/APIs/classServices'
+import toast from 'react-hot-toast'
 
 function Layout({ socket }) {
   const { userInfo } = useSelector(
@@ -26,9 +27,13 @@ function Layout({ socket }) {
   const stateMenu = useSelector(state => state.changeStateMenu)
   useEffect(() => {
     const fetchDataClasses = async () => {
-      const response = await getAllClassTeachAndStudyByID()
-      setClassTeachingList(response.data.classTeaching)
-      setClassStudyingList(response.data.classStudying)
+      try {
+        const response = await getAllClassTeachAndStudyByID()
+        setClassTeachingList(response.data.classTeaching)
+        setClassStudyingList(response.data.classStudying)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     userInfo && fetchDataClasses()

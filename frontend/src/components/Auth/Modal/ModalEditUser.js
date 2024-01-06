@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Button, Grid, MenuItem, Modal, Select, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Modal, Select, Stack, TextField, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { getAllUsersAction, updateUserAction } from '../../../redux/actions/userActions'
@@ -145,24 +145,34 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
 
           <Grid container spacing={2} sx={{ mt: '20px' }}>
             <Grid item xs={6}>
-              <Select
-                variant="outlined"
-                value={isAdmin}
-                onChange={(e) => setIsAdmin(e.target.value)}
-                sx={{ width: '100%' }}>
-                <MenuItem value="admin" sx={{ py: '8px' }}>Admin</MenuItem>
-                <MenuItem value="not admin" sx={{ py: '8px' }}>Not Admin</MenuItem>
-              </Select>
+              <FormControl fullWidth>
+                <InputLabel id="admin-label">Set Admin</InputLabel>
+                <Select
+                  labelId="admin-label"
+                  id="admin"
+                  label="Set Admin"
+                  value={isAdmin}
+                  onChange={(e) => setIsAdmin(e.target.value)}
+                >
+                  <MenuItem value="admin" >Admin</MenuItem>
+                  <MenuItem value="not admin" >Not Admin</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <Select
-                variant="outlined"
-                value={isBanned}
-                onChange={(e) => setIsBanned(e.target.value)}
-                sx={{ width: '100%' }}>
-                <MenuItem value="banned" sx={{ py: '8px' }}>Banned</MenuItem>
-                <MenuItem value="unbanned" sx={{ py: '8px' }}>Unbanned</MenuItem>
-              </Select>
+              <FormControl fullWidth>
+                <InputLabel id="ban-label">Ban User</InputLabel>
+                <Select
+                  labelId="ban-label"
+                  id="ban"
+                  label="Ban User"
+                  value={isBanned}
+                  onChange={(e) => setIsBanned(e.target.value)}
+                >
+                  <MenuItem value="banned">Banned</MenuItem>
+                  <MenuItem value="unbanned">Unbanned</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
           <Stack direction='row' justifyContent='end' mt={4} spacing={2}>

@@ -14,6 +14,10 @@ import Papa from 'papaparse'
 
 function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel, isUploadLoading, adminUpdateStudentIds }) {
 
+    const { userInfo } = useSelector(
+        (state) => state.userLogin
+    )
+
   const [isOpen, setIsOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5)
   const [rowId, setRowId] = useState(null)
@@ -136,12 +140,13 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                   </IconButton>
                 </Tooltip> */}
             <Tooltip title="Edit this room">
-              <IconButton onClick={() => { handleOpen(); setUserRow(params.row) }}>
+              <IconButton disabled={params.row._id === userInfo?._id} onClick={() => { handleOpen(); setUserRow(params.row) }}>
                 <Edit />
               </IconButton>
             </Tooltip>
             <Tooltip title="Delete this room">
               <IconButton
+                disabled={params.row._id === userInfo?._id}
                 onClick={() => deleteHandler(params.row)}
               >
                 <Delete />

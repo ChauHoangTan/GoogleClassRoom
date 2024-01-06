@@ -20,7 +20,9 @@ passport.use(new JwtStrategy({
     if (!user) {
       return done(null, false)
     }
-
+    if(user.isBanned) {
+        return done('Your Account was banned', false)
+    }
     done(null, user)
   } catch (error) {
     done(error, false)

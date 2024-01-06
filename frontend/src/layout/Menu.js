@@ -21,6 +21,7 @@ import './style.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { getRoleInClassByUserId } from '../redux/APIs/classServices'
+import toast from 'react-hot-toast'
 
 const ClassRegisterd = ({ avatar, name, classCode }) => {
 
@@ -99,11 +100,15 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
         setIndexTab(0)
       } else {
         const getRole = async () => {
-          const response = await getRoleInClassByUserId(urlInfo[2])
-          if ( response.isTeacher == true) {
-            setIndexTab(1)
-          } else {
-            setIndexTab(2)
+          try {
+            const response = await getRoleInClassByUserId(urlInfo[2])
+            if ( response.isTeacher == true) {
+              setIndexTab(1)
+            } else {
+              setIndexTab(2)
+            }
+          } catch (error) {
+            console.log(error)
           }
         }
 

@@ -125,10 +125,12 @@ import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { getAllTypeOfStudentsAction, getAllTeachersAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
+import { useState } from 'react'
 
 const VISIBLE_FIELDS = ['image', 'userId', 'fullName', 'status', 'isTeacher']
 
 export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
+  const [pageSize, setPageSize] = useState(5)
   // Check if 'rows' is undefined or empty
   if (!rows || rows.length === 0) {
     return <Typography variant="body1">No data available</Typography>
@@ -257,7 +259,13 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
             'visibility': 'hidden'
           }
         }}
-        pageSizeOptions={[1, 2, 10, 20, 25, 50, 100]}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: pageSize }
+          }
+        }}
+        pageSizeOptions={[5, 15, 25, 50, 100]}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
       />
     </Paper>
   )

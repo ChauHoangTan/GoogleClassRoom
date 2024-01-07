@@ -207,15 +207,19 @@ const EditProfile = () => {
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  {!userInfo?.isAdmin && <Grid item xs={12}>
                     <TextField
                       fullWidth
                       {...register('userId')}
                       id='userId'
                       label='Student ID'
                       name='userId'
+                      error={!!errors.userId}
+                      helperText={
+                        errors.userId?.message || ''
+                      }
                     />
-                  </Grid>
+                  </Grid>}
                   <Grid item xs={12} sm={6}>
                     <TextField
                       name='firstName'

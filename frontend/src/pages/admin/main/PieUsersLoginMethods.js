@@ -74,7 +74,7 @@ const PieUsersLoginMethods = () => {
       ) : (
         loginMethods && (
           <Box sx={{ display: 'flex', flexWrap: 'nowrap', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-            <PieChart width={200} height={200}>
+            <PieChart width={200} height={200} sx={{ alignItems: 'center' }}>
               <Pie
                 // eslint-disable-next-line no-unused-vars
                 data={Object.entries(loginMethods).map(([method, count], index) => ({

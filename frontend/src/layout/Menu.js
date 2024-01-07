@@ -14,7 +14,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined'
 import {
   PeopleAlt,
-  KingBed,
+  Class,
   Dashboard
 } from '@mui/icons-material'
 import './style.scss'
@@ -65,6 +65,8 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
 
   const isOpenMenu = useSelector(state => state.isOpenMenu)
   let storePrevStateMenu = useRef(isOpenMenu)
+
+
   useEffect (() => {
     if (isOpenMenu != storePrevStateMenu) {
       if (!isOpenMenu) {
@@ -78,23 +80,42 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
 
   const location = useLocation()
   useEffect (() => {
-    const urlInfo = location.pathname.split('/')
-    if ( urlInfo[1] === '') {
-      setIndexTab(-1)
-    } else if ( urlInfo[1] === 'home') {
-      setIndexTab(0)
-    } else {
-      const getRole = async () => {
-        const response = await getRoleInClassByUserId(urlInfo[2])
-        if ( response.isTeacher == true) {
-          setIndexTab(1)
-        } else {
-          setIndexTab(2)
-        }
+    if (userInfo?.isAdmin) {
+      const urlInfo = location.pathname.split('/')
+      if ( urlInfo[1] === '') {
+        setIndexTab(-1)
+      } else if ( urlInfo[1] === 'dashboard') {
+        setIndexTab(0)
+      } else if ( urlInfo[1] === 'users') {
+        setIndexTab(1)
+      } else {
+        setIndexTab(2)
       }
+    } else {
+      const urlInfo = location.pathname.split('/')
+      if ( urlInfo[1] === '') {
+        setIndexTab(-1)
+      } else if ( urlInfo[1] === 'home') {
+        setIndexTab(0)
+      } else {
+        const getRole = async () => {
+          try {
+            const response = await getRoleInClassByUserId(urlInfo[2])
+            if ( response.isTeacher == true) {
+              setIndexTab(1)
+            } else {
+              setIndexTab(2)
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log(error)
+          }
+        }
 
-      getRole()
+        getRole()
+      }
     }
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
 
@@ -135,7 +156,7 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
             <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}onClick={() => handleOnclick(2)}>
               <ListItemButton onClick={() => handleNavClick('/classes')}>
                 <ListItemIcon>
-                  <KingBed/>
+                  <Class/>
                 </ListItemIcon>
                 <Typography variant='body-1' color='inherit' sx={{ backgroundColor: (theme) => theme.palette.primary }}>
                 Classes

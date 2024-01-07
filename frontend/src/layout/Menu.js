@@ -21,7 +21,6 @@ import './style.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { getRoleInClassByUserId } from '../redux/APIs/classServices'
-import toast from 'react-hot-toast'
 
 const ClassRegisterd = ({ avatar, name, classCode }) => {
 
@@ -108,6 +107,7 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
               setIndexTab(2)
             }
           } catch (error) {
+            // eslint-disable-next-line no-console
             console.log(error)
           }
         }

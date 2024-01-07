@@ -14,9 +14,9 @@ import Papa from 'papaparse'
 
 function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel, isUploadLoading, adminUpdateStudentIds }) {
 
-    const { userInfo } = useSelector(
-        (state) => state.userLogin
-    )
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
 
   const [isOpen, setIsOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5)
@@ -41,11 +41,10 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     const result = await read(selectedFile)
     let studentsListUpload = []
     result.data.map(data => {
-        console.log(data)
-        if(data['Admin'] === 'yes') {
-            data['Student Id'] = '';
-        }
-        studentsListUpload.push(data)
+      if (data['Admin'] === 'yes') {
+        data['Student Id'] = ''
+      }
+      studentsListUpload.push(data)
     })
     adminUpdateStudentIds(studentsListUpload)
   }
@@ -221,8 +220,8 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                 disableRowSelectionOnClick
                 slots={{
                   toolbar: GridToolbar,
-                  noRowsOverlay: CustomNoRowsOverlay,
-                  
+                  noRowsOverlay: CustomNoRowsOverlay
+
                 }}
                 columnVisibilityModel={{
                   teacherClasses: !isOpenMenu,

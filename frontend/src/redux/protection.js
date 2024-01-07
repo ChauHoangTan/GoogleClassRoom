@@ -1,4 +1,5 @@
 import { logoutAction } from './actions/authActions'
+// eslint-disable-next-line no-unused-vars
 const Swal = require('sweetalert2')
 
 export const ErrorsAction = (error, dispatch, action) => {
@@ -9,8 +10,8 @@ export const ErrorsAction = (error, dispatch, action) => {
   //   console.log(message)
 
   // Logout if token fail
-    if (message === 'Not authorized, token failed') {
-        dispatch(logoutAction())
+  if (message === 'Not authorized, token failed') {
+    dispatch(logoutAction())
   }
   return dispatch({ type: action, payload: message })
 }

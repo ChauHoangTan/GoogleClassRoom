@@ -123,7 +123,7 @@ const EditUserInfoValidation = yup.object().shape({
     .string()
     // .trim()
     .matches(/^[0-9]*$/, 'Only contain numbers'),
-    // .matches(/^$|^[0-9]{8}$/, 'Student ID must contain exactly 8 digits'),
+  // .matches(/^$|^[0-9]{8}$/, 'Student ID must contain exactly 8 digits'),
 
   firstName: yup
     .string()

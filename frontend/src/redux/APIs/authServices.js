@@ -63,8 +63,8 @@ const resendActivationEmailService = async (datas) => {
 }
 
 const checkUserAccount = async (id) => {
-    const { data } = await Axios.get(`/auth/checkAccount/${id}`)
-    return data;
+  const { data } = await Axios.get(`/auth/checkAccount/${id}`)
+  return data
 }
 
 export {
@@ -77,5 +77,5 @@ export {
   checkResetPasswordUrlService,
   resendActivationEmailService,
   refreshAccessTokenService,
-  checkUserAccount,
+  checkUserAccount
 }

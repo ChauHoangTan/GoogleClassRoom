@@ -14,7 +14,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined'
 import {
   PeopleAlt,
-  KingBed,
+  Class,
   Dashboard
 } from '@mui/icons-material'
 import './style.scss'
@@ -156,7 +156,7 @@ const Tabs = ({ indexTab, setIndexTab, classTeaching, classStudying }) => {
             <ListItem disablePadding className={`panel ${indexTab === 2 && 'highlight'}`}onClick={() => handleOnclick(2)}>
               <ListItemButton onClick={() => handleNavClick('/classes')}>
                 <ListItemIcon>
-                  <KingBed/>
+                  <Class/>
                 </ListItemIcon>
                 <Typography variant='body-1' color='inherit' sx={{ backgroundColor: (theme) => theme.palette.primary }}>
                 Classes

@@ -175,28 +175,6 @@ const deleteUser = async (req, res) => {
   }
 }
 
-// @des ban all users
-// @route ban /api/user/:id
-const banUser = async (req, res) => {
-  try {
-    // find user in DB
-    const user = await User.findById(req.params.id)
-    // if user exists delete user from DB
-    if (user) {
-      // else delete user from DB
-      user.isBanned = true
-      await user.save()
-      return res.json({ message: 'User was banned successfully' })
-    }
-    // else send error message
-    else {
-      return res.status(400).json({ message: 'User not found' })
-    }
-  } catch (error) {
-    res.status(400).json({ message: error.message })
-  }
-}
-
 
 // @des block all users
 // @route block /api/user/:id
@@ -313,7 +291,6 @@ module.exports = {
   getUserInfo,
   deleteUser,
   getAllUser,
-  banUser,
   blockUser,
   updateUser,
   countUserMethodLogin,

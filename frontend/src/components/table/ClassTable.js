@@ -138,7 +138,7 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
               <Loader />
             ) : (
               <DataGrid
-                rows={classes}
+                rows={classes || 0}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{

@@ -169,8 +169,8 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
                   value={isBanned}
                   onChange={(e) => setIsBanned(e.target.value)}
                 >
-                  <MenuItem value="banned">Banned</MenuItem>
                   <MenuItem value="unbanned">Unbanned</MenuItem>
+                  <MenuItem value="banned">Banned</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

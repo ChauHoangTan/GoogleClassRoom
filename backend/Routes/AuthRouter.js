@@ -80,4 +80,7 @@ router.post('/refresh', authController.refreshAccessToken)
 
 router.post('/logout', authController.logout)
 
+router.get('/checkAccount/:id', authController.checkUserAccount)
+
+
 module.exports = router

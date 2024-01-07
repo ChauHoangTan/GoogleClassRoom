@@ -75,5 +75,5 @@ export {
   countUsersByLoginMethodsService,
   countUsersByRoleJoinService,
   getAllEmailUsersService,
-  adminUploadStudentList
+  adminUploadStudentList,
 }

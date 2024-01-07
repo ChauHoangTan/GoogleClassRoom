@@ -42,7 +42,9 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     let studentsListUpload = []
 
     result.data.map(data => {
-      studentsListUpload.push(data)
+        if(!data.isAdmin) {
+            studentsListUpload.push(data)
+        }
     })
     adminUpdateStudentIds(studentsListUpload)
   }
@@ -83,13 +85,13 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         field: 'teacherClasses',
         headerName: 'Teacher Classes',
         width: 120,
-        valueGetter: (params) => params.row.teacherClassList.length
+        valueGetter: (params) => params.row.teacherClassList?.length
       },
       {
         field: 'studentClasses',
         headerName: 'Student Classes',
         width: 115,
-        valueGetter: (params) => params.row.studentClassList.length
+        valueGetter: (params) => params.row.studentClassList?.length
       },
       {
         field: 'isVerifiedEmail',
@@ -104,18 +106,10 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         type: 'boolean'
       },
       {
-        field: 'role',
-        headerName: 'Role',
+        field: 'isAdmin',
+        headerName: 'Admin',
         width: 100,
-        renderCell: (params) => {
-          if (params.row.isAdmin) {
-            return 'Admin'
-          } else if (params.row.teacherClassList && params.row.teacherClassList.length > 0) {
-            return 'Teacher'
-          } else {
-            return 'Student'
-          }
-        }
+        type: 'boolean'
       },
       {
         field: 'createdAt',
@@ -197,7 +191,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
               <Loader />
             ) : (
               <DataGrid
-                rows={users}
+                rows={users || 0}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{
@@ -226,7 +220,8 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                 disableRowSelectionOnClick
                 slots={{
                   toolbar: GridToolbar,
-                  noRowsOverlay: CustomNoRowsOverlay
+                  noRowsOverlay: CustomNoRowsOverlay,
+                  
                 }}
                 columnVisibilityModel={{
                   teacherClasses: !isOpenMenu,

@@ -65,6 +65,11 @@ const joinClassByCode = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: 'User not authenticated' })
     }
+
+    if (user.isAdmin) {
+      return res.status(400).json({ message: 'You are Admin so can not join this class' })
+    }
+
     // Get class by ID class
     const curClass = await Class.findOne({ classId: code })
 
@@ -378,6 +383,10 @@ const inviteClassStudent = async(req, res) => {
       return res.status(401).json({ message: 'Please login or register an account to join the class' })
     }
 
+    if (user.isAdmin) {
+      return res.status(400).json({ message: 'You are Admin so can not join this class' })
+    }
+
     if (user.teacherClassList && user.teacherClassList.some(classId => classId.equals(id))) {
       return res.status(400).json({ message: 'You are already a teacher in this class' })
     }
@@ -432,6 +441,10 @@ const inviteClassTeacher = async(req, res) => {
     const user = await User.findById(req.user.id)
     if (!user) {
       return res.status(401).json({ message: 'Please login or register an account to join the class' })
+    }
+
+    if (user.isAdmin) {
+      return res.status(400).json({ message: 'You are Admin so can not join this class' })
     }
 
     if (user.teacherClassList && user.teacherClassList.some(classId => classId.equals(id))) {
@@ -501,6 +514,10 @@ const receiveInvitateEmail = async(req, res) => {
 
     if (user.email !== email) {
       return res.status(400).json({ message: 'This invitation for another email address' })
+    }
+
+    if (user.isAdmin) {
+      return res.status(400).json({ message: 'You are Admin so can not join this class' })
     }
 
     if (user.teacherClassList && user.teacherClassList.some(classId => classId.equals(id))) {

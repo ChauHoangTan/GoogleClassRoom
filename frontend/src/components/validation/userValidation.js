@@ -81,12 +81,12 @@ const ProfileValidation = yup.object().shape({
     .string()
     .trim()
     .matches(/^[0-9]*$/, 'Only contain numbers')
-    .matches(/^$|^[0-9]{8}$/, 'Phone number must be 10 to 11 digits'),
+    .matches(/^$|^[0-9]{10,11}$/, 'Phone number must be 10 to 11 digits'),
   userId: yup
     .string()
     .trim()
     .matches(/^[0-9]*$/, 'Only contain numbers')
-    .matches(/^$|^[0-9]{8}$/, 'Student ID must contain exactly 8 digits')
+    // .matches(/^$|^[0-9]{8}$/, 'Student ID must contain exactly 8 digits')
 })
 
 const ForgotPasswordValidation = yup.object().shape({
@@ -121,9 +121,9 @@ const EditUserInfoValidation = yup.object().shape({
     .trim(),
   userId: yup
     .string()
-    .trim()
-    .matches(/^[0-9]*$/, 'Only contain numbers')
-    .matches(/^$|^[0-9]{8}$/, 'Student ID must contain exactly 8 digits'),
+    // .trim()
+    .matches(/^[0-9]*$/, 'Only contain numbers'),
+  // .matches(/^$|^[0-9]{8}$/, 'Student ID must contain exactly 8 digits'),
 
   firstName: yup
     .string()

@@ -218,7 +218,7 @@ export default function ResponsiveAppBar () {
                         </span>
                       </Link>
                     </MenuItem>
-                    {!userInfo?.isThirdPartyLogin && (
+                    {!userInfo?.password === undefined && (
                       <MenuItem onClick={handleCloseUserMenu}>
                         <Link
                           to='/password'

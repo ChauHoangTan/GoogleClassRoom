@@ -1,4 +1,4 @@
-import { Group, MapsHomeWork } from '@mui/icons-material'
+import { Group, School } from '@mui/icons-material'
 import {
   Avatar,
   Box,
@@ -95,7 +95,7 @@ const Main = () => {
                 <Loader />
               ) : (
                 <>
-                  <MapsHomeWork sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
+                  <School sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
                   <Typography variant="h4">{classes?.length}</Typography>
                 </>
               )
@@ -139,7 +139,7 @@ const Main = () => {
                       <ListItemAvatar>
                         <Avatar
                           alt={classItem?.className}
-                          src={classItem?.image}
+                          src={classItem?.background}
                           variant="rounded"
                         />
                       </ListItemAvatar>

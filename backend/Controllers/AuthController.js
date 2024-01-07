@@ -123,7 +123,7 @@ const loginUser = async (req, res) => {
       // save refreshToken in cookie
       res.cookie('refreshToken', refreshToken, {
         // httpOnly: true,
-        maxAge: 2 * 60*1000,
+        maxAge: 3* 24 * 60 * 1000,
         secure: true,
         sameSite: 'none'
       })
@@ -256,7 +256,7 @@ const loginSuccess = async (req, res) => {
       // httpOnly: true,
       secure: true,
       sameSite: 'none',
-      maxAge: 2*60*1000
+      maxAge: 3* 24 * 60 * 1000
     })
     return res.status(200).json({
       _id: user._id,
@@ -340,6 +340,23 @@ const resetUserPassword = async (req, res) => {
   }
 }
 
+// @des ban all users
+// @route ban /api/user/:id
+const checkUserAccount = async (req, res) => {
+  try {
+    // find user in DB
+    const user = await User.findById(req.params.id)
+    // if user exists delete user from DB
+    if (user) {
+      return res.json({ isExist: true, isBanned: user.isBanned })
+    } else {
+      return res.json({ isExist: false })
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
+}
+
 module.exports = {
   registerUser,
   activateEmail,
@@ -350,5 +367,6 @@ module.exports = {
   checkUrlResetPassword,
   resendActivateEmail,
   refreshAccessToken,
+  checkUserAccount,
   logout
 }

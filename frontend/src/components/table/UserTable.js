@@ -14,6 +14,10 @@ import Papa from 'papaparse'
 
 function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel, isUploadLoading, adminUpdateStudentIds }) {
 
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+
   const [isOpen, setIsOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5)
   const [rowId, setRowId] = useState(null)
@@ -36,8 +40,10 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     const selectedFile = e.target.files[0]
     const result = await read(selectedFile)
     let studentsListUpload = []
-
     result.data.map(data => {
+      if (data['Admin'] === 'yes') {
+        data['Student Id'] = ''
+      }
       studentsListUpload.push(data)
     })
     adminUpdateStudentIds(studentsListUpload)
@@ -72,20 +78,20 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         sortable: false,
         filterable: false
       },
-      { field: 'firstName', headerName: 'First Name', width: 100 },
-      { field: 'lastName', headerName: 'Last Name', width: 100 },
-      { field: 'email', headerName: 'Email', width: 300 },
+      { field: 'firstName', headerName: 'First Name', width: 100, getTooltip: (params) => params.value },
+      { field: 'lastName', headerName: 'Last Name', width: 150, getTooltip: (params) => params.value },
+      { field: 'email', headerName: 'Email', width: 250, getTooltip: (params) => params.value },
       {
         field: 'teacherClasses',
         headerName: 'Teacher Classes',
         width: 120,
-        valueGetter: (params) => params.row.teacherClassList.length
+        valueGetter: (params) => params.row.teacherClassList?.length
       },
       {
         field: 'studentClasses',
         headerName: 'Student Classes',
         width: 115,
-        valueGetter: (params) => params.row.studentClassList.length
+        valueGetter: (params) => params.row.studentClassList?.length
       },
       {
         field: 'isVerifiedEmail',
@@ -100,18 +106,10 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         type: 'boolean'
       },
       {
-        field: 'role',
-        headerName: 'Role',
+        field: 'isAdmin',
+        headerName: 'Admin',
         width: 100,
-        renderCell: (params) => {
-          if (params.row.isAdmin) {
-            return 'Admin'
-          } else if (params.row.teacherClassList && params.row.teacherClassList.length > 0) {
-            return 'Teacher'
-          } else {
-            return 'Student'
-          }
-        }
+        type: 'boolean'
       },
       {
         field: 'createdAt',
@@ -136,12 +134,13 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                   </IconButton>
                 </Tooltip> */}
             <Tooltip title="Edit this room">
-              <IconButton onClick={() => { handleOpen(); setUserRow(params.row) }}>
+              <IconButton disabled={params.row._id === userInfo?._id} onClick={() => { handleOpen(); setUserRow(params.row) }}>
                 <Edit />
               </IconButton>
             </Tooltip>
             <Tooltip title="Delete this room">
               <IconButton
+                disabled={params.row._id === userInfo?._id}
                 onClick={() => deleteHandler(params.row)}
               >
                 <Delete />
@@ -192,7 +191,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
               <Loader />
             ) : (
               <DataGrid
-                rows={users}
+                rows={users || 0}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{
@@ -222,6 +221,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                 slots={{
                   toolbar: GridToolbar,
                   noRowsOverlay: CustomNoRowsOverlay
+
                 }}
                 columnVisibilityModel={{
                   teacherClasses: !isOpenMenu,

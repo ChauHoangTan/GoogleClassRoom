@@ -145,6 +145,9 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     result.data.map((data) => {
       studentsListUpload.push(data)
     })
+    if ( studentsListUpload[studentsListUpload.length - 1].StudentId === '' ) {
+      studentsListUpload.pop()
+    }
     await uploadGradeComposition(classId, id, studentsListUpload)
     setRows([])
   }

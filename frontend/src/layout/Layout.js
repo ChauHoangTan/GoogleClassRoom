@@ -26,9 +26,14 @@ function Layout({ socket }) {
   const stateMenu = useSelector(state => state.changeStateMenu)
   useEffect(() => {
     const fetchDataClasses = async () => {
-      const response = await getAllClassTeachAndStudyByID()
-      setClassTeachingList(response.data.classTeaching)
-      setClassStudyingList(response.data.classStudying)
+      try {
+        const response = await getAllClassTeachAndStudyByID()
+        setClassTeachingList(response.data.classTeaching)
+        setClassStudyingList(response.data.classStudying)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      }
     }
 
     userInfo && fetchDataClasses()

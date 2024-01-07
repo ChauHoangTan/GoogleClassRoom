@@ -1,6 +1,6 @@
 # NexusEdu
 
-![NexusEdu Logo](link_to_logo_image)
+![NexusEdu Logo](https://ibb.co/wdL7Vzn)
 
 ## Overview
 

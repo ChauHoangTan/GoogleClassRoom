@@ -1,4 +1,5 @@
 import { logoutAction } from './actions/authActions'
+// eslint-disable-next-line no-unused-vars
 const Swal = require('sweetalert2')
 
 export const ErrorsAction = (error, dispatch, action) => {
@@ -9,22 +10,8 @@ export const ErrorsAction = (error, dispatch, action) => {
   //   console.log(message)
 
   // Logout if token fail
-  //   if (message === 'Not authorized, token failed' || message === 'Unauthorized' || message === 'Request failed with status code 401) {
-  if (error.response.status === 401) {
-    Swal.fire({
-      title: 'Session Expired',
-      text: 'Your session has expired. Please log in again.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-      customClass: {
-        confirmButton: 'swal-button-custom' //
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Nếu người dùng nhấn nút OK
-        dispatch(logoutAction()) // Gọi hành động để hiển thị cửa sổ đăng nhập
-      }
-    })
+  if (message === 'Not authorized, token failed') {
+    dispatch(logoutAction())
   }
   return dispatch({ type: action, payload: message })
 }

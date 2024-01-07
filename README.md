@@ -39,15 +39,16 @@ The project is developed by the following team members:
 - Deployment:
   - [Vercel](https://vercel.com/) for frontend
   - [Render](https://render.com/) for backend
-- CI/CD: (Add details about your CI/CD setup)
+- CI/CD
 
 ## Getting Started
 
 To run the project locally, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/nexusedu.git`
-2. Install dependencies: `npm install`
-3. Start the development server: `npm start`
+1. Clone the repository: `git clone https://github.com/ChauHoangTan/GoogleClassRoom.git`
+2. Go to backend and frontend folder
+3. Install dependencies: `npm install`
+4. Start the development server: `npm start`
 
 ## Contributing
 

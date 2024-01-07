@@ -79,9 +79,9 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         sortable: false,
         filterable: false
       },
-      { field: 'firstName', headerName: 'First Name', width: 100 },
-      { field: 'lastName', headerName: 'Last Name', width: 100 },
-      { field: 'email', headerName: 'Email', width: 300 },
+      { field: 'firstName', headerName: 'First Name', width: 100, getTooltip: (params) => params.value },
+      { field: 'lastName', headerName: 'Last Name', width: 150, getTooltip: (params) => params.value },
+      { field: 'email', headerName: 'Email', width: 250, getTooltip: (params) => params.value },
       {
         field: 'teacherClasses',
         headerName: 'Teacher Classes',

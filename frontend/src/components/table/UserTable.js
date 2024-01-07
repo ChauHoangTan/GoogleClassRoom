@@ -40,11 +40,12 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     const selectedFile = e.target.files[0]
     const result = await read(selectedFile)
     let studentsListUpload = []
-
     result.data.map(data => {
-        if(!data.isAdmin) {
-            studentsListUpload.push(data)
+        console.log(data)
+        if(data['Admin'] === 'yes') {
+            data['Student Id'] = '';
         }
+        studentsListUpload.push(data)
     })
     adminUpdateStudentIds(studentsListUpload)
   }

@@ -198,7 +198,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 
 
 export default function GradeTable ({ columns, rows, setRows, isEdit }) {
-
+  const [pageSize, setPageSize] = useState(5)
   const [changeState, setChangeState] = useState(false)
   // console.log(columns)
 
@@ -373,7 +373,13 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
             'visibility': 'hidden'
           }
         }}
-        pageSizeOptions={[1, 2, 10, 20, 25, 50, 100]}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: pageSize }
+          }
+        }}
+        pageSizeOptions={[5, 15, 25, 50, 100]}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
       />
     </Paper>
   )

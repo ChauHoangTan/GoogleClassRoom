@@ -1,4 +1,5 @@
 import { logoutAction } from './actions/authActions'
+// eslint-disable-next-line no-unused-vars
 const Swal = require('sweetalert2')
 
 export const ErrorsAction = (error, dispatch, action) => {

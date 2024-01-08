@@ -43,7 +43,7 @@ const Introduction = () => {
                 sx={{ width: '90%' }}>
                 <Typography variant='h4' mt={5}
                   sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px white' }}>
-                                    Welcome to Google Classroom!
+                                    Welcome to NexusEdu!
                 </Typography>
                 <Typography variant='h6'
                   sx={{ fontFamily:'Arima', fontWeight:'600', textShadow:'1px 1px 0px white' }}>
@@ -52,7 +52,7 @@ const Introduction = () => {
                 <Typography variant='body-1' mt={3}
                   sx={{ fontSize: '16px' }}>
                                     Greetings, educators and students alike! We extend a warm welcome to our dedicated space
-                                    for Google Classroom, where learning and collaboration thrive. Whether you&apos;re a teacher
+                                    for NexusEdu, where learning and collaboration thrive. Whether you&apos;re a teacher
                                     shaping minds or a student on a quest for knowledge, this hub is designed with you in mind.
                 </Typography>
                 <button className='btnStart'
@@ -81,7 +81,7 @@ const Famous = () => {
 
         <Grid container spacing={3} className='showResponsive'>
           <Grid item md={12} lg={8}>
-            <Title>Why Should Use My Google Classroom</Title>
+            <Title>Why Should Use My NexusEdu</Title>
             <Stack direction='column' mt={6}>
               <Paper elevation={1} sx={{ borderRadius: '20px' }} className='paperQuantity'>
                 <Grid container spacing={3} justifyContent="center" >
@@ -130,7 +130,7 @@ const Famous = () => {
               <Typography variant='body-1' mt={2}>
                 <li>
                   <Typography variant='body-1' sx={{ fontWeight:'bold' }}>Seamless Integration with Google Services: </Typography>
-                                    Google Classroom seamlessly integrates with other
+                                    NexusEdu seamlessly integrates with other
                                     Google services such as Google Drive, Google Docs, and Google Calendar. </li>
 
               </Typography>
@@ -138,7 +138,7 @@ const Famous = () => {
               <Typography variant='body-1' mt={1}>
                 <li>
                   <Typography variant='body-1' sx={{ fontWeight:'bold' }}>User-Friendly and Intuitive Interface: </Typography>
-                                    Google Classroom offers a user-friendly and
+                                    NexusEdu offers a user-friendly and
                                     intuitive interface that is accessible for both teachers and students.
                 </li>
 
@@ -148,7 +148,7 @@ const Famous = () => {
               <Typography variant='body-1' mt={1}>
                 <li>
                   <Typography variant='body-1' sx={{ fontWeight:'bold' }}>Powerful Collaboration and Communication Tools: </Typography>
-                                    Google Classroom provides powerful tools for real-time collaboration
+                                    NexusEdu provides powerful tools for real-time collaboration
                                     and communication.
                 </li>
 
@@ -182,7 +182,7 @@ const Features = () => {
           <Card variant='outlined' sx={{ padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD' }}>
             <img src='https://i.pinimg.com/564x/4a/30/13/4a30135c32abbea9693ce564b7f02348.jpg'/>
             <CardContent>
-              <Typography variant='body-1' sx={{ fontWeight:'bold' }}>Effortless Class Management: </Typography>Streamline your classes with the power of Google Classroom.
+              <Typography variant='body-1' sx={{ fontWeight:'bold' }}>Effortless Class Management: </Typography>Streamline your classes with the power of NexusEdu.
                             Manage assignments, share resources, and foster collaboration seamlessly.
             </CardContent>
           </Card>
@@ -193,7 +193,7 @@ const Features = () => {
             <img src='https://i.pinimg.com/564x/1f/ec/bc/1fecbc7d8496e7d6a7251d46ca1a84f6.jpg'/>
             <CardContent>
               <Typography variant='body-1' sx={{ fontWeight:'bold' }}>Empowering Educators: </Typography>Discover tips, tricks,
-                                and best practices to maximize your teaching potential with Google Classroom. From innovative assignments
+                                and best practices to maximize your teaching potential with NexusEdu. From innovative assignments
                                 to effective communication strategies, we&apos;ve got you covered.
             </CardContent>
           </Card>
@@ -204,7 +204,7 @@ const Features = () => {
             <img src='https://i.pinimg.com/564x/b8/b4/e1/b8b4e1118277242dfcdd0624217ee560.jpg'/>
             <CardContent>
               <Typography variant='body-1' sx={{ fontWeight:'bold' }}>Engaging Student Experiences: </Typography>Students, embark
-                                on an interactive learning journey! Explore ways to make the most of Google Classroom, participate in discussions,
+                                on an interactive learning journey! Explore ways to make the most of NexusEdu, participate in discussions,
                                 and elevate your academic experience.
             </CardContent>
           </Card>
@@ -214,7 +214,7 @@ const Features = () => {
           <Card variant='outlined' sx={{ padding:'10px 20px', boxShadow:'1px 2px 2px #A5ABBD' }}>
             <img src='https://i.pinimg.com/564x/2d/30/14/2d301464613de4d3421e8572dc051ecb.jpg'/>
             <CardContent>
-              <Typography variant='body-1' sx={{ fontWeight:'bold' }}> Stay Updated: </Typography>Keep abreast of the latest Google Classroom
+              <Typography variant='body-1' sx={{ fontWeight:'bold' }}> Stay Updated: </Typography>Keep abreast of the latest NexusEdu
                             features, updates, and educational trends. Our hub is a dynamic space where the learning never stops.
             </CardContent>
           </Card>
@@ -242,7 +242,7 @@ const CustomerReviews = () => {
   return (
     <Stack direction='column'>
       <Review title='Excellent Educational Platform'
-        review='Google Classroom has truly transformed my teaching experience.
+        review='NexusEdu has truly transformed my teaching experience.
                     The user-friendly interface makes it easy to manage classes, share resources,
                     and interact with students. The seamless integration with Google Drive is a game-changer
                     for organizing and accessing educational materials. The ability to provide real-time
@@ -253,7 +253,7 @@ const CustomerReviews = () => {
         name='Oreki'/>
 
       <Review title='User-Friendly but Limited Features'
-        review='Google Classroom is undoubtedly easy to use, making it accessible for both
+        review='NexusEdu is undoubtedly easy to use, making it accessible for both
                     teachers and students. The platform excels in basic class management and document sharing.
                      However, I find that it lacks some advanced features compared to other educational platforms.
                      More customization options for assignments and a more robust grading system would enhance the
@@ -294,28 +294,28 @@ const FrequentlyQuestions = () => {
   return (
     <Stack direction='column' mt={3}>
       <QuestionAndAnswer
-        question='How do I create a new class in Google Classroom?'
-        answer='To create a new class in Google Classroom, log in to your Google account,
-                go to Google Classroom, click the "+" icon, and select "Create class." Follow the
+        question='How do I create a new class in NexusEdu?'
+        answer='To create a new class in NexusEdu, log in to your Google account,
+                go to NexusEdu, click the "+" icon, and select "Create class." Follow the
                 prompts to set up your class, including adding a class name, section, and description.'/>
 
       <QuestionAndAnswer
-        question={'Can students see each other\'s work in Google Classroom?'}
+        question={'Can students see each other\'s work in NexusEdu?'}
         answer={`It depends on how you set up assignments. By default,
                  students can view their own work, but you have control over whether 
                  they can see each other's work. When creating an assignment, choose 
                  the appropriate settings under "Student can view" and "Student can edit."`}/>
 
       <QuestionAndAnswer
-        question={'How can I grade assignments in Google Classroom?'}
-        answer={`To grade assignments in Google Classroom, go to the Classwork page, 
+        question={'How can I grade assignments in NexusEdu?'}
+        answer={`To grade assignments in NexusEdu, go to the Classwork page, 
                 select the assignment, and click on "View assignment." You can view and grade 
                 individual student submissions, provide feedback, and assign grades. Google 
                 Classroom also offers features for efficient grading, such as rubrics and comment banks.`}/>
 
       <QuestionAndAnswer
-        question={'Is Google Classroom free to use?'}
-        answer={`Yes, Google Classroom is a free platform for both educators and students. 
+        question={'Is NexusEdu free to use?'}
+        answer={`Yes, NexusEdu is a free platform for both educators and students. 
                 It is part of the Google Workspace for Education suite, which offers additional 
                 features for schools and institutions. Users can create classes, share resources, 
                 and collaborate without any cost, making it an accessible tool for online learning.`}/>

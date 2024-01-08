@@ -3,6 +3,7 @@ import { jwtDecode } from 'jwt-decode'
 import { checkUserAccount, refreshAccessTokenService } from './authServices'
 import { store } from '../store'
 import * as authActions from '../actions/authActions'
+// eslint-disable-next-line no-unused-vars
 import { ErrorsAction } from '../protection'
 
 const AxiosJWT = axios.create({

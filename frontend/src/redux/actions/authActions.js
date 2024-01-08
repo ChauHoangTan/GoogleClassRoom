@@ -5,9 +5,6 @@ import * as classConstants from '../constants/classConstants'
 import * as authApi from '../APIs/authServices'
 import { ErrorsAction } from '../protection'
 import Swal from 'sweetalert2'
-import { ToastContainer } from 'react-hot-toast'
-import { Navigate, useNavigate } from 'react-router-dom'
-
 
 // Login action
 const loginAction = (provider, datas) => async dispatch => {

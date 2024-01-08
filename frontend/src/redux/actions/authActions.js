@@ -63,23 +63,23 @@ const logoutAction = (message) => async dispatch => {
   dispatch({ type: classConstants.GET_ALL_TYPE_STUDENTS_RESET })
   localStorage.removeItem('userInfo')
 
-    if(message) {
-        if(message === 'banned' || message === 'deleted')
-        Swal.fire({
-            title: 'Session Expired',
-            text: 'Your Account is ' + message + ' by Admin',
-            icon: 'error'
-        });
+  if (message) {
+    if (message === 'banned' || message === 'deleted')
+      Swal.fire({
+        title: 'Session Expired',
+        text: 'Your Account is ' + message + ' by Admin',
+        icon: 'error'
+      })
 
-        else {
-            Swal.fire({
-                title: 'Session Expired',
-                text: 'Your session has expired. Please log in again.',
-                icon: 'error',
-            })
-        }
-      
+    else {
+      Swal.fire({
+        title: 'Session Expired',
+        text: 'Your session has expired. Please log in again.',
+        icon: 'error'
+      })
     }
+
+  }
 }
 
 const updateUserInfoAction = (userInfo) => async dispatch => {

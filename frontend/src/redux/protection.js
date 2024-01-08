@@ -9,8 +9,8 @@ export const ErrorsAction = (error, dispatch, action) => {
   //   console.log(message)
 
   // Logout if token fail
-    if (message === 'Not authorized, token failed') {
-        dispatch(logoutAction())
+  if (message === 'Not authorized, token failed') {
+    dispatch(logoutAction())
   }
   return dispatch({ type: action, payload: message })
 }

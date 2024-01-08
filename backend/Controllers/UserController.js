@@ -281,7 +281,6 @@ const getStudentsListByUploadFile = async (req, res) => {
       await User.findOneAndUpdate(
         // eslint-disable-next-line no-undef
         { email: student.Email },
-        // eslint-disable-next-line no-undef
         { userId: studentId },
         { new: true }
       )

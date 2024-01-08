@@ -137,15 +137,11 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
   //     return <Typography variant="body1">No data available</Typography>
   //   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { classId } = useParams()
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const dispatch = useDispatch()
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { userInfo } = useSelector(state => state.userLogin)
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   let { classes : classInfo } = useSelector(
     (state) => state.userGetClassByID
   )

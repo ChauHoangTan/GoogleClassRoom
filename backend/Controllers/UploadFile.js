@@ -5,6 +5,10 @@ const multer = require('multer')
 const path = require('path')
 const uuid = require('uuid')
 const storage = require('../config/firebaseStorage')
+const UserModel = require('../Models/UserModel')
+const ClassModel = require('../Models/ClassModel')
+const GradeModel = require('../Models/GradeModel')
+const NotificationModel = require('../Models/NotificationModel')
 
 const uuidv4 = uuid.v4
 const uploadController = async (req, res) => {
@@ -77,6 +81,50 @@ const deleteFileByUrl = async (req, res) => {
   }
 }
 
+const uploadData = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' })
+    }
+
+    const fileBuffer = req.file.buffer
+    const jsonData = JSON.parse(fileBuffer.toString('utf-8'))
+
+    // Chèn dữ liệu vào MongoDB sử dụng các mô hình đã định nghĩa
+    await Promise.all([
+      ...jsonData.users.map(async (user) => {
+        const existingUser = await UserModel.findOne({ /* your conditions to match existing user */ })
+        if (!existingUser) {
+          await UserModel.create(user)
+        }
+      }),
+      ...jsonData.classes.map(async (classData) => {
+        const existingClass = await ClassModel.findOne({ /* your conditions to match existing class */ })
+        if (!existingClass) {
+          await ClassModel.create(classData)
+        }
+      }),
+      ...jsonData.grades.map(async (grade) => {
+        const existingGrade = await GradeModel.findOne({ /* your conditions to match existing grade */ })
+        if (!existingGrade) {
+          await GradeModel.create(grade)
+        }
+      }),
+      ...jsonData.notifications.map(async (notification) => {
+        const existingNotification = await NotificationModel.findOne({ /* your conditions to match existing notification */ })
+        if (!existingNotification) {
+          await NotificationModel.create(notification)
+        }
+      })
+    ])
+
+    return res.json({ message: 'Import successfully' })
+  } catch (error) {
+    return res.status(500).json({ error: 'Error processing the uploaded file' })
+  }
+}
+
+
 // export default uploadController;
 
-module.exports = { uploadController, deleteFileByUrl }
+module.exports = { uploadController, deleteFileByUrl, uploadData }

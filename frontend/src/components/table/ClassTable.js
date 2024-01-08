@@ -138,7 +138,7 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
               <Loader />
             ) : (
               <DataGrid
-                rows={classes || 0}
+                rows={classes}
                 columns={columns}
                 getRowId={(row) => row._id}
                 initialState={{
@@ -147,7 +147,7 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
                   }
                 }}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                pageSizeOptions={[5, 10, 20]}
+                pageSizeOptions={[5, 15, 25, 50, 100]}
                 checkboxSelection
                 getRowSpacing={(params) => ({
                   top: params.isFirstVisible ? 0 : 1,

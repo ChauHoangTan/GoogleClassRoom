@@ -195,10 +195,11 @@ import { Typography, TextField } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
+import CustomNoRowsOverlay from '../../../../components/table/CustomNoRowsOverlay'
 
 
 export default function GradeTable ({ columns, rows, setRows, isEdit }) {
-
+  const [pageSize, setPageSize] = useState(5)
   const [changeState, setChangeState] = useState(false)
   // console.log(columns)
 
@@ -359,10 +360,9 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
     }
     return sum.toFixed(2)
   }
-
   return (
-    <Paper style={{ height: 'auto', width: '100%', overflow: 'hidden' }}>
-      <DataGrid rows={rowsData} columns={columnsData} components={{ Toolbar: GridToolbar }} hideFooterRowCount
+    <Paper style={{ height: rowsData.length > 0 ? 'auto' : '400px', width: '100%', overflow: 'hidden' }}>
+      <DataGrid rows={rowsData} columns={columnsData} components={{ Toolbar: GridToolbar, noRowsOverlay: CustomNoRowsOverlay }} hideFooterRoCount
         sx={{
           '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
             'mt': '1em',
@@ -373,7 +373,13 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
             'visibility': 'hidden'
           }
         }}
-        pageSizeOptions={[1, 2, 10, 20, 25, 50, 100]}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: pageSize }
+          }
+        }}
+        pageSizeOptions={[5, 15, 25, 50, 100]}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
       />
     </Paper>
   )

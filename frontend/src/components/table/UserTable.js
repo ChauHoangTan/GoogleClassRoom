@@ -14,9 +14,9 @@ import Papa from 'papaparse'
 
 function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel, isUploadLoading, adminUpdateStudentIds }) {
 
-    const { userInfo } = useSelector(
-        (state) => state.userLogin
-    )
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
 
   const [isOpen, setIsOpen] = useState(false)
   const [pageSize, setPageSize] = useState(5)
@@ -40,11 +40,11 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     const selectedFile = e.target.files[0]
     const result = await read(selectedFile)
     let studentsListUpload = []
-
     result.data.map(data => {
-        if(!data.isAdmin) {
-            studentsListUpload.push(data)
-        }
+      if (data['Admin'] === 'yes') {
+        data['Student Id'] = ''
+      }
+      studentsListUpload.push(data)
     })
     adminUpdateStudentIds(studentsListUpload)
   }
@@ -78,9 +78,9 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
         sortable: false,
         filterable: false
       },
-      { field: 'firstName', headerName: 'First Name', width: 100 },
-      { field: 'lastName', headerName: 'Last Name', width: 100 },
-      { field: 'email', headerName: 'Email', width: 300 },
+      { field: 'firstName', headerName: 'First Name', width: 100, getTooltip: (params) => params.value },
+      { field: 'lastName', headerName: 'Last Name', width: 150, getTooltip: (params) => params.value },
+      { field: 'email', headerName: 'Email', width: 250, getTooltip: (params) => params.value },
       {
         field: 'teacherClasses',
         headerName: 'Teacher Classes',
@@ -220,8 +220,8 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                 disableRowSelectionOnClick
                 slots={{
                   toolbar: GridToolbar,
-                  noRowsOverlay: CustomNoRowsOverlay,
-                  
+                  noRowsOverlay: CustomNoRowsOverlay
+
                 }}
                 columnVisibilityModel={{
                   teacherClasses: !isOpenMenu,

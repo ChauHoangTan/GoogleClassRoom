@@ -343,19 +343,18 @@ const resetUserPassword = async (req, res) => {
 // @des ban all users
 // @route ban /api/user/:id
 const checkUserAccount = async (req, res) => {
-    try {
-        // find user in DB
-        console.log(req.params.id)
-        const user = await User.findById(req.params.id)
-      // if user exists delete user from DB
-      if (user) {
-          return res.json({ isExist: true, isBanned: user.isBanned })
+  try {
+    // find user in DB
+    const user = await User.findById(req.params.id)
+    // if user exists delete user from DB
+    if (user) {
+      return res.json({ isExist: true, isBanned: user.isBanned })
     } else {
-        return res.json({ isExist: false })
-      }
-    } catch (error) {
-      res.status(400).json({ message: error.message })
+      return res.json({ isExist: false })
     }
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
 }
 
 module.exports = {

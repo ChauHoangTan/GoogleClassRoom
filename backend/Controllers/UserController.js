@@ -21,16 +21,18 @@ const updateUserProfile = async(req, res) => {
     const user = await User.findById(req.user.id)
     // if users exists update user data and save it in DB
     if (user) {
-      const existingUserWithUserId = await User.findOne({ userId: userId }).where('_id').ne(user._id);
-      if (existingUserWithUserId) {
-        return res.status(400).json({ message: 'UserId already in use' });
+      if (userId !== '') {
+        const existingUserWithUserId = await User.findOne({ userId: userId }).where('_id').ne(user._id)
+        if (existingUserWithUserId) {
+          return res.status(400).json({ message: 'UserId already in use' })
+        }
       }
       user.email = email || user.email
       user.firstName = firstName || user.firstName
       user.lastName = lastName || user.lastName
       user.image = image || user.image
-      user.phone = phone || user.phone
-      user.userId = userId || user.userId
+      user.phone = phone
+      user.userId = userId
       user.dob = dob || user.dob
 
       const updatedUser = await user.save()
@@ -270,11 +272,17 @@ const getStudentsListByUploadFile = async (req, res) => {
   try {
     // eslint-disable-next-line no-undef
     for (student of studentsListUpload) {
+      let studentId = ''
+      // eslint-disable-next-line no-undef
+      if (student['Admin'] === 'no') {
+        // eslint-disable-next-line no-undef
+        studentId = student['Student Id']
+      }
       await User.findOneAndUpdate(
         // eslint-disable-next-line no-undef
         { email: student.Email },
         // eslint-disable-next-line no-undef
-        { userId: student['Student Id'] },
+        { userId: studentId },
         { new: true }
       )
     }

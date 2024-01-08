@@ -59,6 +59,7 @@ function HomePageContent({ searchTerm }) {
       dispatch({ type: 'GET_ALL_MY_CLASSES_RESET' })
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
 
   useEffect(() => {

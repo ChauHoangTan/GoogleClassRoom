@@ -126,15 +126,16 @@ import toast from 'react-hot-toast'
 import { getAllTypeOfStudentsAction, getAllTeachersAction } from '../../../redux/actions/classActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
+import CustomNoRowsOverlay from '../../../components/table/CustomNoRowsOverlay'
 
 const VISIBLE_FIELDS = ['image', 'userId', 'fullName', 'status', 'isTeacher']
 
 export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
   const [pageSize, setPageSize] = useState(5)
   // Check if 'rows' is undefined or empty
-  if (!rows || rows.length === 0) {
-    return <Typography variant="body1">No data available</Typography>
-  }
+//   if (!rows || rows.length === 0) {
+//     return <Typography variant="body1">No data available</Typography>
+//   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { classId } = useParams()
@@ -150,7 +151,7 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
   )
 
   classInfo = classInfo?.data
-  const isMainTeacher = classInfo.teachers[0] === userInfo._id
+  const isMainTeacher = classInfo?.teachers[0] === userInfo._id
 
 
   const handleKickUser = (user) => {
@@ -242,13 +243,12 @@ export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
     .filter((column) => column !== null)
 
   const data = {
-    rows: rows.map((row, index) => ({ ...row, id: index })),
+    rows: rows ? rows.map((row, index) => ({ ...row, id: index })) : [],
     columns: columnsForDataGrid
   }
-
   return (
-    <Paper style={{ height: 'auto', width: '100%', overflow: 'hidden' }}>
-      <DataGrid {...data} components={{ Toolbar: GridToolbar }} hideFooterRowCount
+    <Paper style={{ height: rows?.length > 0 ? 'auto' : '400px', width: '100%', overflow: 'hidden' }}>
+      <DataGrid {...data} components={{ Toolbar: GridToolbar, noRowsOverlay: CustomNoRowsOverlay }} hideFooterRowCount
         sx={{
           '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
             'mt': '1em',

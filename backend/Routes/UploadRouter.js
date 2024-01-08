@@ -1,6 +1,7 @@
 const express = require('express')
 const multer = require('multer')
-const { deleteFileByUrl, uploadController } = require('../Controllers/UploadFile')
+const { deleteFileByUrl, uploadController, uploadData } = require('../Controllers/UploadFile')
+const fs = require('fs')
 
 const UploadRouter = express.Router()
 
@@ -10,5 +11,7 @@ const upload = multer({
 
 UploadRouter.post('/', upload.single('file'), uploadController)
 UploadRouter.delete('/', deleteFileByUrl)
+
+UploadRouter.post('/data', upload.single('file'), uploadData)
 
 module.exports = UploadRouter

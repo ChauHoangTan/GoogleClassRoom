@@ -132,7 +132,7 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
             helperText={errors.email?.message || ''}
             sx={{ mt:'20px', width:'100%' }}
           />
-          <TextField
+          {!userRow?.isAdmin && <TextField
             name="userId"
             id="userId"
             label="Student Id"
@@ -141,8 +141,7 @@ const ModalEditUser = ({ isOpen, handleOpen, setUserRow, userRow, setIsOpen }) =
             error={!!errors.userId}
             helperText={errors.userId?.message || ''}
             sx={{ mt:'20px', width:'100%' }}
-          />
-
+          />}
           <Grid container spacing={2} sx={{ mt: '20px' }}>
             <Grid item xs={6}>
               <FormControl fullWidth>

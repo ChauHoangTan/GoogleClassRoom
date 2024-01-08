@@ -10,6 +10,7 @@ const upload = multer({
 })
 
 UploadRouter.post('/', upload.single('file'), uploadController)
+
 UploadRouter.delete('/', deleteFileByUrl)
 
 UploadRouter.post('/data', upload.single('file'), uploadData)

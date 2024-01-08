@@ -272,11 +272,12 @@ const getStudentsListByUploadFile = async (req, res) => {
   try {
     // eslint-disable-next-line no-undef
     for (student of studentsListUpload) {
-        console.log(student);
-        let studentId = '';
-        if(student['Admin'] === 'no') {
-            studentId = student['Student Id'];
-        }
+      let studentId = ''
+      // eslint-disable-next-line no-undef
+      if (student['Admin'] === 'no') {
+        // eslint-disable-next-line no-undef
+        studentId = student['Student Id']
+      }
       await User.findOneAndUpdate(
         // eslint-disable-next-line no-undef
         { email: student.Email },

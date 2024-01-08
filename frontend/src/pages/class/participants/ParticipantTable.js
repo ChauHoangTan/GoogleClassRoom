@@ -133,9 +133,9 @@ const VISIBLE_FIELDS = ['image', 'userId', 'fullName', 'status', 'isTeacher']
 export default function ParticipantDataGrid({ columns, rows, isTeacherTable }) {
   const [pageSize, setPageSize] = useState(5)
   // Check if 'rows' is undefined or empty
-//   if (!rows || rows.length === 0) {
-//     return <Typography variant="body1">No data available</Typography>
-//   }
+  //   if (!rows || rows.length === 0) {
+  //     return <Typography variant="body1">No data available</Typography>
+  //   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { classId } = useParams()

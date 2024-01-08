@@ -120,7 +120,6 @@ const uploadData = async (req, res) => {
 
     return res.json({ message: 'Import successfully' })
   } catch (error) {
-    console.error(error)
     return res.status(500).json({ error: 'Error processing the uploaded file' })
   }
 }

@@ -232,7 +232,10 @@ export default function Participants() {
     let studentsListUpload = []
 
     result.data.map(data => {
-      studentsListUpload.push(handleConvertData(data))
+      if (data.StudentId !== '') {
+        studentsListUpload.push(handleConvertData(data))
+      }
+      // studentsListUpload.push(handleConvertData(data))
     })
 
     await uploadStudentList(studentsListUpload, classId)

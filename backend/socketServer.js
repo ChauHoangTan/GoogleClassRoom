@@ -49,9 +49,7 @@ const registerSocketServer = (server) => {
     })
 
     socket.on('check_select_notification', async (item) => {
-      const notification = await NotificationModel.findById(item._id)
-      notification.read = true
-      await notification.save()
+      const notification = await NotificationModel.findByIdAndDelete(item._id)
       const receiver = getUser(item.userReceiverId)
       if (receiver) {
         io.to(receiver.socketId).emit('change_data')
@@ -61,9 +59,9 @@ const registerSocketServer = (server) => {
     socket.on('check_all_notifications', async () => {
       const notifications = await NotificationModel.find({})
 
-      notifications.forEach((notification) => {
-        notification.read = true
-      })
+      for(let notification of notifications) {
+        await NotificationModel.findByIdAndDelete(notification._id)
+      }
 
       await NotificationModel.create(notifications)
 

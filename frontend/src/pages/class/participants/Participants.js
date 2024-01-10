@@ -379,15 +379,19 @@ export default function Participants() {
             Students
           </Typography>
 
-          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant='body2'>
-              Invite student
-            </Typography>
 
-            <IconButton onClick={handleOpenInviteStudent}>
-              <PersonAddIcon />
-            </IconButton>
-          </Box>
+          {
+            classInfo?.isTeacherOfThisClass &&
+            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant='body2'>
+                Invite student
+              </Typography>
+
+              <IconButton onClick={handleOpenInviteStudent}>
+                <PersonAddIcon />
+              </IconButton>
+            </Box>
+          }
         </Box>
         <Box>
           { studentsLoading ?

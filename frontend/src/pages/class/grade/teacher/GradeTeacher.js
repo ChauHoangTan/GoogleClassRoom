@@ -39,7 +39,7 @@ import toast from 'react-hot-toast'
 import Loader from '../../../../components/notification/Loader'
 
 // eslint-disable-next-line no-unused-vars
-function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows }) {
+function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows, stateSave, setStateSave }) {
 
   const [errorText, setErrorText] = useState('')
   const { classId } = useParams()
@@ -161,7 +161,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     } else {
       await uploadGradeComposition(classId, id, studentsListUpload)
     }
-    setRows([])
+    setStateSave(!stateSave)
   }
 
   const read = (file) => {
@@ -324,7 +324,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
   )
 }
 
-function GradeComposition ({ classId, orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows, isLoadingComposition }) {
+function GradeComposition ({ classId, orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows, isLoadingComposition, stateSave, setStateSave }) {
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
@@ -446,6 +446,8 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
                       setGradeCompositionList={setGradeCompositionList}
                       rows={rows}
                       setRows={setRows}
+                      stateSave={stateSave}
+                      setStateSave={setStateSave}
                     />
                   ))}
                   <DragOverlay dropAnimation={customDropAnimation}>
@@ -500,11 +502,13 @@ const sumGradeComposition = (listGrade) => {
 }
 
 
-function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows }) {
+function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows, stateSave }) {
 
   const [isEdit, setIsEdit] = useState(false)
   // const [isLoading, setIsLoading] = useState(false)
   const [isAvailableSave, setIsAvailableSave] = useState(true)
+
+  const [isLoadingGrade, setIsLoadingGrade] = useState(false)
 
   let compositionList = []
   gradeCompositionList.map((item) => {
@@ -535,95 +539,44 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
     return response // Trả về giá trị của promise (thường là một đối tượng hoặc mảng)
   }
 
-  let newRows = []
-
-  Promise.all(
-    studentList.map(async (item) => {
-      try {
-        // setIsLoading(true)
-        const result = await handleGetGradeCompositionByStudentId(item.userId)
-        const listGrade = result.data
-        // Thêm đối tượng vào mảng rows khi promise hoàn tất
-        newRows.push({
-          id: item.userId,
-          fullName: `${item.lastName} ${item.firstName}`,
-          listGrade: listGrade,
-          total: sumGradeComposition(listGrade)
-        })
-      } catch (error) {
+  useEffect(() => {
+    let newRows = []
+    setIsLoadingGrade(true)
+    Promise.all(
+      studentList.map(async (item) => {
+        try {
+          // setIsLoading(true)
+          const result = await handleGetGradeCompositionByStudentId(item.userId)
+          const listGrade = result.data
+          // Thêm đối tượng vào mảng rows khi promise hoàn tất
+          newRows.push({
+            id: item.userId,
+            fullName: `${item.lastName} ${item.firstName}`,
+            listGrade: listGrade,
+            total: sumGradeComposition(listGrade)
+          })
+        } catch (error) {
+          toast.error(error.message)
+        }
+      })
+    ).then(() => {
+      newRows.sort((a, b) => {
+        return a.id - b.id
+      })
+      // Gọi khi tất cả promises hoàn tất
+      if ( !isEdit ) {
+        if (!isEqual(rows, newRows)) {
+          setRows(newRows)
+        }
+      }
+      setIsLoadingGrade(false)
+      // setIsLoading(false)
+    })
+      .catch((error) => {
         toast.error(error.message)
-      }
-    })
-  ).then(() => {
-    newRows.sort((a, b) => {
-      return a.id - b.id
-    })
-    // Gọi khi tất cả promises hoàn tất
-    if ( !isEdit ) {
-      if (!isEqual(rows, newRows)) {
-        setRows(newRows)
-      }
-    }
-    // setIsLoading(false)
-  })
-    .catch((error) => {
-      toast.error(error.message)
-    })
-
-  // const obj1 = {
-  //   id: '20127261',
-  //   fullName: 'Chau Hoang Tan',
-  //   listGrade: [
-  //     {
-  //       composition: 'Ex2',
-  //       grade: 10
-  //     }
-  //   ]
-  // }
-
-  // const obj2 = {
-  //   id: '20127261',
-  //   fullName: 'Chau Hoang Tan',
-  //   listGrade: [
-  //     {
-  //       composition: 'Ex1',
-  //       grade: 10
-  //     }
-  //   ]
-  // }
-  // useEffect(() => {
-  //   Promise.all(
-  //     studentList.map(async (item) => {
-  //       try {
-  //         const result = await handleGetGradeCompositionByStudentId(item.userId)
-  //         const listGrade = result.data
-  //         // Thêm đối tượng vào mảng rows khi promise hoàn tất
-  //         newRows.push({
-  //           id: item.userId,
-  //           fullName: `${item.lastName} ${item.firstName}`,
-  //           listGrade: listGrade,
-  //           total: sumGradeComposition(listGrade)
-  //         })
-  //       } catch (error) {
-  //         console.error('Error:', error)
-  //       }
-  //     })
-  //   ).then(() => {
-  //     // Gọi khi tất cả promises hoàn tất
-  //     if (rows.length != newRows.length) {
-  //       setRows(newRows)
-  //     } else {
-  //       if (rows.length > 0 && newRows.length > 0) {
-  //         if (rows[0].listGrade.length != newRows[0].listGrade.length ) {
-  //           setRows(newRows)
-  //         }
-  //       }
-  //     }
-  //   })
-  //     .catch((error) => {
-  //       console.error('Error:', error)
-  //     })
-  // }, [rows])
+      })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stateSave, gradeCompositionList, studentList])
 
   const changeState = () => {
     setIsEdit(!isEdit)
@@ -689,7 +642,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
             Save
           </Button>}
       </Stack>
-      <GradeTable columns={columns} rows={rows} setRows={setRows} isEdit={isEdit} setIsAvailableSave={setIsAvailableSave}/>
+      <GradeTable columns={columns} rows={rows} setRows={setRows} isEdit={isEdit} setIsAvailableSave={setIsAvailableSave} isLoadingGrade={isLoadingGrade}/>
     </Container>
   )
 }
@@ -700,6 +653,7 @@ export default function GradeTeacher () {
   const [studentList, setStudentList] = useState([])
 
   const [rows, setRows] = useState([])
+  const [stateSave, setStateSave] = useState(false)
 
   const { classId } = useParams()
 
@@ -826,9 +780,9 @@ export default function GradeTeacher () {
 
       <GradeComposition classId={classId} orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
         gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList}
-        rows={rows} setRows={setRows} isLoadingComposition={isLoadingComposition}/>
+        rows={rows} setRows={setRows} isLoadingComposition={isLoadingComposition} stateSave={stateSave} setStateSave={setStateSave}/>
       <StudentGrade classId={classId} gradeCompositionList={gradeCompositionList} studentList={studentList}
-        rows={rows} setRows={setRows}/>
+        rows={rows} setRows={setRows} stateSave={stateSave}/>
 
       <Modal
         open={isOpenCreateNewGradeComposition}

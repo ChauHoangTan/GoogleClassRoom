@@ -87,7 +87,7 @@ const ModalEditClass = ({ isOpen, handleOpen, setClassRow, classRow, setIsOpen }
           onSubmit={handleSubmit(onSubmit)}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold', color:'#005B48' }}>
-                Edit User
+                Edit Class
           </Typography>
 
           <TextField
@@ -112,7 +112,7 @@ const ModalEditClass = ({ isOpen, handleOpen, setClassRow, classRow, setIsOpen }
           />
 
           <Grid container spacing={2} sx={{ mt: '20px' }}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="class-active">Class Active</InputLabel>
                 <Select

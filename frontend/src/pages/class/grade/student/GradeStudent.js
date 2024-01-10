@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { SocketContext } from '../../../../Context/SocketProvider'
+import Loader from '../../../../components/notification/Loader'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -269,6 +270,7 @@ function GradeComposition () {
   )
 
   const [isGradeCompositionList, setIsGradeCompositionList] = useState([])
+  const [isLoadingGradeCompositionList, setIsLoadingGradeCompositionList] = useState(false)
 
   const totalGrade = isGradeCompositionList.reduce((acc, data) => {
     const grade = data?.grade || 0
@@ -300,7 +302,9 @@ function GradeComposition () {
       try {
         const res = await isMappedAccount(classId, userInfo.userId)
         if (res?.success) {
+          setIsLoadingGradeCompositionList(true)
           const result = await getAllGradeCompositionByStudentId(classId, userInfo.userId)
+          setIsLoadingGradeCompositionList(false)
           setIsGradeCompositionList(result.data)
         }
       } catch (error) {
@@ -322,29 +326,36 @@ function GradeComposition () {
         Grade
       </Typography>
 
-      <Stack spacing={1} py={1}>
-        {isGradeCompositionList.map((data, index) => (
-          data.isPublic &&
+      {
+        isLoadingGradeCompositionList ?
+          <Loader />
+          :
+          <>
+            <Stack spacing={1} py={1}>
+              {isGradeCompositionList.map((data, index) => (
+                data.isPublic &&
           <CardGrade
             key={index}
             data={data}
           />
-        ))}
-      </Stack>
+              ))}
+            </Stack>
 
-      <Divider />
+            <Divider />
 
-      <Container sx={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-      }}>
-        <Typography variant='h6'>
+            <Container sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center'
+            }}>
+              <Typography variant='h6'>
           Total grade: <Typography variant='body-2'>
-            {totalResult.toFixed(2)}
-          </Typography>
-        </Typography>
-      </Container>
+                  {totalResult.toFixed(2)}
+                </Typography>
+              </Typography>
+            </Container>
+          </>
+      }
 
     </Container>
   )

@@ -58,7 +58,7 @@ function SocketProvider({ children }) {
   }
 
   const handleClickAll = () => {
-    socket.emit('check_all_notifications')
+    socket?.emit('check_all_notifications', userInfo._id);
   }
 
   return (

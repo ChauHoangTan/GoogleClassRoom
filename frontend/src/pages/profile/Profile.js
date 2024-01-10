@@ -133,7 +133,8 @@ const EditProfile = () => {
       <Grid
         container
         sx={{
-          height: '120vh',
+          minHeight: '120vh',
+          padding: '32px 0',
           backgroundImage:
                         'url(https://source.unsplash.com/random?wallpapers)',
           backgroundRepeat: 'no-repeat',

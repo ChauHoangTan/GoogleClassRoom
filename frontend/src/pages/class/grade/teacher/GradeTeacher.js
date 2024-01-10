@@ -143,9 +143,16 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     const result = await read(selectedFile)
     let studentsListUpload = []
     result.data.map((data) => {
-      studentsListUpload.push(data)
+      if (data.StudentId !== '' && data.Grade !== '' && !isNaN(data.StudentId) && !isNaN(data.Grade)) {
+        studentsListUpload.push(data)
+      }
+      // else if (data.StudentId === '' && data.Grade === undefined) {
+      //   //
+      // } else {
+      //   toast.error('Student grade upload invalid format!')
+      // }
     })
-    if ( studentsListUpload[studentsListUpload.length - 1].StudentId === '' ) {
+    if ( studentsListUpload[studentsListUpload.length - 1]?.StudentId === '' ) {
       studentsListUpload.pop()
     }
     await uploadGradeComposition(classId, id, studentsListUpload)
@@ -484,6 +491,7 @@ const sumGradeComposition = (listGrade) => {
 function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows }) {
 
   const [isEdit, setIsEdit] = useState(false)
+  // const [isLoading, setIsLoading] = useState(false)
 
   let compositionList = []
   gradeCompositionList.map((item) => {
@@ -519,6 +527,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
   Promise.all(
     studentList.map(async (item) => {
       try {
+        // setIsLoading(true)
         const result = await handleGetGradeCompositionByStudentId(item.userId)
         const listGrade = result.data
         // Thêm đối tượng vào mảng rows khi promise hoàn tất
@@ -533,7 +542,6 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       }
     })
   ).then(() => {
-
     newRows.sort((a, b) => {
       return a.id - b.id
     })
@@ -543,6 +551,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
         setRows(newRows)
       }
     }
+    // setIsLoading(false)
   })
     .catch((error) => {
       toast.error(error.message)

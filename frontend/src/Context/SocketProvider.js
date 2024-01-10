@@ -16,15 +16,20 @@ function SocketProvider({ children }) {
   )
 
   useEffect(() => {
-    // setSocket(io('http://localhost:5000', {
-    setSocket(io('https://nexusedu.onrender.com', {
+    const newSocket = io('https://nexusedu.onrender.com', {
+    // const newSocket = io('http://localhost:5000', {
       withCredentials: true,
       extraHeaders: {
         // 'Access-Control-Allow-Origin': 'http://localhost:3000'
         // 'Access-Control-Allow-Origin': 'https://google-class-room-five.vercel.app'
         'Access-Control-Allow-Origin': 'https://nexusedu.vercel.app'
       }
-    }))
+    })
+    setSocket(newSocket)
+
+    return () => {
+      newSocket.disconnect() // Disconnect the socket on unmount
+    }
   }, [])
 
   useEffect(() => {
@@ -41,6 +46,14 @@ function SocketProvider({ children }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, userInfo])
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('disconnect', () => {
+        window.location.reload() // Reload the page on socket disconnect
+      })
+    }
+  }, [socket])
 
   const getData = (notifications) => {
     if (notifications.length && notifications.some((notification) => notification.read === false)) {
@@ -59,7 +72,7 @@ function SocketProvider({ children }) {
   }
 
   const handleClickAll = () => {
-    socket.emit('check_all_notifications')
+    socket?.emit('check_all_notifications', userInfo._id)
   }
 
   return (

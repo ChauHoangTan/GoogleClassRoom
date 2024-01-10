@@ -124,7 +124,7 @@ function Notification({ notifications, handleClick, handleClickAll }) {
           <Typography
             variant="body-1"
             sx={{
-              '&:hover': {
+              '&:hover, &:active': {
                 textDecoration: 'underline',
                 cursor: 'pointer'
               },

@@ -27,6 +27,7 @@ const registerSocketServer = (server) => {
   io.on('connection', (socket) => {
     io.emit('sendAll', 'Hello all client!')
     socket.on('newUser', (userId) => {
+      // console.log("new user: " + socket.id )
       addNewUser(userId, socket.id)
     })
 
@@ -58,20 +59,18 @@ const registerSocketServer = (server) => {
       }
     })
 
-    socket.on('check_all_notifications', async () => {
-      const notifications = await NotificationModel.find({})
+    socket.on('check_all_notifications', async (userId) => {
+      await NotificationModel.deleteMany({ userReceiverId: userId })
 
-      notifications.forEach((notification) => {
-        notification.read = true
-      })
-
-      await NotificationModel.create(notifications)
-
-      io.sockets.emit('change_data')
+      const receiver = getUser(userId)
+      if (receiver) {
+        io.to(receiver.socketId).emit('change_data')
+      }
     })
 
     socket.on('disconnect', () => {
       removeUser(socket.id)
+    //   io.to(socket.id).emit('reloadPage');
     })
   })
 }

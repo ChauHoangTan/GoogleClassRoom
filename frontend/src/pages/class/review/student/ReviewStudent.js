@@ -443,9 +443,9 @@ export default function ReviewStudent () {
     <>
       <Typography gutterBottom variant="h4" sx={{ my: 1, px: 3 }} >History</Typography>
 
-      <GradeReviewPending reviewList={!isLoading ? reviews.data?.pendingReviews : []} isShowReview={reviewId}/>
+      <GradeReviewPending reviewList={!isLoading ? reviews?.data?.pendingReviews : []} isShowReview={reviewId}/>
 
-      <GradeReviewed reviewList={!isLoading ? reviews.data?.reviewedReviews : []} isShowReview={reviewId}/>
+      <GradeReviewed reviewList={!isLoading ? reviews?.data?.reviewedReviews : []} isShowReview={reviewId}/>
     </>
   )
 }

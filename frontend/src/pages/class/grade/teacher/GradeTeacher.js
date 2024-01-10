@@ -39,7 +39,7 @@ import toast from 'react-hot-toast'
 import Loader from '../../../../components/notification/Loader'
 
 // eslint-disable-next-line no-unused-vars
-function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows }) {
+function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows, stateSave, setStateSave }) {
 
   const [errorText, setErrorText] = useState('')
   const { classId } = useParams()
@@ -161,7 +161,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     } else {
       await uploadGradeComposition(classId, id, studentsListUpload)
     }
-    setRows([])
+    setStateSave(!stateSave)
   }
 
   const read = (file) => {
@@ -324,7 +324,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
   )
 }
 
-function GradeComposition ({ classId, orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows, isLoadingComposition }) {
+function GradeComposition ({ classId, orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows, isLoadingComposition, stateSave, setStateSave }) {
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
@@ -446,6 +446,8 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
                       setGradeCompositionList={setGradeCompositionList}
                       rows={rows}
                       setRows={setRows}
+                      stateSave={stateSave}
+                      setStateSave={setStateSave}
                     />
                   ))}
                   <DragOverlay dropAnimation={customDropAnimation}>
@@ -500,7 +502,7 @@ const sumGradeComposition = (listGrade) => {
 }
 
 
-function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows }) {
+function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRows, stateSave }) {
 
   const [isEdit, setIsEdit] = useState(false)
   // const [isLoading, setIsLoading] = useState(false)
@@ -573,7 +575,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       .catch((error) => {
         toast.error(error.message)
       })
-  }, [gradeCompositionList, studentList])
+  }, [stateSave, gradeCompositionList, studentList])
 
   const changeState = () => {
     setIsEdit(!isEdit)
@@ -650,6 +652,7 @@ export default function GradeTeacher () {
   const [studentList, setStudentList] = useState([])
 
   const [rows, setRows] = useState([])
+  const [stateSave, setStateSave] = useState(false)
 
   const { classId } = useParams()
 
@@ -776,9 +779,9 @@ export default function GradeTeacher () {
 
       <GradeComposition classId={classId} orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
         gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList}
-        rows={rows} setRows={setRows} isLoadingComposition={isLoadingComposition}/>
+        rows={rows} setRows={setRows} isLoadingComposition={isLoadingComposition} stateSave={stateSave} setStateSave={setStateSave}/>
       <StudentGrade classId={classId} gradeCompositionList={gradeCompositionList} studentList={studentList}
-        rows={rows} setRows={setRows}/>
+        rows={rows} setRows={setRows} stateSave={stateSave}/>
 
       <Modal
         open={isOpenCreateNewGradeComposition}

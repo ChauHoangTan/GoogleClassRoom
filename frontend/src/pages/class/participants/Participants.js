@@ -234,6 +234,8 @@ export default function Participants() {
     result.data.map(data => {
       if (data.StudentId !== '' && data.FullName !== '' && !isNaN(data.StudentId)) {
         studentsListUpload.push(handleConvertData(data))
+      } else if (data.StudentId !== '' && data.FullName !== '') {
+        //
       } else {
         toast.error('Student file upload invalid format!')
       }

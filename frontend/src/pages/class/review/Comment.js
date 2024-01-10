@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import toast from 'react-hot-toast'
 import { convertTime } from '../../../utils/timeConvert/timeConvert'
 import { SocketContext } from '../../../Context/SocketProvider'
+import moment from 'moment'
 
 function Message ({ data, state }) {
   return (
@@ -21,7 +22,11 @@ function Message ({ data, state }) {
       <Grid item xs={11.2} sx={{ order: state ? 0 : 1, textAlign: state ? 'right' : 'inherit' }}>
         <Grid container direction="column">
           <Grid item xs={12}>
-            <Typography sx={{ fontWeight: 'bold' }}> {data?.firstName} {data?.lastName} <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'bold' }}>{convertTime(data?.time)}</Typography></Typography>
+            {state ? (
+              <Typography sx={{ fontWeight: 'bold' }}><Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'border' }}>{moment(data?.time).fromNow()}</Typography> {data?.firstName} {data?.lastName}</Typography>
+            ) : (
+              <Typography sx={{ fontWeight: 'bold' }}> {data?.firstName} {data?.lastName} <Typography sx={{ display:'inline-block', fontStyle:'italic', fontWeight:'border' }}>{moment(data?.time).fromNow()}</Typography></Typography>
+            )}
           </Grid>
 
           <Grid item xs={12}>

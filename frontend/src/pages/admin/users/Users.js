@@ -16,6 +16,8 @@ const Users = () => {
   const dispatch = useDispatch()
 
   const [selectionModel, setSelectionModel] = useState([])
+  const [isLoadingFile, setIsLoadingFile] = useState(false)
+  // eslint-disable-next-line no-unused-vars
   const { isUploadLoading, isError: isUploadError, isSuccess: isUploadSuccess } = useSelector(
     (state) => state.adminUpdateStudentIds
   )
@@ -32,6 +34,7 @@ const Users = () => {
   useEffect(() => {
     if (!prevIsUploadSuccess.current || isSuccess) {
       dispatch(getAllUsersAction())
+      setIsLoadingFile(false)
     }
 
     // Cập nhật giá trị trạng thái trước đó của isUploadSuccess
@@ -59,7 +62,7 @@ const Users = () => {
 
   return (
     <StyledClassTable>
-      <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} isUploadLoading={isUploadLoading} adminUpdateStudentIds={(adminUploadStudentList) => dispatch(adminUpdateStudentIdsAction(adminUploadStudentList))} />
+      <UserTable deleteHandler={deleteUserHandler} isLoading={isLoading} users={users} isUploadSuccess={isUploadSuccess} deleteSelectedHandler={handleDeleteSelectedRows} selectionModel={selectionModel} setSelectionModel={setSelectionModel} isLoadingFile={isLoadingFile} adminUpdateStudentIds={(adminUploadStudentList) => dispatch(adminUpdateStudentIdsAction(adminUploadStudentList))} setIsLoadingFile={setIsLoadingFile} />
     </StyledClassTable>
   )
 }

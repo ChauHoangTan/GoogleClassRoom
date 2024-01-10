@@ -19,6 +19,7 @@ import { getAllReviewGradeCompositionAction, getAllReviewGradeCompositionByStude
 import { updateReviewGrade } from '../../../../redux/APIs/gradeServices'
 import Comment from '../Comment'
 import { SocketContext } from '../../../../Context/SocketProvider'
+import Loader from '../../../../components/notification/Loader'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -707,7 +708,7 @@ function CardRelatedReview ({ data, close }) {
   )
 }
 
-function GradeReviewPending ({ reviewList, isShowReview }) {
+function GradeReviewPending ({ reviewList, isShowReview, isLoading }) {
   return (
     <Container sx={{
       borderRadius: 2,
@@ -719,8 +720,12 @@ function GradeReviewPending ({ reviewList, isShowReview }) {
         Pending Review
       </Typography>
 
-      <Stack spacing={1} py={1}>
-        {reviewList &&
+      {
+        isLoading ?
+          <Loader />
+          :
+          <Stack spacing={1} py={1}>
+            {reviewList &&
           reviewList.map((data, index) => {
             const isShowDetail = data._id === isShowReview
             return (
@@ -731,12 +736,13 @@ function GradeReviewPending ({ reviewList, isShowReview }) {
               />
             )
           })}
-      </Stack>
+          </Stack>
+      }
     </Container>
   )
 }
 
-function GradeReviewed ({ reviewList, isShowReview }) {
+function GradeReviewed ({ reviewList, isShowReview, isLoading }) {
   return (
     <Container sx={{
       borderRadius: 2,
@@ -747,9 +753,12 @@ function GradeReviewed ({ reviewList, isShowReview }) {
       <Typography gutterBottom variant="h5" >
         Reviewed
       </Typography>
-
-      <Stack spacing={1} py={1}>
-        {reviewList &&
+      {
+        isLoading ?
+          <Loader />
+          :
+          <Stack spacing={1} py={1}>
+            {reviewList &&
           reviewList.map((data, index) => {
             const isShowDetail = data._id === isShowReview
             return (
@@ -760,12 +769,13 @@ function GradeReviewed ({ reviewList, isShowReview }) {
               />
             )
           })}
-      </Stack>
+          </Stack>
+      }
     </Container>
   )
 }
 
-export default function ReviewStudent () {
+export default function ReviewTeacher () {
 
   const dispatch = useDispatch()
   // eslint-disable-next-line no-unused-vars
@@ -783,14 +793,14 @@ export default function ReviewStudent () {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
-
   return (
     <>
       <Typography gutterBottom variant="h4" sx={{ my: 1, px: 3 }} >History</Typography>
 
-      <GradeReviewPending reviewList={!isLoading ? reviews?.data?.pendingReviews : []} isShowReview={reviewId}/>
+      <GradeReviewPending reviewList={!isLoading ? reviews?.data?.pendingReviews : []} isShowReview={reviewId} isLoading={isLoading}/>
 
-      <GradeReviewed reviewList={!isLoading ? reviews?.data?.reviewedReviews : []} isShowReview={reviewId}/>
+      <GradeReviewed reviewList={!isLoading ? reviews?.data?.reviewedReviews : []} isShowReview={reviewId} isLoading={isLoading}/>
+
     </>
   )
 }

@@ -12,7 +12,7 @@ import UploadIcon from '@mui/icons-material/Upload'
 import { styled } from '@mui/material/styles'
 import Papa from 'papaparse'
 
-function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel, isUploadLoading, adminUpdateStudentIds }) {
+function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, selectionModel, setSelectionModel, isLoadingFile, adminUpdateStudentIds, setIsLoadingFile }) {
 
   const { userInfo } = useSelector(
     (state) => state.userLogin
@@ -177,9 +177,9 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
                 Manage Users
           </Typography>
           <Box sx={{ textAlign: 'right', mb: 2 }}>
-            <Button component="label" variant='contained' startIcon={<UploadIcon />} disabled={ isLoading || isUploadLoading } >
+            <Button component="label" variant='contained' startIcon={<UploadIcon />} disabled={ isLoading || isLoadingFile } >
                 Upload Student Ids
-              <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => readFileCSV(e)}/>
+              <VisuallyHiddenInput type='file' accept='.csv'onChange={(e) => {setIsLoadingFile(true); readFileCSV(e)}}/>
             </Button>
 
             <Button startIcon={<Delete/>} sx={{ ml: 2 }} variant="contained" color="primary" onClick={deleteSelectedHandler} disabled={selectionModel.length === 0}>
@@ -187,7 +187,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
             </Button>
           </Box>
           {
-            isLoading || isUploadLoading ? (
+            isLoading || isLoadingFile ? (
               <Loader />
             ) : (
               <DataGrid

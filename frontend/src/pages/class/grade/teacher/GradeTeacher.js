@@ -145,7 +145,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     result.data.map((data) => {
       if (data.StudentId !== '' && data.Grade !== '' && !isNaN(data.StudentId) && !isNaN(data.Grade)) {
         studentsListUpload.push(data)
-      } else if (data.StudentId === '' && data.Grade === '') {
+      } else if (data.StudentId === '' && data.Grade === undefined) {
         //
       } else {
         toast.error('Student grade upload invalid format!')

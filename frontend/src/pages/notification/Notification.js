@@ -126,7 +126,7 @@ function Notification({ notifications, handleClick, handleClickAll }) {
             sx={{
               '&:hover, &:active': {
                 textDecoration: 'underline',
-                cursor: 'pointer',
+                cursor: 'pointer'
               },
               py: 1,
               textAlign: 'center',

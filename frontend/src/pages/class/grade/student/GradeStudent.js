@@ -82,6 +82,11 @@ function CardGrade ({ data }) {
   const { socket } = useContext(SocketContext)
 
   const handleReviewRequest = async () => {
+    if (isExpectedGrade === 0 || isExplanation === '') {
+      toast.error('Please enter expected grade and comment')
+      return
+    }
+
     handleCloseDialog()
 
     const gradeCompositionId = data?._id

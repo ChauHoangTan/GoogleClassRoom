@@ -60,12 +60,12 @@ const registerSocketServer = (server) => {
     })
 
     socket.on('check_all_notifications', async (userId) => {
-        await NotificationModel.deleteMany({ userReceiverId: userId });
+      await NotificationModel.deleteMany({ userReceiverId: userId })
 
-        const receiver = getUser(userId)
-        if (receiver) {
-            io.to(receiver.socketId).emit('change_data')
-        }
+      const receiver = getUser(userId)
+      if (receiver) {
+        io.to(receiver.socketId).emit('change_data')
+      }
     })
 
     socket.on('disconnect', () => {

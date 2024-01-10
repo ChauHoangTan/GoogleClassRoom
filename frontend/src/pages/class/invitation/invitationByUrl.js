@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
+import { useSelector } from 'react-redux'
 import { invitationStudentByUrlService, invitationTeacherByUrlService, invitationByEmailService } from '../../../redux/APIs/classServices'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Container, Dialog, DialogActions, DialogTitle, Grid, Paper, ThemeProvider, Typography, createTheme } from '@mui/material'
@@ -69,8 +70,14 @@ function InvitationByUrl() {
 
   const handleClose = () => {
     setOpen(false)
-    navigate('/home')
+    userInfo?.isAdmin ?
+      navigate('/dashboard') :
+      navigate('/home')
   }
+
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
   return (
     <>
       {
@@ -127,7 +134,7 @@ function InvitationByUrl() {
                         sx={{ py: 1, px: 2 }}
                         color="primary"
                       >
-                        Back to Home
+                        {userInfo?.isAdmin ? 'Back to Dashboard' : 'Back to Home'}
                       </Button>
                     </DialogActions>
                   </Box>

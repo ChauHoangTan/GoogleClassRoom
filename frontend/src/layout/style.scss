@@ -51,6 +51,7 @@ body{
             overflow-x: hidden;
             .containerPanel{
                 border-top: 2px solid rgb(199, 199, 199);
+                min-width: 300px;
             }
     
             .containerPanel:nth-child(4){

@@ -231,19 +231,21 @@ export default function Participants() {
     const result = await read(selectedFile)
     let studentsListUpload = []
 
+    let checkError = false
     result.data.map(data => {
       if (data?.StudentId !== '' && data?.FullName !== '' && data?.StudentId !== undefined && data?.FullName !== undefined && !isNaN(data?.StudentId)) {
         studentsListUpload.push(handleConvertData(data))
       }
-      // else if (data.StudentId === '' && data.FullName === undefined) {
-      //   //
-      // } else {
-      //   toast.error('Student file upload invalid format!')
-      // }
-      // // studentsListUpload.push(handleConvertData(data))
+      else if (!(data.StudentId === '' && data.FullName === undefined)) {
+        checkError = true
+      }
     })
 
-    await uploadStudentList(studentsListUpload, classId)
+    if (checkError) {
+      toast.error('Student grade upload invalid format!')
+    } else {
+      await uploadStudentList(studentsListUpload, classId)
+    }
     dispatch(getAllTypeOfStudentsAction(classId))
   }
 

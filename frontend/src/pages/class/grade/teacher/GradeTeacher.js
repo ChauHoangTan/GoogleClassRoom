@@ -142,20 +142,24 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
     const selectedFile = e.target.files[0]
     const result = await read(selectedFile)
     let studentsListUpload = []
+    let checkError = false
     result.data.map((data) => {
       if (data.StudentId !== '' && data.Grade !== '' && !isNaN(data.StudentId) && !isNaN(data.Grade)) {
         studentsListUpload.push(data)
       }
-      // else if (data.StudentId === '' && data.Grade === undefined) {
-      //   //
-      // } else {
-      //   toast.error('Student grade upload invalid format!')
-      // }
+      else if (!(data.StudentId === '' && data.Grade === undefined)) {
+        checkError = true
+      }
     })
     if ( studentsListUpload[studentsListUpload.length - 1]?.StudentId === '' ) {
       studentsListUpload.pop()
     }
-    await uploadGradeComposition(classId, id, studentsListUpload)
+
+    if (checkError) {
+      toast.error('Student grade upload invalid format!')
+    } else {
+      await uploadGradeComposition(classId, id, studentsListUpload)
+    }
     setRows([])
   }
 

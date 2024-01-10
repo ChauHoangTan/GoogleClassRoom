@@ -27,6 +27,7 @@ const registerSocketServer = (server) => {
   io.on('connection', (socket) => {
     io.emit('sendAll', 'Hello all client!')
     socket.on('newUser', (userId) => {
+        // console.log("new user: " + socket.id )
       addNewUser(userId, socket.id)
     })
 
@@ -68,7 +69,8 @@ const registerSocketServer = (server) => {
     })
 
     socket.on('disconnect', () => {
-      removeUser(socket.id)
+      removeUser(socket.id);
+    //   io.to(socket.id).emit('reloadPage');
     })
   })
 }

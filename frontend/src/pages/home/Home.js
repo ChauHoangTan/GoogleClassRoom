@@ -15,7 +15,7 @@ import { createClassInfoValidation, joinClassByCodeFormInfoValidation } from '..
 // eslint-disable-next-line no-unused-vars
 import { io } from 'socket.io-client'
 import { changStateAction } from '../../redux/actions/menuActions'
-
+import { Navigate } from 'react-router-dom'
 
 const styleModalJoin = {
   position: 'absolute',
@@ -224,7 +224,12 @@ const ModalNewClass = () => {
 function Home() {
   const [searchTerm, setSearchTerm] = useState('')
 
-  return (
+  const { userInfo } = useSelector(
+    (state) => state.userLogin
+  )
+  return userInfo?.isAdmin ? (
+    <Navigate to="/dashboard" />
+  ) : (
     <Stack id='home' direction='column'>
       <div className='content'>
         <Stack direction='row' justifyContent='end' spacing={2} pt={6} pr={2} pb={2}>

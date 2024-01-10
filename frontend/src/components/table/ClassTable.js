@@ -27,7 +27,7 @@ function ClassTable({ deleteHandler, isLoading, classes, deleteSelectedHandler, 
 
   const columns = useMemo(
     () => [
-      { field: 'classId', headerName: 'Class Id', width: 150 },
+      { field: 'classId', headerName: 'Class Code', width: 150 },
       { field: 'className', headerName: 'Class Name', width: 350 },
       {
         field: 'isActive',

@@ -573,7 +573,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       .catch((error) => {
         toast.error(error.message)
       })
-  }, [rows, gradeCompositionList, studentList])
+  }, [gradeCompositionList, studentList])
 
   const changeState = () => {
     setIsEdit(!isEdit)

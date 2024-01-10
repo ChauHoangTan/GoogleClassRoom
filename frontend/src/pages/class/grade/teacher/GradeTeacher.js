@@ -575,6 +575,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
       .catch((error) => {
         toast.error(error.message)
       })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stateSave, gradeCompositionList, studentList])
 
   const changeState = () => {

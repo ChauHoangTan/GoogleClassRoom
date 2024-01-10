@@ -24,11 +24,11 @@ function SocketProvider({ children }) {
         // 'Access-Control-Allow-Origin': 'https://google-class-room-five.vercel.app'
       }
     })
-    setSocket(newSocket);
+    setSocket(newSocket)
 
     return () => {
-      newSocket.disconnect(); // Disconnect the socket on unmount
-    };
+      newSocket.disconnect() // Disconnect the socket on unmount
+    }
   }, [])
 
   useEffect(() => {
@@ -49,10 +49,10 @@ function SocketProvider({ children }) {
   useEffect(() => {
     if (socket) {
       socket.on('disconnect', () => {
-        window.location.reload(); // Reload the page on socket disconnect
-      });
+        window.location.reload() // Reload the page on socket disconnect
+      })
     }
-  }, [socket]);
+  }, [socket])
 
   const getData = (notifications) => {
     if (notifications.length && notifications.some((notification) => notification.read === false)) {

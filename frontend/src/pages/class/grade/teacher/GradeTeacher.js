@@ -36,6 +36,7 @@ import { styled } from '@mui/material/styles'
 import Papa from 'papaparse'
 import { SocketContext } from '../../../../Context/SocketProvider'
 import toast from 'react-hot-toast'
+import Loader from '../../../../components/notification/Loader'
 
 // eslint-disable-next-line no-unused-vars
 function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderGradeComposition, setGradeCompositionList, rows, setRows }) {
@@ -323,7 +324,7 @@ function CardGrade ({ id, title, composition, time, percent, isPublic, setOrderG
   )
 }
 
-function GradeComposition ({ classId, orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows }) {
+function GradeComposition ({ classId, orderGradeComposition, setOrderGradeComposition, gradeCompositionList, setGradeCompositionList, rows, setRows, isLoadingComposition }) {
   const [orderedGradeCompostionState, SetorderedGradeCompostionState] = useState([])
   const [activeDragItemID, setActiveDragItemID] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
@@ -425,26 +426,30 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
         Grade Composition
       </Typography>
 
-      <DndContext onDragOver={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
-        <SortableContext items={orderedGradeCompostionState?.map(c => c._id)} strategy={verticalListSortingStrategy}>
-          <Stack spacing={2} py={1}>
-            {orderedGradeCompostionState.map(({ _id, name, scale, time, isPublic }) => (
-              <CardGrade
-                key={_id}
-                id={_id}
-                title={'Dev posted a new assignment'}
-                composition={name}
-                time={convertTime(time)}
-                percent={scale}
-                isPublic={isPublic}
-                setOrderGradeComposition={setOrderGradeComposition}
-                setGradeCompositionList={setGradeCompositionList}
-                rows={rows}
-                setRows={setRows}
-              />
-            ))}
-            <DragOverlay dropAnimation={customDropAnimation}>
-              {!!(activeDragItemID) &&
+      {
+        isLoadingComposition ?
+          <Loader/> :
+          <>
+            <DndContext onDragOver={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
+              <SortableContext items={orderedGradeCompostionState?.map(c => c._id)} strategy={verticalListSortingStrategy}>
+                <Stack spacing={2} py={1}>
+                  {orderedGradeCompostionState.map(({ _id, name, scale, time, isPublic }) => (
+                    <CardGrade
+                      key={_id}
+                      id={_id}
+                      title={'Dev posted a new assignment'}
+                      composition={name}
+                      time={convertTime(time)}
+                      percent={scale}
+                      isPublic={isPublic}
+                      setOrderGradeComposition={setOrderGradeComposition}
+                      setGradeCompositionList={setGradeCompositionList}
+                      rows={rows}
+                      setRows={setRows}
+                    />
+                  ))}
+                  <DragOverlay dropAnimation={customDropAnimation}>
+                    {!!(activeDragItemID) &&
                 <CardGrade
                   id={activeDragItemData?._id}
                   title={activeDragItemData?.title}
@@ -453,25 +458,28 @@ function GradeComposition ({ classId, orderGradeComposition, setOrderGradeCompos
                   percent={activeDragItemData?.percent}
                   order={orderedGradeCompostionState}
                 />
-              }
-            </DragOverlay>
-          </Stack>
-        </SortableContext>
-      </DndContext>
+                    }
+                  </DragOverlay>
+                </Stack>
+              </SortableContext>
+            </DndContext>
 
-      <Divider />
+            <Divider />
 
-      <Container sx={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-      }}>
-        <Typography variant='h6'>
+            <Container sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center'
+            }}>
+              <Typography variant='h6'>
           Total grade: <Typography variant='body-2'>
-            {totalGrade()}%
-          </Typography>
-        </Typography>
-      </Container>
+                  {totalGrade()}%
+                </Typography>
+              </Typography>
+            </Container>
+          </>
+      }
+
 
     </Container>
   )
@@ -496,6 +504,7 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
 
   const [isEdit, setIsEdit] = useState(false)
   // const [isLoading, setIsLoading] = useState(false)
+  const [isAvailableSave, setIsAvailableSave] = useState(true)
 
   let compositionList = []
   gradeCompositionList.map((item) => {
@@ -675,11 +684,12 @@ function StudentGrade ({ classId, gradeCompositionList, studentList, rows, setRo
               Edit
           </Button> :
           <Button variant='contained' color='primary' startIcon={<BeenhereIcon />}
-            onClick={() => {changeState(); editGradeCompositionAPI() }}>
+            onClick={() => {changeState(); editGradeCompositionAPI() }}
+            disabled={!isAvailableSave}>
             Save
           </Button>}
       </Stack>
-      <GradeTable columns={columns} rows={rows} setRows={setRows} isEdit={isEdit}/>
+      <GradeTable columns={columns} rows={rows} setRows={setRows} isEdit={isEdit} setIsAvailableSave={setIsAvailableSave}/>
     </Container>
   )
 }
@@ -693,12 +703,15 @@ export default function GradeTeacher () {
 
   const { classId } = useParams()
 
+  const [isLoadingComposition, setIsLoadingComposition] = useState(false)
+
   useEffect(() => {
 
     const fetchData = async () => {
       try {
+        setIsLoadingComposition(true)
         const response = await getAllGradeCompositionByClassIdService(classId)
-
+        setIsLoadingComposition(false)
         if (response.orderGradeComposition.length != orderGradeComposition.length) {
           setOrderGradeComposition(response.orderGradeComposition)
           setGradeCompositionList(response.gradeCompositionList)
@@ -813,7 +826,7 @@ export default function GradeTeacher () {
 
       <GradeComposition classId={classId} orderGradeComposition={orderGradeComposition} setOrderGradeComposition={setOrderGradeComposition}
         gradeCompositionList={gradeCompositionList} setGradeCompositionList={setGradeCompositionList}
-        rows={rows} setRows={setRows}/>
+        rows={rows} setRows={setRows} isLoadingComposition={isLoadingComposition}/>
       <StudentGrade classId={classId} gradeCompositionList={gradeCompositionList} studentList={studentList}
         rows={rows} setRows={setRows}/>
 

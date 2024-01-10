@@ -16,7 +16,8 @@ const Users = () => {
   const dispatch = useDispatch()
 
   const [selectionModel, setSelectionModel] = useState([])
-  const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [isLoadingFile, setIsLoadingFile] = useState(false)
+  // eslint-disable-next-line no-unused-vars
   const { isUploadLoading, isError: isUploadError, isSuccess: isUploadSuccess } = useSelector(
     (state) => state.adminUpdateStudentIds
   )
@@ -33,7 +34,7 @@ const Users = () => {
   useEffect(() => {
     if (!prevIsUploadSuccess.current || isSuccess) {
       dispatch(getAllUsersAction())
-      setIsLoadingFile(false);
+      setIsLoadingFile(false)
     }
 
     // Cập nhật giá trị trạng thái trước đó của isUploadSuccess

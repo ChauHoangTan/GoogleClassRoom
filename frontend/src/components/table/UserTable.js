@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Avatar, Box, Grid, IconButton, Tooltip, Typography, Button } from '@mui/material'
 import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid'
 import { grey } from '@mui/material/colors'
@@ -35,7 +35,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     whiteSpace: 'nowrap',
     width: 1
   })
-    
+
   const readFileCSV = async (e) => {
     const selectedFile = e.target.files[0]
     const result = await read(selectedFile)

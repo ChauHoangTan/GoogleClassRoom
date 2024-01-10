@@ -196,15 +196,23 @@ import Paper from '@mui/material/Paper'
 import { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import CustomNoRowsOverlay from '../../../../components/table/CustomNoRowsOverlay'
+import toast from 'react-hot-toast'
 
 
-export default function GradeTable ({ columns, rows, setRows, isEdit }) {
+export default function GradeTable ({ columns, rows, setRows, isEdit, setIsAvailableSave }) {
   const [pageSize, setPageSize] = useState(5)
   const [changeState, setChangeState] = useState(false)
+
   // console.log(columns)
 
   const handleChangeGrade = (e, indexRow, indexGrade) => {
     const newGrade = e.target.value
+    if ( newGrade === '' ) {
+      setIsAvailableSave(false)
+      toast.error('Please enter grade!')
+    } else {
+      setIsAvailableSave(true)
+    }
     let newTextFields = [...rows]
     newTextFields[indexRow].listGrade[indexGrade].grade = newGrade
     setRows(newTextFields)
@@ -282,6 +290,7 @@ export default function GradeTable ({ columns, rows, setRows, isEdit }) {
                   (
                     (getIndexById(params.row.id) != null) ?
                       (<TextField
+                        type='number'
                         size="small"
                         value={
                           rows[getIndexById(params.row.id) - 1].listGrade[index].grade

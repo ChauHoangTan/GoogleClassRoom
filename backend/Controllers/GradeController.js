@@ -420,7 +420,16 @@ const updateReviewGrade = async (req, res) => {
     }
 
     const student = gradeComposition.studentGradeList.find(student => student.studentId === studentId)
-    student.grade = reviewedGrade
+    if (!student) {
+      const GradeStudent = mongoose.model('GradeStudent', GradeStudentSchema)
+      const newGradeComposition = new GradeStudent({
+        studentId: studentId,
+        grade: reviewedGrade
+      })
+      gradeComposition.studentGradeList.push(newGradeComposition)
+    } else {
+      student.grade = reviewedGrade
+    }
 
     const review = gradeComposition.reviewGradeList.find(
       review => String(review.studentId) === String(studentId)

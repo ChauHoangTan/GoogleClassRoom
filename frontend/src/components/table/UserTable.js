@@ -41,7 +41,7 @@ function UserTable({ deleteHandler, isLoading, users, deleteSelectedHandler, sel
     const result = await read(selectedFile)
     let studentsListUpload = []
     result.data.map(data => {
-      if (data['Admin'] === 'yes') {
+      if (isNaN(data['Student Id'])) {
         data['Student Id'] = ''
       }
       studentsListUpload.push(data)

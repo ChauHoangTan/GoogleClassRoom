@@ -112,7 +112,7 @@ const ModalEditClass = ({ isOpen, handleOpen, setClassRow, classRow, setIsOpen }
           />
 
           <Grid container spacing={2} sx={{ mt: '20px' }}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="class-active">Class Active</InputLabel>
                 <Select

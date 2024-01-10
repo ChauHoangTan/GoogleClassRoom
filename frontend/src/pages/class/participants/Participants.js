@@ -232,8 +232,10 @@ export default function Participants() {
     let studentsListUpload = []
 
     result.data.map(data => {
-      if (data.StudentId !== '') {
+      if (data.StudentId !== '' && data.FullName !== '' && !isNaN(data.StudentId)) {
         studentsListUpload.push(handleConvertData(data))
+      } else {
+        toast.error('Student file upload invalid format!')
       }
       // studentsListUpload.push(handleConvertData(data))
     })
@@ -279,7 +281,7 @@ export default function Participants() {
         <Stack direction='row' justifyContent='end' spacing={3} disabled={!classInfo?.isTeacherOfThisClass}>
           <CSVLink data={csvData} filename='participants.csv'>
             <Button variant='contained' startIcon={<FileDownloadIcon />}>
-            Download Student List
+            Download Template
             </Button>
           </CSVLink>
           <Button component="label" variant='contained' startIcon={<UploadIcon />}>
@@ -294,16 +296,19 @@ export default function Participants() {
           <Typography variant='h6'>
             Teachers
           </Typography>
+          {
+            classInfo?.isTeacherOfThisClass &&
+             <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+               <Typography variant='body2'>
+                Invite teacher
+               </Typography>
 
-          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant='body2'>
-              Invite teacher
-            </Typography>
+               <IconButton onClick={handleOpenInviteTeacher}>
+                 <PersonAddIcon />
+               </IconButton>
+             </Box>
+          }
 
-            <IconButton onClick={handleOpenInviteTeacher}>
-              <PersonAddIcon />
-            </IconButton>
-          </Box>
         </Box>
         <Box>
           { teachersLoading ?

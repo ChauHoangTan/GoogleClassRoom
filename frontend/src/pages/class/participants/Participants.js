@@ -232,7 +232,6 @@ export default function Participants() {
     let studentsListUpload = []
 
     result.data.map(data => {
-      console.log(data)
       if (data.StudentId !== '' && data.FullName !== '' && !isNaN(data.StudentId)) {
         studentsListUpload.push(handleConvertData(data))
       } else if (data.StudentId === '' && data.FullName === undefined) {

@@ -87,7 +87,7 @@ const ModalEditClass = ({ isOpen, handleOpen, setClassRow, classRow, setIsOpen }
           onSubmit={handleSubmit(onSubmit)}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight:'bold', color:'#005B48' }}>
-                Edit User
+                Edit Class
           </Typography>
 
           <TextField

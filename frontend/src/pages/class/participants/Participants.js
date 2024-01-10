@@ -232,14 +232,15 @@ export default function Participants() {
     let studentsListUpload = []
 
     result.data.map(data => {
-      if (data.StudentId !== '' && data.FullName !== '' && !isNaN(data.StudentId)) {
+      if (data?.StudentId !== '' && data?.FullName !== '' && data?.StudentId !== undefined && data?.FullName !== undefined && !isNaN(data?.StudentId)) {
         studentsListUpload.push(handleConvertData(data))
-      } else if (data.StudentId === '' && data.FullName === undefined) {
-        //
-      } else {
-        toast.error('Student file upload invalid format!')
       }
-      // studentsListUpload.push(handleConvertData(data))
+      // else if (data.StudentId === '' && data.FullName === undefined) {
+      //   //
+      // } else {
+      //   toast.error('Student file upload invalid format!')
+      // }
+      // // studentsListUpload.push(handleConvertData(data))
     })
 
     await uploadStudentList(studentsListUpload, classId)

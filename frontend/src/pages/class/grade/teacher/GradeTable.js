@@ -197,9 +197,10 @@ import { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import CustomNoRowsOverlay from '../../../../components/table/CustomNoRowsOverlay'
 import toast from 'react-hot-toast'
+import Loader from '../../../../components/notification/Loader'
 
 
-export default function GradeTable ({ columns, rows, setRows, isEdit, setIsAvailableSave }) {
+export default function GradeTable ({ columns, rows, setRows, isEdit, setIsAvailableSave, isLoadingGrade }) {
   const [pageSize, setPageSize] = useState(5)
   const [changeState, setChangeState] = useState(false)
 
@@ -370,26 +371,33 @@ export default function GradeTable ({ columns, rows, setRows, isEdit, setIsAvail
     return sum.toFixed(2)
   }
   return (
-    <Paper style={{ height: rowsData.length > 0 ? 'auto' : '400px', width: '100%', overflow: 'hidden' }}>
-      <DataGrid rows={rowsData} columns={columnsData} components={{ Toolbar: GridToolbar, noRowsOverlay: CustomNoRowsOverlay }} hideFooterRoCount
-        sx={{
-          '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
-            'mt': '1em',
-            'mb': '1em'
-          },
+    <>
+      {
+        isLoadingGrade ?
+          <Loader/> :
+          <Paper style={{ height: rowsData.length > 0 ? 'auto' : '400px', width: '100%', overflow: 'hidden' }}>
+            <DataGrid rows={rowsData} columns={columnsData} components={{ Toolbar: GridToolbar, noRowsOverlay: CustomNoRowsOverlay }} hideFooterRoCount
+              sx={{
+                '.MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel': {
+                  'mt': '1em',
+                  'mb': '1em'
+                },
 
-          '.MuiDataGrid-selectedRowCount': {
-            'visibility': 'hidden'
-          }
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: pageSize }
-          }
-        }}
-        pageSizeOptions={[5, 15, 25, 50, 100]}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-      />
-    </Paper>
+                '.MuiDataGrid-selectedRowCount': {
+                  'visibility': 'hidden'
+                }
+              }}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: pageSize }
+                }
+              }}
+              pageSizeOptions={[5, 15, 25, 50, 100]}
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            />
+          </Paper>
+      }
+    </>
+
   )
 }
